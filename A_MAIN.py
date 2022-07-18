@@ -15,7 +15,7 @@ from A_GROBID_generator import *
 # os.popen("./gradlew run")
 # os.chdir("../Stage/Programmes/")
 #
-# sutime = SUTime(mark_time_ranges=True, include_range=True) # load sutime wrapper
+# sutime = SUTime(mark_time_ranges=True, include_range=True) # load sutime wrapper 22
 
 main_path = "./DATA/Papers"
 
