@@ -44,7 +44,7 @@ for elems,val in SATS_dict.items():
         # f.write("# Test catalog;" + "\n")
         f.write("# Name: ascii_cat;" + "\n")
         f.write("# Creation Date: " + datetime.now().isoformat() + ";" + "\n")
-        f.write("# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "+ "\"github link à insérer\"" +") on the papers mentionning "+elems+" as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the "+elems+" with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).\n")
+        f.write("# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "+ "\"https://github.com/ADablanc/BibHelioTech.git\"" +") on the papers mentionning "+elems+" as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the "+elems+" with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).\n")
         f.write("# Parameter 1: id:column1; name:DOI; size:1; type:char;" + "\n")
         f.write("# Parameter 2: id:column2; name:SATS; size:1; type:char;" + "\n")
         f.write("# Parameter 3: id:column3; name:INSTS; size:1; type:char;" + "\n")
