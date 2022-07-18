@@ -6,10 +6,10 @@ import re
 from copy import copy
 import os
 import string
-from A_DOI_finder import *
+from DOI_finder import *
 from datetime import *
 import collections
-from A_published_date import *
+from published_date_finder import *
 
 v = sys.version
 token = 'IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m' # API Key

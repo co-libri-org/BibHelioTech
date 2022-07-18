@@ -2,7 +2,7 @@ import os
 import sys
 import re
 import json
-from A_DOI_finder import *
+from DOI_finder import *
 
 # v = sys.version
 # token = 'IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m' # API Key

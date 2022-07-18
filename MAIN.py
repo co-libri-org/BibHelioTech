@@ -5,11 +5,11 @@ import os
 import re
 import shutil
 
-from A_OCRiser import *
-from A_OCR_filtering import *
-from A_SUTime_processing import *
-from A_Entities_finder import *
-from A_GROBID_generator import *
+from OCRiser import *
+from OCR_filtering import *
+from SUTime_processing import *
+from Entities_finder import *
+from GROBID_generator import *
 
 # os.chdir("../../grobid-0.7.1/")
 # os.popen("./gradlew run")
