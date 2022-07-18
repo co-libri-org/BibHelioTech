@@ -2,7 +2,7 @@ import os
 import re
 from datetime import *
 
-main_path = "../NOT_annotated_papers"
+main_path = "./DATA/Papers"
 
 SATS_dict = {}
 
@@ -40,7 +40,7 @@ for elems,val in SATS_dict.items():
     SATS_dict[elems] = sorted(val, key=lambda d: d['start_time'])
 
 for elems,val in SATS_dict.items():
-    with open("../SATS_catalogues/" +elems+"_bibheliotech.txt", "w") as f:
+    with open("./DATA/SATS_catalogues/" +elems+"_bibheliotech.txt", "w") as f:
         # f.write("# Test catalog;" + "\n")
         f.write("# Name: ascii_cat;" + "\n")
         f.write("# Creation Date: " + datetime.now().isoformat() + ";" + "\n")
