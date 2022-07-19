@@ -1,5 +1,4 @@
 import os
-import sys
 import re
 import json
 from DOI_finder import *
