@@ -1,14 +1,11 @@
-import pandas as pd
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-stop_words = set(stopwords.words('english'))
 import re
-from copy import copy
 import os
 import string
-from DOI_finder import *
-from datetime import *
 import collections
+import pandas as pd
+from copy import copy
+from datetime import *
+from DOI_finder import *
 from published_date_finder import *
 
 v = sys.version

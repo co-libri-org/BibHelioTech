@@ -1,6 +1,4 @@
-import os
 import re
-from bs4 import BeautifulSoup
 
 def filter(current_OCR_folder):
     in_file = open(current_OCR_folder+"/"+"out_text.txt", "r") # open the txt file resulting from OCR

@@ -3,10 +3,9 @@ import sys
 import re
 import json
 from bs4 import BeautifulSoup
-import lxml
 
 v = sys.version
-token = 'IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m' # API Key
+token = 'IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m' # NASA ADS API Key. Get your API key on: https://ui.adsabs.harvard.edu/help/api/
 
 def check_main_doi_exist(content):
     content = re.sub(".*<encodingDesc>\n[\s\S]+", "", content) # delete everything after <encodingDesc> markup in the xml file
