@@ -1,6 +1,5 @@
-import json
-from sutime import SUTime
 import re
+import json
 from datetime import date
 from datetime import datetime
 
