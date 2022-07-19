@@ -5,6 +5,12 @@
 ## BibHelioTech project description
 
 ## Installation guide
+STEP 1: install all dependency
+    On your shell, run: pip install -r requirements.txt
+
+STEP 2:
+    
+    
 
 ## User guide
 
