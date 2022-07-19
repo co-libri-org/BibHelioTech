@@ -1,0 +1,8 @@
+# Name: ascii_cat;
+# Creation Date: 2022-07-19T15:33:20.128591;
+# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "https://github.com/ADablanc/BibHelioTech.git") on the papers mentionning Cluster-2 as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the Cluster-2 with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:REGS; size:1; type:char;
+2002-08-18T17:05:00.000 2002-08-18T17:35:00.000 https://doi.org/10.5194/angeo-29-1571-2011 "Cluster-2" "" "Earth.Magnetosphere.Main"

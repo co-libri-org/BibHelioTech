@@ -1,0 +1,26 @@
+# Name: ascii_cat;
+# Creation Date: 2022-07-19T15:33:20.126608;
+# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "https://github.com/ADablanc/BibHelioTech.git") on the papers mentionning Voyager-2 as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the Voyager-2 with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:REGS; size:1; type:char;
+2014-10-14T18:21:00.000 2014-10-14T18:21:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-14T18:21:00.000 2014-10-14T18:21:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-14T18:21:00.000 2014-10-14T18:21:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-14T18:30:00.000 2014-10-14T18:30:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-14T18:30:00.000 2014-10-14T18:30:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-14T21:27:00.000 2014-10-14T21:27:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-16T18:11:00.000 2014-10-16T18:11:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-16T18:11:00.000 2014-10-16T18:11:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-16T18:11:00.000 2014-10-16T18:11:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-16T18:11:00.000 2014-10-16T18:11:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-17T00:00:00.000 2014-10-17T00:00:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-17T22:51:00.000 2014-10-17T22:51:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-17T22:51:00.000 2014-10-17T22:51:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-17T22:51:00.000 2014-10-17T22:51:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-17T22:53:48.495 2014-10-17T22:53:48.505 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-18T00:00:00.000 2014-10-18T00:00:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-10-22T20:48:00.000 2014-10-22T20:48:59.000 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-11-12T14:33:34.495 2014-11-12T14:33:34.505 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"
+2014-11-12T14:33:34.495 2014-11-12T14:33:34.505 https://doi.org/10.1002/2017JA023884 "Voyager-2" "MAG,PLS,CRS" "Heliosphere.NearEarth"

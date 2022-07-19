@@ -1,0 +1,24 @@
+# Name: ascii_cat;
+# Creation Date: 2022-07-19T15:33:20.123001;
+# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "https://github.com/ADablanc/BibHelioTech.git") on the papers mentionning ISEE as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the ISEE with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:REGS; size:1; type:char;
+1987-09-24T12:02:00.000 1987-09-24T12:02:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1987-09-24T12:02:00.000 1987-09-24T12:02:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1987-09-24T12:02:00.000 1987-09-24T12:02:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1987-09-24T12:02:00.000 1987-09-24T12:02:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1987-09-24T12:02:00.000 1987-09-24T12:02:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1987-09-24T12:02:00.000 1987-09-24T12:02:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1987-09-24T12:02:00.000 1987-09-24T12:02:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1987-09-24T12:02:00.000 1987-09-24T12:02:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1999-05-10T20:03:00.000 1999-05-13T20:03:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1999-05-13T20:00:00.000 1999-05-13T20:00:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1999-05-13T20:00:00.000 1999-05-13T20:00:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1999-05-13T20:01:00.000 1999-05-13T20:02:00.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+1999-05-13T20:03:00.000 1999-05-13T20:03:59.000 https://doi.org/10.1029/2004JA010540 "ISEE" "" "Heliosphere.NearEarth"
+2001-03-31T18:02:17.495 2001-03-31T18:02:17.505 https://doi.org/10.1029/2003JA010056 "ISEE" "" "Heliosphere.NearEarth"
+2002-02-02T04:00:00.000 2002-02-02T04:00:59.000 https://doi.org/10.1038/nature04393 "ISEE" "" "Heliosphere.NearEarth"
+2011-11-24T10:29:04.048 2011-11-24T10:29:04.050 https://doi.org/10.1002/jgra.50123 "ISEE" "" "Heliosphere.NearEarth"
+2015-12-15T11:20:00.000 2015-12-15T11:21:00.000 https://doi.org/10.1002/2016GL069787 "ISEE" "" "Heliosphere.NearEarth"

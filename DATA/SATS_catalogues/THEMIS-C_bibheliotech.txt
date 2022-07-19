@@ -1,0 +1,15 @@
+# Name: ascii_cat;
+# Creation Date: 2022-07-19T15:33:20.123676;
+# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "https://github.com/ADablanc/BibHelioTech.git") on the papers mentionning THEMIS-C as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the THEMIS-C with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:REGS; size:1; type:char;
+2007-07-16T19:50:00.000 2007-07-16T20:37:00.000 https://doi.org/10.1029/2010JA015404 "THEMIS-C" "FGM,ESA" "Earth.Magnetosheath"
+2007-07-16T19:50:00.000 2007-07-16T19:50:59.000 https://doi.org/10.1029/2010JA015404 "THEMIS-C" "FGM,ESA" "Earth.Magnetosheath"
+2007-07-16T20:20:00.000 2007-07-16T20:25:00.000 https://doi.org/10.1029/2010JA015404 "THEMIS-C" "FGM,ESA" "Earth.Magnetosheath"
+2007-08-07T22:45:00.000 2007-08-07T22:45:59.000 https://doi.org/10.1038/s41467-021-25923-7 "THEMIS-C" "EFI,FGM,ESA" "Earth.Magnetosheath"
+2007-08-08T04:00:00.000 2007-08-08T06:00:00.000 https://doi.org/10.1029/2010JA015404 "THEMIS-C" "FGM,ESA" "Earth.Magnetosheath"
+2007-08-08T04:39:00.000 2007-08-08T04:44:00.000 https://doi.org/10.1029/2010JA015404 "THEMIS-C" "FGM,ESA" "Earth.Magnetosheath"
+2008-04-15T09:16:20.495 2008-04-15T09:16:20.505 https://doi.org/10.3389/fspas.2021.760885 "THEMIS-C" "" "Earth.Magnetosheath"
+2016-08-13T19:00:00.000 2016-08-13T19:00:59.000 https://doi.org/10.1029/2021JA029773 "THEMIS-C" "FGM,ESA" "Earth.Magnetosheath"
