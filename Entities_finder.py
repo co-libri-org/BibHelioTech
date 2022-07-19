@@ -34,7 +34,6 @@ def load_dataframes():
 
     df_Satellites= pd.read_excel(entities_path, sheet_name='Satellites')
     SAT_dict = {}
-    compteur_ligne = 0
     for compteur_ligne in range(len(df_Satellites)):
         SAT_dict[str(df_Satellites.iloc[compteur_ligne,0])] = []
         for compteur_colonne in range(len(df_Satellites.iloc[compteur_ligne])) :
@@ -43,7 +42,6 @@ def load_dataframes():
 
     df_Instruments = pd.read_excel(entities_path, sheet_name='Instruments')
     INST_dict = {}
-    compteur_ligne = 0
     for compteur_ligne in range(len(df_Instruments)):
         INST_dict[str(df_Instruments.iloc[compteur_ligne, 0])] = []
         for compteur_colonne in range(1, len(df_Instruments.iloc[compteur_ligne])):
@@ -82,7 +80,7 @@ def load_dataframes():
         for compteur_colonne in range(1, len(df_operating_spans.iloc[compteur_ligne])):
             SPAN_dict[str(df_operating_spans.iloc[compteur_ligne, 0])].append(str(df_operating_spans.iloc[compteur_ligne, compteur_colonne]))
 
-    # Pour toutes operating spans, si pas de date début ou fin remplace par défaut par T-Spoutnik le début, ou aujourd'hui pour la fin.
+    # For all operating spans, if no start or end date, default to T-Sputnik for the start, or today for the end.
     for elements, val in SPAN_dict.items():
         if val[0] == 'nan':
             val[0] = '1957-10-04'  # T-Spoutnik
@@ -92,15 +90,15 @@ def load_dataframes():
     return SAT_dict,INST_dict,REG_general_list,REG_dict,AMDA_dict,df_distance_metrics,SPAN_dict,num_colonne
 
 def operating_span_checker(sat,durations,SAT_dict,SPAN_dict,published_date):
-    # Vérifie qu'un intervalle liée à un sattelite est bien comrpis dans l'operating span du dit sattelite.
+    # Checks that an interval linked to a sattelite is included in the operating span of that sattelite.
     try:
-        # récupère le nom principale (le premier) d'un sattelite.
+        # retrieves the primary (first) name of a sattelite.
         sat_name = sat['text']
         for syns in SAT_dict.values():
             if sat_name in syns:
                 sat_name = syns[0]
 
-        # découpage YYYY,MM,DD dans les spans
+        # cutting YYYY,MM,DD in the spans
         SPAN_start_year,SPAN_start_month,SPAN_start_day = int(re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))",SPAN_dict[sat_name][0]).group(2)),\
                                                           int(re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))",SPAN_dict[sat_name][0]).group(3)),\
                                                           int(re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))",SPAN_dict[sat_name][0]).group(4))
@@ -113,7 +111,7 @@ def operating_span_checker(sat,durations,SAT_dict,SPAN_dict,published_date):
                                                            int(re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))",SPAN_dict[sat_name][1]).group(3)),\
                                                            int(re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))",SPAN_dict[sat_name][1]).group(4))
 
-        # découpage YYYY,MM,DD dans les durations
+        # cutting YYYY,MM,DD into durations
         begin_year,begin_month,begin_day = int(re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))",durations['value']['begin']).group(2)),\
                                            int(re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))",durations['value']['begin']).group(3)),\
                                            int(re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))",durations['value']['begin']).group(4))
@@ -121,7 +119,7 @@ def operating_span_checker(sat,durations,SAT_dict,SPAN_dict,published_date):
                                      int(re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))",durations['value']['end']).group(3)),\
                                      int(re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))",durations['value']['end']).group(4))
 
-        # vérification: duration incluse dans operating span
+        # check: duration included in operating span
         if (datetime(begin_year, begin_month, begin_day) >= datetime(SPAN_start_year, SPAN_start_month, SPAN_start_day)) and (datetime(end_year, end_month, end_day) <= datetime(SPAN_stop_year, SPAN_stop_month, SPAN_stop_day)):
             return True
         else:
@@ -158,16 +156,16 @@ def entities_finder(current_OCR_folder):
 
     SAT_dict, INST_dict, REG_general_list, REG_dict, AMDA_dict, df_distance_metrics, SPAN_dict, num_colonne = load_dataframes()
 
-    files_path = os.path.join(current_OCR_folder, "out_filtered_text.txt")  # chargement du fichier texte (contenue de l'article)
+    files_path = os.path.join(current_OCR_folder, "out_filtered_text.txt")  # loading the text file (content of the article)
 
     file = open(files_path, "r")
     content_upper = file.read()
     file.close()
 
     file_name = current_OCR_folder + "/" + os.path.basename(current_OCR_folder) + ".tei.xml"
-    DOI = find_DOI(file_name) # récupération du DOI de l'article en cour de traitement.
+    DOI = find_DOI(file_name) # retrieving the DOI of the article being processed.
 
-    files_path_json = os.path.join(current_OCR_folder, "res_sutime_2.json")  # chargement des résultats SUTime transformés
+    files_path_json = os.path.join(current_OCR_folder, "res_sutime_2.json")  # loading transformed SUTime results
     JSON_file = open(files_path_json, "r")
     JSON_content = JSON_file.read()
     JSON_dict = eval(JSON_content)
@@ -218,7 +216,7 @@ def entities_finder(current_OCR_folder):
     for sats in sat_dict_list:
         final_links.append([sats, {'end': (len(content_upper) / 2) + 1, 'start': (len(content_upper) / 2), 'text': inst_list}])
 
-    # Vérifie pour chaque sattelites trouvés les instruments qui leur appartiennent respectivement.
+    # Check for each sattelite found the instruments that belong to them respectively.
     for elements in final_links:
         temp = []
         try:
@@ -236,21 +234,21 @@ def entities_finder(current_OCR_folder):
             elements[1]['text'] = []
         elements[1]['text'] = temp
 
-    # Changeles nom de tous les sattelites trouvés par leur nom principal (nom AMDA quand existant OU premier nom dans SAT_dict)
+    # Change the names of all found sattelites by their main name (AMDA name when existing OR first name in SAT_dict)
     for elements in final_links:
         for key, val in SAT_dict.items():
             if elements[0]['text'] in val:
                 in_amda = False
                 for elems in val:
-                    if elems in AMDA_dict.keys():  # nom amda
+                    if elems in AMDA_dict.keys():  # amda name
                         elements[0]['text'] = elems
                         in_amda = True
                 if in_amda == False:
-                    for key, val in SAT_dict.items(): # premier nom dans SAT_dict
+                    for key, val in SAT_dict.items(): # first name in SAT_dict
                         if elements[0]['text'] in val:
                             elements[0]['text'] = val[0]
 
-    # comptage occurance des satellites et intégrations
+    # satellite occurance counting and integrations
     list_occur = dict(collections.Counter([dicts[0]['text'] for dicts in final_links]))
     for elems in final_links:
         elems[0]['SO'] = list_occur[elems[0]['text']]
@@ -259,7 +257,7 @@ def entities_finder(current_OCR_folder):
     temp += JSON_dict
     temp = sorted(temp, key=lambda d: d['start'])
 
-    # Association de la duration la plus proche d'un sattelite. Si elle n'est pas comprise dans l'operating span du sattelite, recherche la Nième duration le plus proche.
+    # Association of the closest duration of a sattelite. If it is not included in the sattelite's operating span, search for the Nth closest duration.
     published_date = published_date_finder(token, v, DOI)
     dicts_index = 0
     for dicts in temp:
@@ -272,7 +270,7 @@ def entities_finder(current_OCR_folder):
             sens_aller = dicts_index
             sens_retour = dicts_index
 
-            # sens -->
+            # direction -->
             while sens_aller < len(temp):
                 if (temp[sens_aller]['type'] != 'sat'):
                     compteur_rang_aller += 1
@@ -282,7 +280,7 @@ def entities_finder(current_OCR_folder):
                         sens_aller = len(temp)
                 sens_aller += 1
 
-            # sens <--
+            # direction <--
             while sens_retour >= 0:
                 if (temp[sens_retour]['type'] != 'sat'):
                     compteur_rang_retour += 1
@@ -292,7 +290,7 @@ def entities_finder(current_OCR_folder):
                         sens_retour = -1
                 sens_retour -= 1
 
-            # vérification du plus proche entre aller et retour:
+            # check of the closest between outward and backward.
             if len(dist_list) == 2:
                 if (abs(dicts['start'] - dist_list[0]['start'])) < (abs(dicts['start'] - dist_list[1]['start'])):
                     min_dist = abs(dicts['start'] - dist_list[0]['start'])
@@ -336,7 +334,7 @@ def entities_finder(current_OCR_folder):
 
     maxi = max([elements[0]['conf'] for elements in final_links])
     for elements in final_links:
-        elements[0]['conf'] = elements[0]['conf'] / maxi # normalisation par l'indice de confiance maximum
+        elements[0]['conf'] = elements[0]['conf'] / maxi # normalisation by the maximum confidence index
 
     # REG recognition
     planete_list = ["earth", "jupiter", "mars", "mercury", "neptune", "saturn", "sun", "uranus", "venus", "pluto", "heliosphere", "asteroid", "comet", "interstellar"]
@@ -346,7 +344,7 @@ def entities_finder(current_OCR_folder):
         test = re.finditer("( |\n)" + "(" + regs + "|" + regs.lower() + ")" + "(\.|,| )", content_upper)
         regs_dict_list += [{'end': matches.end(), 'start': matches.start(), 'text': matches.group().strip().translate(str.maketrans('', '', string.punctuation))} for matches in test]
 
-    # Association du nom de région de niveau bas (exemple magnetosphere) au nom de niveau haut (nom de planète) le plus proche.
+    # Association of the low-level region name (e.g. magnetosphere) with the nearest high-level name (planet name).
     dicts_index = 0
     founded_regions_list = []
     temp = []
@@ -355,7 +353,7 @@ def entities_finder(current_OCR_folder):
             temp = []
             sens_aller = dicts_index + 1
             sens_retour = dicts_index - 1
-            # sens -->
+            # direction -->
             while sens_aller < len(regs_dict_list):
                 if regs_dict_list[sens_aller]['text'] not in planete_list:
                     temp.append(regs_dict_list[sens_aller])
@@ -363,7 +361,7 @@ def entities_finder(current_OCR_folder):
                     founded_regions_list.append(temp)
                     temp = []
                 sens_aller += 1
-            # sens <--
+            # direction <--
             while sens_retour >= 0:
                 if regs_dict_list[sens_retour]['text'] not in planete_list:
                     temp.append(dicts)
@@ -373,20 +371,19 @@ def entities_finder(current_OCR_folder):
                 sens_retour -= 1
         dicts_index += 1
 
-    # TEST
     compteur = 0
     for elements in founded_regions_list:
         if elements[0]['text'].lower() in planete_list and elements[1]['text'].lower() in planete_list:
-            if elements[0]['text'].lower() != elements[1]['text'].lower(): # supprésion des couples planète/planète quand celle-ci sont différentes.
+            if elements[0]['text'].lower() != elements[1]['text'].lower(): # deletion of planet/planet pairs when these are different.
                 founded_regions_list[compteur].clear()
-        elif (elements[0]['text'].lower() not in planete_list) and (elements[1]['text'].lower() not in planete_list): # supprésion des couples bas niveau/bas niveau.
+        elif (elements[0]['text'].lower() not in planete_list) and (elements[1]['text'].lower() not in planete_list): # removal of low-level/low-level pairs.
             founded_regions_list[compteur].clear()
         compteur += 1
     founded_regions_list = [elements for elements in founded_regions_list if elements != []]
 
-    # Ré-organisation de la liste de dictionnaire:
-    #   les planètes en indexe 0
-    #   les bas niveau en indexe 1
+    # Re-organisation of the dictionary list:
+    #   planets in index 0
+    #   low level in index 1
     compteur = 0
     for list_of_dicts in founded_regions_list:
         if (list_of_dicts[0]['text'].lower() not in planete_list) and (list_of_dicts[1]['text'].lower() in planete_list):
@@ -396,13 +393,13 @@ def entities_finder(current_OCR_folder):
             founded_regions_list[compteur][1] = temp_0
         compteur += 1
 
-    # Vérification et supprésion de les couples planètes/bas niveau impossible (exemple Mercury/Atmosphère)
+    # Checking and deleting planet/low level pairs is not possible (e.g. Mercury/Atmosphere)
     path = []
     compteur = 0
     for elements in founded_regions_list:
         result = []
         result.append(elements[0]['text'])
-        find_path(REG_dict[str(elements[0]['text'][0].upper() + elements[0]['text'][1:])], elements[1]['text'][0].upper() + elements[1]['text'][1:])  # params = nom planete, nom bas niveau
+        find_path(REG_dict[str(elements[0]['text'][0].upper() + elements[0]['text'][1:])], elements[1]['text'][0].upper() + elements[1]['text'][1:])  # params = planet name, low level name
         final_path = ""
         for i in result:
             if isinstance(i, str):
@@ -419,7 +416,7 @@ def entities_finder(current_OCR_folder):
                 elements[1] = elements[0]
         compteur += 1
 
-    # supréssion des couples en doublons
+    # removal of duplicate pairs
     compteur = 0
     for i in founded_regions_list:
         compteur_2 = compteur
@@ -430,8 +427,8 @@ def entities_finder(current_OCR_folder):
         compteur += 1
     founded_regions_list = [elements for elements in founded_regions_list if elements != []]
 
-    # cas sattelite cité dans l'article mais aucune région le concernant:
-    #   association par défaut avec le premier élément de sa liste de région.
+    # case sattelite mentioned in the article but no region concerning it:
+    #   default association with the first item in its region list.
     if len(founded_regions_list) == 0:
         for elements in final_links:
             sat = elements[0]['text']
@@ -476,12 +473,12 @@ def entities_finder(current_OCR_folder):
                         compteur_min = compteur
                 compteur += 1
 
-            # construire le path SPASE
-            # recherche dans l'arborescence
+            # build the SPASE path
+            # search in the tree structure
             result = []
             result.append(temp_reg[compteur_min][0]['text'])
             find_path(REG_dict[temp_reg[compteur_min][0]['text'][0].upper() + temp_reg[compteur_min][0]['text'][1:]],
-                      temp_reg[compteur_min][1]['text'][0].upper() + temp_reg[compteur_min][1]['text'][1:])  # params = nom planete, nom bas niveau
+                      temp_reg[compteur_min][1]['text'][0].upper() + temp_reg[compteur_min][1]['text'][1:])  # params = planet name, low level name
             final_path = ""
             for i in result:
                 if isinstance(i, str):
@@ -493,7 +490,7 @@ def entities_finder(current_OCR_folder):
             final_path = re.sub("\.$", "", final_path)
             result = []
 
-            # vérification de l'existance de cette plus proche régions dans REG_dict
+            # check for the existence of this nearest region in REG_dict
             if elems[0]['text'] in AMDA_dict:
                 nearest_region = None
                 if final_path in AMDA_dict[elems[0]['text']]:
@@ -514,7 +511,7 @@ def entities_finder(current_OCR_folder):
                 finish = True
                 break
 
-        # rien n'a était trouvé
+        # case: nothing was found
         if len(temp_reg) == 0 or nearest_region == None:
             if elems[0]['text'] in AMDA_dict:
                 temp = AMDA_dict[elems[0]['text']][0].split(".")
@@ -546,7 +543,7 @@ def entities_finder(current_OCR_folder):
 
         compteur_sat += 1
 
-    # Ré-écriture selon la mise en forme ci-dessous
+    # Re-written according to the formatting below
     final_amda_dict = {"start_time": "", "stop_time": "", "DOI": "", "sat": "", "inst": "", "reg": "", "D": "", "R": "", "SO": ""}
     final_amda_list = []
 
@@ -560,12 +557,12 @@ def entities_finder(current_OCR_folder):
         if len(elems) >= 5:
             final_amda_dict["start_time"] = elems[4]["begin"]
             final_amda_dict["stop_time"] = elems[4]["end"]
-        # recherche dans l'arborescence
+        # search in the tree structure
         result = []
 
         result.append(elems[2]['text'])
 
-        find_path(REG_dict[elems[2]['text'][0].upper() + elems[2]['text'][1:]],elems[3]['text'][0].upper() + elems[3]['text'][1:])  # params = nom planete, nom bas niveau
+        find_path(REG_dict[elems[2]['text'][0].upper() + elems[2]['text'][1:]],elems[3]['text'][0].upper() + elems[3]['text'][1:])  # params = planet name, low level name
 
         final_path = ""
         for i in result:
@@ -581,7 +578,7 @@ def entities_finder(current_OCR_folder):
         final_amda_list.append(final_amda_dict)
         final_amda_dict = {"start_time": "", "stop_time": "", "DOI": "", "sat": "", "inst": "", "reg": "", "D": "", "R": "", "SO": ""}
 
-    # insertion DOI dans le champ prévu à cet effet.
+    # insert DOI in the field provided.
     for elements in final_amda_list:
         elements['DOI'] = DOI
 
@@ -611,7 +608,8 @@ def entities_finder(current_OCR_folder):
         final_file.write("\n")
     final_file.close()
 
-    # TEST
+    # =============================================================================================================================================================
+    # For displaying results, comment for disable.
     start_time = 'start_time'
     stop_time = 'stop_time'
     DOI_2 = 'DOI'
@@ -624,9 +622,9 @@ def entities_finder(current_OCR_folder):
         print(f'{temp[0]:30}',f'{temp[1]:30}',f'{temp[2]:30}',f'{temp[3]:30}',f'{temp[4]:50}'f'{temp[5]:30}')
         print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
     print("\n")
+    # =============================================================================================================================================================
 
     with open(current_OCR_folder + "/" + DOI.translate(str.maketrans('', '', string.punctuation))+"_bibheliotech_V"+"1.txt", "w") as f:
-        # f.write("# Test catalog;" + "\n")
         f.write("# Name: "+DOI.translate(str.maketrans('', '', string.punctuation))+"_bibheliotech_V"+"1"+";" + "\n")
         f.write("# Creation Date: " + datetime.now().isoformat() + ";" + "\n")
         f.write("# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, " + "\"https://github.com/ADablanc/BibHelioTech.git\"" + ") on the paper " + "https://doi.org/" + str(DOI) + "\"" + ". The two first columns are the start/stop times of the event. the third column is the DOI of the paper, the fourth column is the mission that observed the event with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term);\n")
