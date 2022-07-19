@@ -33,7 +33,7 @@ STEP 4: GROBID python client installation<br />
 Put Heliophysics articles in pdf format under BibHelio_Tech/DATA/Papers.<br />
 You just have to run "MAIN.py".<br />
 <br />
-Optionaly if you want to have AMDA catalogues by satellites,<br />
+optionally if you want to have AMDA catalogues by satellites,<br />
 you need to run "SATS_catalogue_generator.py".
 
 ## License
