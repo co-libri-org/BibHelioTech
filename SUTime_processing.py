@@ -1,7 +1,7 @@
 import re
 import json
-from datetime import date
-from datetime import datetime
+from sutime import SUTime
+from datetime import date,datetime
 
 def SUTime_treatement(current_OCR_folder,sutime):
     file = open(current_OCR_folder + "/" + 'out_filtered_text.txt', 'r')
