@@ -1,5 +1,6 @@
 # BibHelioTech
 
+[![DOI](https://zenodo.org/badge/515186537.svg)](https://zenodo.org/badge/latestdoi/515186537)
 [![License](https://img.shields.io/github/license/ADablanc/BibHelioTech.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 [![GitHub release](https://img.shields.io/github/release/ADablanc/BibHelioTech.svg)](https://github.com/ADablanc/BibHelioTech/releases/tag/v2.0.0)
 
