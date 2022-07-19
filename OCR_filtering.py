@@ -3,7 +3,7 @@ import re
 def filter(current_OCR_folder):
     in_file = open(current_OCR_folder+"/"+"out_text.txt", "r") # open the txt file resulting from OCR
     content = in_file.read()
-    content = re.sub("\n{1,5}"," ", content) # remove all
+    content = re.sub("\n{1,5}"," ", content) # remove all \n
 
     content = re.sub(r"UT ", r" UT ", content)  # replace "22:02UT" by "22:02 UT"
     content = re.sub(r" UT ", r"UTC", content)  # replace "22:02 UT" by "22:02 UTC"
