@@ -4,10 +4,7 @@ import re
 import json
 from DOI_finder import *
 
-# v = sys.version
-# token = 'IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m' # API Key
-
-main_path = "../NOT_annotated_papers"
+main_path = "./DATA/Papers"
 
 def published_date_finder(token,v,DOI):
     # encode the title to URL encode, exemple: "kinetic+study+of+the+mirror+mode"
