@@ -5,7 +5,7 @@
 ## BibHelioTech project description
 
 ## Installation guide
-STEP 1: install all dependency
+STEP 1: install all dependency\n
 On your shell, run: pip install -r requirements.txt
 
 STEP 2: tesseract installation
