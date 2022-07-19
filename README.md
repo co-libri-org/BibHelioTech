@@ -18,6 +18,7 @@ STEP 2: tesseract 5 installation (Ubuntu exemple)<br />
 &nbsp;&nbsp;&nbsp;tesseract --version
 
 STEP 3: GROBID installation<br />
+&nbsp;&nbsp;&nbsp;install GROBID under BibHelio_Tech/../../<br />
 &nbsp;&nbsp;&nbsp;Follow install instruction on: https://grobid.readthedocs.io/en/latest/Install-Grobid/ <br />
 &nbsp;&nbsp;&nbsp;Make sure you have JVM 8 used by default !
 
