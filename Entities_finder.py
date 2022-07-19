@@ -578,6 +578,10 @@ def entities_finder(current_OCR_folder):
         final_amda_list.append(final_amda_dict)
         final_amda_dict = {"start_time": "", "stop_time": "", "DOI": "", "sat": "", "inst": "", "reg": "", "D": "", "R": "", "SO": ""}
 
+    for dicts in final_amda_list:
+        dicts['inst'] = ','.join(list(set(dicts['inst'].split(",")))).replace(" ", "-")
+        dicts['sat'] = dicts['sat'].strip().replace(" ", "-")
+
     # insert DOI in the field provided.
     for elements in final_amda_list:
         elements['DOI'] = DOI
