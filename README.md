@@ -9,5 +9,6 @@
 ## User guide
 
 ## Licence
+If you use BibHelio_Tech, you agree to use it following these licenses.
 
 ## Authors
