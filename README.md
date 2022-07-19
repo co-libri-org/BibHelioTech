@@ -37,6 +37,6 @@ Optionaly if you want to have AMDA catalogues by satellites,<br />
 you need to run "SATS_catalogue_generator.py".
 
 ## License
-If you use BibHelio_Tech, you agree to use it following this license.
+If you use or contribute to BibHelio_Tech, you agree to use it or share your contribution following this license.
 
 ## Authors
