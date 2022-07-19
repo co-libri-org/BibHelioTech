@@ -30,7 +30,7 @@ STEP 4: GROBID python client installation<br />
 &nbsp;&nbsp;&nbsp;Follow install instruction on: https://github.com/kermitt2/grobid_client_python <br />
 
 ## User guide
-Put pdf files under BibHelio_Tech/DATA/Papers<br />
+Put Heliophysics articles in pdf format under BibHelio_Tech/DATA/Papers<br />
 You just have to run "MAIN.py".
 
 ## License
