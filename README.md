@@ -6,7 +6,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/ADablanc/BibHelioTech)](https://github.com/ADablanc/BibHelioTech/issues)
 
 ## BibHelioTech project description
-
+...
 ## Installation guide
 STEP 1: install all dependency<br />
 &nbsp;&nbsp;&nbsp;On your shell, run: pip install -r requirements.txt<br />
