@@ -31,7 +31,7 @@ STEP 4: GROBID python client installation<br />
 
 ## User guide
 Put pdf files under BibHelio_Tech/DATA/Papers<br />
-You just have to run "MAIN.py"
+You just have to run "MAIN.py".
 
 ## License
 If you use BibHelio_Tech, you agree to use it following this license.
