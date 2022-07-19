@@ -8,10 +8,10 @@ from GROBID_generator import *
 from datetime import datetime
 start_time = datetime.now()
 
-# os.chdir("../../grobid-0.7.1/")
-# os.popen("./gradlew run") # starting GROBID server
-# os.chdir("../Stage/BibHelio_Tech/")
-#
+os.chdir("../grobid-0.7.1/")
+os.popen("./gradlew run") # starting GROBID server
+os.chdir("../BibHelio_Tech/")
+
 sutime = SUTime(mark_time_ranges=True, include_range=True) # load sutime wrapper
 
 main_path = "./DATA/Papers"
@@ -39,9 +39,9 @@ for folders_or_pdf in os.listdir(main_path):
                 SUTime_transform(pdf_paths) # transforms some results of sutime to complete missing, etc ... save results in "res_sutime_2.json"
                 entities_finder(pdf_paths) # entities recognition and association + writing of HPEvent
 
-os.chdir("../../grobid-0.7.1/")
+os.chdir("../grobid-0.7.1/")
 os.popen("./gradlew --stop") # stop GROBID server
-os.chdir("../Stage/BibHelio_Tech/")
+os.chdir("../BibHelio_Tech/")
 
 end_time = datetime.now()
 print("TOTAL ELAPSED TIME: ---"+str(end_time - start_time)+"---")
