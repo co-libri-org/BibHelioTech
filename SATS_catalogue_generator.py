@@ -16,8 +16,9 @@ for folders in os.listdir(main_path):
                 with open(os.path.join(files_path,files)) as file:
                     Lines = file.readlines()
                     for line in Lines:
-                        if not re.search("^#",line):
-                            sat = line.split(" ")[3].replace("\"","")
+                        if not re.search("^#",line): # skip comments lines
+                            sat = line.split(" ")[3].replace("\"","") # delete " from satellites name
+                            # group by satellites
                             if sat not in SATS_dict:
                                 SATS_dict[sat] = []
                                 the_line = [things.replace("\"", "") for things in line.split(" ")]
@@ -37,11 +38,11 @@ for folders in os.listdir(main_path):
                                                        'reg': the_line[5]})
 
 for elems,val in SATS_dict.items():
-    SATS_dict[elems] = sorted(val, key=lambda d: d['start_time'])
+    SATS_dict[elems] = sorted(val, key=lambda d: d['start_time']) # sort by ascending start_time
 
+# write datas
 for elems,val in SATS_dict.items():
     with open("./DATA/SATS_catalogues/" +elems+"_bibheliotech.txt", "w") as f:
-        # f.write("# Test catalog;" + "\n")
         f.write("# Name: ascii_cat;" + "\n")
         f.write("# Creation Date: " + datetime.now().isoformat() + ";" + "\n")
         f.write("# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "+ "\"https://github.com/ADablanc/BibHelioTech.git\"" +") on the papers mentionning "+elems+" as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the "+elems+" with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).\n")
