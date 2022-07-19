@@ -1,9 +1,8 @@
-# Import libraries
-from PIL import Image
-import pytesseract
-import sys
-from pdf2image import convert_from_path
 import os
+import sys
+import pytesseract
+from PIL import Image
+from pdf2image import convert_from_path
 
 
 def PDF_OCRiser(current_OCR_folder,PDF_file):
