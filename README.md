@@ -40,3 +40,5 @@ you need to run "SATS_catalogue_generator.py".
 If you use or contribute to BibHelio_Tech, you agree to use it or share your contribution following this license.
 
 ## Authors
+[Axel Dablanc]: axel.alain.dablanc@gmail.com<br />
+[Vincent Génot]: vincent.genot@irap.omp.eu
