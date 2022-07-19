@@ -6,7 +6,7 @@
 
 ## Installation guide
 STEP 1: install all dependency<br />
-On your shell, run: pip install -r requirements.txt
+    On your shell, run: pip install -r requirements.txt
 
 STEP 2: tesseract installation
     
