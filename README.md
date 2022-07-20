@@ -46,4 +46,4 @@ If you use or contribute to BibHelio_Tech, you agree to use it or share your con
 
 ## Authors
 [Axel Dablanc]: axel.alain.dablanc@gmail.com<br />
-[Vincent Génot]: vincent.genot@irap.omp.eu
+[Vincent Génot]: vincent.genot@irap.omp.eu 
