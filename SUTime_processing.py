@@ -423,11 +423,11 @@ def SUTime_transform(current_OCR_folder):
                 dicts['value']['begin'] += '.000'
 
             if end.group(14) == '':
-                dicts['value']['end'] += ':00.000'
+                dicts['value']['end'] += ':59.999'
             elif end.group(12) == '':
-                dicts['value']['end'] += ':00:00.000'
+                dicts['value']['end'] += ':59:59.999'
             elif end.group(16) == '':
-                dicts['value']['end'] += '.000'
+                dicts['value']['end'] += '.999'
         except:
             continue
 
