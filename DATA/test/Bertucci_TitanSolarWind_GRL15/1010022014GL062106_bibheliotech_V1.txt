@@ -1,0 +1,46 @@
+# Name: 1010022014GL062106_bibheliotech_V1;
+# Creation Date: 2022-07-20T10:05:35.869575;
+# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "https://github.com/ADablanc/BibHelioTech.git") on the paper https://doi.org/10.1002/2014GL062106". The two first columns are the start/stop times of the event. the third column is the DOI of the paper, the fourth column is the mission that observed the event with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term);
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:REGS; size:1; type:char;
+# Parameter 5: id:column5; name:D; size:1; type:int;
+# Parameter 6: id:column6; name:R; size:1; type:int;
+# Parameter 7: id:column7; name:SO; size:1; type:int;
+# Parameter 8: id:column8; name:occur_sat; size:1; type:int;
+# Parameter 9: id:column9; name:nb_durations; size:1; type:int;
+# Parameter 10: id:column10; name:conf; size:1; type:float;
+2013-11-28T00:24:00.000 2013-12-01T00:24:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn" 745 1 28 33 47 0.005893054896377155 
+2013-11-28T00:24:00.000 2013-12-01T00:24:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 3721 1 28 33 47 0.02943363391868375 
+2013-11-28T01:45:00.000 2013-12-01T01:45:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 4944 1 28 33 47 0.0391077361177029 
+2013-11-28T22:30:00.000 2013-12-01T22:30:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 4776 1 28 33 47 0.037778832463217844 
+2013-11-30T00:24:31.495 2013-11-30T00:24:31.505 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 15516 1 28 33 47 0.12273374466065497 
+2013-11-30T00:24:31.495 2013-11-30T00:24:31.505 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 15683 1 28 33 47 0.1240547381743395 
+2013-11-30T21:00:00.000 2013-12-01T00:24:00.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 11287 1 28 33 47 0.08928175921531403 
+2013-12-01T00:00:00.000 2013-12-01T00:00:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 10827 1 28 33 47 0.08564309444708115 
+2013-12-01T00:00:00.000 2013-12-01T00:24:00.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 13348 1 28 33 47 0.1055845594051574 
+2013-12-01T00:00:00.000 2013-12-01T00:24:00.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 15103 1 28 33 47 0.11946685651004588 
+2013-12-01T00:20:00.000 2013-12-01T00:20:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 14662 1 28 33 47 0.11597848441702263 
+2013-12-01T00:20:00.000 2013-12-01T00:20:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 15011 1 28 33 47 0.1187391235563993 
+2013-12-01T00:24:00.000 2013-12-01T01:16:00.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 14694 1 28 33 47 0.11623160892263883 
+2013-12-01T00:24:00.000 2013-12-01T01:16:00.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 16180 1 28 33 47 0.1279860781521911 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn" 4391 1 28 33 47 0.034733428255022944 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 4033 1 28 33 47 0.0319015978484417 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 3761 1 28 33 47 0.029750039550704006 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 1362 1 28 33 47 0.010773611770289512 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 973 1 28 33 47 0.00769656699889258 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 670 1 28 33 47 0.005299794336339187 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn" 230 1 28 33 47 0.0018193323841164371 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn" 906 1 28 33 47 0.007166587565258661 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "IMAGE" "" "Earth.Magnetosphere" 4804 1 4 33 47 0.26600221483942416 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "IMAGE" "" "Earth.Magnetosphere" 4467 1 4 33 47 0.2473421926910299 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "IMAGE" "" "Earth.Magnetosphere" 4804 1 4 33 47 0.26600221483942416 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "IMAGE" "" "Earth.Magnetosphere" 4467 1 4 33 47 0.2473421926910299 
+2013-12-01T00:41:18.495 2013-12-01T00:41:18.505 https://doi.org/10.1002/2014GL062106 "Thule" "" "Earth.NearSurface" 4515 1 1 33 47 1.0 
+2013-12-01T01:45:00.000 2013-12-01T02:10:00.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Venus" 15334 1 28 33 47 0.12129409903496283 
+2013-12-01T02:00:00.000 2013-12-01T02:00:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 11922 1 28 33 47 0.0943046986236355 
+2013-12-01T18:00:00.000 2013-12-01T18:00:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 4904 1 28 33 47 0.038791330485682646 
+2013-12-01T18:00:00.000 2013-12-01T18:00:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 8418 1 28 33 47 0.06658756525866161 
+2013-12-01T20:00:00.000 2013-12-01T20:00:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 8453 1 28 33 47 0.06686442018667933 
+2013-12-01T22:00:00.000 2013-12-01T22:00:59.000 https://doi.org/10.1002/2014GL062106 "Cassini" "MIMI,RPWS,CAPS,MAG" "Saturn.Magnetosphere" 8689 1 28 33 47 0.0687312134155988 

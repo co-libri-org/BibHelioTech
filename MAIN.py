@@ -8,10 +8,10 @@ from GROBID_generator import *
 from datetime import datetime
 start_time = datetime.now()
 
-os.chdir("../grobid-0.7.1/")
-os.popen("./gradlew run") # starting GROBID server
-os.chdir("../BibHelio_Tech/")
-
+# os.chdir("../grobid-0.7.1/")
+# os.popen("./gradlew run") # starting GROBID server
+# os.chdir("../BibHelio_Tech/")
+#
 sutime = SUTime(mark_time_ranges=True, include_range=True) # load sutime wrapper
 
 main_path = "./DATA/Papers"

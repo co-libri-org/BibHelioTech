@@ -1,0 +1,1119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TEI xml:space="preserve" xmlns="http://www.tei-c.org/ns/1.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.tei-c.org/ns/1.0 https://raw.githubusercontent.com/kermitt2/grobid/master/grobid-home/schemas/xsd/Grobid.xsd"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+	<teiHeader xml:lang="en">
+		<fileDesc>
+			<titleStmt>
+				<title level="a" type="main">Titan&apos;s interaction with the supersonic solar wind</title>
+			</titleStmt>
+			<publicationStmt>
+				<publisher/>
+				<availability status="unknown"><licence/></availability>
+			</publicationStmt>
+			<sourceDesc>
+				<biblStruct>
+					<analytic>
+						<author role="corresp">
+							<persName><forename type="first">C</forename><surname>Bertucci</surname></persName>
+							<email>cbertucci@iafe.uba.ar</email>
+							<affiliation key="aff0">
+								<orgName type="institution">Instituto de Astronomía y Física del Espacio (CONICET/UBA)</orgName>
+								<address>
+									<addrLine>Ciudad Universitaria</addrLine>
+									<settlement>Buenos Aires</settlement>
+									<country key="AR">Argentina</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">D</forename><forename type="middle">C</forename><surname>Hamilton</surname></persName>
+							<affiliation key="aff1">
+								<orgName type="department">Physics Department</orgName>
+								<orgName type="institution">University of Maryland</orgName>
+								<address>
+									<settlement>College Park, Maryland</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">W</forename><forename type="middle">S</forename><surname>Kurth</surname></persName>
+							<affiliation key="aff2">
+								<orgName type="department">Department of Physics and Astronomy</orgName>
+								<orgName type="institution">University of Iowa</orgName>
+								<address>
+									<settlement>Iowa City, Iowa</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">G</forename><surname>Hospodarsky</surname></persName>
+							<affiliation key="aff2">
+								<orgName type="department">Department of Physics and Astronomy</orgName>
+								<orgName type="institution">University of Iowa</orgName>
+								<address>
+									<settlement>Iowa City, Iowa</settlement>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">D</forename><surname>Mitchell</surname></persName>
+							<affiliation key="aff3">
+								<orgName type="laboratory">Applied Physics Laboratory</orgName>
+								<orgName type="institution">Johns Hopkins University</orgName>
+								<address>
+									<settlement>Baltimore</settlement>
+									<region>Maryland</region>
+									<country key="US">USA</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">N</forename><surname>Sergis</surname></persName>
+							<affiliation key="aff4">
+								<orgName type="department">Office for Space Research</orgName>
+								<orgName type="institution">Academy of Athens</orgName>
+								<address>
+									<settlement>Athens</settlement>
+									<country key="GR">Greece</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">N</forename><forename type="middle">J T</forename><surname>Edberg</surname></persName>
+							<affiliation key="aff5">
+								<orgName type="institution">Swedish Institute of Space Physics</orgName>
+								<address>
+									<settlement>Uppsala</settlement>
+									<country key="SE">Sweden</country>
+								</address>
+							</affiliation>
+						</author>
+						<author>
+							<persName><forename type="first">M</forename><forename type="middle">K</forename><surname>Dougherty</surname></persName>
+							<affiliation key="aff6">
+								<orgName type="laboratory">Blackett Laboratory</orgName>
+								<orgName type="institution">Imperial College London</orgName>
+								<address>
+									<settlement>London</settlement>
+									<country key="GB">UK</country>
+								</address>
+							</affiliation>
+						</author>
+						<title level="a" type="main">Titan&apos;s interaction with the supersonic solar wind</title>
+					</analytic>
+					<monogr>
+						<imprint>
+							<date/>
+						</imprint>
+					</monogr>
+					<idno type="MD5">7205E4714CE17A36BE32FCB1E45E8DD6</idno>
+					<idno type="DOI">10.1002/2014GL062106</idno>
+					<note type="submission">Received 6 OCT 2014 Accepted 18 DEC 2014 Accepted article online 22 DEC 2014</note>
+				</biblStruct>
+			</sourceDesc>
+		</fileDesc>
+		<encodingDesc>
+			<appInfo>
+				<application version="0.7.1" ident="GROBID" when="2022-07-18T14:53+0000">
+					<desc>GROBID - A machine learning software for extracting information from scholarly documents</desc>
+					<ref target="https://github.com/kermitt2/grobid"/>
+				</application>
+			</appInfo>
+		</encodingDesc>
+		<profileDesc>
+			<abstract>
+<div xmlns="http://www.tei-c.org/ns/1.0"><p>After 9 years in the Saturn system, the Cassini spacecraft finally observed Titan in the supersonic and super-Alfvénic solar wind. These unique observations reveal that Titan's interaction with the solar wind is in many ways similar to unmagnetized planets Mars and Venus and active comets in spite of the differences in the properties of the solar plasma in the outer solar system. In particular, Cassini detected a collisionless, supercritical bow shock and a well-defined induced magnetosphere filled with mass-loaded interplanetary magnetic field lines, which drape around Titan's ionosphere. Although the flyby altitude may not allow the detection of an ionopause, Cassini reports enhancements of plasma density compatible with plasma clouds or streamers in the flanks of its induced magnetosphere or due to an expansion of the induced magnetosphere. Because of the upstream conditions, these observations may be also relevant to other bodies in the outer solar system such as Pluto, where kinetic processes are expected to dominate.</p></div>
+			</abstract>
+		</profileDesc>
+	</teiHeader>
+	<text xml:lang="en">
+		<body>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="1.">Introduction</head><p>The absence of an intrinsic magnetic field at Titan <ref type="bibr" target="#b20">[Ness et al., 1982;</ref><ref type="bibr" target="#b34">Wei et al., 2010]</ref> results in a direct interaction of the plasma environment with its ionized atmosphere. In the absence of collisions, this interaction consists of the electromagnetic coupling between the charged particles from Titan's ionosphere and its neutral corona and the external plasma flow around the moon. The external flow approaching Titan progressively slows down not only as it is loaded with ions from its extended exosphere but also as the moon's ionosphere acts as a conducting obstacle. As a result, the magnetic field lines frozen into the external flow pileup near the subflow point and stretch along the direction of the flow in the flanks and the downstream sector, defining an induced magnetosphere and magnetotail where the cold and dense plasma from Titan dominates <ref type="bibr" target="#b23">[Neubauer et al., 2006]</ref>. This interaction has been shown to lead to the removal of ionized atmospheric constituents <ref type="bibr" target="#b16">[Hartle et al., 1982;</ref><ref type="bibr" target="#b6">Coates et al., 2012;</ref><ref type="bibr" target="#b25">Romanelli et al., 2014]</ref>, which may have important implications on the evolution of Titan's atmosphere.</p><p>Titan orbits Saturn at an average distance of 20.2 R S (R S = Saturn radius = 60,268 km) near the Kronian equatorial plane. As a result, it spends most of its time in Saturn's partially corotating, magnetospheric flow <ref type="bibr" target="#b30">[Thomsen, 2013]</ref>. This flow transports Saturn's magnetic field, which encounters Titan at speeds of ~100 km/s and generates an interaction which is sub-Alfvénic and subsonic <ref type="bibr" target="#b1">[Arridge et al., 2011]</ref>. Titan has also been observed in Saturn's magnetosheath during periods when an increase in the solar wind pressure P SW compressed Saturn's magnetopause inside Titan's orbital radius <ref type="bibr" target="#b4">[Bertucci et al., 2008]</ref>, but no supersonic solar wind interaction has been observed until now.</p><p>In situ observations around Venus and Mars <ref type="bibr">[Bertucci et al., 2011, and references therein]</ref> and active comets [e.g., <ref type="bibr" target="#b28">Smith et al., 1986;</ref><ref type="bibr" target="#b22">Neubauer et al., 1986]</ref> paved the way for the interpretation of Cassini measurements around Titan. However, all previous flybys had revealed strong differences with these objects, as Titan's magnetosphere displayed a far more complex structure of the magnetic field and plasma. These differences were attributed to Titan's richer atmospheric chemistry and variable plasma environment [e.g., <ref type="bibr" target="#b33">Ulusen et al., 2012]</ref>.</p><p>After 9 years in the Saturn system, the Cassini spacecraft observed the plasma environment of Titan in the supersonic solar wind for the first time. In this work we analyze the plasma boundaries and regions characterizing this interaction and discuss the physical processes behind them. In particular, we discuss the importance of kinetic effects for induced magnetospheres in the outer solar system.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.">Cassini In Situ Observations</head></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.1.">The Solar Wind Near Titan</head><p>The Cassini's T96 close encounter with Titan occurred on 1 December 2013 at a local time of 12.52 with respect to Saturn. The time of closest approach to Titan (CA) was 00:41:18 UT. Figure <ref type="figure" target="#fig_0">1</ref> displays Cassini's trajectory in Titan-centered solar wind interaction (TSWIS) coordinates. In this coordinate system, the X axis points antisunward, the Y axis points in the direction of Saturn's orbital motion, and the Z axis points north of Saturn's orbital plane. The spacecraft is in a highly inclined orbit and travels southward and tailward during the encounter. As a result, it explores the subsolar region on the inbound leg, followed by the southern terminator sector on the outbound leg.</p><p>The measurements of the magnetometer (MAG) <ref type="bibr" target="#b9">[Dougherty et al., 2004]</ref>, Magnetospheric Imaging Instrument/Charge Energy Mass Spectrometer (MIMI/ CHEMS) <ref type="bibr" target="#b17">[Krimigis et al., 2004]</ref>, and Radio and Plasma Wave Science instrument (RPWS) <ref type="bibr" target="#b15">[Gurnett et al., 2004]</ref> provide a detailed description of the plasma properties in the vicinity of the encounter (Figure <ref type="figure" target="#fig_1">2</ref>). Between 28 November and 1 December, Cassini detects at least 16 crossings of Saturn's bow shock. Cassini's CA occurs as the spacecraft is in the supersonic solar wind between the outbound Kronian bow shock crossing at 18:18 UT on 30 November (OBKBS) and the subsequent inbound bow shock crossing at 02:39 UT on 1 December (IBKBS). Both crossings are characterized by a jump in the magnetic field strength of nearly an order of magnitude and a strong change in the proton counts measured by MIMI-CHEMS for energies above 2.8 keV. The appearance of Langmuir waves in the range 6-7 kHz (also called electron plasma oscillations) both prior to 00:24 UT and after ~01:45 UT on the day of the encounter (sixth panel in Figure <ref type="figure" target="#fig_1">2</ref>) provide additional evidence of Titan's position in the supersonic solar wind, as these emissions are a common feature of the solar wind upstream of planetary bow shocks.</p><p>Between OBKBS and IBKBS, the solar wind plasma is highly disturbed. The interplanetary magnetic field (IMF) displays variations in elevation, whereas the variability in the magnetic field azimuth and strength becomes stronger after ~22:30 on 30 of November. During the entire solar wind excursion, the extension of the background interplanetary magnetic field intersects Saturn's bow shock average location <ref type="bibr" target="#b18">[Masters et al., 2008]</ref>, suggesting that the encounter occurs within Saturn's foreshock.</p><p>As Cassini approaches Titan, strong signatures of three species of pickup ions (H + , H 2 + , and O + ) start to be observed by MIMI/CHEMS at about 21:50 UT on 30 November (even earlier for H + ) at 23 R T (1 R T = 1 Titan radius = 2575 km) from the moon. The cutoff energies of all three pickup ion species are about 4.3 keV/nucleon corresponding to a solar wind speed of ~460 km/s assuming that most of their kinetic energy is contained in the direction perpendicular to the IMF. The latter statement is supported by the fact that from 21:00 on 30 November until 00:24 on 1 December, the cone angle of the IMF-measured from the X TSWIS axis-remains close to 90°. The observed pickup H 2 + almost certainly originates from Titan <ref type="bibr" target="#b8">[Cui et al., 2008]</ref> while the pick-up H + and m/q~16 ions could also originate from Saturn's extensive neutral cloud <ref type="bibr" target="#b19">[Melin et al., 2009]</ref>. Geophysical Research Letters</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>10.1002/2014GL062106</head><p>Around 00:00 UT on 1 December, Cassini crosses a shock front (hereafter SF). At the SF, the magnetic field doubles in strength as it rotates and adopts a southward direction. In addition, the detection of pickup ions with energies as high as 200 keV just before the SF is a result of their interaction with the shock potential and may be part of its foot.</p><p>The SF is also characterized by a deceleration of the solar wind speed, implying a compression of the plasma past the SF. This is revealed by the decrease in the cutoff energy in the pickup ion signatures in CHEMS data which eventually reaches the instrument's energy threshold. The last pickup ion signature detected by CHEMS before T96 (~00:20 UT) yields a solar wind velocity of ~300 km/s and a dynamic pressure of ~0.09 nPa (the averaged solar wind density is 0.6 cm À3 according to RPWS). In spite of these changes, the average solar wind plasma from 00:00 until 00:24 remains supersonic: the Alfvén and magnetosonic Mach numbers (assuming a polytropic index γ = 5/3 and an electron temperature of 1 eV) are 11 and 10, respectively. In the outbound leg pickup ion signatures are less evident, precluding a reliable estimate of the solar wind speed.</p><p>The presence of Titan in the solar wind is noticeable in the Cassini data from the peaks in the magnetic field strength and the "bite out" in the energetic H + around CA. As it will be discussed later, Titan's signature is surrounded by inbound and outbound crossings of its bow shock (IBTBS and OBTBS, around 00:24 and 01:16 UT, respectively). After that, Cassini goes back into the supersonic solar wind.</p><p>Table <ref type="table" target="#tab_0">1</ref> summarizes averaged inbound and outbound plasma parameters upstream from Titan. The inbound and outbound intervals have been chosen according to the following criteria: (a) intervals display stable magnetic field and density values, (b) intervals do not show features linked to Titan, and (c) intervals are as close as possible to Titan signatures.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="2.2.">Titan's Induced Magnetosphere</head><p>Figure <ref type="figure" target="#fig_2">3</ref> shows the magnetic field, the averaged 2.8-4.4 eV proton counts from the three telescopes of CHEMS, and the electron densities estimated from the at the upper hybrid frequency (f uh ) from RPWS, and from the Langmuir Probe (LP), in the vicinity of Titan.</p><p>Several minutes after the SF, MAG detects an increase in magnetic field fluctuations. At 00:24:31 UT two signatures suggest the crossing of the inbound Titan bow shock ramp (IBTBS): a jump in the magnetic field strength from ~1 to 2 nT and an increase in the wavefield amplitude |δB|/B from typically 0.5 in the upstream side to values near 1 in the downstream side (see detail in Figure <ref type="figure" target="#fig_2">3</ref>). Cassini detects the IBTBS at a distance of 2.69 R T from the moon and a solar zenith angle (SZA) of 45.9°. Downstream from the IBTBS, the oscillations of the magnetic field continue to be highly nonlinear and compressive as in most planetary magnetosheaths. Titan's magnetosheath, however, seems to be exiguous as fluctuations rapidly fade out in a magnetic field which becomes increasingly stronger with decreasing altitude. A coplanarity analysis <ref type="bibr" target="#b26">[Schwartz, 1998]</ref> in the intervals 00:13:05-00:19:21 and 00:28:24-00:31:54 UT yields a normal vector to the shock surface with TSWIS components (À0.8670, À0.4753, and 0.1497). The angle θ Bn between the bow shock normal and the IMF is ~60°, suggesting an oblique shock.</p><p>The disappearance of the magnetosheath fluctuations and the sudden enhancement of the magnetic field strength observed around 00:33 UT reveal a structure remarkably similar to the induced magnetospheric  <ref type="bibr" target="#b29">[Sonnerup and Scheible, 1998</ref>] in a layer that includes the IBIMB yields a well-defined boundary, with an intermediate-to-minimum eigenvalue ratio of 16.7 and a normal vector which is quasi-perpendicular to the mean magnetic field (θ Bn = 80.8 ± 1.1°). A few minutes later, and in coincidence to what it is observed at Mars <ref type="bibr" target="#b11">[Dubinin et al., 2008]</ref>, the electron densities-measured by RPWS and the LP and proportional to the total plasma density-also increase. Inside the IMB, the magnetic field and the plasma density remain high.</p><p>The draping of the southward interplanetary magnetic field as the spacecraft transits the induced magnetosphere is clearly seen in the first to third panels of Figure <ref type="figure" target="#fig_2">3</ref>. Upstream from Titan's shock the B ZTSWIS component of the IMF is negative and dominant, whereas in the induced magnetosphere, the IMF becomes antiparallel to the X TSWIS axis as Cassini travels south from Titan.</p><p>At CA, Cassini is marginally below Titan's nominal exobase (1425 km according to <ref type="bibr" target="#b14">Garnier et al. [2007]</ref>) and above the average ionospheric electron density peak altitude (~1110 km according to <ref type="bibr">Ågren et al. [2009]</ref>). The electron densities measured by Cassini RPWS and the LP at 00:41:24 UT are respectively 1245 and 1985 cm À3 . These estimates are consistent with previous measurements at similar altitudes and SZA <ref type="bibr" target="#b0">[Ågren et al., 2009;</ref><ref type="bibr" target="#b13">Edberg et al., 2010]</ref>, suggesting that the upstream pressure may not influence ionospheric densities at those altitudes. At the same time, the plasma density around CA might not be as high as to suggest that magnetic diffusion dominates. It is precisely the absence of an appreciable decrease in the magnetic field around CA that suggests that the convection of the magnetic field may still dominate at those altitudes <ref type="bibr" target="#b7">[Cravens et al., 2010]</ref>.</p><p>The IMB and bow shock are also detected in the outbound leg of T96, suggesting that they are permanent features in Titan's supersonic interaction. Nevertheless, the inclination of Cassini's trajectory with respect to the Sun-Titan line gives rise to an expected inbound/outbound asymmetry in the location of these plasma features with respect to the nominal direction of the solar wind. In particular, Figure <ref type="figure" target="#fig_2">3</ref> displays a slightly elongated mirror image in the magnetic field strength with respect to the inbound leg with the outbound IMB (OBIMB) and shock ramp (OBTBS) crossings occurring tailward, at 2.45 R T (00:56 UT) and 4.72 R T (01:16 UT), respectively.</p><p>The OBIMB is identified as the locus where the magnetosheath magnetic field fluctuations cease and the magnetic field strength increases. The MVA applied around the OBIMB location yields results which are slightly different from those obtained around the IBIMB crossing. Still, a boundary layer can be identified with an intermediate-to-minimum eigenvalue ratio of 6.8 and a θ Bn of 89.7 ± 1.4°.</p><p>The outbound magnetosheath is less influenced by the magnetic field pileup and displays compressive oscillations with peak-to-peak amplitudes slightly smaller than those detected in the inbound leg. These oscillations coexist with the presence of energetic (a few tens of keV) ions throughout the shocked and unshocked solar wind. As Cassini leaves the magnetosheath, MAG detects a sharp ramp at 01:16 UT followed by a series of high-amplitude pulsations. The magnetic field strength in the ramp varies from ~1 to ~7 nT in less than 4 s (see detail in Figure <ref type="figure" target="#fig_2">3</ref>) suggesting that this structure is the outbound counterpart of Titan's bow shock (OBTBS). A coplanarity analysis in the intervals 01:13:21-01:14:59 and 01:15:51-01:16:22 UT yields a shock normal with TSWIS components (0.0353, À0.8597, and À0.5096), and a normal angle of ~87°, suggesting a quasi-perpendicular shock. The pulsations observed between 01:17 and 01:42 are compressive and grouped in three "trains" consisting of two to three periods. None of these pulsations presents a sharp front as the OBTBS and some of them display short (~10 s long) dispersive wave packets with periods of the order of a few seconds located to the right of the pulsation.</p></div>
+<div xmlns="http://www.tei-c.org/ns/1.0"><head n="3.">Discussion</head><p>This is the first time that Titan is found in the supersonic solar wind. The plasma environment near T96 is, however, substantially variable, and therefore, a careful analysis of the structures detected by Cassini in the surroundings of Titan is needed in order to correctly characterize the flow with which the moon was directly interacting at the time of the encounter. As described above, the shock front (SF) around 00:00 UT on 1 December is responsible for drastic changes in the solar wind conditions. The origin of this feature remains as an elusive issue, mainly because of the absence of CAPS measurements and the lack of plasma measurements upstream from the spacecraft. However, important properties of the SF can be inferred from Cassini magnetic field and superthermal plasma measurements. First, the orientation of the IMF on either side of the SF intersects Saturn's shock surface model <ref type="bibr" target="#b18">[Masters et al., 2008]</ref>, implying that the SF occurs inside Saturn's foreshock. Second, if Titan is the obstacle generating the SF, the solar wind downstream from the SF to be subfast, as the spacecraft frame is only moving at a few km s À1 with respect to the moon. However, the MIMI CHEMS pickup ion measurements suggest that solar wind remains supersonic between 00:00 and 00:24 UT. Third, it is unlikely that the SF be the inbound counterpart of a Titan-centered outer bow shock since no similar feature is observed after the encounter. Still, the role of Titan in the formation of the SF should be investigated in future works as the ambient conditions are likely to be variable and transient structures could be present.</p><p>In contrast to the SF, the shock signatures at 00:24 and 01:16 UT on 1 December are clearly associated with Titan. Furthermore, the solar wind flow ahead of Titan's shock is supercritical (see Table <ref type="table" target="#tab_0">1</ref>), implying that part of the solar wind ions are expected to be reflected back upstream as dissipation is insufficient to account for the required retardation, thermalization, and entropy increase <ref type="bibr" target="#b31">[Treumann, 2009]</ref>. In the inbound leg, the increase of wave activity around 00:15 UT may be indicative of an inbound Titan shock foot of the order of a pickup proton gyroradius in thickness. In addition, Titan's inbound shock does not display a clear ramp but is made of a series of magnetic field oscillations with increasing amplitude that precludes the identification of the typical substructures of supercritical shocks. Similar crossings have been observed at Mars <ref type="bibr" target="#b2">[Bertucci et al., 2005a]</ref> and comets <ref type="bibr" target="#b22">[Neubauer et al., 1986]</ref>. In these cases, the bow shock structure was explained in terms of kinetic effects and exospheric ion pickup and mass loading <ref type="bibr" target="#b24">[Omidi and Winske, 1987]</ref>.</p><p>The transition from the outbound magnetosheath to the solar wind reveals nonstationary features. The coplanarity normal at the IBTBS is consistent with a conic section bow shock, whereas the outbound shock normal presents a negative Y TSWIS component, not compatible with such a shock surface. It is possible that the short interval considered for the coplanarity analysis (between OBTBS and the first pulsation at ~01:17 UT) may have included fields contaminated by the shock's substructures, leading to inconsistencies.</p><p>The restrictions imposed on Cassini as a single-spacecraft plasma monitor prevent a conclusive interpretation on the origin of the pulsations detected by MAG after the OBTBS. In spite of this, the absence of fronts as sharp as OBTBS and the presence of dispersive wave packets attached to some of these pulsations suggest that they are nonlinear waves rather than multiple crossings of a dynamic shock. These nonlinear waves could be associated with either a possible foreshock of Titan <ref type="bibr" target="#b27">[Schwartz et al., 1992]</ref> or the pickup of Titan's exospheric ions as reported at comets <ref type="bibr" target="#b32">[Tsurutani et al., 1987]</ref>. In both scenarios, waves are expected to propagate toward the Sun within the moon's foreshock at speeds smaller than the solar wind's. As these waves grow in amplitude and become nonlinear, they would be carried downstream against Titan's shock contributing to its reformation.</p><p>The extent of Titan's dayside magnetosheath region is comparable to the upstream pickup proton gyroradius and, therefore, it may be very small to allow efficient plasma thermalization. However, the increase in the magnetic field strength by a factor of nearly 10 within the magnetosheath due to both the solar wind mass loading by planetary ions and the presence of an ionospheric obstacle significantly reduces the gyroradii of charged particles in the lower magnetosheath contributing to a more efficient dissipation.</p><p>Titan's IMB presents strong similarities with the magnetic pileup boundaries around active comets and planets Mars and Venus. It is then likely that also at Titan, this boundary marks the locus where solar wind ion population starts to be outnumbered by local ions [e.g., <ref type="bibr" target="#b10">Dubinin et al., 2006]</ref>. The inbound IMB thickness along the boundary normal (~170 km) is of the order of the local ion inertial length considering a local ion density of 2 cm À3 (~160 km), supporting the idea that Hall fields play an important role there <ref type="bibr" target="#b3">[Bertucci et al., 2005b]</ref>.</p><p>The size of Titan's induced magnetosphere is another element in common with Mars and Venus. Cassini measurements show that the sizes of Titan's bow shock and IMB in terms of the moon's radius are comparable to those reported at those unmagnetized planets <ref type="bibr" target="#b36">[Zhang et al., 2008;</ref><ref type="bibr" target="#b12">Edberg et al., 2008]</ref>. However, Titan's induced magnetosphere is significantly smaller when measured in terms of the gyroradii of pickup ions. Similar effects are expected at other outer solar system objects such as Pluto <ref type="bibr" target="#b9">[Delamere and Bagenal, 2004]</ref>.</p><p>Although T96 occurs 6 h after Cassini crossed Saturn's bow shock, the passage of the SF suggests that at the time of CA, Titan's interaction might not have occurred under steady state conditions. The magnetic pressure in the magnetic pileup region <ref type="bibr" target="#b21">[Neubauer, 1987]</ref> or magnetic barrier <ref type="bibr" target="#b35">[Zhang et al., 1991</ref>  <ref type="bibr" target="#b10">[Dubinin et al., 2006]</ref> suggests a solar wind dynamic pressure P SW ¼ ρ SW u 2 SW of 0.64 nPa which is significantly greater than the one measured by Cassini before IBTBS. This is compatible with the idea that the IMF flux accumulated in the barrier may have been acquired from the accretion of flux tubes convected by the faster solar wind observed by Cassini before 00:00 UT on 1 December, suggesting that the "fossilization" of upstream fields predicted to be an inherent feature of Titan interaction <ref type="bibr" target="#b23">[Neubauer et al., 2006]</ref>, and observed during the T32 flyby <ref type="bibr" target="#b4">[Bertucci et al., 2008]</ref>, is also present during T96. By applying the concept of fossil fields, it is possible that during the encounter, Titan's induced magnetosphere may have been expanding as it entered a low-pressure solar wind sector following the passage of the SF. The local peak in electron density observed around 00:45 UT (~230 cm À3 ) may be either a signature of an expanding induced magnetosphere as the spacecraft heads back into the solar wind or an evidence of plasma cloud or streamer. The weak solar wind pressure observed after 00:00 UT has also consequences on the dynamics of Saturn's shock, which is expected to expand as well. The crossing of Saturn's bow shock at 02:39 is in agreement with this.</p><p>According to a previous work <ref type="bibr" target="#b14">[Garnier et al., 2007]</ref>, it is expected that at altitudes above Titan's bow shock H 2 will be the most important exospheric species, followed by H. However, the spectra of the magnetic field do not show clear peaks at the local cyclotron frequencies of H + and H 2 + . It is then possible that although Titan's exosphere is detected farther away from its bow shock, plasma conditions during T96 may not allow for the detection of ultralow-frequency waves arising from the resonance between the IMF and exospheric pickup particles.</p><p>In summary, Cassini observations during T96 have provided a unique look at the way in which Titan interacts with the supersonic solar wind. Because of the planned orbital geometry of the remaining Cassini Solstice Mission (with no future flybys on the dayside), it is certain that there will be no other chance to encounter Titan under these conditions during the Cassini era.</p><p>Geophysical Research Letters 10.1002/2014GL062106</p></div><figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_0"><head>Figure 1 .</head><label>1</label><figDesc>Figure 1. Trajectory of the Cassini spacecraft in the vicinity of Titan in TSWIS coordinates, as viewed (a) from the east, (b) from the Sun, and (c) looking down on Saturn's orbital plane. The blue arrow indicates the sense of the spacecraft's path.</figDesc><graphic coords="2,176,09,90,71,168,46,528,21" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_1"><head>Figure 2 .</head><label>2</label><figDesc>Figure 2. From top to bottom: magnetic field data in spherical TSWIS coordinates (elevation θ, azimuth φ, and magnetic field strength in logarithmic scale) from MAG, H + fluxes from MIMI-CHEMS, and electric field spectrogram and local electron cyclotron frequency (f ce ) from RPWS during the T96 flyby. Closest approach (CA), outbound and inbound crossings of the Kronian bow shock (OBKBS and IBKBS, respectively), shock front (SF), and Titan's inbound and outbound bow shock crossings (IBTBS and OBTBS, respectively) are indicated. Cassini's distance to Titan, longitude and latitude with respect to Titan's prime meridian and equatorial plane, and local time with respect to Titan's noon meridian are indicated beneath the plots.</figDesc><graphic coords="3,212,99,246,41,346,46,270,26" type="bitmap" /></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" xml:id="fig_2"><head>Figure 3 .</head><label>3</label><figDesc>Figure 3. Magnetic field data in Cartesian TSWIS coordinates (from MAG), H+ counts per second in the range 2.8-4.4 keV from MIMI CHEMS, and total electron density (N e ) from RPWS (dots) and LP (grey curve) during the T96 flyby. Gaps in RPWS data correspond to intervals where the upper hybrid frequency (f uh ) is not well resolved. CA and crossings of Titan's induced magnetospheric boundary (IBIMB and OBIMB) and bow shock (IBTBS and OBTBS) are indicated. Close-up views of |B| versus UTC around the IBTBS and the OBTBS are included. Cassini's altitude above Titan (in Titan radii) and solar zenith angle (SZA) are indicated beneath the plots.</figDesc></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_0"><head>Table 1 .</head><label>1</label><figDesc>Average Upstream Parameters During T96 (Times Correspond to 1 December 2013) Estimated from the upper hybrid frequency emission detected by RPWS. c Estimated from the cutoff pickup energy (MIMI CHEMS) assuming a pure ring distribution. d Assuming electron and ion temperatures of 1 eV.</figDesc><table><row><cell>Inbound a (00:00-00:24)</cell><cell>Outbound</cell><cell>a (01:45-02:10)</cell></row></table><note>a Averages for each interval. b boundary (IMB), reported around active comets, Mars, and Venus<ref type="bibr" target="#b21">[Neubauer, 1987;</ref> Bertucci et al., 2011,  and references therein]. Titan's inbound IMB (IBIMB) is detected at 1.88 R T and a SZA of 40.1°. The application of minimum variance analysis or MVA</note></figure>
+<figure xmlns="http://www.tei-c.org/ns/1.0" type="table" xml:id="tab_1"><head></head><label></label><figDesc>] P Mbarrier ¼</figDesc><table><row><cell>B 2 barrier</cell></row><row><cell>2μ 0</cell></row><row><cell>reaches a maximum of 0.24 nPa around 00:40:48 UT, when Cassini is located at 49.3°SZA. If we consider a</cell></row><row><cell>simplified scenario where pressure balance holds the expression kρ SW u 2 SW cos SZA ð Þ 2 ¼ P Mbarrier , where</cell></row><row><cell>k = 0.88</cell></row></table></figure>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot">BERTUCCI ET AL.©2014. American Geophysical Union. All Rights Reserved.1</note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot">©2014. American Geophysical Union. All Rights Reserved.</note>
+			<note xmlns="http://www.tei-c.org/ns/1.0" place="foot" n="10">.1002/2014GL062106 BERTUCCI ET AL. ©2014. American Geophysical Union. All Rights Reserved.</note>
+		</body>
+		<back>
+
+			<div type="acknowledgement">
+<div xmlns="http://www.tei-c.org/ns/1.0"><head>Acknowledgments</head><p>C.B. acknowledges the support from the Argentine National Agency for Promotion of Science and Technology (ANPCYT) through grant 2012-1763. The data for this study are available from the Planetary Data System (http://pds.jpl.nasa.gov).</p><p>The Editor thanks Fritz M. Neubauer and an anonymous reviewer for their assistance in evaluating this paper.</p></div>
+			</div>
+
+			<div type="references">
+
+				<listBibl>
+
+<biblStruct xml:id="b0">
+	<analytic>
+		<title level="a" type="main">On the ionospheric structure of Titan</title>
+		<author>
+			<persName><forename type="first">K</forename><surname>Ågren</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J.-E</forename><surname>Wahlund</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><surname>Garnier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Modolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Cui</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Galand</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Müller-Wodarg</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.pss.2009.04.012</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Planet. Space Sci</title>
+		<imprint>
+			<biblScope unit="volume">57</biblScope>
+			<biblScope unit="page" from="1821" to="1827" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b1">
+	<analytic>
+		<title level="a" type="main">Upstream of Saturn and Titan</title>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">S</forename><surname>Arridge</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s11214-011-9849-x</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Space Sci. Rev</title>
+		<imprint>
+			<biblScope unit="volume">162</biblScope>
+			<biblScope unit="issue">1-4</biblScope>
+			<biblScope unit="page" from="25" to="83" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b2">
+	<analytic>
+		<title level="a" type="main">Structure and variability of the Martian magnetic pileup boundary and bow shock from MGS MAG/ER observations</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Bertucci</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Mazelle</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Acuña</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.asr.2005.05.096</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Adv. Space Res</title>
+		<imprint>
+			<biblScope unit="volume">36</biblScope>
+			<biblScope unit="issue">11</biblScope>
+			<biblScope unit="page" from="2066" to="2076" />
+			<date type="published" when="2005">2005a</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b3">
+	<analytic>
+		<title level="a" type="main">Structure of the magnetic pileup boundary at Mars and Venus</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Bertucci</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Mazelle</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">H</forename><surname>Acuña</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">T</forename><surname>Russell</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">A</forename><surname>Slavin</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2004JA010592</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">110</biblScope>
+			<biblScope unit="page">A01209</biblScope>
+			<date type="published" when="2005">2005b</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b4">
+	<analytic>
+		<title level="a" type="main">The magnetic memory of Titan&apos;s ionized atmosphere</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Bertucci</surname></persName>
+		</author>
+		<idno type="DOI">10.1126/science.1159780</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Science</title>
+		<imprint>
+			<biblScope unit="volume">321</biblScope>
+			<biblScope unit="issue">5895</biblScope>
+			<biblScope unit="page" from="1475" to="1478" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b5">
+	<analytic>
+		<title level="a" type="main">The induced magnetospheres of Mars</title>
+		<author>
+			<persName><forename type="first">C</forename><surname>Bertucci</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Duru</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Edberg</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Fraenz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Martinecz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Szego</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">O</forename><surname>Vaisberg</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s11214-011-9845-1</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Space Sci. Rev</title>
+		<imprint>
+			<biblScope unit="volume">162</biblScope>
+			<biblScope unit="issue">1-4</biblScope>
+			<biblScope unit="page" from="113" to="171" />
+			<date type="published" when="2011">2011</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b6">
+	<analytic>
+		<title level="a" type="main">Cassini in Titan&apos;s tail: CAPS observations of plasma escape</title>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">J</forename><surname>Coates</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2012JA017595</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">117</biblScope>
+			<biblScope unit="page">A05324</biblScope>
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b7">
+	<analytic>
+		<title level="a" type="main">Dynamical and magnetic field time constants for Titan&apos;s ionosphere: Empirical estimates and comparisons with Venus</title>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">E</forename><surname>Cravens</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2009JA015050</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">115</biblScope>
+			<biblScope unit="page">A08319</biblScope>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b8">
+	<analytic>
+		<title level="a" type="main">Distribution and escape of molecular hydrogen in Titan&apos;s thermosphere and exosphere</title>
+		<author>
+			<persName><forename type="first">J</forename><surname>Cui</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">V</forename><surname>Yelle</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Volk</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2007JE003032</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">113</biblScope>
+			<biblScope unit="page">E10004</biblScope>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b9">
+	<analytic>
+		<title level="a" type="main">Pluto&apos;s kinetic interaction with the solar wind</title>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">A</forename><surname>Delamere</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><surname>Bagenal</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Dougherty</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2003GL018122</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Geophys. Res. Lett</title>
+		<imprint>
+			<biblScope unit="volume">31</biblScope>
+			<biblScope unit="issue">1-4</biblScope>
+			<biblScope unit="page" from="331" to="383" />
+			<date type="published" when="2004">2004. 2004</date>
+		</imprint>
+	</monogr>
+	<note>Space Sci. Rev.</note>
+</biblStruct>
+
+<biblStruct xml:id="b10">
+	<analytic>
+		<author>
+			<persName><forename type="first">E</forename><surname>Dubinin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Fränz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Woch</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><surname>Roussos</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><surname>Barabash</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Lundin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">D</forename><surname>Winningham</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Frahm</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Acuña</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s11214-006-9039-4</idno>
+	</analytic>
+	<monogr>
+		<title level="m">Plasma morphology at Mars. Aspera-3 observations</title>
+				<imprint>
+			<date type="published" when="2006">2006</date>
+			<biblScope unit="volume">126</biblScope>
+			<biblScope unit="page" from="209" to="238" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b11">
+	<analytic>
+		<title level="a" type="main">Plasma environment of Mars as observed by simultaneous MEX-ASPERA-3 and MEX-MARSIS observations</title>
+		<author>
+			<persName><forename type="first">E</forename><surname>Dubinin</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2008JA013355</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">113</biblScope>
+			<biblScope unit="page">A10217</biblScope>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b12">
+	<analytic>
+		<title level="a" type="main">Statistical analysis of the location of the Martian magnetic pileup boundary and bow shock and the influence of crustal magnetic fields</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">J T</forename><surname>Edberg</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Lester</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">W H</forename><surname>Cowley</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">I</forename><surname>Eriksson</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2008JA013096</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">113</biblScope>
+			<biblScope unit="page">A08206</biblScope>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b13">
+	<analytic>
+		<title level="a" type="main">Electron density and temperature measurements in the cold plasma environment of Titan: Implications for atmospheric escape</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">J T</forename><surname>Edberg</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J.-E</forename><surname>Wahlund</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><surname>Ågren</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">W</forename><surname>Morooka</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><surname>Modolo</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Bertucci</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">K</forename><surname>Dougherty</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2010GL044544</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Geophys. Res. Lett</title>
+		<imprint>
+			<biblScope unit="volume">37</biblScope>
+			<biblScope unit="page">L20105</biblScope>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b14">
+	<analytic>
+		<title level="a" type="main">The exosphere of Titan and its interaction with the kronian magnetosphere: MIMI observations and modeling</title>
+		<author>
+			<persName><forename type="first">P</forename><surname>Garnier</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">I</forename><surname>Dandouras</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Toublanc</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">P</forename><forename type="middle">C</forename><surname>Brandt</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">C</forename><surname>Roelof</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">G</forename><surname>Mitchell</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">M</forename><surname>Krimigis</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Krupp</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">C</forename><surname>Hamilton</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Waite</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.pss.2006.07.006</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Planet. Space Sci</title>
+		<imprint>
+			<biblScope unit="volume">55</biblScope>
+			<biblScope unit="issue">1-2</biblScope>
+			<biblScope unit="page" from="165" to="173" />
+			<date type="published" when="2007">2007</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b15">
+	<analytic>
+		<title level="a" type="main">The Cassini radio and plasma wave investigation</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Gurnett</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Space Sci. Rev</title>
+		<imprint>
+			<biblScope unit="volume">114</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="395" to="463" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b16">
+	<analytic>
+		<title level="a" type="main">Titan&apos;s ion exosphere observed from Voyager 1</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">E</forename><surname>Hartle</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">C</forename><surname>Sittler</surname><genName>Jr</genName></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Ogilvie</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">D</forename><surname>Scudder</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">J</forename><surname>Lazarus</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">K</forename><surname>Atreya</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/JA087iA03p01383</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">87</biblScope>
+			<biblScope unit="page" from="1383" to="1394" />
+			<date type="published" when="1982">1982</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b17">
+	<analytic>
+		<title level="a" type="main">Magnetosphere imaging instrument (MIMI) on the Cassini mission to Saturn/Titan</title>
+		<author>
+			<persName><forename type="first">S</forename><surname>Krimigis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Space, Sci. Rev</title>
+		<imprint>
+			<biblScope unit="volume">114</biblScope>
+			<biblScope unit="page" from="233" to="329" />
+			<date type="published" when="2004">2004</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b18">
+	<analytic>
+		<title level="a" type="main">An empirical model of Saturn&apos;s bow shock: Cassini observations of shock location and shape</title>
+		<author>
+			<persName><forename type="first">A</forename><surname>Masters</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">N</forename><surname>Achilleos</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">K</forename><surname>Dougherty</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">A</forename><surname>Slavin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">B</forename><surname>Hospodarsky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">S</forename><surname>Arridge</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">A</forename><forename type="middle">J</forename><surname>Coates</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2008JA013276</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">113</biblScope>
+			<biblScope unit="page">A10210</biblScope>
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b19">
+	<analytic>
+		<title level="a" type="main">The distribution of atomic hydrogen and oxygen in the magnetosphere of Saturn</title>
+		<author>
+			<persName><forename type="first">H</forename><surname>Melin</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">E</forename><surname>Shemansky</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">X</forename><surname>Liu</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.pss.2009.04.014</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Planet. Space Sci</title>
+		<imprint>
+			<biblScope unit="volume">57</biblScope>
+			<biblScope unit="page" from="1743" to="1753" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b20">
+	<analytic>
+		<title level="a" type="main">The induced magnetosphere of Titan</title>
+		<author>
+			<persName><forename type="first">N</forename><forename type="middle">F</forename><surname>Ness</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">H</forename><surname>Acuña</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">K</forename><forename type="middle">W</forename><surname>Behannon</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">M</forename><surname>Neubauer</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/JA087iA03p01369</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">87</biblScope>
+			<biblScope unit="page" from="1369" to="1381" />
+			<date type="published" when="1982">1982</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b21">
+	<analytic>
+		<title level="a" type="main">Giotto magnetic-field results on the boundaries of the pile-up region and the magnetic cavity</title>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">M</forename><surname>Neubauer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Astron. Astrophys</title>
+		<imprint>
+			<biblScope unit="volume">187</biblScope>
+			<biblScope unit="page" from="73" to="79" />
+			<date type="published" when="1987">1987</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b22">
+	<analytic>
+		<title level="a" type="main">First results from the Giotto magnetometer experiment at comet Halley</title>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">M</forename><surname>Neubauer</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="j">Nature</title>
+		<imprint>
+			<biblScope unit="volume">321</biblScope>
+			<biblScope unit="page" from="352" to="355" />
+			<date type="published" when="1986">1986</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b23">
+	<analytic>
+		<title level="a" type="main">Titan&apos;s near magnetotail from magnetic field and electron plasma observations and modeling: Cassini flybys TA, TB, and T3</title>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">M</forename><surname>Neubauer</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2006JA011676</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">111</biblScope>
+			<biblScope unit="page">A10220</biblScope>
+			<date type="published" when="2006">2006</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b24">
+	<analytic>
+		<title level="a" type="main">A kinetic study of solar wind mass loading and cometary bow shocks</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Omidi</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Winske</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/JA092iA12p13409</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">92</biblScope>
+			<biblScope unit="page" from="409" to="413" />
+			<date type="published" when="1987">1987</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b25">
+	<analytic>
+		<title level="a" type="main">Outflow and plasma acceleration in Titan&apos;s induced magnetotail: Evidence of magnetic tension forces</title>
+		<author>
+			<persName><forename type="first">N</forename><surname>Romanelli</surname></persName>
+		</author>
+		<idno type="DOI">10.1002/2014JA020391</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res. Space Physics</title>
+		<imprint>
+			<biblScope unit="page">119</biblScope>
+			<date type="published" when="2014">2014</date>
+		</imprint>
+	</monogr>
+	<note>in press</note>
+</biblStruct>
+
+<biblStruct xml:id="b26">
+	<analytic>
+		<title level="a" type="main">Shock and discontinuity normals, Mach numbers, and related parameters</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">J</forename><surname>Schwartz</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Analysis Methods for Multi-Spacecraft Data</title>
+				<editor>
+			<persName><forename type="first">G</forename><surname>Paschmann</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">P</forename><surname>Daly</surname></persName>
+		</editor>
+		<meeting><address><addrLine>Noordwijk, Netherlands</addrLine></address></meeting>
+		<imprint>
+			<publisher>ESA/ISSI</publisher>
+			<date type="published" when="1998">1998</date>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page" from="249" to="267" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b27">
+	<analytic>
+		<title level="a" type="main">Observations of short large-amplitude magnetic structures at a quasi-parallel shock</title>
+		<author>
+			<persName><forename type="first">S</forename><forename type="middle">J</forename><surname>Schwartz</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><surname>Burgess</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">W</forename><forename type="middle">P</forename><surname>Wilkinson</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">L</forename><surname>Kessel</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Dunlop</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Lühr</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/91JA02581</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">97</biblScope>
+			<biblScope unit="page" from="4209" to="4227" />
+			<date type="published" when="1992">1992</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b28">
+	<analytic>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">J</forename><surname>Smith</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">B</forename><forename type="middle">T</forename><surname>Tsurutani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">A</forename><surname>Slvain</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">E</forename><surname>Jones</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">G</forename><forename type="middle">L</forename><surname>Siscoe</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">D</forename><forename type="middle">Asoka</forename><surname>Mendis</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">International cometary explorer encounter with Giacobini-Zinner: Magnetic field observations</title>
+				<imprint>
+			<date type="published" when="1986">1986</date>
+			<biblScope unit="volume">232</biblScope>
+			<biblScope unit="page" from="382" to="385" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b29">
+	<analytic>
+		<title level="a" type="main">Minimum and maximum variance analysis</title>
+		<author>
+			<persName><forename type="first">B</forename><forename type="middle">U O</forename><surname>Sonnerup</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><surname>Scheible</surname></persName>
+		</author>
+	</analytic>
+	<monogr>
+		<title level="m">Analysis Methods for Multi-Spacecraft Data</title>
+				<editor>
+			<persName><forename type="first">G</forename><surname>Paschmann</surname></persName>
+		</editor>
+		<editor>
+			<persName><forename type="first">P</forename><surname>Daly</surname></persName>
+		</editor>
+		<meeting><address><addrLine>Noordwijk, Netherlands</addrLine></address></meeting>
+		<imprint>
+			<publisher>ESA/ISSI</publisher>
+			<date type="published" when="1998">1998</date>
+			<biblScope unit="volume">1</biblScope>
+			<biblScope unit="page" from="185" to="215" />
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b30">
+	<analytic>
+		<title level="a" type="main">Saturn&apos;s magnetospheric dynamics</title>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">F</forename><surname>Thomsen</surname></persName>
+		</author>
+		<idno type="DOI">10.1002/2013GL057967</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Geophys. Res. Lett</title>
+		<imprint>
+			<biblScope unit="volume">40</biblScope>
+			<biblScope unit="page" from="5337" to="5344" />
+			<date type="published" when="2013">2013</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b31">
+	<analytic>
+		<title level="a" type="main">Fundamentals of collisionless shocks for astrophysical application: 1. Non-relativistic shocks</title>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">A</forename><surname>Treumann</surname></persName>
+		</author>
+		<idno type="DOI">10.1007/s00159-009-0024-2</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Astron. Astrophys. Rev</title>
+		<imprint>
+			<biblScope unit="volume">17</biblScope>
+			<biblScope unit="issue">4</biblScope>
+			<biblScope unit="page" from="409" to="535" />
+			<date type="published" when="2009">2009</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b32">
+	<analytic>
+		<title level="a" type="main">Steepened magnetosonic waves at comet Giacobini-Zinner</title>
+		<author>
+			<persName><forename type="first">B</forename><forename type="middle">T</forename><surname>Tsurutani</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">E</forename><forename type="middle">J</forename><surname>Smith</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">R</forename><forename type="middle">M</forename><surname>Thorne</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><forename type="middle">T</forename><surname>Gosling</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">H</forename><surname>Matsumoto</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/JA092iA10p11074</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">92</biblScope>
+			<biblScope unit="page">82</biblScope>
+			<date type="published" when="1987">1987</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b33">
+	<analytic>
+		<title level="a" type="main">Comparisons of Cassini flybys of the Titan magnetospheric interaction with an MHD model: Evidence for organized behavior at high altitudes</title>
+		<author>
+			<persName><forename type="first">D</forename><surname>Ulusen</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.icarus.2011.10.009</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Icarus</title>
+		<imprint>
+			<biblScope unit="volume">217</biblScope>
+			<biblScope unit="issue">1</biblScope>
+			<biblScope unit="page" from="43" to="54" />
+			<date type="published" when="2012">2012</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b34">
+	<analytic>
+		<title level="a" type="main">Upper limits on Titan&apos;s magnetic moment and implications for its interior</title>
+		<author>
+			<persName><forename type="first">H</forename><forename type="middle">Y</forename><surname>Wei</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><forename type="middle">T</forename><surname>Russell</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">M</forename><forename type="middle">K</forename><surname>Dougherty</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">F</forename><forename type="middle">M</forename><surname>Neubauer</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">Y</forename><forename type="middle">J</forename><surname>Ma</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/2009JE003538</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">115</biblScope>
+			<biblScope unit="page">E10007</biblScope>
+			<date type="published" when="2010">2010</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b35">
+	<analytic>
+		<title level="a" type="main">The magnetic barrier at Venus</title>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">L</forename><surname>Zhang</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">J</forename><surname>Luhmann</surname></persName>
+		</author>
+		<author>
+			<persName><forename type="first">C</forename><surname>Russell</surname></persName>
+		</author>
+		<idno type="DOI">10.1029/91JA00088</idno>
+	</analytic>
+	<monogr>
+		<title level="j">J. Geophys. Res</title>
+		<imprint>
+			<biblScope unit="volume">96</biblScope>
+			<biblScope unit="page" from="145" to="156" />
+			<date type="published" when="1991">1991</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b36">
+	<analytic>
+		<title level="a" type="main">Initial Venus express magnetic field observations of the Venus bow shock location at solar minimum</title>
+		<author>
+			<persName><forename type="first">T</forename><forename type="middle">L</forename><surname>Zhang</surname></persName>
+		</author>
+		<idno type="DOI">10.1016/j.pss.2007.09.012</idno>
+	</analytic>
+	<monogr>
+		<title level="j">Planet. Space Sci</title>
+		<imprint>
+			<biblScope unit="volume">56</biblScope>
+			<biblScope unit="issue">6</biblScope>
+			<biblScope unit="page" from="785" to="789" />
+			<date type="published" when="2008">2008</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+<biblStruct xml:id="b37">
+	<analytic>
+		<title/>
+	</analytic>
+	<monogr>
+		<title level="j">Geophysical Research Letters</title>
+		<imprint>
+			<biblScope unit="volume">10</biblScope>
+			<date type="published" when="1002">1002/2014GL062106</date>
+		</imprint>
+	</monogr>
+</biblStruct>
+
+				</listBibl>
+			</div>
+		</back>
+	</text>
+</TEI>
