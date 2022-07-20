@@ -1,20 +1,20 @@
 # Name: ascii_cat;
-# Creation Date: 2022-07-19T15:33:20.125904;
+# Creation Date: 2022-07-20T11:46:46.198269;
 # Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "https://github.com/ADablanc/BibHelioTech.git") on the papers mentionning Mars-Odyssey as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the Mars-Odyssey with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).
 # Parameter 1: id:column1; name:DOI; size:1; type:char;
 # Parameter 2: id:column2; name:SATS; size:1; type:char;
 # Parameter 3: id:column3; name:INSTS; size:1; type:char;
 # Parameter 4: id:column4; name:REGS; size:1; type:char;
+2001-10-01T00:00:00.000 2003-10-28T23:59:59.000 https://doi.org/10.1002/2015JA022327 "Mars-Odyssey" "MARIE,Gamma-Ray-Spectrometer" "Earth.Magnetosphere.Polar"
+2014-05-07T16:30:00.000 2014-05-07T16:30:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Earth.NearSurface.Atmosphere"
 2014-10-14T18:30:00.000 2014-10-14T18:30:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Earth.NearSurface.Atmosphere"
 2014-10-14T18:30:00.000 2014-10-14T18:30:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "heliosphere.Outer"
 2014-10-14T21:39:00.000 2014-10-14T21:39:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Earth.Magnetosheath"
-2014-10-16T18:11:00.000 2014-10-16T18:11:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "heliosphere.Outer"
-2014-10-16T18:11:00.000 2014-10-16T18:11:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Mars"
 2014-10-16T20:15:00.000 2014-10-16T20:15:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Earth.Surface"
 2014-10-16T20:15:00.000 2014-10-16T20:15:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Comet"
 2014-10-22T10:00:00.000 2014-10-22T10:00:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "comet"
+2014-10-22T20:22:32.495 2014-10-22T20:22:32.505 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Earth.Surface"
 2014-10-22T20:48:00.000 2014-10-22T20:48:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Comet"
-2014-11-12T16:30:00.000 2014-11-12T16:30:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Earth.NearSurface.Atmosphere"
-2014-11-12T18:55:00.000 2014-11-12T18:55:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Earth.Surface"
-2014-11-12T22:18:51.495 2014-11-12T22:18:51.505 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Earth.Surface"
-2015-02-25T15:00:00.000 2015-03-15T16:00:00.000 https://doi.org/10.1002/2015JA022327 "Mars-Odyssey" "Gamma-Ray-Spectrometer,MARIE" "Earth.Magnetosphere.Polar"
+2014-11-12T03:59:02.495 2014-11-12T03:59:02.505 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Earth.Surface"
+2015-12-01T00:00:00.000 2016-03-28T23:59:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "heliosphere.Outer"
+2015-12-01T00:00:00.000 2016-03-28T23:59:59.000 https://doi.org/10.1002/2017JA023884 "Mars-Odyssey" "" "Mars"

@@ -1,16 +1,16 @@
 # Name: ascii_cat;
-# Creation Date: 2022-07-19T15:33:20.119928;
+# Creation Date: 2022-07-20T11:46:46.192197;
 # Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "https://github.com/ADablanc/BibHelioTech.git") on the papers mentionning RBSP as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the RBSP with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).
 # Parameter 1: id:column1; name:DOI; size:1; type:char;
 # Parameter 2: id:column2; name:SATS; size:1; type:char;
 # Parameter 3: id:column3; name:INSTS; size:1; type:char;
 # Parameter 4: id:column4; name:REGS; size:1; type:char;
+2004-07-01T00:00:00.000 2017-09-15T23:59:59.000 https://doi.org/10.1029/2021SW002969 "RBSP" "" "Earth.Magnetosphere"
+2004-07-01T00:00:00.000 2017-09-15T23:59:59.000 https://doi.org/10.1029/2021SW002969 "RBSP" "" "Earth.Magnetosphere"
+2013-03-31T00:00:00.000 2017-12-31T23:59:59.000 https://doi.org/10.1029/2021SW002969 "RBSP" "" "Earth.Magnetosphere"
+2013-03-31T00:00:00.000 2017-12-31T23:59:59.000 https://doi.org/10.1029/2021SW002969 "RBSP" "" "Earth.Magnetosphere"
+2013-03-31T00:00:00.000 2017-12-31T23:59:59.000 https://doi.org/10.1029/2021SW002969 "RBSP" "" "Earth.Magnetosphere"
 2015-08-02T01:05:00.000 2015-08-02T01:07:00.000 https://doi.org/10.1002/2016GL069691 "RBSP" "EMFISIS" "Earth.Magnetosphere"
 2015-08-02T01:06:00.000 2015-08-02T01:10:00.000 https://doi.org/10.1002/2016GL069691 "RBSP" "EMFISIS" "Earth.Magnetosphere"
 2015-08-02T01:06:00.000 2015-08-02T01:10:00.000 https://doi.org/10.1002/2016GL069691 "RBSP" "EMFISIS" "Earth.Magnetosphere"
 2015-08-02T01:06:00.000 2015-08-02T01:10:00.000 https://doi.org/10.1002/2016GL069691 "RBSP" "EMFISIS" "Earth.Magnetosphere"
-2017-03-26T12:24:00.000 2017-03-26T12:24:59.000 https://doi.org/10.1029/2021SW002969 "RBSP" "" "Earth.Magnetosphere"
-2017-03-26T12:24:00.000 2017-03-26T12:24:59.000 https://doi.org/10.1029/2021SW002969 "RBSP" "" "Earth.Magnetosphere"
-2017-03-26T12:24:00.000 2017-03-26T12:24:59.000 https://doi.org/10.1029/2021SW002969 "RBSP" "" "Earth.Magnetosphere"
-2017-03-29T22:27:00.000 2017-03-29T22:27:59.000 https://doi.org/10.1029/2021SW002969 "RBSP" "" "Earth.Magnetosphere"
-2017-03-29T22:27:00.000 2017-03-29T22:27:59.000 https://doi.org/10.1029/2021SW002969 "RBSP" "" "Earth.Magnetosphere"

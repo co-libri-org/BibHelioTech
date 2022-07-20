@@ -1,14 +1,15 @@
 # Name: ascii_cat;
-# Creation Date: 2022-07-19T15:33:20.127123;
+# Creation Date: 2022-07-20T11:46:46.200189;
 # Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "https://github.com/ADablanc/BibHelioTech.git") on the papers mentionning Ulysses as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the Ulysses with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).
 # Parameter 1: id:column1; name:DOI; size:1; type:char;
 # Parameter 2: id:column2; name:SATS; size:1; type:char;
 # Parameter 3: id:column3; name:INSTS; size:1; type:char;
 # Parameter 4: id:column4; name:REGS; size:1; type:char;
 2007-10-15T21:00:00.000 2007-10-15T21:00:59.000 https://doi.org/10.5194/angeo-28-233-2010 "Ulysses" "" "Heliosphere.Inner"
+2014-10-07T14:30:00.000 2014-10-07T14:30:59.000 https://doi.org/10.1002/2017JA023884 "Ulysses" "LET" "Heliosphere.Inner"
+2014-10-07T14:30:00.000 2014-10-07T14:30:59.000 https://doi.org/10.1002/2017JA023884 "Ulysses" "LET" "Heliosphere.Inner"
 2014-10-16T09:00:00.000 2014-10-16T09:00:59.000 https://doi.org/10.1002/2017JA023884 "Ulysses" "LET" "Heliosphere.Inner"
-2014-11-12T14:33:34.495 2014-11-12T14:33:34.505 https://doi.org/10.1002/2017JA023884 "Ulysses" "LET" "Heliosphere.Inner"
-2014-11-12T14:33:34.495 2014-11-12T14:33:34.505 https://doi.org/10.1002/2017JA023884 "Ulysses" "LET" "Heliosphere.Inner"
 2018-11-15T12:00:00.000 2018-11-15T12:00:59.000 https://doi.org/10.3847/1538-4365/ab5a84 "Ulysses" "" "Heliosphere.Inner"
-2020-07-11T02:30:00.000 2020-07-11T02:30:59.000 https://doi.org/10.1051/0004-6361/202140998 "Ulysses" "" "Heliosphere.Inner"
-2020-07-11T02:30:00.000 2020-07-11T02:30:59.000 https://doi.org/10.1051/0004-6361/202140998 "Ulysses" "" "Heliosphere.Inner"
+2020-07-01T00:00:00.000 2020-11-28T23:59:59.000 https://doi.org/10.1051/0004-6361/202140998 "Ulysses" "" "Heliosphere.Inner"
+2020-07-01T00:00:00.000 2020-11-28T23:59:59.000 https://doi.org/10.1051/0004-6361/202140998 "Ulysses" "" "Heliosphere.Inner"
+2021-06-01T00:00:00.000 2021-07-01T23:59:59.000 https://doi.org/10.3389/fspas.2021.718024 "Ulysses" "" "Heliosphere.Inner"
