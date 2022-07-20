@@ -7,7 +7,8 @@
 
 ## BibHelioTech project description
 BibHelioTech is a program for recognition of temporal expressions and entities (satellites, instruments, regions) extracted from scientific articles in the field of heliophysics.<br />
-It was developed for the IRAP (INSTITUT DE RECHERCHE EN ASTROPHYSIQUE ET PLANÉTOLOGIE (CNRS)) of Toulouse.
+It was developed for the IRAP (INSTITUT DE RECHERCHE EN ASTROPHYSIQUE ET PLANÉTOLOGIE (CNRS)) of Toulouse.<br />
+Its main purpose is to retrieve this information which is not currently available digitally, and to allow its visualisation on AMDA (http://amda.irap.omp.eu/).
 
 ## Installation guide
 STEP 1: install all dependency<br />
