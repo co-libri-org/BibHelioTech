@@ -14,7 +14,7 @@ start_time = datetime.now()
 #
 # sutime = SUTime(mark_time_ranges=True, include_range=True) # load sutime wrapper
 
-main_path = "./DATA/test"
+main_path = "./DATA/Papers"
 
 for folders_or_pdf in os.listdir(main_path):
     folders_or_pdf_path = os.path.join(main_path, folders_or_pdf)
