@@ -6,7 +6,9 @@
 [![GitHub issues](https://img.shields.io/github/issues/ADablanc/BibHelioTech)](https://github.com/ADablanc/BibHelioTech/issues)
 
 ## BibHelioTech project description
-...
+BibHelioTech is a program for recognition of temporal expressions and entities (satellites, instruments, regions) extracted from scientific articles in the field of heliophysics.<br />
+It was developed for the IRAP (INSTITUT DE RECHERCHE EN ASTROPHYSIQUE ET PLANÉTOLOGIE (CNRS)) of Toulouse.
+
 ## Installation guide
 STEP 1: install all dependency<br />
 &nbsp;&nbsp;&nbsp;On your shell, run: pip install -r requirements.txt<br />
