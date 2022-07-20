@@ -401,7 +401,8 @@ def SUTime_transform(current_OCR_folder):
             dicts.clear()
         elif dicts['type'] == "DURATION":
             if re.search("[0-9]{2}-[0-9]{2}$", dicts['value']['begin']) and re.search("[0-9]{2}-[0-9]{2}$", dicts['value']['end']):
-                dicts.clear()
+                dicts['value']['begin'] += "T00:00:00.000"
+                dicts['value']['end'] += "T23:59:59.000"
     JSON_list = [i for i in JSON_list if i != {}]
 
     # harmonise the formats, bring them all down to the millisecond

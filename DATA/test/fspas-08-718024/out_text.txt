@@ -1,0 +1,1172 @@
++ frontiers
+
+in Astronomy and Space Sciences
+
+BRIEF RESEARCH REPORT
+published: 14 September 2021
+dol: 10.33889/fspas.2021.718024
+
+OPEN ACCESS
+
+Edited by:
+
+Rudolf A. Treumann,
+
+Ludwig Maximilian University of
+Munich, Germany
+
+Reviewed by:
+
+Daniel Heyner,
+
+Technische Universitat Braunschweig,
+Germany
+
+Alexander Kozyrev,
+
+Space Research Institute (RAS),
+Russia
+
+*Correspondence:
+L. Z. Hadid
+lina.hadid@lpp.polytechnique. fr
+
+Specialty section:
+
+This article was submitted to
+Space Physics,
+
+a section of the journal
+
+Frontiers in Astronomy and Space
+Sciences
+
+Received: 31 May 2021
+Accepted: 30 August 2021
+Published: 14 September 2021
+
+Citation:
+
+Hadid LZ, Génot V, Aizawa S, Milillo A,
+Zender J, Murakami G, Benkhoff J,
+Zouganelis |, Alberti T, André N,
+Bebesi Z, Califano F, Dimmock AP,
+Dosa M, Escoubet CP, Griton L,
+
+Ho GC, Horbury TS, Iwai K, Janvier M,
+Kiloua E, Lavraud B, Madar A,
+Miyoshi Y, Muller D, Pinto FF,
+Rouillard AP, Raines J M, Raouafi N,
+Sahraoui F, Sanchez-Cano B,
+
+Shiota D, Vainio R and Walsh A (2021)
+BepiColombo’s Cruise Phase: Unique
+Opportunity for
+
+Synergistic Observations.
+
+Front. Astron. Space Sci. 8:718024.
+doi: 10.3389/fspas.2021.718024
+
+Check for
+updates
+
+BepiColombo’s Cruise Phase: Unique
+Opportunity for Synergistic
+Observations
+
+L. Z. Hadid'*, V. Génot?, S. Aizawa”, A. Milillo®, J. Zender*, G. Murakami°, J. Benkhoff’,
+
+I. Zouganelis®, T. Alberti*, N. André’, Z. Bebesi’, F. Califano®, A. P. Dimmock®, M. Dosa’,
+C. P. Escoubet*, L. Griton?, G. C. Ho'®, T. S. Horbury"', K. Iwai’, M. Janvier", E. Kilpua",
+B. Lavraud*"°, A. Madar’, Y. Miyoshi", D. Miller*, R. F. Pinto”:’®, A. P. Rouillard?,
+
+J. M. Raines 17’ N. Raouafi'®, F. Sahraoui', B. Sanchez-Cano "8, D. Shiota’?, R. Vainio7° and
+A. Walsh
+
+‘Laboratoire de Physique des Plasmas (LPP), CNRS, Ecole Polytechnique, Institut Polytechnique de Paris, Observatoire de Paris,
+Sorbonne Université, Université Paris Saclay, Palaiseau, France, “CNRS, UPS, CNES, Institut de Recherche en Astrophysique et
+Planétologie (IRAP), Université de Toulouse, Toulouse, France, 3INAF, Institute for space astrophysics and planetology (IAPS),
+Rome, Italy, “European Space Agency, ESTEC, Noordwijk, Netherlands, °Japan Aerospace Exploration Agency, Institute of
+Space and Astronautical Science, Sagamihara, Japan, °European Space Agency (ESA), European Space Astronomy Centre
+(ESAC), Madrid, Spain, ‘Wigner Research Centre for Physics, Budapest, Hungary, °Dipartimento di Fisica “E. Fermi”, Universita di
+Pisa, Pisa, Italy, °Swedish Institute of Space Physics (IRF), Uppsala, Sweden, '?Johns Hopkins University Applied Physics
+Laboratory, Laurel, MD, United States, ''Blackett Laboratory, Imperial College, London, United Kingdom, ‘Institute for SpaceEarth Environment Research, Nagoya University, Nagoya, Japan, '°CNRS, IAS, Université Paris-Saclay, Gif-sur-Yvette, France,
+'4Department of Physics, University of Helsinki, Helsinki, Finland, '°CNRS, Laboratoire d’astrophysique de Bordeaux, University
+Bordeaux, Pessac, France, '°Département d’Astrophysique/AIM, CEA/IRFU, CNRS/INSU, University Paris-Saclay, University de
+Paris, Gif-sur-Yvette, France, '’Department of Climate and Space Sciences and Engineering, University of Michigan, Ann Arbor,
+MI, United States, '°School of Physics and Astronomy, University of Leicester, Leicester, United Kingdom, '?National Institute of
+Information and Communications Technology, Koganei, Japan, *°Department of Physics and Astronomy, University of Turku,
+Turku, Finland
+
+The investigation of multi-spacecraft coordinated observations during the cruise phase of
+BepiColombo (ESA/JAXA) are reported, with a particular emphasis on the recently
+launched missions, Solar Orbiter (ESA/NASA) and Parker Solar Probe (NASA). Despite
+some payload constraints, many instruments onboard BepiColombo are operating during
+its cruise phase simultaneously covering a wide range of heliocentric distances (0.28
+AU-0.5 AU). Hence, the various spacecraft configurations and the combined in-situ and
+remote sensing measurements from the different spacecraft, offer unique opportunities for
+BepiColombo to be part of these unprecedented multipoint synergistic observations and
+for potential scientific studies in the inner heliosphere, even before Its orbit insertion around
+Mercury in December 2025. The main goal of this report is to present the coordinated
+observation opportunities during the cruise phase of BepiColombo (excluding the
+planetary flyoys). We summarize the identified science topics, the operational
+instruments, the method we have used to identify the windows of opportunity and
+discuss the planning of joint observations in the future.
+
+Keywords: solar wind, multi-spacecraft measurements, inner heliosphere, spacecraft mission, coordinated
+measurements
+
+Frontiers in Astronomy and Space Sciences | www.frontiersin.org 1
+
+September 2021 | Volume 8 | Article 718024
+Hadid et al.
+
+BepiColombo’s Coordinated Observations During Cruise
+
+1 INTRODUCTION
+
+A new era of coordinated observations in the inner heliosphere
+has begun with the launch of NASA’s Parker Solar Probe (PSP,
+Fox et al., 2016) in August 2018, followed by the ESA-JAXA
+BepiColombo spacecraft mission in October 2018 (Benkhoff
+et al., 2021), and by ESA-NASA’s Solar Orbiter (Miiller et al.,
+2020) in February 2020. Until the end of the cruise phase of
+BepiColombo (November 30, 2025), these three spacecraft will be
+traveling simultaneously in the inner heliosphere covering
+different heliocentric distances (Velli et al, 2020):
+BepiColombo’s elliptical orbit will cover distances from about
+1.2 Astronomical Unit (AU) to ~ 0.31 AU, while Solar Orbiter
+from ~ 1.02 to 0.28 AU, and Parker Solar Probe from about 0.7 to
+0.04 AU. Together with these missions, previous (and future)
+spacecraft provide continuous in situ and remote sensing
+measurements in our Solar System (as shown in Figure 1): at
+Venus ~ 0.7 AU (Akatsuki, also known as the Venus Climate
+Orbiter), around Earth, including the L1 Lagrange point ~ 1 AU
+(e.g., SOHO, ACE, Wind, Cluster, THEMIS, and MMS), at Mars
+~ 1.5 AU (e.g., MAVEN, Mars Express, Mars Odyssey), and at
+Jupiter ~ 5 AU (e.g., JUNO). In addition many Sun-observing
+including, SOHO, Hinode, Solar Dynamics Observatory,
+PROBA-2, and STEREO-A monitor the Sun with various
+instrumentations. The exceptional and complementary in-situ
+and remote sensing payloads on-board these different satellites,
+together with ground based measurements, will give the
+opportunity to perform unprecedented multi-point
+measurements of the solar wind plasma and the Sun. Hence
+allowing the community to address different fundamental
+physical processes in the solar wind, such as turbulence, the
+generation, acceleration, and transport of solar energetic particles
+(SEPs), and the characterization of large scale heliospheric
+
+structures such as Interplanetary Coronal Mass Ejections
+(ICMEs).
+
+During the cruise phase, the BepiColombo spacecraft is in a
+so-called “stacked” configuration: the Mercury Magnetospheric
+Orbiter (MMO/Mio) is inside the Sunshield and Interface
+Structure (MOSIF) which is attached to the Mercury Planetary
+Orbiter (MPO). MPO, MOSIF, and Mio are all connected to the
+Mercury Transfer Module (MTM) (Mangano et al., 2021).
+Therefore, unlike some MPO instruments that are fully
+operational during cruise, all the instruments onboard Mio are
+shielded by MOSIF and not all of them can be scientifically
+operational (i.e., limited field of view, undeployed instruments). It
+is only after entering Mercury's orbit in December 2025, that all
+the instruments will be fully deployed and operational at full
+capacity. Nevertheless, despite some operational and
+instrumental constraints, science operations could _ be
+performed during cruise in coordination with other spacecraft
+missions. Moreover, since long term planning is required for at
+least BepiColombo and Solar Orbiter (9 months and 6 months in
+advance respectively), a close coordination between
+BepiColombo, Solar Orbiter, and PSP teams was necessary
+(Velli et al, 2020). In this context, the BepiColombo
+Coordinated Observations Working Group (BC-CoObs WG)
+was initiated in November 2019. The BC-CoObs WG
+consisted of the project scientist and deputy project scientist of
+BepiColombo, along with instruments Principal Investigators
+(PIs) and members from BepiColombo, Solar Orbiter and PSP
+teams and researchers from the planetary and _heliophysics
+community. The main goal of the BC-CoObs WG was to
+identify the science opportunities during the cruise phase of
+BepiColombo from September 1, 2020 till November 30, 2025,
+excluding the planetary flybys. In order to achieve this goal, we
+have defined three main tasks: 1) to specify the different science
+
+SDO
+STEREO A
+Hinode
+
+Akatsuki a
+
+L1 probes
+€@luster
+WMemis/Artemis
+Arase
+
+Mars Express
+MAVEN
+
+FIGURE 1 | Examples of operational missions covering different heliocentric distances in our Solar System.
+
+Frontiers in Astronomy and Space Sciences | www.frontiersin.org
+
+September 2021 | Volume 8 | Article 718024
+Hadid et al.
+
+BepiColombo’s Coordinated Observations During Cruise
+
+TABLE 1 | Operational instruments during the cruise phase (excluding the periods of the planetary flybys).
+
+Consortium and reference
+
+MPPE (Mercury Plasma Particles Experiment). Saito
+
+et al. (2021)
+
+Kobayashi et al. (2020)
+
+SERENA (Search for Exospheric Refilling and Emitted
+Natural Abundances). Orsini et al. (2021)
+
+SIXS (Solar Intensity X-ray and particles Spectrometer).
+
+Huovelin et al. (2020)
+
+Quemerais et al. (2020)
+
+Hiesinger et al. (2020)
+
+Instrument and information
+MMO/Mio
+
+MEA1 and MEA2 (Mercury Electron Analyzer),
+reduced FOV
+HEP-e (High Energetic Particles—electrons), reduced FOV
+
+MDM (Mercury Dust Monitor), reduced FOV
+
+MPO
+
+MIPA (Miniature lon Precipitation Analyser), reduced FOV
+PICAM (Planetary lon CAMera), reduced FOV
+
+SIXS-X, partially in the MOSIF shadow. It could face the
+Sun on request during specific periods
+SIXS-P, hot distributions can be detected
+
+MPO-MAG,, fully operational
+
+PHEBUS (Probing of Hermean Exosphere by Ultraviolet
+
+Spectroscopy): can be operated
+
+MERTIS (MErcury Radiometer and Thermal Infrared
+Spectrometer), fully operational
+BERM, fully operational
+
+MORE, fully operational
+
+MGNS, fully operational
+
+Target Sensitivity
+Low energy electrons 3 eV—26 keV
+High energy electrons 30-700 keV
+Impact momentum and dust —
+particles direction
+Low energy ions 15 eV—-15 keV
+Low energy ions 10 eV-3 keV
+Solar X-ray 1-20 keV
+High energy protons 0.33-30 MeV
+High energy electrons 50 keV-3 MeV
+B-field (nominal mode) ~ DC-16 Hz
+B-field (reduced mode) ~ DC-1 Hz
+Far-Extreme UV 55-330 nm
+Infrared radiation 7-14 um
+High energy protons 1-200 MeV
+High energy electrons 0.3-10 MeV
+
+Radio emissions
+
+Gammaz-rays
+Neutron flux
+
+X-band and Kaband
+
+300 keV-10 MeV
+1 eV-10 MeV
+
+ISA, fully operational
+
+topics that are related to the multi-spacecraft observations, 2) to
+report the potential operational instruments on-board
+BepiColombo, and 3) to identify the potential windows of
+opportunities of BepiColombo in coordination with all the
+operational spacecraft, by selecting the most interesting
+spacecraft configurations.
+
+In the following sections, we summarize the operational
+instruments on board BepiColombo, the science topics that
+can be addressed during cruise, and some _ operation
+constraints. Then, we describe the method and the tool that
+we used to identify the different windows of opportunity. Finally,
+we discuss the planning of the joint observations and present
+some specific examples.
+
+2 OPERATIONAL INSTRUMENTS, SCIENCE
+TOPICS, AND CONSTRAINTS
+
+The only official instrument onboard BepiColombo that was
+originally planned to be operating during cruise was the
+Mercury Orbiter Radio science Experiment (MORE, less et al.,
+
+Non-gravitational acceleration 3.10° — 107'Hz
+vector
+
+2021) during superior solar conjunctions. Nevertheless, the
+beginning of the cruise phase has revealed that other
+instruments on board Mio and MPO could be operating as well
+and exploited for scientific studies. In fact, some of the instruments
+on-board MPO will be continuously operating during cruise,
+except for the Electric Propulsion (EP) periods, such as the
+BepiColombo Radiation Monitor (BERM), the Magnetometer
+(MPO-MAG, Glassmeier et al., 2010; Heyner et al., 2021), the
+Mercury Gamma-ray and Neutron Spectrometer (MGNS,
+Mitrofanov et al., 2010), the Italian Spring Accelerometer (ISA,
+lafolla et al., 2021) and MORE. In table 1, we summarize all the
+operational instruments during the cruise phase, excluding the
+planetary flybys periods [more details regarding the planetary
+flybys periods and the pointing of the different instruments can
+be found in Mangano et al. (2021)]. A detailed description about
+the combined in situ and remote sensing instruments on-board
+Solar Orbiter and Parker Solar Probe can be found in Velli et al.
+(2020) and Miiller et al. (2020).
+
+Despite the limited science operations, interesting science studies
+can be performed. During the cruise phase of BepiColombo, at least
+from September 2020 until December 2025, the Sun will be
+
+Frontiers in Astronomy and Space Sciences | www.frontiersin.org
+
+September 2021 | Volume 8 | Article 718024
+Hadid et al.
+
+BepiColombo’s Coordinated Observations During Cruise
+
+approaching Solar maximum (predicted in July 2025). The joint
+measurements with BepiColombo, Solar Orbiter, and Parker Solar
+Probe including other operational spacecraft in the interplanetary
+space, will allow a better understanding of the evolution of the solar
+wind plasma and its large scale three-dimensional distribution under
+different conditions of the solar activity using both remote sening
+and in-situ meaurements. An extensive discussion on the science
+investigations during the cruise phase of BepiColombo can be found
+in Mangano et al. (2021). Briefly, the main science topics can be
+grouped into seven cases: 1) Solar wind turbulence properties (e.g.,
+Tu and Marsch, 1995; Bruno and Carbone, 2013; Sahraoui et al.,
+2020). They include studies of the scaling properties (e.g., Alberti
+et al., 2020), characterization of the wave modes propagation (e.g.,
+Howes et al., 2012), high order statistics, and intermittency (e.g.,
+Bruno et al., 2001), and their evolution with heliocentric distances. 2)
+Solar wind structures. These include the study of the properties and
+radial evolution of small scale structures, such as discontinuities,
+including reconnection exhausts (e.g., Gosling et al., 2005), magnetic
+holes (e.g., Turner et al., 1977; Volwerk et al., 2020; Karlsson et al.,
+2021), interplanetary shocks and of large scale heliospheric
+structures, such as transient events [e.g., ICMEs, flux ropes
+(Kilpua et al. 2017)], and the Co-rotating Interaction Regions
+(CIRs, Richardson, 2018) which are compressive regions formed
+in the background magnetic field where high-speed wind runs into
+the slower wind ahead (e.g. Pizzo, 1980; Gosling and Pizzo, 1999).
+Moreover, the large scale properties of the solar wind (electron
+number density and velocity) could be done by combining groundbased interplanetary scintillation observations (IPS) observations
+(e.g., Iwai et al., 2019), heliospheric imaging (e.g., Harrison et al.,
+2018) and global magnetohydrodynamic (MHD) simulations and
+models such as SUSANOO (e.g., Shiota et al., 2014), IPS-ENLIL (e.g,,
+Odstrcil, 2003; Jackson et al., 2015), or EUHFORIA (e.g., Pomoell
+and Poedts, 2018). The solar wind plasma parameters measured
+onboard one of the spacecraft can also be propagated with the help of
+a simple 1D MHD model such as Heliopropa (http://heliopropa.
+irap.omp.eu) to another planet, comet, or spacecraft in order to
+provide a virtual solar wind monitor and predict the properties of the
+solar wind in another heliospheric location. 3) Solar Energetic
+Particles (SEPs). The study of their generation, acceleration and
+transport processes and their flux-time profiles at different locations
+in the solar wind (eg. Miroshnichenko, 2018). Moreover,
+combining in situ SEP data with type-II radio burst data, and
+global MHD simulations may provide information regarding the
+structure of the background interplanetary magnetic fields and the
+propagation of ICMEs. 4) Dust and Comets. The characterization of
+the dust distribution in the inner Solar System (e.g., Griin et al., 1980)
+and the analysis of the cometary composition such as the hydrogen
+coma at Lyman-a in Extreme Ultraviolet Violet (EUV) (e.g., Bertaux
+et al., 1995). Even though this depends on the passage of the comets
+in the field of view of BepiColombo’s EUV spectrometer (PHEBUS),
+at least one observation of comet 2P/Encke would be possible by the
+end of November 2023 as it arrives at a distance of ~ 0.6 AU from
+BepiColombo. 5) Solar Corona. Measurements of the density
+fluctuations of the solar corona down to a few solar radii (e.g.,
+Miyamoto et al., 2014) will be possible using radio measurements
+from the Mercury Orbiter Radio-science Experiment (MORE). 6)
+High frequency electromagnetic radiation. These include the
+
+1.64/—— EP ap
+m7
+LA 14 §
+a 1.2 12 @
+se id
+= 0.8 8 =
+£ g =
+co 0.6 o
+Ww U
+4 ©
+0.4 &
+
+2
+
+OZ
+0
+
+T T T T T T
+2021 2022 2023 2024 2025 2026
+
+Year
+
+FIGURE 2 | Distance of BepiColombo from Earth in AU (left axis, in blue)
+and the science downlink rate (right axis, in black) as a function of time during
+cruise. The Electric Propulsion (EP) periods are highlighted in red lines.
+
+detection of Gamma-Ray Bursts (GRBs) and their localization, in
+particular the gamma-rays that originate from solar flares, and
+monitoring the local radiation background of the spacecraft due
+to bombardment by energetic particles of Galactic Cosmic Rays. Last
+but not least, 7) General relativity test could be performed during
+superior solar conjunctions (e.g., Bertotti et al., 1993; Iess et al., 2021).
+
+Two major constraints had to be taken into account for the
+planning of the joint observations with BepiColombo. The first one is
+related to the Electric Propulsion periods during which no
+instruments operations can be performed, and the second one is
+related to the science downlink rate, as BepiColombo moves away
+from Earth. As one can see from Figure 2, in periods with a distance
+between BepiColombo and Earth larger than 1.2 AU the data
+downlink rate gets very low (< 0.3 kbps), not even allowing the
+instruments’ background operations. Therefore, we assume that all
+in-situ instruments can operate in background mode when the
+distance Bepi-Earth is less than 0.7 AU (data downlink rate > 6 kbps).
+
+3 METHODS
+
+In order to identify the potential windows of opportunities, we have
+focused our investigation on five different spacecraft geometries and
+used the Centre de Données de la Physique des Plasmas (CDPP)
+tools, in particular the Automated Multi-Dataset Analysis (AMDA)
+tool. In the following subsections, we give a short overview of AMDA
+and describe the different spacecraft configurations.
+
+3.1 AMDA Tool
+
+AMDA is an online database and analysis tool (http://amda.cdpp.
+eu/) developed for 15 years by the CDPP (http://www.cdpp.eu/).
+It gathers a large variety of plasma data from space missions and
+ground instruments together with simulations and models. It also
+offers a dedicated work space to all registered users where plot
+layouts, data mining conditions, and event lists can be stored and
+reused. Hundreds of user accounts have been provided over the
+years from space physics students to senior researchers. Several
+papers describe the basics of AMDA and its various applications
+in heliophysics and planetary sciences (Génot et al., 2021, and
+references herein). Registration is done by sending an mail to
+
+Frontiers in Astronomy and Space Sciences | www.frontiersin.org
+
+September 2021 | Volume 8 | Article 718024
+Hadid et al.
+
+BepiColombo’s Coordinated Observations During Cruise
+
+A 2021-02-19 - 2021-03-08
+
+Parker Solar
+Probe
+
+%
+
+BepiColombo
+
+Solar Orbiter
+‘\
+
+C 2021-03-21 - 2021-03-24
+
+Parker Solar
+Probe
+
+BepiColomb
+
+Venus
+
+FIGURE 3 | 3DView illustration of the downselected configurations for the first half of 2021, in the HEE coordinate system: (A) 2021-02-19-2021-03-08: Parker
+Solar Probe and BepiColombo are in a cone geometry and in Quadrature geometry with Solar Orbiter. (B) 2021 -03-13-2021-03-14: BepiColombo and Venus are in a
+cone geometry. (C) 2021-03-21-2021-03-24: Parker Solar Probe is in quadrature geometry with Solar Orbiter and BepiColombo is in quadrature geometry with
+STEREO A. (D) 2021-06-01-—2021-07-01: BepiColombo and Solar Orbiter are in cone geometry and in quadrature geometry with STEREO A.
+
+BepiColombo
+
+2021-06-01 - 2021-07-01
+
+amda@irap.omp.eu, and a public access (with no workspace) is
+also available. For the planning activities of the BC-CoObs
+Working Group, the choice of using AMDA arose for several
+reasons. First, the tool gives access to the ephemeris of all
+considered objects (spacecraft and planets) in several common
+coordinate systems and measurements at several cadences.
+Second, it enables to create new parameters from existing data,
+to perform conditional search on a large volume of data-set, and
+finally, to manage resulting event lists, and so, to produce
+catalogues which are relevant to this study.
+
+3.2 Spacecraft Configurations
+
+The investigation of the different windows of opportunity was
+done based on five different geometries, “Cone,” “Opposition,”
+“Parker,” “Cone-Parker,” and “Quadrature” and by considering
+the following spacecraft/bodies: BepiColombo, PSP, Solar
+
+Orbiter, STEREO-A, Venus, Earth, Mars, and Jupiter. Each of
+these configurations are defined below in the Heliocentric Earth
+Ecliptic (HEE) system, where the X axis points towards the Earth
+and the Z axis is perpendicular to the plane of the Earth’s orbit
+around the Sun (positive North). This system is fixed with respect
+to the Earth-Sun line.
+
+e Cone: radial alignments between two or more spacecraft/
+bodies, ie., when they are within a small longitude cone
+from the Sun. For the radial alignment we require here the
+maximum cone width of 10 + 3 in longitude without putting
+any constraints on the latitude assuming that it’s sufficient
+to identify all the events that are radially aligned within a
+cone (Figure 3B). The “Cone” geometry allows mainly to
+study the in situ evolution of the same plasma parcel and the
+underlying processes as a function of the distance from the
+
+Frontiers in Astronomy and Space Sciences | www.frontiersin.org
+
+September 2021 | Volume 8 | Article 718024
+Hadid et al.
+
+BepiColombo’s Coordinated Observations During Cruise
+
+Sun, such as the properties of the solar wind plasma, and
+turbulence as it has been already done using Helios 1 and 2
+probes (Schwartz and Marsch, 1983), Ulysses and ACE
+(D’Amicis et al., 2010) and more recently using PSP and
+Solar Orbiter (Telloni et al., 2021), as well as the evolution of
+large-scale heliospheric structures (e.g., Gosling and Pizzo,
+1999).
+
+e Opposition: two or more spacecraft/bodies are oppositely
+aligned forming a cone with respect to the Sun. The
+difference in longitude (in absolute values) between the
+spacecraft is defined as 180 + 10. This geometry is
+particularly interesting for periods of superior solar
+conjunctions, during which — simultaneous radio
+occultation observations can be performed to observe
+remotely the solar corona using both remote sensing
+measurements and ground based observations.
+
+e Parker: magnetic alignment between two or more bodies,
+i.e., when the footpoints of Parker field lines passing through
+the bodies are in a small latitude/longitude region at the socalled “source surface” (R,), which is an imaginary spherical
+surface above the corona. The alignment along the same
+spiral field line would allow to study the evolution of the
+solar wind plasma that originate from the same source at
+different locations on the field line (with a time difference
+that corresponds to the travel time of the plasma that
+would change over this time). Moreover, it would allow to
+analyze unpredictable bursty events (e.g., SEPs) that
+originate from the same “active” region on the solar
+surface.
+
+For this configuration, the longitude of the Parker field line at
+the source surface (¢,) has first to be computed for a given Solar
+Wind velocity usw; the formula is given below by:
+
+o, = (1) + O(r — R)/Usw (1)
+
+where ¢(r) is the spacecraft heliocentric longitude at distance r,
+Q, = 27/25.38 days, and R, = 2.5Rs5,,. Several values of usw were
+used in the range 200-800 km/s, to take into account the slow
+(200-400 km/s), intermediate (400-500 km/s) and fast solar wind
+(600-800 km/s). At the source surface a small region of 3 x 3 in
+longitude/latitude is considered for the footpoints to be said colocated. Varying the size of this region impacts the duration of the
+magnetic conjunction. The footprint of a given spacecraft at a
+given time is defined by its longitude (¢,) and by its latitude (equal
+to the one of the spacecraft as a Parker field line is inscribed on a
+cone of constant latitude). Below the source surface, the Parker
+approximation to model the magnetic field generally fails as the
+coronal magnetic field becomes more complex; refined models
+that take into account observed/modeled magnetograms (e.g.,
+Potential-Field Source-Surface model Wang et al., 1992) can then
+be used. This is what is done, for instance, in the “Magnetic
+Connectivity” tool developed at IRAP’ to estimate the solar
+source location of the solar wind and energetic particles
+measured by different spacecraft. Nevertheless the first order
+
+‘http://connect-tool.irap.omp.eu/
+
+approach explained above and used in AMDA by the working
+group is a quick way to derive times of interest for the coordinated
+analysis.
+
+e Cone-Parker: the combination of the Cone and Parker
+geometries. This configuration is mainly interesting to
+study and analyze ICMEs, SEPs, or any other bursty
+event that propagates and expands at different longitude
+and radial distances.
+
+e Quadrature: Spacecraft with remote sensing instruments
+(e.g., imagers, coronographs) forming an angle of 90 + 10
+with the Sun and other spacecraft/planet. For this particular
+geometry we only considered BepiColombo, Earth (L1
+probes, e.g., Wind, SOHO) and the solar missions: PSP,
+Solar Orbiter, and STEREO-A. This configuration is
+optimal for observing remotely the structure of the Solar
+corona (Lamy et al., 2020) or any transient events that
+emanate from the Sun, and linking them to the heliosphere
+observed in-situ 90 from the Sun-spacecraft line. An
+example would be when Parker Solar Probe is in
+quadrature with Solar Orbiter. Close to the Sun, the
+remote sensing instruments onboard Solar Orbiter (such
+as the Solar Orbiter Heliospheric Imager using Thomson
+scattering) would be providing imagery of the plasma lifting
+up from the limb and so the solar wind plasma parcel that is,
+expected to be encountered by Parker Solar Probe further
+away from the Sun at 90° from the Sun-Solar Orbiter line
+(Howard et al., 2020). The quadrature geometry and the
+combination of the in situ and remote sensing measurement
+would allow to observe the global structure of the eruptive
+events as they evolve in the interplanetary space and
+contribute to the understanding of their initiation at
+the Sun.
+
+In a recent study, Davies et al. (2021) could investigate in situ
+the propagation of an ICME through the interplanetary medium
+as Solar Orbiter, BepiColombo, and Wind spacecraft were
+radially aligned, and could observe its global shape and
+expansion using the remote observations from STEREO-A as
+it was in a quadrature geometry with respect to the SunEarth line.
+
+A detailed description of AMDA’s data mining conditions can
+be found in the Bepi-CoObs WG AMDA manual (see data
+availability statement). It is worth noting that the travel time
+of the plasma from one spacecraft to another was not taken into
+account when selecting the different events and this should be
+taken into account when considering the radial alignment case
+studies.
+
+4 WINDOWS OF OPPORTUNITY AND
+FUTURE PLANNINGS
+
+Using the AMDA tool and applying the method described in
+section 3, the investigation of the joint observations with
+BepiColombo by the CoObs WG, has led to 921 windows of
+opportunity between September Ist, 2020 and November 30th,
+
+Frontiers in Astronomy and Space Sciences | www.frontiersin.org
+
+September 2021 | Volume 8 | Article 718024
+Hadid et al.
+
+BepiColombo’s Coordinated Observations During Cruise
+
+2025. We note that this large number of events is mainly due to
+the “Parker” geometry condition, that was applied assuming
+different ranges of the solar wind speed. The full list of events
+is publicly available on AMDA, and will be shared on
+BepiColombo’s Cruise Science study group ESA’s website (see
+data availability statement). The timetable includes an identifier
+(ID) for each case study, the starting and ending time of the
+observation window, the geometry, the name of the spacecraft or
+objects, whether the event coincides with any particular flyby of
+BepiColombo, Solar Orbiter or PSP, or to an EP period.
+Furthermore, for each of the considered objects
+(BepiColombo, PSP, Solar Orbiter, STEREO-A, Venus, Earth,
+Mars, and Jupiter) we added the minimum, maximum and
+average values of the latitude, longitude, and radial distance
+from the Sun. We note that movies of Solar Orbiter,
+BepiColombo, PSP and STEREO-A trajectories, and the
+planning of Solar Orbiter’s joint observations for JulyDecember 2021 (and future plans) are available at Solar
+Orbiter’s Science Operation Center website (see data
+availability statement).
+
+After identifying all the potential opportunities with the
+different conjunctions, a down-selection of the most feasible
+and realistic cases was necessary in order to plan and
+coordinate well in advance the joint observations, in particular
+between the two ESA missions, BepiColombo and Solar Orbiter
+teams. The down-selection is based on the following selection
+approach: 1) we assume that the BERM instrument is always
+operational in the background and not further analyzed, as its
+downlink rate is relatively low (38 bps); 2) the EP and instruments
+checkout periods are immediately excluded from any analysis; 3)
+all the in situ instruments are assumed to be operating in
+background mode when the distance BepiColombo-Earth is
+less than 0.7 AU. The only question to the teams during these
+periods would be related to the spacecraft pointing requirements;
+and 4) no events near the flyby’s periods (closest approach +
+l week) are down-selected, as the flyby operations are
+discussed withing the flyby working group.
+
+The down-selection step is implemented by a small group
+including the Project Scientists of the missions, who discusses
+9months in advance, a 6months planning period for the
+coordinated observations between BepiColombo and _ Solar
+Orbiter - and any other non-ESA missions, taking into
+account the constraints as discussed above in the selection
+approach (Figure 2). The down-selected opportunities are
+then sent by the project scientists to the different instruments
+PIs of both missions, who analyze the different periods and
+specify for each of them a set of information (a priority level,
+a description of the observation, operational mode, pointing
+requests, and the expected science downlink rate and volume)
+that are then studied and validated by the ESA Mission Operation
+Center (MOC). Due to the spacecraft and payload constraints,
+only few windows of opportunities could be down-selected. In
+fact, for the planning of the year 2021 and the first half of 2022
+(January 1st, 2022-June 30, 2022), only 17 events out of 349 could
+be requested to MOC. Examples of these joint observations,
+plotted using 3DView tool (Génot et al., 2018), are shown in
+Figure 3 and listed below:
+
+e 2021-02-19-2021-03-08: BepiColombo is in a cone
+geometry with PSP and in quadrature geometry with
+Solar Orbiter.
+
+e 2021-03-13-2021-03-14: BepiColombo and Akatsuki in
+solar conjunction.
+
+e 2021-03-21-2021-03-24: PSP, BepiColombo, Solar Orbiter,
+and STEREO-A are longitudinally distributed around the
+Sun. PSP-Solar Orbiter and BepiColombo-STEREO-A are
+more or less in quadrature geometry.
+
+e 2021-06-01-2021-06-12: BepiColombo is in a _ cone
+geometry with Solar Orbiter and in quadrature geometry
+with STEREO-A.
+
+e 2021-07-01-2021-08-02: BepiColombo, Solar Orbiter and
+Mars are in Cone-Parker geometry. On 2021-07-15
+BepiColombo is radially aligned with Solar Orbiter, and
+STEREO-A is in quadrature geometry.
+
+e 2021-08-14-2021-08-26: BepiColombo and Solar Orbiter
+are magnetically aligned, and STEREO-A in quadrature
+geometry.
+
+@ 2021-09-05-2021-09-25: PSP, Solar Orbiter, and STEREOA are in a Cone geometry and BepiColombo is nearby.
+
+e 2021-10-07-2021-10-08: BepiColombo, Solar Orbiter, and
+STEREO-A are magnetically connected on the same parker
+spiral.
+
+@ 2021-10-14—2021-10-15: BepiColombo, Solar Orbiter, and
+STEREO-A are magnetically connected on the same parker
+spiral.
+
+@ 2021-10-23-2021-10-28: BepiColombo is radially aligned
+with Earth and Solar Orbiter is in a quadrature geometry.
+
+@ 2022-03-11-2022-03-31: BepiColombo is radially aligned
+with STEREO-A and Solar Orbiter is in a quadrature
+geometry.
+
+@ 2022-04-06-2022-04-18: BepiColombo is radially aligned
+with Earth.
+
+@ 2022-06-09-2022-06-10: BepiColombo is close to Mercury
+and radially aligned with PSP, and STEREO-A is in a
+quadrature geometry.
+
+CONCLUSION
+
+In this short report we attempt to summarize the extensive
+investigation that we have done within the BepiColombo CoObs
+WG to identify the potential scientific coordinated observations
+related to BepiColombo, Solar Orbiter and any other operational
+spacecraft mission. Despite some spacecraft and payload constraints,
+this work has revealed many interesting science opportunities for insitu and remote sensing synergistic observations in the inner
+heliosphere even before the orbit insertion of BepiColombo
+around Mercury in December 2025. The joint in situ and remote
+sensing observations of BepiColombo, Solar Orbiter, Parker Solar
+Probe including other space, and ground based observatories, would
+allow detailed mapping of the inner heliosphere and to better
+understand the solar wind properties, structures and magnetic
+field expansion at different heliocentric distances. Recent studies
+of coordinated observations between BepiColombo, Solar Orbiter
+and Wind (Davies et al., 2021), and Parker Solar Probe and Solar
+
+Frontiers in Astronomy and Space Sciences | www.frontiersin.org
+
+September 2021 | Volume 8 | Article 718024
+Hadid et al.
+
+BepiColombo’s Coordinated Observations During Cruise
+
+Orbiter (Telloni et al, 2021) and additional on-going studies,
+highlight the need for careful advance planning to optimize the
+scientific return from this unprecedented opportunity of synergistic
+observations. At the time of writing this report, regular meetings for
+the planing of the future years are being held and the approved
+selected events will be made public to the community and will
+available on BepiColombo’s Cruise Science Study Group ESA
+cosmos website (see Data Availability Statement).
+
+DATA AVAILABILITY STATEMENT
+
+The SPICE kernels are used for the different missions with the
+official data sources as given below. The kernels are regularly
+updated at the official sources and in orbitography services
+(including AMDA), for instance when reconstructed kernels
+are replacing predicted ones. As a consequence the catalogue
+of events as it is presented at the time of publication of the article
+may change. However, it has been checked that these possible
+changes (shift in start/stop times of some events) are limited, and,
+for example, on the same scale as the shift induced by varying the
+cone aperture of a few degrees (for “Cone” configuration), or the
+solar wind velocity by a few 10 km/s (for “Parker” configuration).
+List of the SPICE kernels:
+
+e BepiColombo:
+dwuc9bs
+
+e Solar Orbiter: ESA/ESAC https://doi.org/10.5270/esa-kt1577e
+
+e Parker Solar Probe: https://sppgway.jhuapl.edu/Ipredict_
+ephem and https://sppgway.jhuapl.edu/recon_ephem
+
+e STEREO-A: _ https://sohowww.nascom.nasa.gov/solarsoft/
+stereo/gen/data/spice/depm/ahead/
+
+e Planets: NASA/NAIF https://naif.jpl.nasa.gov/naif/
+
+ESA/ESAC _https://doi.org/10.5270/esa
+The websites of the different tools and movies are:
+
+CDPP: http://www.cdpp.eu/
+
+AMDA: http://amda.cdpp.eu/
+
+3D View: http://3dview.irap.omp.eu/
+
+Magnetic Connectivity: http://connect-tool.irap.omp.eu/
+Heliopropa: http://heliopropa.irap.omp.eu
+
+Bepi-CoObs WG Amda manual
+
+Solar Orbiter’s Science Operation Center: https://issues.
+cosmos.esa.int/solarorbiterwiki/display/SOSP/
+Solar+Orbiter+SOC+Public
+
+REFERENCES
+
+Alberti, T., Laurenza, M., Consolini, G., Milillo, A., Marcucci, M. F., Carbone,
+V., et al. (2020). On the Scaling Properties of Magnetic-Field Fluctuations
+through the Inner Heliosphere. ApJ 902, 84. doi:10.3847/1538-4357/
+abb3d2
+
+Benkhoff, J., Benkhoff, J., and Benkhoff, J. (2021). BepiColombo Overview and Science Goals in Space. Space Sci. Rev. 217.
+
+Bertaux, J. L., Kyr6la, E., Quémerais, E., Pellinen, R., Lallement, R.,
+Schmidt, W., et al. (1995). SWAN: A Study of Solar Wind
+Anisotropies on SOHO with Lyman Alpha Sky Mapping. The SOHO
+
+Mission
+
+BepiColombo planning - the generated catalogue and the
+down-selected list of events are available in:
+
+e AMDA: “Shared catalogue” directory http://amda.cdpp.eu/
+e BepiColombo’s Cruise Science: https://www.cosmos.esa.int/
+web/bepicolombo-yssg-cs
+
+Solar Orbiter planning - the future planning during the cruise
+phase of Solar Orbiter is available in:
+
+e https://issues.cosmos.esa.int/solarorbiterwiki/display/
+SOSP/Cruise+Phase
+
+AUTHOR CONTRIBUTIONS
+
+All the co-authors have contributed in discussing the science
+topics, operational instruments and geometries for identifying the
+potential coordinated observations. In addition, LH, VG, and SA
+have investigated the potential windows of opportunities using
+the AMDA tool.
+
+FUNDING
+
+The CDPP is supported by CNRS, CNES, Observatoire de Paris
+and Université Paul Sabatier Toulouse, and parts of the
+aforementioned tools are currently being developed through
+the Sun Planet Interactions Digital Environment on Request
+(SPIDER) Virtual Activity of the Europlanet H2024 Research
+Infrastucture funded by the European Union’s Horizon 2020
+research and innovation programme under grant agreement No
+871149. B.S.-C. acknowledges support through UK-STFC grants
+ST/S000429/1 and ST/V000209/1.
+
+ACKNOWLEDGMENTS
+
+AMDA team thanks all active users who provided very useful
+feedback over the years and therefore contributed to enhance the
+quality of the system. French co-authors ackowledge the support
+of CNES for the BepiColombo, Solar Orbiter, and Parker Solar
+Probe missions. This analysis was performed in the frame of the
+ESA/JAXA working group: BepiColombo’s cruise phase
+coordinated observations.
+
+Mission, 403-439. Germany: Springer. doi:10.1007/978-94-009-0191910.1007/978-94-009-0191-9_11
+
+Bertotti, B., Comoretto, G., and Iess, L. (1993). Doppler Tracking of Spacecraft with
+Multi-Frequency Links. Astron. Astrophysics 269, 608-616.
+
+Bruno, R., and Carbone, V. (2013). The Solar Wind as a Turbulence Laboratory.
+Living Rev. Solar Phys. 10. doi:10.12942/lrsp-2013-2
+
+Bruno, R., Carbone, V., Veltri, P., Pietropaolo, E., and Bavassano, B. (2001).
+Identifying Intermittency Events in the Solar Wind. Planet. Space Sci. 49,
+1201-1210. Nonlinear Dynamics and Fraactals in Space. doi:10.1016/S00320633(01)00061-7
+
+D’Amicis, R., Bruno, R., Pallocchia, G., Bavassano, B., Telloni, D., Carbone, V., et al.
+(2010). Radial Evolution of Solar Wind Turbulence during Earth and Ulysses
+
+Frontiers in Astronomy and Space Sciences | www.frontiersin.org
+
+September 2021 | Volume 8 | Article 718024
+Hadid et al.
+
+BepiColombo’s Coordinated Observations During Cruise
+
+Alignement of 2007 August. Astrophysical J. 717, 474-480. doi:10.1088/0004637x/717/1/474
+
+Davies, E. E., Méstl, C., Owens, M. J., Weiss, A. J., Amerstorfer, T., Hinterreiter, J.,
+et al. (2021). In Situ multi-spacecraft and Remote Imaging Observations of the
+First Cme Detected by Solar Orbiter and Bepicolombo. AeA. doi:10.1051/00046361/202040113
+
+Fox, N. J., Velli, M. C., Bale, S. D., Decker, R., Driesman, A., Howard, R. A., et al.
+(2016). The Solar Probe Plus Mission: Humanity’s First Visit to Our Star. Space
+Sci. Rev. 204, 7-48. doi:10.1007/s11214-015-0211-6
+
+Génot, V., Beigbeder, L., Popescu, D., Dufourg, N., Gangloff, M., Bouchemit, M.,
+et al. (2018). Science Data Visualization in Planetary and Heliospheric Contexts
+with 3DView. Planet. Space Sci. 150, 111-130. doi:10.1016/j.pss.2017.07.007
+
+Génot, V., Budnik, E., Jacquey, C., Bouchemit, M., Renard, B., Dufourg, N., et al.
+(2021). Automated Multi-Dataset Analysis (Amda): an On-Line Database and
+Analysis Tool for Heliospheric and Planetary Plasma Data. Planet. Space Sci.
+201, 105214. doi:10.1016/j.pss.2021.105214
+
+Glassmeier, K.-H., Auster, H.-U., Heyner, D., Okrafka, K., Carr, C., Berghofer, G.,
+et al. (2010). The Fluxgate Magnetometer of the Bepicolombo Mercury
+Planetary Orbiter. Planet. Space Sci. 58, 287-299. Comprehensive Science
+Investigations of Mercury: The scientific goals of the joint ESA/JAXA
+mission BepiColombo. doi:10.1016/j.pss.2008.06.018
+
+Gosling, J. T., and Pizzo, V. J. (1999). Formation and Evolution of Corotating
+Interaction Regions and Their Three Dimensional Structure. Space Sci. Rev. 89,
+21-52. doi:10.1007/978-94-017-1179-1_3
+
+Gosling, J. T., Skoug, R. M., McComas, D. J., and Smith, C. W. (2005). Magnetic
+Disconnection from the Sun: Observations of a Reconnection Exhaust in the
+Solar Wind at the Heliospheric Current Sheet. Geophys. Res. Lett. 32.
+doi:10.1029/2005g1022406
+
+Griin, E., Pailer, N., Fechtig, H., and Kissel, J. (1980). Orbital and Physical
+Characteristics of Micrometeoroids in the Inner Solar System as Observed
+by Helios 1. Planet. Space Sci. 28, 333-349. doi:10.1016/0032-0633(80)90022-7
+
+Harrison, R. A., Davies, J. A., Barnes, D., Byrne, J. P., Perry, C. H., Bothmer, V.,
+et al. (2018). Cmes in the Heliosphere: I. A Statistical Analysis of the
+Observational Properties of Cmes Detected in the Heliosphere from 2007 to
+2017 by Stereo/hi-1. Sol. Phys. 293, 77. doi:10.1007/s11207-018-1297-2
+
+Heyner, D., Auster, H.-U., Fornacgon, K.-H., Carr, C., Richter, I., Mieth, J. Z. D.,
+et al. (2021). The Bepicolombo Planetary Magnetometer Mpo-Mag: What Can
+We Learn from the Hermean Magnetic Field’. Space Sci. Rev. 217, 52.
+doi:10.1007/s11214-021-00822-x
+
+Hiesinger, H., Helbert, J., Helbert, J., Alemanno, G., Bauch, K. E., D’Amore, M.,
+et al. (2020). Studying the Composition and Mineralogy of the Hermean Surface
+with the Mercury Radiometer and thermal Infrared Spectrometer (Mertis) for
+the Bepicolombo mission: An Update. Space Sci. Rev. 216, 110. doi:10.1007/
+$11214-020-00732-4
+
+Howard, R. A., Vourlidas, A., Colaninno, R. C., Korendyke, C. M., Plunkett, S. P.,
+Carter, M. T., et al. (2020). The Solar Orbiter Heliospheric Imager (Solohi).
+AeA 642, Al3. doi:10.1051/0004-6361/201935202
+
+Howes, G. G., Bale, S. D., Klein, K. G., Chen, C. H. K., Salem, C. S., and TenBarge,
+J. M. (2012). The Slow-Mode Nature of Compressible Wave Power in Solar
+Wind Turbulence. ApJ 753, L19. doi:10.1088/2041-8205/753/1/119
+
+Huovelin, J., Vainio, R., Kilpua, E., Lehtolainen, A., Korpela, S., Esko, E., et al.
+(2020). Solar Intensity X-ray and Particle Spectrometer Sixs: Instrument Design
+and First Results. Space Sci. Rev. 216, 94. doi:10.1007/s11214-020-00717-3
+
+Iafolla, V., Iafolla, V., and Iafolla, V. (2021). Planetary and Space Science.
+
+less, L., Asmar, S. W., Cappuccio, P., Cascioli, G., De Marchi, F., di Stefano, I., et al.
+(2021). Gravity, Geodesy and Fundamental Physics with BepiColombo’s
+MORE Investigation. Space Sci. Rev. 217, 21. doi:10.1007/s11214-021-00800-3
+
+Iwai, K., Shiota, D., Tokumaru, M., Fujiki, K. i, Den, M., and Kubo, Y. (2019).
+Development of a Coronal Mass Ejection Arrival Time Forecasting System
+Using Interplanetary Scintillation Observations. Earth Planets Space 71, 39.
+doi:10.1186/s40623-019-1019-510.1186/s40623-019-1019-5
+
+Jackson, B. V., Odstrcil, D., Yu, H.-S., Hick, P. P., Buffington, A., Mejia-Ambriz,
+J. C., et al. (2015). The Ucsd Kinematic Ips Solar Wind Boundary and its Use in
+the Enlil 3-d Mhd Prediction Model. Space Weather 13, 104-115. doi:10.1002/
+2014SW001130
+
+Karlsson, T., Heyner, D., Volwerk, M., Morooka, M., Plaschke, F., Goetz, C., et al.
+(2021). Magnetic Holes in the Solar Wind and Magnetosheath Near Mercury.
+J. Geophys. Res. Space Phys. 126. doi:10.1029/2020JA028961
+
+Kilpua, E., Koskinen, H. E. J., and Pulkkinen, T. I. (2017). Coronal Mass Ejections
+and Their Sheath Regions in Interplanetary Space. Living Rev. Sol. Phys. 14, 5.
+doi:10.1007/s41116-017-0009-6
+
+Kobayashi, M., Shibata, H., Nogami, K. i., Fujii, M., Hasegawa, S., Hirabayashi, M.,
+et al. (2020). Mercury Dust Monitor (Mdm) Onboard the mio Orbiter of the
+Bepicolombo mission. Space Sci. Rev. 216, 144. doi:10.1007/s11214-02000775-7
+
+Lamy, P., Llebaria, A., Boclet, B., Gilardy, H., Burtin, M., and Floyd, O. (2020).
+Coronal Photopolarimetry with the LASCO-C2 Coronagraph over 24 Years
+[1996 - 2019]. Sol. Phys. 295, 89. doi:10.1007/s11207-020-01650-y
+
+Mangano, V., Dosa, M., Franz, M., Milillo, A., Oliveira, J. S., Lee, Y. J., et al.
+(2021). Bepicolombo Science Investigations during Cruise and Flybys at the
+Earth, Venus and Mercury. Space Sci. Rev. 217, 23. doi:10.1007/s11214-02100797-9
+
+Miroshnichenko, L. I. (2018). Retrospective Analysis of Gles and Estimates of
+Radiation Risks. J. Space Weather Space Clim. 8, A52. doi:10.1051/swsc/
+2018042
+
+Mitrofanov, I. G., Kozyrev, A. S., Konovalov, A., Litvak, M. L., Malakhov, A. A.,
+Mokrousov, M. I. et al. (2010). The Mercury Gamma and Neutron
+Spectrometer (Mgns) on Board the Planetary Orbiter of the Bepicolombo
+mission. Planet. Space Sci. 58, 116-124. Comprehensive Science Investigations
+of Mercury: The scientific goals of the joint ESA/JAXA mission BepiColombo.
+doi:10.1016/j.pss.2009.01.005
+
+Miyamoto, M., Imamura, T., Tokumaru, M., Ando, H., Isobe, H., Asai, A., et al.
+(2014). Radial Distribution of Compressive Waves in the Solar Corona Revealed
+Byakatsukiradio Occultation Observations. Ap] 797, 51. doi:10.1088/0004637x/797/1/51
+
+Miiller, D., St. Cyr, O. C. O. C., Zouganelis, I., Gilbert, H. R., Marsden, R., NievesChinchilla, T., et al. (2020). The Solar Orbiter mission. A&A 642, Al.
+doi:10.1051/0004-6361/202038467
+
+Odstrcil, D. (2003). Modeling 3-d Solar Wind Structure. Adv. Space Res. 32,
+497-506. Heliosphere at Solar Maximum. doi:10.1016/S0273-1177(03)
+00332-6
+
+Orsini, S., Livi, S. A., Lichtenegger, H., Barabash, S., Milillo, A., De Angelis, E., et al.
+(2021). Serena: Particle Instrument Suite for Determining the Sun-Mercury
+Interaction from Bepicolombo. Space Sci. Rev. 217, 11. doi:10.1007/s11214-02000787-3
+
+Pizzo, V. J. (1980). A Three-Dimensional Model of Corotating Streams in the Solar
+Wind 2. Hydrodynamic Streams. J. Geophys. Res. 85, 727-743. doi:10.1029/
+JA085iA02p00727
+
+Pomoell, J., and Poedts, S. (2018). Euhforia: European Heliospheric Forecasting
+Information Asset. J. Space Weather Space Clim. 8, A35. doi:10.1051/swsc/
+2018020
+
+Quémerais, E., Chaufray, J.-Y., Koutroumpa, D., Leblanc, F., Reberac, A.,
+Lustrement, B., et al. (2020). Phebus on Bepi-Colombo: Post-launch Update
+and Instrument Performance. Space Sci. Rev. 216, 67. doi:10.1007/s11214-02000695-6
+
+Richardson, I. G. (2018). Solar Wind Stream Interaction Regions throughout
+the Heliosphere. Living Rev. Sol. Phys. 15, 1. doi:10.1007/s41116-0170011-z
+
+Sahraoui, F., Hadid, L., and Huang, S. (2020). Magnetohydrodynamic and Kinetic
+Scale Turbulence in the Near-Earth Space Plasmas: a (Short) Biased Review.
+Rev. Mod. Plasma Phys. 4, 4. doi:10.1007/s41614-020-0040-2
+
+Saito, Y., Delcourt, D., Hirahara, M., Barabash, S., André, N., Takashima, T.,
+et al. (2021). Pre-flight Calibration and Near-Earth Commissioning Results
+of the Mercury Plasma Particle Experiment (MPPE) Onboard MMO (Mio).
+Space Sci. Rev. 217 (5), 70. doi:10.1007/s11214-021-00839-2
+
+Schwartz, S. J., and Marsch, E. (1983). The Radial Evolution of a Single Solar
+Wind Plasma Parcel. J. Geophys. Res. 88, 9919-9932. doi:10.1029/
+JA088iA12p09919
+
+Shiota, D., Kataoka, R., Miyoshi, Y., Hara, T., Tao, C., Masunaga, K., et al. (2014).
+Inner Heliosphere Mhd Modeling System Applicable to Space Weather
+Forecasting for the Other Planets. Space Weather 12, 187-204. doi:10.1002/
+2013sw000989
+
+Telloni, D., Sorriso-Valvo, L., Woodham, L. D., Panasenco, O., Velli, M., Carbone,
+F,, et al. (2021). Evolution of Solar Wind Turbulence from 0.1 to 1 au during the
+First Parker Solar Probe-Solar Orbiter Radial Alignment. ApJL 912, L21.
+doi:10.3847/2041-8213/abf7d1
+
+Frontiers in Astronomy and Space Sciences | www.frontiersin.org
+
+September 2021 | Volume 8 | Article 718024
+Hadid et al.
+
+BepiColombo’s Coordinated Observations During Cruise
+
+Tu, C.-Y., and Marsch, E. (1995). MHD Structures, Waves and Turbulence in the Solar
+Wind: Observations and Theories. Space Sci. Rev. 73. 1-210. doi:10.1007/bf0074889 1
+
+Turner, J. M., Burlaga, L. F., Ness, N. F., and Lemaire, J. F. (1977). Magnetic Holes
+in the Solar Wind. J. Geophys. Res. 82, 1921-1924. doi:10.1029/
+JA082i013p01921 19771896.
+
+Velli, M., Harra, L. K., Vourlidas, A., Schwadron, N., Panasenco, O., Liewer, P. C.,
+et al. (2020). Understanding the Origins of the Heliosphere: Integrating
+Observations and Measurements from parker Solar Probe, Solar Orbiter,
+and Other Space- and Ground-Based Observatories. AeA 642, A4.
+doi:10.1051/0004-6361/202038245
+
+Volwerk, M., Goetz, C., Plaschke, F., Karlsson, T., Heyner, D., and Anderson, B. (2020).
+On the Magnetic Characteristics of Magnetic Holes in the Solar Wind between
+Mercury and Venus. Ann. Geophys. 38, 51-60. doi:10.5194/angeo-38-51-2020
+
+Wang, Y.-M., and Sheeley, N. R., Jr. (1992). On Potential Field Models of the Solar
+Corona. ApJ 392, 310. doi:10.1086/171430
+
+Conflict of Interest: The authors declare that the research was conducted in the
+absence of any commercial or financial relationships that could be construed as a
+potential conflict of interest.
+
+The reviewer DH declared a past co-authorship with several of the authors SA, AM,
+JZ, JB, LG, TH, EK, and BS to the handling editor.
+
+Publisher’s Note: All claims expressed in this article are solely those of the authors
+and do not necessarily represent those of their affiliated organizations, or those of
+the publisher, the editors and the reviewers. Any product that may be evaluated in
+this article, or claim that may be made by its manufacturer, is not guaranteed or
+endorsed by the publisher.
+
+Copyright © 2021 Hadid, Génot, Aizawa, Milillo, Zender, Murakami, Benkhoff,
+Zouganelis, Alberti, André, Bebesi, Califano, Dimmock, Dosa, Escoubet, Griton, Ho,
+Horbury, Iwai, Janvier, Kilpua, Lavraud, Madar, Miyoshi, Miiller, Pinto, Rouillard,
+Raines, Raouafi, Sahraoui, Sdnchez-Cano, Shiota, Vainio and Walsh. This is an
+open-access article distributed under the terms of the Creative Commons Attribution
+License (CC BY). The use, distribution or reproduction in other forums is permitted,
+provided the original author(s) and the copyright owner(s) are credited and that the
+original publication in this journal is cited, in accordance with accepted academic
+practice. No use, distribution or reproduction is permitted which does not comply
+with these terms.
+
+Frontiers in Astronomy and Space Sciences | www.frontiersin.org
+
+10
+
+September 2021 | Volume 8 | Article 718024
