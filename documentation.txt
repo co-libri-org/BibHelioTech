@@ -1,0 +1,55 @@
+This documentation explains in detail the step-by-step operation of the program.
+
+the program starts the GROBID service
+_ the program browses the folder "BibHelio_Tech/DATA/Papers
+	_ if it finds a pdf:
+		_ it creates a folder for it and moves it into it
+
+		_ then it calls the "PDF_OCRiser" function of the "OCRiser.py" file:
+			_ this function scans the pdf to .jpg in the folder
+			_ then occludes the jpg in the "out_text.txt" file
+		
+		_ calls the GROBID_generation function in the file "GROBID_generator.py":
+			_ generates the GROBID in .tei.xml format
+		
+		_ calls the filter function of the file "OCR_filtering.py":
+			_ opens the file "out_text.txt
+				_ removes references; dates of reception, acceptance, publication
+				_ replace UT with UTC
+				_ makes adjustments to time expressions
+				_ tokenize by phrase (Separator '. ') the file
+				_ writes the result to the file "out_filtered_text.txt
+		
+		_ calls the SUTime_treatement function in "SUTime_processing.py":
+			_ parse the time expressions in ISO 8601 format
+			_ writes the result to the "res_sutime.json" file
+		
+		_ calls the SUTime_transform function of the "SUTime_processing.py" file:
+			_ opens the file "res_sutime.json
+			_ performs adjustments on the SUTime results such as filling in missing years, months, days, hours, minutes, etc.
+			_ writes these results to the file "res_sutime_2.json
+		
+		_ calls the entities_finder function of the "Entities_finder.py" file:
+			_ opens the different spreadsheets of the Excel file "Entities_DataBank.xls
+			_ opens the file "out_filtered_text.txt
+			_ opens the file "res_sutime_2.json
+			_ performs satellite recognition using the data in the 'Satellites' worksheet
+				_ store the results in a dictionary list of the form: { 'end': 133, 'start': 128, 'text': 'MMS', 'type': 'sat'}
+				(end and start represent the position between the beginning and the end of the word in number of characters from the beginning of the file)
+				_ performs instrument recognition using data from the 'Instruments' worksheet
+				_ stores the results in a dictionary list of the form: {'end': 2006, 'start': 2002, 'text': 'FPI'}
+			_ removes some ambiguities
+			_ keeps only the instruments that belong to each satellite
+			_ associates the closest time interval to a satellite. If not within the mission validity period, searches for the second closest, third closest, etc.
+			_ performs region recognition using data from the Regions_General worksheet
+				_ stores the results in a dictionary list of the form: {'end': 7009, 'start': 7002, 'text': 'earth'}
+				_ associate the planets with their regions in the previously created list
+				_ constructs the regions according to the SPASE standard as a path from the 'Regions_Tree' worksheet
+			_ associate each satellite with the nearest quoted region
+			_ build the final dictionary list according to the following structure: {"start_time": "", "stop_time": "", "DOI": "", "sat": "", "inst": "", "reg": "", "D": "", "R": "", "SO": ""}
+			sort by ascending date
+			_ write the HPEvent in the DOI__bibheliotech_V1.txt files
+		
+	_ otherwise
+		_ re-execute all but the scanning and generation of the GROBID
+_ the program stops the GROBID service
