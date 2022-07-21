@@ -22,7 +22,7 @@ for folders_or_pdf in os.listdir(main_path):
         os.makedirs(os.path.join(main_path, folders_or_pdf.replace(".pdf", "")))  # create the directory under the same name than the paper.
         shutil.move(folders_or_pdf_path, os.path.join(main_path, folders_or_pdf.replace(".pdf", ""))) # move '.pdf' to his directory.
     pdf_paths = os.path.join(main_path, folders_or_pdf.replace(".pdf", ""))
-    for pdf_files in os.listdir(pdf_paths): # precessing treatment.
+    for pdf_files in os.listdir(pdf_paths): # processing treatment.
         if pdf_files.endswith(".pdf"):
             print(pdf_paths)
             if len(os.listdir(pdf_paths)) == 1: # Only 1 file (the pdf) --> directory never treated --> processing first treatment.
