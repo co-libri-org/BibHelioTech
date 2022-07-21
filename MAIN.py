@@ -33,7 +33,7 @@ for folders_or_pdf in os.listdir(main_path):
                 SUTime_treatement(pdf_paths, sutime) # SUTime read all the file and save its results in a file "res_sutime.json"
                 SUTime_transform(pdf_paths) # transforms some results of sutime to complete missing, etc ... save results in "res_sutime_2.json"
                 entities_finder(pdf_paths) # entities recognition and association + writing of HPEvent
-            else: # case directory already treated: processing only after GROBID generation.
+            else: # case directory already treated: processing only after GROBID generation. (comment to disable)
                 filter(pdf_paths) # filter result of the OCR to deletes references, change HHmm to HH:mm, etc ...
                 SUTime_treatement(pdf_paths,sutime) # SUTime read all the file and save its results in a file "res_sutime.json"
                 SUTime_transform(pdf_paths) # transforms some results of sutime to complete missing, etc ... save results in "res_sutime_2.json"
