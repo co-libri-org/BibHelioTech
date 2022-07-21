@@ -41,16 +41,6 @@ def filter(current_OCR_folder):
         r" \1 \2 \4 at \5 to \7 \8 \10 at \11 ", content)  # replace "2018 Oct 9 12:00 2018 Oct 11 00:00" by "9 Oct 2018 at 12:00 to 11 Oct 2018 at 00:00 "
     content = re.sub(r"UTC", r"", content)  # replace "22:02 UTC" by "22:02"
 
-    # content = re.sub(r'References', 'References\n', content)
-    # content = re.sub(r'REFERENCES', 'REFERENCES\n', content)
-    #
-    # content = re.sub(r'References\n[\s\S]+', '', content)
-    # content = re.sub(r'REFERENCES\n[\s\S]+', '', content)
-    # # content = re.sub('Received.*', '', content)
-    # # content = re.sub('Accepted.*', '', content)
-    # # content = re.sub('Published.*', '', content)
-    # # content = re.sub('Suggested.*', '', content)
-
     content = content.split('. ')
 
     open(current_OCR_folder+"/"+"out_filtered_text.txt", 'w').close() # erase previous file
