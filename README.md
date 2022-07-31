@@ -8,9 +8,9 @@
 [![GitHub issues](https://img.shields.io/github/issues/ADablanc/BibHelioTech)](https://github.com/ADablanc/BibHelioTech/issues)
 
 ## BibHelioTech project description
-BibHelioTech is a program for recognition of temporal expressions and entities (satellites, instruments, regions) extracted from scientific articles in the field of heliophysics.<br />
-It was developed for the IRAP (INSTITUT DE RECHERCHE EN ASTROPHYSIQUE ET PLANÉTOLOGIE (CNRS)) of Toulouse.<br />
-Its main purpose is to retrieve this information which is not currently available digitally, and to allow its visualisation on AMDA (http://amda.irap.omp.eu/).
+BibHelioTech is a program for the recognition of temporal expressions and entities (satellites, instruments, regions) extracted from scientific articles in the field of heliophysics.<br />
+It was developed at IRAP (Institut de Recherche en Astrophysique et Planétologie, Toulouse https://www.irap.omp.eu/) in the frame of an internship by A. Dablanc supervised by V. Génot.<br />
+Its main purpose is to retrieve events of interest which have been studied and published, and associate them with the full context of the observations. It produces standardized catalogues of events (time intervals, satellites, instruments, regions, metrics) which can then be exploited in space physics visualization tools such as AMDA (http://amda.cdpp.eu/).
 
 ## Installation guide
 STEP 1: install all dependency<br />
