@@ -18,14 +18,14 @@ STEP 1: install all dependency<br />
 &nbsp;&nbsp;&nbsp;Don't forget to install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/ <br />
 &nbsp;&nbsp;&nbsp;Put the "english.sutime.txt" under sutime install directory, jars/stanford-corenlp-4.0.0-models.jar/edu/stanford/nlp/models/sutime/
 
-STEP 2: tesseract 5 installation (Ubuntu exemple)<br />
+STEP 2: tesseract 5.1.0 installation (Ubuntu exemple)<br />
 &nbsp;&nbsp;&nbsp;sudo apt update<br />
 &nbsp;&nbsp;&nbsp;sudo add-apt-repository ppa:alex-p/tesseract-ocr-devel<br />
 &nbsp;&nbsp;&nbsp;sudo apt install -y tesseract-ocr<br />
 &nbsp;&nbsp;&nbsp;sudo apt update<br />
 &nbsp;&nbsp;&nbsp;tesseract --version
 
-STEP 3: GROBID installation<br />
+STEP 3: GROBID (0.7.1) installation<br />
 &nbsp;&nbsp;&nbsp;install GROBID under ../<br />
 &nbsp;&nbsp;&nbsp;Follow install instruction on: https://grobid.readthedocs.io/en/latest/Install-Grobid/ <br />
 &nbsp;&nbsp;&nbsp;Make sure you have JVM 8 used by default !
