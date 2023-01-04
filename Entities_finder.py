@@ -70,8 +70,8 @@ def load_dataframes():
         for compteur_colonne in range(1, len(df_AMDA_SPASE.iloc[compteur_ligne])):
             AMDA_dict[str(df_AMDA_SPASE.iloc[compteur_ligne, 0])] = eval(df_AMDA_SPASE.iloc[compteur_ligne, compteur_colonne])
 
-    df_distance_metrics= pd.read_csv("../Classeurs/distance_metrics.csv")
-    num_colonne = len(df_distance_metrics)
+    df_distance_metrics = None # pd.read_csv("../Classeurs/distance_metrics.csv")
+    num_colonne = 0 # len(df_distance_metrics)
 
     df_operating_spans = pd.read_excel(entities_path, sheet_name='span')
     SPAN_dict = {}

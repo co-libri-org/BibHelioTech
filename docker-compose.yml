@@ -1,0 +1,11 @@
+version: "3.3"
+services:
+        bibheliotech:
+                image: bibheliotech
+                build:
+                        context: docker
+                        args:
+                                - USER_UID
+                                - USER_GID
+                volumes:
+                        - ./:/home/bibheliotech/BibHelio_Tech
