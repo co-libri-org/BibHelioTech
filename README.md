@@ -44,6 +44,25 @@ STEP 4: GROBID python client installation
 * install GROBID python client under ../
 * Follow install instruction on: https://github.com/kermitt2/grobid_client_python 
 
+## Docker alternative
+
+build it first
+
+    cp .env-dist .env
+    $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
+    docker-compose build
+
+then run from your directory
+
+    docker-compose run --rm bibheliotech python MAIN.py
+    # or
+    docker-compose run --rm bibheliotech bash
+
+this docker container is linked with the current directory, that means
+
+* you can change python code without rebuild
+* and you can populate ./DATA/ and run MAIN.py on your own datas.
+
 ## User guide
 Put Heliophysics articles in pdf format under BibHelio_Tech/DATA/Papers.
 
