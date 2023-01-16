@@ -41,8 +41,8 @@ STEP 3: GROBID (0.7.1) installation
 
 STEP 4: GROBID python client installation
 
-* install GROBID python client under ../
-* Follow install instruction on: https://github.com/kermitt2/grobid_client_python 
+* pip package should have been installed with requirements.txt
+* copy grobid-client-config.json-dist grobid-client-config.json
 
 ## Docker alternative
 

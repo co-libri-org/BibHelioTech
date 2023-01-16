@@ -10,3 +10,4 @@ requests==2.22.0
 pathlib==1.0.1
 setuptools==60.2.0
 xlrd==2.0.1
+grobid-client-python==0.0.4
