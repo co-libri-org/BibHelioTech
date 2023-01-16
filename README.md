@@ -64,15 +64,22 @@ this docker container is linked with the current directory, that means
 * and you can populate ./DATA/ and run MAIN.py on your own datas.
 
 ## User guide
-Put Heliophysics articles in pdf format under BibHelio_Tech/DATA/Papers.
+Make sure the GROBID server is running:
 
-You just have to run "MAIN.py".
+    cd ${GROBID_SERVER_PATH}
+    nohup ./gradlew run &
+
+Copy any Heliophysics articles in pdf format under ./DATA/Papers/
+
+Now run the main pipeline:
+
+    python MAIN.py
 
 Optionally if you want to have AMDA catalogues by satellites, you need to run "SATS_catalogue_generator.py".
 
 ## License
 
-If you use or contribute to BibHelio_Tech, you agree to use it or share your contribution following the LICENSE file.
+If you use or contribute to BibHelioTech, you agree to use it or share your contribution following the LICENSE file.
 
 ## Authors
 * [Axel Dablanc](axel.alain.dablanc@gmail.com)
