@@ -8,4 +8,4 @@ services:
                                 - USER_UID
                                 - USER_GID
                 volumes:
-                        - ./:/home/bibheliotech/BibHelio_Tech
+                        - ./:/home/bibheliotech/BibHelioTech

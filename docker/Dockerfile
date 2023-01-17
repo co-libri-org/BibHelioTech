@@ -36,15 +36,13 @@ RUN git clone https://github.com/kermitt2/grobid_client_python && \
 
 RUN git clone https://github.com/ADablanc/BibHelioTech.git
 
-RUN mv BibHelioTech BibHelio_Tech
-
-WORKDIR /home/bibheliotech/BibHelio_Tech
+WORKDIR /home/bibheliotech/BibHelioTech
 
 RUN pip install -r requirements.txt && \
     pip install xlrd && \
     cd $VIRTUAL_ENV/lib/python3.8/site-packages/sutime/jars && \
     unzip stanford-corenlp-4.0.0-models.jar -d stanford-corenlp-4.0.0-models && \
-    cp /home/bibheliotech/BibHelio_Tech/english.sutime.txt stanford-corenlp-4.0.0-models/edu/stanford/nlp/models/sutime/english.sutime.txt && \
+    cp /home/bibheliotech/BibHelioTech/english.sutime.txt stanford-corenlp-4.0.0-models/edu/stanford/nlp/models/sutime/english.sutime.txt && \
     cd stanford-corenlp-4.0.0-models && \ 
     zip -r ../stanford-corenlp-4.0.0-models.jar * && \
     cd $VIRTUAL_ENV/lib/python3.8/site-packages/sutime/jars && \
