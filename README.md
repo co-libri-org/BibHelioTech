@@ -46,22 +46,32 @@ STEP 4: GROBID python client installation
 
 ## Docker alternative
 
+bibheliotech docker container is linked with the current directory, that means
+
+* you can change python code without rebuild
+* and you can populate ./DATA/ and run MAIN.py on your own datas.
+
+Make sure there are pdf document in `DATA/Papers`
+
+
 build it first
 
     cp .env-dist .env
     $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
     docker-compose build
 
+run grobid dependency
+
+    docker-compose up --detache
+
 then run from your directory
 
     docker-compose run --rm bibheliotech python MAIN.py
-    # or
+
+or run inside container itself
+
     docker-compose run --rm bibheliotech bash
-
-this docker container is linked with the current directory, that means
-
-* you can change python code without rebuild
-* and you can populate ./DATA/ and run MAIN.py on your own datas.
+    python MAIN.py
 
 ## User guide
 Make sure the GROBID server is running:

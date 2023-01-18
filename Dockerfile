@@ -25,25 +25,16 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install -U pip sutime && \
     mvn dependency:copy-dependencies -DoutputDirectory=./jars -f $(python -c 'import importlib; import importlib.util; import pathlib; print(pathlib.Path(importlib.util.find_spec("sutime").origin).parent / "pom.xml")')
 
-RUN wget https://github.com/kermitt2/grobid/archive/0.7.1.zip && \
-    unzip 0.7.1.zip && \
-    cd grobid-0.7.1 && \
-    ./gradlew clean install --no-daemon
-
-RUN git clone https://github.com/kermitt2/grobid_client_python && \
-    cd grobid_client_python && \
-    python setup.py install
-
-RUN git clone https://github.com/ADablanc/BibHelioTech.git
-
+# RUN git clone https://github.com/ADablanc/BibHelioTech.git
 WORKDIR /home/bibheliotech/BibHelioTech
+COPY . .
+
 
 RUN pip install -r requirements.txt && \
-    pip install xlrd && \
     cd $VIRTUAL_ENV/lib/python3.8/site-packages/sutime/jars && \
     unzip stanford-corenlp-4.0.0-models.jar -d stanford-corenlp-4.0.0-models && \
     cp /home/bibheliotech/BibHelioTech/english.sutime.txt stanford-corenlp-4.0.0-models/edu/stanford/nlp/models/sutime/english.sutime.txt && \
-    cd stanford-corenlp-4.0.0-models && \ 
+    cd stanford-corenlp-4.0.0-models && \
     zip -r ../stanford-corenlp-4.0.0-models.jar * && \
     cd $VIRTUAL_ENV/lib/python3.8/site-packages/sutime/jars && \
     rm -Rf stanford-corenlp-4.0.0-models
