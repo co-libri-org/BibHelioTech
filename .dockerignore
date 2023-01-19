@@ -1,0 +1,4 @@
+# Minimize the docker context size to only needed files
+.git/
+venv/
+DATA/

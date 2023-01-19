@@ -1,4 +1,7 @@
 import os
 
-def GROBID_generation(pdf_paths):
-    os.popen("grobid_client --config ../../grobid_client_python/config.json --input"+" \""+pdf_paths+"\" "+"--output"" \""+pdf_paths+"\" "+"processFulltextDocument").read() # GROBID call
+from grobid_client.grobid_client import  GrobidClient
+client = GrobidClient(config_path="./grobid-client-config.json")
+
+def GROBID_generation(pdf_path):
+    client.process("processFulltextDocument", input_path=pdf_path, output=pdf_path,   n=20)

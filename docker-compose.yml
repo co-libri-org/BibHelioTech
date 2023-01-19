@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+    bibheliotech:
+        image: bibheliotech
+        build:
+            context: .
+            args:
+                - USER_UID
+                - USER_GID
+        volumes:
+            #- .:/home/bibheliotech/BibHelioTech # uncomment for code linking
+            - ./DATA:/home/bibheliotech/BibHelioTech/DATA
+    grobid:
+        image: "grobid/grobid:0.7.2"
