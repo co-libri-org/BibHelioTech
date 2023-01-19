@@ -1,4 +1,4 @@
-*
-!Dockerfile
-!requirements.txt
-!english.sutime.txt
+# Minimize the docker context size to only needed files
+.git/
+venv/
+DATA/
