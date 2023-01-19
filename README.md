@@ -14,15 +14,53 @@ It was developed at IRAP (Institut de Recherche en Astrophysique et Planétologi
 
 Its main purpose is to retrieve events of interest which have been studied and published, and associate them with the full context of the observations. It produces standardized catalogues of events (time intervals, satellites, instruments, regions, metrics) which can then be exploited in space physics visualization tools such as AMDA (http://amda.cdpp.eu/).
 
-## Installation guide
+## Docker image building
+
+We use docker-compose for the link between bibheliotech and grobid containers.
+
+
+build it first
+
+    cp .env-dist .env
+    $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
+    docker-compose build
+
+run grobid dependency
+
+    docker-compose up --detach
+
+then run from your directory
+
+    docker-compose run --rm bibheliotech python MAIN.py
+
+or run inside container itself
+
+    docker-compose run --rm bibheliotech bash
+    python MAIN.py
+
+bibheliotech docker container is linked with the current `DATA/` directory, that you can populate
+and run MAIN.py on your own datas.
+
+First make sure there are pdf document in `DATA/Papers/` before running.
+
+It is also possible to link current dir as volume so you can change python code without rebuild.
+To do so, change the volume instruction in `docker-compose.yml`.
+
+## Manual installation 
 
 You would be advised to look at `./docker/Dockerfile` for more tips.
 
 STEP 1: install all dependency
 
-* On your shell, run: `pip install -r requirements.txt`
-* Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/ 
-* Put the "english.sutime.txt" under sutime install directory, jars/stanford-corenlp-4.0.0-models.jar/edu/stanford/nlp/models/sutime/
+1. install pip dependencies
+```
+python3 -m venv venv
+source venv/bin/activate
+pip install wheel
+pip install -r requirements.txt
+```
+1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/ 
+1. Update the `edu/stanford/nlp/models/sutime/english.sutime.txt` under  jars/stanford-corenlp-4.0.0-models.jar/
 
 
 STEP 2: tesseract 5.1.0 installation (Ubuntu exemple)
@@ -39,45 +77,15 @@ STEP 3: GROBID (0.7.1) installation
 * Follow install instruction on: https://grobid.readthedocs.io/en/latest/Install-Grobid/ 
 * Make sure you have JVM 8 used by default !
 
+or run a grobid docker container
+
 STEP 4: GROBID python client installation
 
 * pip package should have been installed with requirements.txt
 * copy grobid-client-config.json-dist grobid-client-config.json
 
-## Docker alternative
-
-bibheliotech docker container is linked with the current directory, that means
-
-* you can change python code without rebuild
-* and you can populate ./DATA/ and run MAIN.py on your own datas.
-
-Make sure there are pdf document in `DATA/Papers`
-
-
-build it first
-
-    cp .env-dist .env
-    $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
-    docker-compose build
-
-run grobid dependency
-
-    docker-compose up --detache
-
-then run from your directory
-
-    docker-compose run --rm bibheliotech python MAIN.py
-
-or run inside container itself
-
-    docker-compose run --rm bibheliotech bash
-    python MAIN.py
-
 ## User guide
-Make sure the GROBID server is running:
-
-    cd ${GROBID_SERVER_PATH}
-    nohup ./gradlew run &
+Make sure the GROBID server is running
 
 Copy any Heliophysics articles in pdf format under ./DATA/Papers/
 
@@ -94,3 +102,4 @@ If you use or contribute to BibHelioTech, you agree to use it or share your cont
 ## Authors
 * [Axel Dablanc](axel.alain.dablanc@gmail.com)
 * [Vincent Génot](vincent.genot@irap.omp.eu)
+* [Richard Hitier](hitier.richard@gmail.com)
