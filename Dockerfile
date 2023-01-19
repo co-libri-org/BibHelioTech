@@ -1,5 +1,6 @@
-FROM ubuntu:20.04
-LABEL maintainer="Benjamin Renard <benjamin.renard@irap.omp.eu>"
+FROM ubuntu:22.04
+LABEL maintainer="Benjamin Renard <benjamin.renard@irap.omp.eu>,\
+                  Richard Hitier <hitier.richard@gmail.com>"
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common git wget unzip python3 python3-pip python3-venv openjdk-8-jre openjdk-8-jdk maven zip vim curl poppler-utils zip
@@ -19,7 +20,9 @@ USER bibheliotech
 WORKDIR /home/bibheliotech
 
 ENV VIRTUAL_ENV=/home/bibheliotech/venv
-RUN python3 -m venv $VIRTUAL_ENV
+RUN python3 -m venv $VIRTUAL_ENV &&\
+    . ./venv/bin/activate &&\
+    pip install --upgrade pip
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN pip install -U pip sutime && \
@@ -28,14 +31,7 @@ RUN pip install -U pip sutime && \
 # RUN git clone https://github.com/ADablanc/BibHelioTech.git
 WORKDIR /home/bibheliotech/BibHelioTech
 COPY . .
-
-
-RUN pip install -r requirements.txt && \
-    cd $VIRTUAL_ENV/lib/python3.8/site-packages/sutime/jars && \
-    unzip stanford-corenlp-4.0.0-models.jar -d stanford-corenlp-4.0.0-models && \
-    cp /home/bibheliotech/BibHelioTech/english.sutime.txt stanford-corenlp-4.0.0-models/edu/stanford/nlp/models/sutime/english.sutime.txt && \
-    cd stanford-corenlp-4.0.0-models && \
-    zip -r ../stanford-corenlp-4.0.0-models.jar * && \
-    cd $VIRTUAL_ENV/lib/python3.8/site-packages/sutime/jars && \
-    rm -Rf stanford-corenlp-4.0.0-models
-
+RUN pip install wheel && pip install -r requirements.txt
+RUN cd ressources/ && \
+    jar uf $VIRTUAL_ENV/lib/python3.10/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar \
+           edu/stanford/nlp/models/sutime/english.sutime.txt
