@@ -1,23 +1,25 @@
-import os
 import shutil
+from datetime import datetime
 from OCRiser import *
 from OCR_filtering import *
 from SUTime_processing import *
 from Entities_finder import *
 from GROBID_generator import *
-from datetime import datetime
+
+from config import settings
+
 start_time = datetime.now()
 
 sutime = SUTime(mark_time_ranges=True, include_range=True) # load sutime wrapper
 
-main_path = "./DATA/Papers"
+papers_dir = settings["BHT_PAPERS_DIR"]
 
-for folders_or_pdf in os.listdir(main_path):
-    folders_or_pdf_path = os.path.join(main_path, folders_or_pdf)
+for folders_or_pdf in os.listdir(papers_dir):
+    folders_or_pdf_path = os.path.join(papers_dir, folders_or_pdf)
     if folders_or_pdf.endswith(".pdf"): # If '.pdf' on "Papers" folder --> paper not treated --> processing paper treatment.
-        os.makedirs(os.path.join(main_path, folders_or_pdf.replace(".pdf", "")))  # create the directory under the same name than the paper.
-        shutil.move(folders_or_pdf_path, os.path.join(main_path, folders_or_pdf.replace(".pdf", ""))) # move '.pdf' to his directory.
-    pdf_paths = os.path.join(main_path, folders_or_pdf.replace(".pdf", ""))
+        os.makedirs(os.path.join(papers_dir, folders_or_pdf.replace(".pdf", "")))  # create the directory under the same name than the paper.
+        shutil.move(folders_or_pdf_path, os.path.join(papers_dir, folders_or_pdf.replace(".pdf", ""))) # move '.pdf' to his directory.
+    pdf_paths = os.path.join(papers_dir, folders_or_pdf.replace(".pdf", ""))
     for pdf_files in os.listdir(pdf_paths): # processing treatment.
         if pdf_files.endswith(".pdf"):
             print(pdf_paths)

@@ -8,6 +8,8 @@ from datetime import *
 from DOI_finder import *
 from published_date_finder import *
 
+from config import settings
+
 v = sys.version
 token = 'IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m' # API Key
 
@@ -30,7 +32,7 @@ def keys_exists(element, *keys):
 
 # =====================================================================================================================
 def load_dataframes():
-    entities_path = "./DATA/Worksheet/Entities_DataBank.xls"
+    entities_path = os.path.join(settings["BHT_WORKSHEET_DIR"],"Entities_DataBank.xls")
 
     df_Satellites= pd.read_excel(entities_path, sheet_name='Satellites')
     SAT_dict = {}

@@ -3,7 +3,6 @@ import re
 import json
 from DOI_finder import *
 
-main_path = "./DATA/Papers"
 
 def published_date_finder(token,v,DOI):
     # encode the title to URL encode, exemple: "kinetic+study+of+the+mirror+mode"
