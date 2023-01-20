@@ -48,6 +48,9 @@ RUN pip install -U pip sutime && \
 WORKDIR /home/bibheliotech/BibHelioTech
 COPY . .
 RUN pip install wheel && pip install -r requirements.txt
-WORKDIR ressources
+
+WORKDIR /home/bibheliotech/BibHelioTech/ressources
 RUN jar uf $VIRTUAL_ENV/lib/python3.10/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar \
            edu/stanford/nlp/models/sutime/english.sutime.txt
+
+WORKDIR /home/bibheliotech/BibHelioTech
