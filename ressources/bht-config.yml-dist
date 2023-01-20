@@ -1,0 +1,3 @@
+# Root data dir , may be absolute path
+# or relative, which is to current project dir
+BHT_DATA_DIR: "DATA"

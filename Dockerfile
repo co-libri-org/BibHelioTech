@@ -3,7 +3,23 @@ LABEL maintainer="Benjamin Renard <benjamin.renard@irap.omp.eu>,\
                   Richard Hitier <hitier.richard@gmail.com>"
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common git wget unzip python3 python3-pip python3-venv openjdk-8-jre openjdk-8-jdk maven zip vim curl poppler-utils zip
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    curl \
+    git \
+    maven \
+    openjdk-8-jdk \
+    openjdk-8-jre \
+    poppler-utils \
+    python3 \
+    python3-pip \
+    python3-venv \
+    software-properties-common \
+    unzip \
+    vim \
+    wget \
+    zip && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN add-apt-repository ppa:alex-p/tesseract-ocr && \
     apt install -y tesseract-ocr && \
     apt-get clean && \
@@ -32,6 +48,9 @@ RUN pip install -U pip sutime && \
 WORKDIR /home/bibheliotech/BibHelioTech
 COPY . .
 RUN pip install wheel && pip install -r requirements.txt
-RUN cd ressources/ && \
-    jar uf $VIRTUAL_ENV/lib/python3.10/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar \
+
+WORKDIR /home/bibheliotech/BibHelioTech/ressources
+RUN jar uf $VIRTUAL_ENV/lib/python3.10/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar \
            edu/stanford/nlp/models/sutime/english.sutime.txt
+
+WORKDIR /home/bibheliotech/BibHelioTech

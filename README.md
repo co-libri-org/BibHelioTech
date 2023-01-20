@@ -31,15 +31,15 @@ run grobid dependency
 
 then run from your directory
 
-    docker-compose run --rm bibheliotech python MAIN.py
+    docker-compose run --rm bibheliotech python bht
 
 or run inside container itself
 
     docker-compose run --rm bibheliotech bash
-    python MAIN.py
+    python bht
 
 bibheliotech docker container is linked with the current `DATA/` directory, that you can populate
-and run MAIN.py on your own datas.
+and `run bht` on your own datas.
 
 First make sure there are pdf document in `DATA/Papers/` before running.
 
@@ -91,7 +91,7 @@ Copy any Heliophysics articles in pdf format under ./DATA/Papers/
 
 Now run the main pipeline:
 
-    python MAIN.py
+    python bht
 
 Optionally if you want to have AMDA catalogues by satellites, you need to run "SATS_catalogue_generator.py".
 

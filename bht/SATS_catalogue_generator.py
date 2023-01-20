@@ -2,12 +2,14 @@ import os
 import re
 from datetime import *
 
-main_path = "./DATA/Papers"
+from config import settings
+
+papers_dir = settings["BHT_PAPERS_DIR"]
 
 SATS_dict = {}
 
-for folders_or_pdf in os.listdir(main_path):
-    files_path = os.path.join(main_path, folders_or_pdf)
+for folders_or_pdf in os.listdir(papers_dir):
+    files_path = os.path.join(papers_dir, folders_or_pdf)
     for files in os.listdir(files_path):
         if files.endswith("bibheliotech_V1.txt"):
             liste = []
@@ -40,7 +42,7 @@ for elems,val in SATS_dict.items():
 
 # write datas
 for elems,val in SATS_dict.items():
-    with open("./DATA/SATS_catalogues/" +elems+"_bibheliotech.txt", "w") as f:
+    with open(os.path.join(papers_dir ,elems+"_bibheliotech.txt"), "w") as f:
         f.write("# Name: ascii_cat;" + "\n")
         f.write("# Creation Date: " + datetime.now().isoformat() + ";" + "\n")
         f.write("# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "+ "\"https://github.com/ADablanc/BibHelioTech.git\"" +") on the papers mentionning "+elems+" as listed in the third column by their DOI. The two first columns are the start/stop times of the event; the fourth column is the "+elems+" with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term).\n")
