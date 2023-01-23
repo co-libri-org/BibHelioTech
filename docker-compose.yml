@@ -7,6 +7,8 @@ services:
             args:
                 - USER_UID
                 - USER_GID
+        ports:
+            - "8000:5000"
         volumes:
             #- .:/home/bibheliotech/BibHelioTech # uncomment for code linking
             - ./DATA:/home/bibheliotech/BibHelioTech/DATA
