@@ -6,13 +6,13 @@ from SUTime_processing import *
 from Entities_finder import *
 from GROBID_generator import *
 
-from config import settings
+from config import yml_settings
 
 start_time = datetime.now()
 
 sutime = SUTime(mark_time_ranges=True, include_range=True) # load sutime wrapper
 
-papers_dir = settings["BHT_PAPERS_DIR"]
+papers_dir = yml_settings["BHT_PAPERS_DIR"]
 
 for folders_or_pdf in os.listdir(papers_dir):
     folders_or_pdf_path = os.path.join(papers_dir, folders_or_pdf)

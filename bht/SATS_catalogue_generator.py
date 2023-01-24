@@ -2,9 +2,9 @@ import os
 import re
 from datetime import *
 
-from config import settings
+from config import yml_settings
 
-papers_dir = settings["BHT_PAPERS_DIR"]
+papers_dir = yml_settings["BHT_PAPERS_DIR"]
 
 SATS_dict = {}
 
