@@ -2,7 +2,7 @@ import os
 import re
 from datetime import *
 
-from config import yml_settings
+from bht_config import yml_settings
 
 papers_dir = yml_settings["BHT_PAPERS_DIR"]
 

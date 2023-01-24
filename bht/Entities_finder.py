@@ -8,7 +8,7 @@ from datetime import *
 from DOI_finder import *
 from published_date_finder import *
 
-from config import yml_settings
+from bht_config import yml_settings
 
 v = sys.version
 token = 'IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m' # API Key

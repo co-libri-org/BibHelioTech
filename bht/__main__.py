@@ -6,7 +6,7 @@ from SUTime_processing import *
 from Entities_finder import *
 from GROBID_generator import *
 
-from config import yml_settings
+from bht_config import yml_settings
 
 start_time = datetime.now()
 
