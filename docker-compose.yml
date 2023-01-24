@@ -13,4 +13,5 @@ services:
             #- .:/home/bibheliotech/BibHelioTech # uncomment for code linking
             - ./DATA:/home/bibheliotech/BibHelioTech/DATA
     grobid:
-        image: "grobid/grobid:0.7.2"
+      image: "lfoppiano/grobid:0.7.2"
+      #image: "grobid/grobid:0.7.2" # uncomment for biggest grobid server
