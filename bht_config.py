@@ -25,3 +25,4 @@ if not os.path.isabs(yml_settings["BHT_DATA_DIR"]):
 yml_settings["BHT_PAPERS_DIR"] = os.path.join(yml_settings["BHT_DATA_DIR"], 'Papers')
 yml_settings["BHT_SATSCAT_DIR"] = os.path.join(yml_settings["BHT_DATA_DIR"], 'SATS_catalogues')
 yml_settings["BHT_WORKSHEET_DIR"] = os.path.join(yml_settings["BHT_DATA_DIR"], 'Worksheet')
+yml_settings["BHT_RESSOURCES_DIR"] = os.path.join(BHT_ROOT_DIR, 'ressources')
