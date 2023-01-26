@@ -1,2 +1,0 @@
-def bonjour():
-    print("Monde")
