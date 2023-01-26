@@ -1,8 +1,3 @@
-__all__ = ["BhtError",
-           "BhtPathError"
-           ]
-
-
 class BhtError(Exception):
     """BHT pipeline base exception"""
 
@@ -13,4 +8,9 @@ class BhtError(Exception):
 
 class BhtPathError(BhtError):
     """File or Dir path error"""
+    pass
+
+
+class BhtResultError(BhtError):
+    """Result error"""
     pass

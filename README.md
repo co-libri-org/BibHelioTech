@@ -58,7 +58,7 @@ run from your host directory
 or run inside container itself
 
     docker-compose run --rm bibheliotech bash
-    python bht
+    PYTHON_PATH=. python bht
 
 ## Manual installation 
 
