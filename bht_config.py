@@ -22,6 +22,8 @@ with open(config_file) as f:
 
 if not os.path.isabs(yml_settings["BHT_DATA_DIR"]):
     yml_settings["BHT_DATA_DIR"] = os.path.join(BHT_ROOT_DIR, yml_settings["BHT_DATA_DIR"])
+if not os.path.isabs(yml_settings["WEB_UPLOAD_DIR"]):
+    yml_settings["WEB_UPLOAD_DIR"] = os.path.join(BHT_ROOT_DIR, yml_settings["WEB_UPLOAD_DIR"])
 yml_settings["BHT_PAPERS_DIR"] = os.path.join(yml_settings["BHT_DATA_DIR"], 'Papers')
 yml_settings["BHT_SATSCAT_DIR"] = os.path.join(yml_settings["BHT_DATA_DIR"], 'SATS_catalogues')
 yml_settings["BHT_WORKSHEET_DIR"] = os.path.join(yml_settings["BHT_DATA_DIR"], 'Worksheet')
