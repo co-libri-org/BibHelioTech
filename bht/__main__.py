@@ -8,6 +8,7 @@ from bht.GROBID_generator import GROBID_generation
 from bht.Entities_finder import entities_finder
 from bht.OCRiser import PDF_OCRiser
 from bht.OCR_filtering import ocr_filter
+from bht.errors import *
 from bht_config import yml_settings
 
 
@@ -50,13 +51,16 @@ def run_dir(_base_pdf_dir):
                     entities_finder(pdf_paths)  # entities recognition and association + writing of HPEvent
 
 
-def run_file(_pdf_file, _base_dir):
-    pdf_filename = os.path.basename(_pdf_file)
+def run_file(orig_pdf_file, result_base_dir):
+
     # 0- Move original file to working directory
-    dest_pdf_dir = os.path.join(_base_dir, pdf_filename.replace(".pdf", ""))
+    pdf_filename = os.path.basename(orig_pdf_file)
+    paper_name = pdf_filename.replace(".pdf", "")
+    dest_pdf_dir = os.path.join(result_base_dir, paper_name)
     dest_pdf_file = os.path.join(dest_pdf_dir, pdf_filename)
     os.makedirs(dest_pdf_dir, exist_ok=True)
-    shutil.move(args.pdf_file, dest_pdf_file)
+    print("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-> copying ", orig_pdf_file, 'to', dest_pdf_file)
+    shutil.copy(orig_pdf_file, dest_pdf_file)
 
     # 1- OCR the pdf file
     PDF_OCRiser(dest_pdf_dir, dest_pdf_file)
@@ -76,6 +80,13 @@ def run_file(_pdf_file, _base_dir):
     SUTime_transform(dest_pdf_dir)
     # entities recognition and association + writing of HPEvent
     entities_finder(dest_pdf_dir)
+    search_pattern = os.path.join(dest_pdf_dir, '**', '*bibheliotech*.txt')
+    print(f"searching {search_pattern}")
+    result_catalogs = glob.glob(search_pattern, recursive=True)
+    found_file = result_catalogs[0]
+    if not os.path.isfile(found_file):
+        raise BhtResultError(f"No such file {found_file}")
+    return found_file
 
 
 if __name__ == '__main__':
@@ -107,12 +118,13 @@ if __name__ == '__main__':
             elif os.path.isdir(abs_path):
                 _f_type = "d"
             else:
-                _f_type="u"
+                _f_type = "u"
 
             print(_f_type, item)
         for item in glob.glob('*.py', root_dir="/home/richard/01DEV/BibHelioTech/bht/", recursive=True):
             print(item)
         import sys
+
         sys.exit()
     if args.pdf_file:
         run_file(args.pdf_file, papers_dir)
