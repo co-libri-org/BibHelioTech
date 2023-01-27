@@ -4,15 +4,25 @@
     {% block more_head %}{% endblock %}
 </head>
 <body>
-    <header>
-    </header>
-    <section>
-        {% block content %}{% endblock %}
-    </section>
-    <footer>
-        <p>© 2023 IRAP - <a id="redirect" href="{{ url_for('main.index') }}">bibheliotech</a> - <span>{{ config.VERSION }}</span>
-        </p>
-    </footer>
+<header>
+</header>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<section>
+    {% block content %}{% endblock %}
+</section>
+<footer>
+    <p>© 2023 IRAP - <a id="redirect" href="{{ url_for('main.index') }}">bibheliotech</a> -
+        <span>{{ config.VERSION }}</span>
+    </p>
+</footer>
 </body>
 </html>
 
