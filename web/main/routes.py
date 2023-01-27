@@ -10,14 +10,19 @@ from web.errors import *
 from bht.__main__ import run_file as bht_run_file
 
 
-@bp.route('/')
-def index():
-    return render_template("index.html", configuration=current_app.config)
-
-
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
+
+
+@bp.route('/')
+def index():
+    return render_template("index.html", name='')
+
+
+@bp.route('/configuration')
+def configuration():
+    return render_template("configuration.html", configuration=current_app.config)
 
 
 @bp.route('/uploads/<name>')
