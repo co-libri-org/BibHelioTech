@@ -5,8 +5,10 @@ import collections
 import pandas as pd
 from copy import copy
 from datetime import *
-from DOI_finder import *
-from published_date_finder import *
+
+from bht.DOI_finder import *
+from bht.published_date_finder import *
+
 
 from bht_config import yml_settings
 
