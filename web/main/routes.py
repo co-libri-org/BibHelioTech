@@ -7,11 +7,12 @@ from flask import send_from_directory, render_template, current_app, request, fl
 
 from . import bp
 from web.errors import *
+from bht.__main__ import run_file as bht_run_file
 
 
 @bp.route('/')
 def index():
-    return render_template("index.html", name=current_app.config['BHT_DATA_DIR'])
+    return render_template("index.html", configuration=current_app.config)
 
 
 def allowed_file(filename):
@@ -54,15 +55,33 @@ def upload_file():
     return render_template("upload_form.html")
 
 
-@bp.route('/catalog/<catalog_file>', methods=['GET'])
-def catalog(catalog_file):
-    catalog_paths = glob.glob(os.path.join(current_app.config['BHT_PAPERS_DIR'], '**', catalog_file), recursive=True)
+@bp.route('/pdf2catalog/<pdf_file>')
+def pdf2catalog(pdf_file):
+    # finde pdf file from ... upload dir
+    found_pdf_file = os.path.join(current_app.config['WEB_UPLOAD_DIR'], pdf_file)
+    if not os.path.isfile(found_pdf_file):
+        flash(f"No such file {found_pdf_file}")
+        return redirect(url_for("main.index"))
+    catalog_path = bht_run_file(found_pdf_file, current_app.config['WEB_UPLOAD_DIR'])
+    # catalog_file = os.path.basename(catalog_path)
+    if not os.path.isfile(catalog_path):
+        raise WebResultError(f"Unable to build catalog file for {pdf_file}")
+    paper_id = os.path.basename(pdf_file).replace(".pdf", "")
+    return redirect(url_for('main.catalog', catalog_dir=paper_id))
+
+
+@bp.route('/catalog/<catalog_dir>', methods=['GET'])
+def catalog(catalog_dir):
+    search_pattern = os.path.join(current_app.config['WEB_UPLOAD_DIR'], '**', catalog_dir, '*bibheliotech' '*.txt')
+    print(search_pattern)
+    catalog_paths = glob.glob(search_pattern, recursive=True)
     if len(catalog_paths) == 0:
-        raise WebResultError(f"No such file 1 {catalog_file}")
+        raise WebResultError(f"Not any catalog for paper in {catalog_dir}")
     found_file = catalog_paths[0]
+    print(f' -+ -+ -+ -+ -+ -+ -+ -+ -+ -+ > > {found_file}')
     if not os.path.isfile(found_file):
-        flash(f"No such file {catalog_file}")
-        raise WebResultError(f"No such file 2  {catalog_file}")
+        flash(f"No such file {catalog_dir}")
+        raise WebResultError(f"No such file {found_file}")
         return redirect(url_for('main.index'))
     return send_file(found_file)
 
