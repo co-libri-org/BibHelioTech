@@ -54,4 +54,3 @@ RUN jar uf $VIRTUAL_ENV/lib/python3.10/site-packages/sutime/jars/stanford-corenl
            edu/stanford/nlp/models/sutime/english.sutime.txt
 
 WORKDIR /home/bibheliotech/BibHelioTech
-CMD ["flask", "--app" , "web", "run", "--host=0.0.0.0"]
