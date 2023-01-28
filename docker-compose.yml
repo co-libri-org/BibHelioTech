@@ -1,5 +1,10 @@
 version: "3.3"
 services:
+
+    grobid:
+      image: "lfoppiano/grobid:0.7.2"
+      #image: "grobid/grobid:0.7.2" # uncomment for biggest grobid server
+
     bibheliotech:
         image: bibheliotech
         build:
