@@ -1,6 +1,6 @@
 import re
 
-def filter(current_OCR_folder):
+def ocr_filter(current_OCR_folder):
     in_file = open(current_OCR_folder+"/"+"out_text.txt", "r") # open the txt file resulting from OCR
     content = in_file.read()
 

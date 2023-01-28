@@ -1,0 +1,16 @@
+{% extends "base_page.html" %}
+{%  block more_head %}
+{%  endblock %}
+
+{% block content %}
+<h1>This is configuration:</h1>
+<table>
+    {% for k, v in configuration.items()%}
+    <tr>
+        <td>{{k}}</td>
+        <td>{{v}}</td>
+    </tr>
+    {%endfor%}
+</table>
+
+{%  endblock %}

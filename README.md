@@ -16,6 +16,8 @@ Its main purpose is to retrieve events of interest which have been studied and p
 
 ## Docker image building
 
+### Web interface
+
 We use docker-compose for the link between bibheliotech and grobid containers.
 
 
@@ -25,18 +27,16 @@ build it first
     $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
     docker-compose build
 
-run grobid dependency
+run all
 
     docker-compose up --detach
 
-then run from your directory
+- will launch grobid server
+- and flask application
 
-    docker-compose run --rm bibheliotech python bht
+access web interface through `localhost:8000` (edit docker-compose.yml in case)
 
-or run inside container itself
-
-    docker-compose run --rm bibheliotech bash
-    python bht
+### Volumes
 
 bibheliotech docker container is linked with the current `DATA/` directory, that you can populate
 and `run bht` on your own datas.
@@ -45,6 +45,20 @@ First make sure there are pdf document in `DATA/Papers/` before running.
 
 It is also possible to link current dir as volume so you can change python code without rebuild.
 To do so, change the volume instruction in `docker-compose.yml`.
+
+
+### Running files treatement under ./DATA/
+
+This will compute all `*pdf` papers in `./DATA/` directory
+
+run from your host directory
+
+    docker-compose run --rm bibheliotech python bht
+
+or run inside container itself
+
+    docker-compose run --rm bibheliotech bash
+    PYTHON_PATH=. python bht
 
 ## Manual installation 
 

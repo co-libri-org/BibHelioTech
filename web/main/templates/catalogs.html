@@ -1,0 +1,11 @@
+{% extends "base_page.html" %}
+{%  block more_head %}
+{%  endblock %}
+{% block content %}
+<ul>
+    {% for catalog in catalogs %}
+    <li>{{catalog}}</li>
+    {%endfor%}
+
+</ul>
+{%  endblock %}
