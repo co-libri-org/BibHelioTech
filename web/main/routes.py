@@ -34,7 +34,8 @@ def papers(name=None):
     if not name:
         # get all uploaded pdf
         pdf_list = glob.glob(os.path.join(current_app.config['WEB_UPLOAD_DIR'], '*.pdf'))
-        return render_template('papers.html', pdf_list=pdf_list)
+        papers_list = [os.path.basename(pdf_file).replace(".pdf", "") for pdf_file in pdf_list]
+        return render_template('papers.html', papers_list=papers_list)
     else:
         flash("Uploaded " + name)
         return redirect(url_for('main.papers'))
