@@ -17,28 +17,31 @@ def allowed_file(filename):
 
 @bp.route('/')
 def index():
-    return render_template("index.html", name='')
+    return render_template("index.html")
 
+@bp.route('/about')
+def about():
+    return render_template("index.html", message='To fill in')
 
 @bp.route('/configuration')
 def configuration():
     return render_template("configuration.html", configuration=current_app.config)
 
 
-@bp.route('/uploads/<name>')
-@bp.route('/uploads')
-def uploads(name=None):
+@bp.route('/papers/<name>')
+@bp.route('/papers')
+def papers(name=None):
     if not name:
         # get all uploaded pdf
         pdf_list = glob.glob(os.path.join(current_app.config['WEB_UPLOAD_DIR'], '*.pdf'))
-        return render_template('uploads.html', pdf_list=pdf_list)
+        return render_template('papers.html', pdf_list=pdf_list)
     else:
         flash("Uploaded " + name)
-        return redirect(url_for('main.uploads'))
+        return redirect(url_for('main.papers'))
 
 
 @bp.route('/upload', methods=['GET', 'POST'])
-def upload_file():
+def upload():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -56,7 +59,7 @@ def upload_file():
             if not os.path.isdir(upload_dir):
                 os.makedirs(upload_dir)
             file.save(os.path.join(upload_dir, filename))
-            return redirect(url_for('main.uploads', name=filename))
+            return redirect(url_for('main.papers', name=filename))
     return render_template("upload_form.html")
 
 
