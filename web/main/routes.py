@@ -19,13 +19,23 @@ def allowed_file(filename):
 def index():
     return render_template("index.html")
 
+
 @bp.route('/about')
 def about():
     return render_template("index.html", message='To fill in')
 
+
 @bp.route('/configuration')
 def configuration():
     return render_template("configuration.html", configuration=current_app.config)
+
+
+@bp.route('/pdf/<paper_name>')
+def pdf(paper_name):
+    pdf_files = glob.glob(os.path.join(current_app.config['WEB_UPLOAD_DIR'], paper_name, '.pdf'))
+    if len(pdf_files) == 0 or not os.path.isfile(pdf_files[0]):
+        flash(f"No file found for paper {paper_name}")
+    return send_file(pdf_files[0])
 
 
 @bp.route('/papers/<name>')
@@ -64,32 +74,32 @@ def upload():
     return render_template("upload_form.html")
 
 
-@bp.route('/pdf2catalog/<pdf_file>')
-def pdf2catalog(pdf_file):
+@bp.route('/bht/<paper_name>')
+def bht(paper_name):
     # finde pdf file from ... upload dir
-    found_pdf_file = os.path.join(current_app.config['WEB_UPLOAD_DIR'], pdf_file)
+    found_pdf_file = os.path.join(current_app.config['WEB_UPLOAD_DIR'], paper_name)
     if not os.path.isfile(found_pdf_file):
         flash(f"No such file {found_pdf_file}")
         return redirect(url_for("main.index"))
     catalog_path = bht_run_file(found_pdf_file, current_app.config['WEB_UPLOAD_DIR'])
     # catalog_file = os.path.basename(catalog_path)
     if not os.path.isfile(catalog_path):
-        raise WebResultError(f"Unable to build catalog file for {pdf_file}")
-    paper_id = os.path.basename(pdf_file).replace(".pdf", "")
+        raise WebResultError(f"Unable to build catalog file for {paper_name}")
+    paper_id = os.path.basename(paper_name).replace(".pdf", "")
     return redirect(url_for('main.catalog', catalog_dir=paper_id))
 
 
-@bp.route('/catalog/<catalog_dir>', methods=['GET'])
-def catalog(catalog_dir):
-    search_pattern = os.path.join(current_app.config['WEB_UPLOAD_DIR'], '**', catalog_dir, '*bibheliotech' '*.txt')
+@bp.route('/cat/<paper_name>', methods=['GET'])
+def cat(paper_name):
+    search_pattern = os.path.join(current_app.config['WEB_UPLOAD_DIR'], '**', paper_name, '*bibheliotech' '*.txt')
     print(search_pattern)
     catalog_paths = glob.glob(search_pattern, recursive=True)
     if len(catalog_paths) == 0:
-        raise WebResultError(f"Not any catalog for paper in {catalog_dir}")
+        raise WebResultError(f"Not any catalog for paper in {paper_name}")
     found_file = catalog_paths[0]
     print(f' -+ -+ -+ -+ -+ -+ -+ -+ -+ -+ > > {found_file}')
     if not os.path.isfile(found_file):
-        flash(f"No such file {catalog_dir}")
+        flash(f"No such file {paper_name}")
         raise WebResultError(f"No such file {found_file}")
         return redirect(url_for('main.index'))
     return send_file(found_file)
