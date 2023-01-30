@@ -32,9 +32,10 @@ def configuration():
 
 @bp.route('/pdf/<paper_name>')
 def pdf(paper_name):
-    pdf_files = glob.glob(os.path.join(current_app.config['WEB_UPLOAD_DIR'], paper_name, '.pdf'))
+    pdf_files = glob.glob(os.path.join(current_app.config['WEB_UPLOAD_DIR'], paper_name + '.pdf'))
     if len(pdf_files) == 0 or not os.path.isfile(pdf_files[0]):
         flash(f"No file found for paper {paper_name}")
+        return redirect(url_for('main.papers'))
     return send_file(pdf_files[0])
 
 
