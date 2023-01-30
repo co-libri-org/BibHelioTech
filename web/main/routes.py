@@ -77,8 +77,8 @@ def upload():
 
 @bp.route('/bht/<paper_name>')
 def bht(paper_name):
-    # finde pdf file from ... upload dir
-    found_pdf_file = os.path.join(current_app.config['WEB_UPLOAD_DIR'], paper_name)
+    # find pdf file from ... upload dir
+    found_pdf_file = os.path.join(current_app.config['WEB_UPLOAD_DIR'], paper_name + '.pdf')
     if not os.path.isfile(found_pdf_file):
         flash(f"No such file {found_pdf_file}")
         return redirect(url_for("main.index"))
@@ -86,8 +86,7 @@ def bht(paper_name):
     # catalog_file = os.path.basename(catalog_path)
     if not os.path.isfile(catalog_path):
         raise WebResultError(f"Unable to build catalog file for {paper_name}")
-    paper_id = os.path.basename(paper_name).replace(".pdf", "")
-    return redirect(url_for('main.catalog', catalog_dir=paper_id))
+    return redirect(url_for('main.cat', paper_name=paper_name))
 
 
 @bp.route('/cat/<paper_name>', methods=['GET'])
@@ -96,12 +95,13 @@ def cat(paper_name):
     print(search_pattern)
     catalog_paths = glob.glob(search_pattern, recursive=True)
     if len(catalog_paths) == 0:
-        raise WebResultError(f"Not any catalog for paper in {paper_name}")
+        flash(f"No catalog for paper {paper_name}")
+        # raise WebResultError(f"Not any catalog for paper in {paper_name}")
+        redirect(url_for('main.papers'))
     found_file = catalog_paths[0]
-    print(f' -+ -+ -+ -+ -+ -+ -+ -+ -+ -+ > > {found_file}')
     if not os.path.isfile(found_file):
-        flash(f"No such file {paper_name}")
-        raise WebResultError(f"No such file {found_file}")
+        flash(f"No such file for paper {paper_name}")
+        # raise WebResultError(f"No such file {found_file}")
         return redirect(url_for('main.index'))
     return send_file(found_file)
 
