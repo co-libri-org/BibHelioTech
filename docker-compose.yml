@@ -18,8 +18,7 @@ services:
         volumes:
             #- .:/home/bibheliotech/BibHelioTech # uncomment for code linking
             - ./DATA:/home/bibheliotech/BibHelioTech/DATA
-        depends_on:
-            - grobid
+        depends_on: ['grobid']
 
     nginx:
       image: nginx
