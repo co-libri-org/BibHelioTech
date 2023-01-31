@@ -18,7 +18,7 @@ services:
         volumes:
             #- .:/home/bibheliotech/BibHelioTech # uncomment for code linking
             - ./DATA:/home/bibheliotech/BibHelioTech/DATA
-        depends_on: ['grobid']
+        depends_on: ['grobid', 'redis']
 
     nginx:
       image: nginx
@@ -28,4 +28,20 @@ services:
         - 80:80
       depends_on:
         - bibheliotech
+
+    worker:
+      image: bibheliotech
+      command: python manage.py run_worker
+      volumes:
+        - ./DATA:/home/bibheliotech/BibHelioTech/DATA
+#      volumes:
+#        - .:/usr/src/app
+#      environment:
+#        - APP_SETTINGS=project.server.config.DevelopmentConfig
+      depends_on:
+        - redis
+
+    redis:
+      image: redis:6.2-alpine
+
 

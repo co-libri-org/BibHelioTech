@@ -1,9 +1,12 @@
 import glob
 import os
+import redis
+from rq import Connection, Queue
 
 from werkzeug.utils import secure_filename
 
-from flask import send_from_directory, render_template, current_app, request, flash, redirect, url_for, send_file
+from flask import send_from_directory, render_template, current_app, request, flash, redirect, url_for, send_file, \
+    jsonify
 
 from . import bp
 from web.errors import *
@@ -82,11 +85,42 @@ def bht(paper_name):
     if not os.path.isfile(found_pdf_file):
         flash(f"No such file {found_pdf_file}")
         return redirect(url_for("main.index"))
-    catalog_path = bht_run_file(found_pdf_file, current_app.config['WEB_UPLOAD_DIR'])
+    # catalog_path = bht_run_file(found_pdf_file, current_app.config['WEB_UPLOAD_DIR'])
+    with Connection(redis.from_url(current_app.config["REDIS_URL"])):
+        q = Queue()
+        task = q.enqueue(bht_run_file, found_pdf_file, current_app.config['WEB_UPLOAD_DIR'])
+    response_object = {
+        "status": "success",
+        "data": {
+            "task_id": task.get_id()
+        }
+    }
     # catalog_file = os.path.basename(catalog_path)
-    if not os.path.isfile(catalog_path):
-        raise WebResultError(f"Unable to build catalog file for {paper_name}")
-    return redirect(url_for('main.cat', paper_name=paper_name))
+    # if not os.path.isfile(catalog_path):
+    #     raise WebResultError(f"Unable to build catalog file for {paper_name}")
+    # return redirect(url_for('main.cat', paper_name=paper_name))
+
+    # return jsonify(response_object), 202
+    return redirect(url_for("main.get_status", task_id=task.get_id()))
+
+
+@bp.route("/tasks/<task_id>", methods=["GET"])
+def get_status(task_id):
+    with Connection(redis.from_url(current_app.config["REDIS_URL"])):
+        q = Queue()
+        task = q.fetch_job(task_id)
+    if task:
+        response_object = {
+            "status": "success",
+            "data": {
+                "task_id": task.get_id(),
+                "task_status": task.get_status(),
+                "task_result": task.result,
+            },
+        }
+    else:
+        response_object = {"status": "error"}
+    return jsonify(response_object)
 
 
 @bp.route('/cat/<paper_name>', methods=['GET'])
