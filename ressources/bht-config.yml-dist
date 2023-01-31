@@ -2,3 +2,5 @@
 # or relative, which is to current project dir
 BHT_DATA_DIR: "DATA"
 WEB_UPLOAD_DIR: "DATA/web-upload"
+REDIS_URL: "redis://redis:6379/0"
+QUEUES: ["default"]
