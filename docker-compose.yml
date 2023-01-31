@@ -1,10 +1,6 @@
 version: "3.3"
 services:
 
-    grobid:
-      image: "lfoppiano/grobid:0.7.2"
-      #image: "grobid/grobid:0.7.2" # uncomment for biggest grobid server
-
     bibheliotech:
         image: bibheliotech
         build:
@@ -18,7 +14,29 @@ services:
         volumes:
             #- .:/home/bibheliotech/BibHelioTech # uncomment for code linking
             - ./DATA:/home/bibheliotech/BibHelioTech/DATA
-        depends_on: ['grobid', 'redis']
+        depends_on:
+          grobid:
+            condition: service_healthy
+          redis:
+            condition: service_started
+
+    grobid:
+      build:
+        context: .
+        dockerfile: Dockerfile.grobid
+      healthcheck:
+        test: ["CMD-SHELL", "curl --fail http://localhost:8070/api/isalive || exit 1"]
+        interval: 30s
+        timeout: 3s
+        retries: 30
+
+    worker:
+      image: bibheliotech
+      command: python manage.py run_worker
+      volumes:
+        - ./DATA:/home/bibheliotech/BibHelioTech/DATA
+      depends_on:
+        - bibheliotech
 
     nginx:
       image: nginx
@@ -29,19 +47,12 @@ services:
       depends_on:
         - bibheliotech
 
-    worker:
-      image: bibheliotech
-      command: python manage.py run_worker
-      volumes:
-        - ./DATA:/home/bibheliotech/BibHelioTech/DATA
-#      volumes:
-#        - .:/usr/src/app
-#      environment:
-#        - APP_SETTINGS=project.server.config.DevelopmentConfig
-      depends_on:
-        - redis
-
     redis:
       image: redis:6.2-alpine
+#      healthcheck:
+#        test: ["CMD", "redis-cli", "ping"]
+#        interval: 1s
+#        timeout: 3s
+#        retries: 30
 
 
