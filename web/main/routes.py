@@ -89,18 +89,20 @@ def bht(paper_name):
     with Connection(redis.from_url(current_app.config["REDIS_URL"])):
         q = Queue()
         task = q.enqueue(bht_run_file, found_pdf_file, current_app.config['WEB_UPLOAD_DIR'])
-    response_object = {
-        "status": "success",
-        "data": {
-            "task_id": task.get_id()
-        }
-    }
+
     # catalog_file = os.path.basename(catalog_path)
     # if not os.path.isfile(catalog_path):
     #     raise WebResultError(f"Unable to build catalog file for {paper_name}")
     # return redirect(url_for('main.cat', paper_name=paper_name))
 
+    # response_object = {
+    #     "status": "success",
+    #     "data": {
+    #         "task_id": task.get_id()
+    #     }
+    # }
     # return jsonify(response_object), 202
+
     return redirect(url_for("main.get_status", task_id=task.get_id()))
 
 
