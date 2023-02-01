@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+{% macro page_active(page) %}{% if  page in request.endpoint %}active{% endif %}{% endmacro %}
+
 <html lang="en">
 <head>
     <title>BibHelioTech</title>
@@ -8,7 +10,7 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
     {% block more_head %}{% endblock %}
-<!--<body class="text-center ">-->
+    <!--<body class="text-center ">-->
 <body>
 
 <main>
@@ -22,8 +24,8 @@
             </a>
 
             <ul class="nav nav-pills">
-                <li class="nav-item"><a href="{{url_for('main.papers')}}" class="nav-link">Papers</a></li>
-                <li class="nav-item"><a href="{{url_for('main.about')}}" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="{{url_for('main.papers')}}" class="nav-link {{page_active('papers')}}">Papers</a></li>
+                <li class="nav-item"><a href="{{url_for('main.about')}}" class="nav-link {{page_active('about')}}">About</a></li>
             </ul>
         </header>
     </div>
