@@ -75,8 +75,9 @@ def upload():
             if not os.path.isdir(upload_dir):
                 os.makedirs(upload_dir)
             file.save(os.path.join(upload_dir, filename))
-            return redirect(url_for('main.papers', name=filename))
-    return render_template("upload_form.html")
+            flash(f'Uploaded {file.filename}')
+            return redirect(url_for('main.papers'))#, name=filename))
+        # return render_template("upload_form.html")
 
 
 @bp.route('/bht/<paper_name>')
