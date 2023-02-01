@@ -20,7 +20,8 @@ def allowed_file(filename):
 
 @bp.route('/')
 def index():
-    return render_template("index.html")
+    # return render_template("index.html")
+    return redirect(url_for('main.papers'))
 
 
 @bp.route('/about')
