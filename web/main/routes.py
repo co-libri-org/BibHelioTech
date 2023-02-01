@@ -26,7 +26,7 @@ def index():
 
 @bp.route('/about')
 def about():
-    return render_template("index.html", message='To fill in')
+    return render_template("about.html")
 
 
 @bp.route('/configuration')
