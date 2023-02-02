@@ -18,23 +18,21 @@ Its main purpose is to retrieve events of interest which have been studied and p
 
 ### Web interface
 
-We use docker-compose for the link between bibheliotech and grobid containers.
+We use docker-compose for the link between bibheliotech and dependency containers.
 
 
 build it first
 
-    cp .env-dist .env
-    $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
     docker-compose build
 
 run all
 
     docker-compose up --detach
 
-- will launch grobid server
+- will launch all services
 - and flask application
 
-access web interface through `localhost:8000` (edit docker-compose.yml in case)
+access web interface through `http://localhost` 
 
 ### Volumes
 
@@ -46,6 +44,17 @@ First make sure there are pdf document in `DATA/Papers/` before running.
 It is also possible to link current dir as volume so you can change python code without rebuild.
 To do so, change the volume instruction in `docker-compose.yml`.
 
+### Dev mode
+
+mainly runs flask in debug mode (skipping gunicorn), and
+linking host files to container for live update.
+
+    cp .env-dist .env
+    $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
+    docker compose down
+    cp docker-compose.override.yml-dist docker-compose.override.yml
+    docker compose build
+    docker compose up -d
 
 ### Running files treatement under ./DATA/
 

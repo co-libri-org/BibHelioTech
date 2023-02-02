@@ -1,0 +1,6 @@
+services:
+  web:
+    command: flask --debug --app bht_web run --host=0.0.0.0
+    volumes:
+      - ./web:/home/bibheliotech/BibHelioTech/web
+      - ./DATA:/home/bibheliotech/BibHelioTech/DATA
