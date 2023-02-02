@@ -32,7 +32,7 @@ ARG USER_GID
 
 RUN groupadd --gid $USER_GID bibheliotech && \
     useradd --uid $USER_UID --gid $USER_GID -ms /bin/bash bibheliotech
-USER bibheliotech
+
 WORKDIR /home/bibheliotech
 
 ENV VIRTUAL_ENV=/home/bibheliotech/venv
@@ -55,4 +55,6 @@ WORKDIR /home/bibheliotech/BibHelioTech/ressources
 RUN jar uf $VIRTUAL_ENV/lib/python3.10/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar \
            edu/stanford/nlp/models/sutime/english.sutime.txt
 
+RUN chown -R bibheliotech:bibheliotech /home/bibheliotech
 WORKDIR /home/bibheliotech/BibHelioTech
+USER bibheliotech
