@@ -1,8 +1,9 @@
 version: "3.3"
+name: "bht"
 services:
 
-    bibheliotech:
-        image: bibheliotech
+    web:
+        image: web
         build:
             context: .
             args:
@@ -27,12 +28,12 @@ services:
         dockerfile: Dockerfile.grobid
 
     worker:
-      image: bibheliotech
+      image: web
       command: python manage.py run_worker
       volumes:
         - bht_data:/home/bibheliotech/BibHelioTech/DATA:rw
       depends_on:
-        - bibheliotech
+        - web
 
     nginx:
       image: nginx
@@ -41,7 +42,7 @@ services:
       ports:
         - "80:80"
       depends_on:
-        - bibheliotech
+        - web
 
     redis:
       image: redis:6.2-alpine
