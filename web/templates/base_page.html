@@ -24,40 +24,39 @@
             </a>
 
             <ul class="nav nav-pills">
-                <li class="nav-item"><a href="{{url_for('main.papers')}}" class="nav-link {{page_active('papers')}}">Papers</a></li>
-                <li class="nav-item"><a href="{{url_for('main.about')}}" class="nav-link {{page_active('about')}}">About</a></li>
+                <li class="nav-item"><a href="{{url_for('main.papers')}}" class="nav-link {{page_active('papers')}}">Papers</a>
+                </li>
+                <li class="nav-item"><a href="{{url_for('main.about')}}"
+                                        class="nav-link {{page_active('about')}}">About</a></li>
             </ul>
         </header>
     </div>
-    <header>
-    </header>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class=flashes>
-        {% for message in messages %}
-        <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
+
     <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </div>
 
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container">
+    <div class="container">
+        <footer class="footer mt-auto py-3 bg-light">
     <span class="text-muted">
       <p>© 2023 IRAP - <a id="redirect" href="{{ url_for('main.index') }}">BibHelioTech</a> -
           <span>{{ config.VERSION }}</span>
       </p>
 
     </span>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
 
-    <footer>
-    </footer>
     <!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"-->
     <!--        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"-->
     <!--        crossorigin="anonymous"></script>-->
