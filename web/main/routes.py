@@ -90,7 +90,7 @@ def bht(paper_name):
     # catalog_path = bht_run_file(found_pdf_file, current_app.config['WEB_UPLOAD_DIR'])
     with Connection(redis.from_url(current_app.config["REDIS_URL"])):
         q = Queue()
-        task = q.enqueue(bht_run_file, found_pdf_file, current_app.config['WEB_UPLOAD_DIR'])
+        task = q.enqueue(bht_run_file, args=(found_pdf_file, current_app.config['WEB_UPLOAD_DIR']), job_timeout=600)
 
     # catalog_file = os.path.basename(catalog_path)
     # if not os.path.isfile(catalog_path):
