@@ -1,5 +1,10 @@
 version: "3.3"
 services:
+
+    grobid:
+      image: "lfoppiano/grobid:0.7.2"
+      #image: "grobid/grobid:0.7.2" # uncomment for biggest grobid server
+
     bibheliotech:
         image: bibheliotech
         build:
@@ -7,11 +12,20 @@ services:
             args:
                 - USER_UID
                 - USER_GID
-        ports:
-            - "8000:5000"
+        command: gunicorn --bind 0.0.0.0:5000 bht_web:app
+        expose:
+            - 5000
         volumes:
             #- .:/home/bibheliotech/BibHelioTech # uncomment for code linking
             - ./DATA:/home/bibheliotech/BibHelioTech/DATA
-    grobid:
-      image: "lfoppiano/grobid:0.7.2"
-      #image: "grobid/grobid:0.7.2" # uncomment for biggest grobid server
+        depends_on: ['grobid']
+
+    nginx:
+      image: nginx
+      volumes:
+        - ./web_nginx.docker.conf:/etc/nginx/conf.d/default.conf
+      ports:
+        - 80:80
+      depends_on:
+        - bibheliotech
+

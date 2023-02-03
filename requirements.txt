@@ -13,3 +13,4 @@ xlrd==2.0.1
 grobid-client-python==0.0.4
 PyYAML==6.0
 Flask==2.2.2
+gunicorn==20.1.0
