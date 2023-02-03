@@ -1,6 +1,16 @@
 services:
   web:
+    build:
+      context: .
+      args:
+        - USER_UID=$USER_UID
+        - USER_GID=$USER_GID
     command: flask --debug --app bht_web run --host=0.0.0.0
+    ports:
+      - "5000:5000"
     volumes:
       - ./web:/home/bibheliotech/BibHelioTech/web
       - ./DATA:/home/bibheliotech/BibHelioTech/DATA
+
+  nginx:
+    entrypoint: [ "echo", "Service foo disabled" ]
