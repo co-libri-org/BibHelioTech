@@ -46,15 +46,18 @@ RUN pip install -U pip sutime && \
 
 # RUN git clone https://github.com/ADablanc/BibHelioTech.git
 WORKDIR /home/bibheliotech/BibHelioTech
-COPY . .
-RUN cp ./ressources/grobid-client-config.json-dist ./grobid-client-config.json &&\
-    cp ./ressources/bht-config.yml-dist ./bht-config.yml
+COPY ./requirements.txt ./requirements.txt
 RUN pip install wheel && pip install -r requirements.txt
 
+COPY ./ressources ./ressources
 WORKDIR /home/bibheliotech/BibHelioTech/ressources
 RUN jar uf $VIRTUAL_ENV/lib/python3.10/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar \
            edu/stanford/nlp/models/sutime/english.sutime.txt
 
-RUN chown -R bibheliotech:bibheliotech /home/bibheliotech
 WORKDIR /home/bibheliotech/BibHelioTech
+COPY . .
+RUN cp ./ressources/grobid-client-config.json-dist ./grobid-client-config.json &&\
+    cp ./ressources/bht-config.yml-dist ./bht-config.yml
+
+RUN chown -R bibheliotech:bibheliotech /home/bibheliotech/BibHelioTech/DATA
 USER bibheliotech
