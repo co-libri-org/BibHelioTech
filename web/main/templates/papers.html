@@ -1,0 +1,24 @@
+{% extends "base_page.html" %}
+{%  block more_head %}
+{%  endblock %}
+{% block content %}
+
+{% for paper_name in papers_list %}
+<div class="row ">
+    <div class="col-4 ">{{paper_name}}</div>
+    <div class="col-1 "><a href="{{url_for('main.pdf', paper_name=paper_name)}}" title="Get pdf file">pdf</a></div>
+    <div class="col-1 "><a href="{{url_for('main.cat', paper_name=paper_name)}}" title="Get catalog file">cat</a></div>
+    <div class="col-1 "><a href="{{url_for('main.bht', paper_name=paper_name)}}" title="Run bht pipeline on this file">run</a>
+    </div>
+</div>
+{%endfor%}
+<hr class="mt-5 mb-5">
+<div class="row mb-5">
+    <h4>Upload new File</h4>
+    <form action={{url_for('main.upload')}} method=post enctype=multipart/form-data>
+        <input type=file name=file>
+        <input type=submit value=Upload>
+    </form>
+</div>
+
+{%  endblock %}

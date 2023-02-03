@@ -1,0 +1,7 @@
+venv
+.idea
+*.swp
+*.pyc
+.env
+DATA/web-upload
+DATA/Papers

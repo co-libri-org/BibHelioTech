@@ -3,10 +3,14 @@
 {%  endblock %}
 
 {% block content %}
-<title>Upload new File</title>
-<h1>Upload new File</h1>
-<form method=post enctype=multipart/form-data>
-    <input type=file name=file>
-    <input type=submit value=Upload>
-</form>
-{%  endblock %}
+<div class="row ">
+    <div class="col-2 "></div>
+    <div class="col-8 ">
+        <h2>Upload new File</h2>
+        <form method=post enctype=multipart/form-data>
+            <input type=file name=file>
+            <input type=submit value=Upload>
+        </form>
+    </div>
+</div>
+{% endblock %}

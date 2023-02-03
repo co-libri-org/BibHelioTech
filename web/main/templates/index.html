@@ -3,5 +3,9 @@
 {%  endblock %}
 
 {% block content %}
-<h1>Hello {{name}}, This is BibHelioTech!</h1>
+{% if message != '' %}
+<h1>{{message}}</h1>
+{% else %}
+<h1>This is BibHelioTech!</h1>
+{% endif %}
 {%  endblock %}

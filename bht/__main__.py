@@ -59,7 +59,6 @@ def run_file(orig_pdf_file, result_base_dir):
     dest_pdf_dir = os.path.join(result_base_dir, paper_name)
     dest_pdf_file = os.path.join(dest_pdf_dir, pdf_filename)
     os.makedirs(dest_pdf_dir, exist_ok=True)
-    print("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-> copying ", orig_pdf_file, 'to', dest_pdf_file)
     shutil.copy(orig_pdf_file, dest_pdf_file)
 
     # 1- OCR the pdf file

@@ -47,6 +47,8 @@ RUN pip install -U pip sutime && \
 # RUN git clone https://github.com/ADablanc/BibHelioTech.git
 WORKDIR /home/bibheliotech/BibHelioTech
 COPY . .
+COPY ./ressources/grobid-client-config.json-dist ./grobid-client-config.json
+COPY ./ressources/bht-config.yml-dist ./bht-config.yml
 RUN pip install wheel && pip install -r requirements.txt
 
 WORKDIR /home/bibheliotech/BibHelioTech/ressources
