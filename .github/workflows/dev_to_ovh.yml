@@ -1,0 +1,26 @@
+name: ovh-buid-deploy
+
+on:
+  push:
+    branches:
+      - "ovh-deploy"
+
+jobs:
+
+  deploy-to-ovh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build and run from OVH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWD }}
+          port: 22
+          script: |
+            cd BibHelioTech
+            docker compose down
+            git checkout  ovh-deploy
+            git pull
+            docker compose up -d
