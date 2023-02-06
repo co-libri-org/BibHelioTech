@@ -12,5 +12,5 @@ class Config(object):
     def __init__(self):
         # pprint(yml_settings)
         self.__dict__.update(yml_settings)
-        self.__dict__['SQLALCHEMY_DATABASE_URI'] = 'sqlite://' + \
+        self.__dict__['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
                                                    os.path.join(yml_settings['WEB_DB_DIR'], 'bht_web.db')

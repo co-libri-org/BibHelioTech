@@ -30,3 +30,5 @@ yml_settings["BHT_RESSOURCES_DIR"] = os.path.join(BHT_ROOT_DIR, 'ressources')
 if not os.path.isabs(yml_settings["WEB_UPLOAD_DIR"]):
     yml_settings["WEB_UPLOAD_DIR"] = os.path.join(BHT_ROOT_DIR, yml_settings["WEB_UPLOAD_DIR"])
 yml_settings["WEB_DB_DIR"] = os.path.join(yml_settings["BHT_DATA_DIR"], 'db')
+if not os.path.isdir(yml_settings['WEB_DB_DIR']):
+    os.makedirs(yml_settings['WEB_DB_DIR'])
