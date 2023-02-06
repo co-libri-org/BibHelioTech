@@ -22,10 +22,10 @@ def create_db():
 
 @cli.command("mock_papers")
 def mock_papers():
-    papers_list = [["aa33199-18", "./aa33199-18/aa33199-18.pdf", None, None],
-                   ["2016GL069787", "./2016GL069787/2016GL069787.pdf",
-                    "./2016GL069787/1010022016gl069787_bibheliotech_V1.txt", None],
-                   ["5.0067370", "./5.0067370/5.0067370.pdf", "./5.0067370/10106350067370_bibheliotech_V1.txt", None]]
+    papers_list = [["aa33199-18", "aa33199-18.pdf", None, None],
+                   ["2016GL069787", "2016GL069787.pdf",
+                    "2016GL069787/1010022016gl069787_bibheliotech_V1.txt", None],
+                   ["5.0067370", "5.0067370.pdf", "5.0067370/10106350067370_bibheliotech_V1.txt", None]]
     for p_l in papers_list:
         paper = Paper(title=p_l[0],
                       pdf_path=p_l[1],
