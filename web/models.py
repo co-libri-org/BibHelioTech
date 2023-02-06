@@ -1,3 +1,5 @@
+import os.path
+
 from web import db
 
 
@@ -9,4 +11,5 @@ class Paper(db.Model):
     task_id = db.Column(db.String, unique=True)
 
     def __repr__(self):
-        return f'<Paper {self.title}>'
+        return f'<Paper {self.title} {self.pdf_path} {self.cat_path}>'
+
