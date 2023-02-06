@@ -9,8 +9,8 @@ from flask import send_from_directory, render_template, current_app, request, fl
     jsonify
 
 from . import bp
-from web.errors import *
 from bht.__main__ import run_file as bht_run_file
+from web.models import Paper
 
 
 def allowed_file(filename):
@@ -47,9 +47,8 @@ def pdf(paper_name):
 @bp.route('/papers')
 def papers(name=None):
     if not name:
-        # get all uploaded pdf
-        pdf_list = glob.glob(os.path.join(current_app.config['WEB_UPLOAD_DIR'], '*.pdf'))
-        papers_list = [os.path.basename(pdf_file).replace(".pdf", "") for pdf_file in pdf_list]
+        # get all uploaded pdf stored in db
+        papers_list = Paper.query.all()
         return render_template('papers.html', papers_list=papers_list)
     else:
         flash("Uploaded " + name)

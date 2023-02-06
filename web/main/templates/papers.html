@@ -3,12 +3,12 @@
 {%  endblock %}
 {% block content %}
 
-{% for paper_name in papers_list %}
+{% for paper in papers_list %}
 <div class="row ">
-    <div class="col-4 ">{{paper_name}}</div>
-    <div class="col-1 "><a href="{{url_for('main.pdf', paper_name=paper_name)}}" title="Get pdf file">pdf</a></div>
-    <div class="col-1 "><a href="{{url_for('main.cat', paper_name=paper_name)}}" title="Get catalog file">cat</a></div>
-    <div class="col-1 "><a href="{{url_for('main.bht', paper_name=paper_name)}}" title="Run bht pipeline on this file">run</a>
+    <div class="col-4 ">{{paper.title}}</div>
+    <div class="col-1 "><a href="{{url_for('main.pdf', paper_name=paper.title)}}" title="Get pdf file">pdf</a></div>
+    <div class="col-1 "><a href="{{url_for('main.cat', paper_name=paper.title)}}" title="Get catalog file">cat</a></div>
+    <div class="col-1 "><a href="{{url_for('main.bht', paper_name=paper.title)}}" title="Run bht pipeline on this file">run</a>
     </div>
 </div>
 {%endfor%}
