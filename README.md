@@ -2,10 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/515186537.svg)](https://zenodo.org/badge/latestdoi/515186537)
 [![License](https://img.shields.io/github/license/ADablanc/BibHelioTech.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-![GitHub Pipenv locked Python version](https://img.shields.io/github/pipenv/locked/python-version/ADablanc/BibHelioTech)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/ADablanc/BibHelioTech)
-![GitHub repo size](https://img.shields.io/github/repo-size/ADablanc/BibHelioTech)
-[![GitHub issues](https://img.shields.io/github/issues/ADablanc/BibHelioTech)](https://github.com/ADablanc/BibHelioTech/issues)
+![GitHub repo size](https://img.shields.io/github/repo-size/RichardHitier/BibHelioTech)
 
 ## BibHelioTech project description
 BibHelioTech is a program for the recognition of temporal expressions and entities (satellites, instruments, regions) extracted from scientific articles in the field of heliophysics.
