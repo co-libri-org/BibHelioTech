@@ -13,45 +13,46 @@ Its main purpose is to retrieve events of interest which have been studied and p
 
 ## Docker image building
 
+After first install (git clone), `docker compose build` and `docker compose up -d`,
+make sure you have created the database:
+
+    docker compose run -it   web python manage.py create_db
+
 ### Web interface
 
-We use docker-compose for the link between bibheliotech and dependency containers.
+We use docker compose for the link between bibheliotech and dependency containers.
 
 
 build it first
 
-    docker-compose build
+    docker compose build
 
 run all
 
-    docker-compose up --detach
+    docker compose up --detach
 
 - will launch all services
 - and flask application
 
 access web interface through `http://localhost` 
 
-### Volumes
-
-bibheliotech docker container is linked with the current `DATA/` directory, that you can populate
-and `run bht` on your own datas.
-
-First make sure there are pdf document in `DATA/Papers/` before running.
-
-It is also possible to link current dir as volume so you can change python code without rebuild.
-To do so, change the volume instruction in `docker-compose.yml`.
-
 ### Dev mode
 
-mainly runs flask in debug mode (skipping gunicorn), and
-linking host files to container for live update.
+An override compose file is available in `ressources/` dir
 
     cp .env-dist .env
     $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
     docker compose down
-    cp docker-compose.override.yml-dist docker-compose.override.yml
+    cp docker compose.override.yml-dist docker compose.override.yml
     docker compose build
     docker compose up -d
+
+Bibheliotech docker container is then linked with the current `DATA/` directory.
+
+Current web dir is also mounted as volume so you can change python code without rebuild.
+
+Mainly runs flask in debug mode (skipping gunicorn), and
+linking host files to container for live update.
 
 ### Running files treatement under ./DATA/
 
@@ -59,11 +60,11 @@ This will compute all `*pdf` papers in `./DATA/` directory
 
 run from your host directory
 
-    docker-compose run --rm bibheliotech python bht
+    docker compose run --rm bibheliotech python bht
 
 or run inside container itself
 
-    docker-compose run --rm bibheliotech bash
+    docker compose run --rm bibheliotech bash
     PYTHON_PATH=. python bht
 
 ## Manual installation 
