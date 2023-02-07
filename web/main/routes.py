@@ -11,6 +11,7 @@ from flask import send_from_directory, render_template, current_app, request, fl
 from . import bp
 from web.models import Paper
 from web.bht_proxy import runfile_and_updatedb
+from .. import db
 
 
 def allowed_file(filename):
@@ -86,28 +87,32 @@ def papers(name=None):
         return redirect(url_for('main.papers'))
 
 
-@bp.route('/upload', methods=['GET', 'POST'])
+@bp.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
-            return redirect(request.url)
+            return redirect(url_for('main.papers'))
         file = request.files['file']
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
         if file.filename == '':
             flash('No selected file')
-            return redirect(request.url)
+            return redirect(url_for('main.papers'))
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             upload_dir = current_app.config['WEB_UPLOAD_DIR']
             if not os.path.isdir(upload_dir):
                 os.makedirs(upload_dir)
-            file.save(os.path.join(upload_dir, filename))
+            file_path = os.path.join(upload_dir, filename)
+            file.save(file_path)
+            paper_title = file.filename.replace(".pdf", "")
+            paper = Paper(title=paper_title, pdf_path=file_path)
+            db.session.add(paper)
+            db.session.commit()
             flash(f'Uploaded {file.filename}')
-            return redirect(url_for('main.papers'))  # , name=filename))
-        # return render_template("upload_form.html")
+            return redirect(url_for('main.papers'))
 
 
 @bp.route('/bht_run', methods=["POST"])
@@ -118,7 +123,8 @@ def bht_run():
         return redirect(url_for('main.papers'))
     with Connection(redis.from_url(current_app.config["REDIS_URL"])):
         q = Queue()
-        task = q.enqueue(runfile_and_updatedb, args=(paper_id, found_pdf_file, current_app.config['WEB_UPLOAD_DIR']), job_timeout=600)
+        task = q.enqueue(runfile_and_updatedb, args=(paper_id, found_pdf_file, current_app.config['WEB_UPLOAD_DIR']),
+                         job_timeout=600)
 
     paper = Paper.query.get(paper_id)
     paper.set_task_id(task.get_id())
