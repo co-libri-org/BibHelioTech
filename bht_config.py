@@ -19,6 +19,8 @@ if not os.path.isfile(config_file):
 with open(config_file) as f:
     yml_settings = yaml.safe_load(f)
 
+with open(os.path.join(BHT_ROOT_DIR, 'VERSION.txt')) as version_file:
+    yml_settings['VERSION'] = version_file.read().strip()
 
 if not os.path.isabs(yml_settings["BHT_DATA_DIR"]):
     yml_settings["BHT_DATA_DIR"] = os.path.join(BHT_ROOT_DIR, yml_settings["BHT_DATA_DIR"])
