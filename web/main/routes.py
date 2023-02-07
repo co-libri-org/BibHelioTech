@@ -120,6 +120,9 @@ def bht_task():
         q = Queue()
         task = q.enqueue(bht_run_file, args=(found_pdf_file, current_app.config['WEB_UPLOAD_DIR']), job_timeout=600)
 
+    paper = Paper.query.filter_by(title=paper_title).one_or_none()
+    paper.set_task_id(task.get_id())
+
     response_object = {
         "status": "success",
         "data": {

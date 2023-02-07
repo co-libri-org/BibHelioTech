@@ -38,7 +38,8 @@ def mock_papers():
 
 @cli.command("list_papers")
 def list_papers():
-    print(Paper.query.all())
+    for p in Paper.query.all():
+        print(p)
 
 
 @cli.command("run_worker")
