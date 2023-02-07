@@ -3,12 +3,24 @@
 {%  endblock %}
 {% block content %}
 
-{% for paper_name in papers_list %}
+{% for paper in papers_list %}
 <div class="row ">
-    <div class="col-4 ">{{paper_name}}</div>
-    <div class="col-1 "><a href="{{url_for('main.pdf', paper_name=paper_name)}}" title="Get pdf file">pdf</a></div>
-    <div class="col-1 "><a href="{{url_for('main.cat', paper_name=paper_name)}}" title="Get catalog file">cat</a></div>
-    <div class="col-1 "><a href="{{url_for('main.bht', paper_name=paper_name)}}" title="Run bht pipeline on this file">run</a>
+    <div class="col-3 ">{{paper.title}}</div>
+    <div class="col-1 "><a href="{{url_for('main.pdf', paper_id=paper.id)}}" title="Get pdf file">pdf</a></div>
+    <div class="col-1 ">
+        {% if paper.cat_path %}
+            {% set cat_class = "cat-link" %}
+        {% else %}
+            {% set cat_class = "cat-link-disabled" %}
+        {% endif %}
+        <a class="{{cat_class}}" id="cat-link-{{paper.id}}" href="{{url_for('main.cat', paper_id=paper.id)}}"
+           title="Get catalog file">cat</a>
+    </div>
+    <div class="col-1 ">
+        <button class='run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">run</button>
+    </div>
+    <div class="col-1">
+        <span class="bht-status" id="bht-status-{{paper.id}}"></span>
     </div>
 </div>
 {%endfor%}
@@ -20,5 +32,59 @@
         <input type=submit value=Upload>
     </form>
 </div>
+
+{%endblock%}
+
+{% block scripts %}
+<script>
+
+$('.run-bht').on('click', function() {
+  $.ajax({
+    url: '/bht_run',
+    data: { paper_id: $(this).data('paper_id') },
+    method: 'POST'
+  })
+  .done((res) => {
+    console.log('bht task sent with id: ', res.data.task_id)
+    setStatus(res.data.paper_id)
+  })
+  .fail((err) => {
+    console.log(err);
+  });
+});
+
+
+function setStatus(paper_id) {
+  $.ajax({
+    url: `/bht_status/${paper_id}`,
+    method: 'GET',
+  })
+  .done((res) => {
+    if (res.status === 'error' ) return false;
+    const statusElmtId = '#bht-status-'+res.data.paper_id
+    $(statusElmtId).attr('title', 'task id: '+res.data.task_id)
+    $(statusElmtId).html(res.data.task_status)
+    const taskStatus = res.data.task_status;
+    if (taskStatus === 'finished' ) {
+        const catElementId = '#cat-link-'+res.data.paper_id;
+        $(catElementId).attr('class', 'cat-link');
+    }
+    if ( taskStatus === 'failed') return false;
+    setTimeout(function () {
+      setStatus(res.data.paper_id);
+    }, 5000);
+  })
+  .fail((err) => {
+    console.log(err);
+  });
+}
+
+$('.bht-status').each(function(index){
+    const paperId = $(this).attr('id').substring(11);
+    setStatus(paperId);
+});
+
+
+</script>
 
 {%  endblock %}

@@ -9,8 +9,9 @@ from flask import send_from_directory, render_template, current_app, request, fl
     jsonify
 
 from . import bp
-from web.errors import *
-from bht.__main__ import run_file as bht_run_file
+from web.models import Paper
+from web.bht_proxy import runfile_and_updatedb
+from .. import db
 
 
 def allowed_file(filename):
@@ -34,82 +35,117 @@ def configuration():
     return render_template("configuration.html", configuration=current_app.config)
 
 
-@bp.route('/pdf/<paper_name>')
-def pdf(paper_name):
-    pdf_files = glob.glob(os.path.join(current_app.config['WEB_UPLOAD_DIR'], paper_name + '.pdf'))
-    if len(pdf_files) == 0 or not os.path.isfile(pdf_files[0]):
-        flash(f"No file found for paper {paper_name}")
+def get_paper_file(paper_id, file_type):
+    file_path = None
+    paper = Paper.query.get(paper_id)
+    if paper is None:
+        flash(f"No such paper {paper_id}")
+        return None
+
+    if file_type == 'pdf':
+        file_path = paper.pdf_path
+    elif file_type == 'cat':
+        file_path = paper.cat_path
+
+    if file_path is None:
+        flash(f"No {file_type} file for paper {paper_id}")
+        return None
+
+    if not os.path.isabs(file_path):
+        file_path = os.path.join(current_app.config['WEB_UPLOAD_DIR'], file_path)
+
+    return file_path
+
+
+@bp.route('/pdf/<paper_id>')
+def pdf(paper_id):
+    file_path = get_paper_file(paper_id, 'pdf')
+    if file_path is None:
         return redirect(url_for('main.papers'))
-    return send_file(pdf_files[0])
+    else:
+        return send_file(file_path)
+
+
+@bp.route('/cat/<paper_id>', methods=['GET'])
+def cat(paper_id):
+    file_path = get_paper_file(paper_id, 'cat')
+    if file_path is None:
+        return redirect(url_for('main.papers'))
+    else:
+        return send_file(file_path)
 
 
 @bp.route('/papers/<name>')
 @bp.route('/papers')
 def papers(name=None):
     if not name:
-        # get all uploaded pdf
-        pdf_list = glob.glob(os.path.join(current_app.config['WEB_UPLOAD_DIR'], '*.pdf'))
-        papers_list = [os.path.basename(pdf_file).replace(".pdf", "") for pdf_file in pdf_list]
+        # get all uploaded pdf stored in db
+        papers_list = Paper.query.all()
         return render_template('papers.html', papers_list=papers_list)
     else:
         flash("Uploaded " + name)
         return redirect(url_for('main.papers'))
 
 
-@bp.route('/upload', methods=['GET', 'POST'])
+@bp.route('/upload', methods=['POST'])
 def upload():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
-            return redirect(request.url)
+            return redirect(url_for('main.papers'))
         file = request.files['file']
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
         if file.filename == '':
             flash('No selected file')
-            return redirect(request.url)
+            return redirect(url_for('main.papers'))
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             upload_dir = current_app.config['WEB_UPLOAD_DIR']
             if not os.path.isdir(upload_dir):
                 os.makedirs(upload_dir)
-            file.save(os.path.join(upload_dir, filename))
+            file_path = os.path.join(upload_dir, filename)
+            file.save(file_path)
+            paper_title = file.filename.replace(".pdf", "")
+            paper = Paper(title=paper_title, pdf_path=file_path)
+            db.session.add(paper)
+            db.session.commit()
             flash(f'Uploaded {file.filename}')
-            return redirect(url_for('main.papers'))#, name=filename))
-        # return render_template("upload_form.html")
+            return redirect(url_for('main.papers'))
 
 
-@bp.route('/bht/<paper_name>')
-def bht(paper_name):
-    # find pdf file from ... upload dir
-    found_pdf_file = os.path.join(current_app.config['WEB_UPLOAD_DIR'], paper_name + '.pdf')
-    if not os.path.isfile(found_pdf_file):
-        flash(f"No such file {found_pdf_file}")
-        return redirect(url_for("main.index"))
-    # catalog_path = bht_run_file(found_pdf_file, current_app.config['WEB_UPLOAD_DIR'])
+@bp.route('/bht_run', methods=["POST"])
+def bht_run():
+    paper_id = request.form["paper_id"]
+    found_pdf_file = get_paper_file(paper_id, 'pdf')
+    if found_pdf_file is None:
+        return redirect(url_for('main.papers'))
     with Connection(redis.from_url(current_app.config["REDIS_URL"])):
         q = Queue()
-        task = q.enqueue(bht_run_file, args=(found_pdf_file, current_app.config['WEB_UPLOAD_DIR']), job_timeout=600)
+        task = q.enqueue(runfile_and_updatedb, args=(paper_id, found_pdf_file, current_app.config['WEB_UPLOAD_DIR']),
+                         job_timeout=600)
 
-    # catalog_file = os.path.basename(catalog_path)
-    # if not os.path.isfile(catalog_path):
-    #     raise WebResultError(f"Unable to build catalog file for {paper_name}")
-    # return redirect(url_for('main.cat', paper_name=paper_name))
+    paper = Paper.query.get(paper_id)
+    paper.set_task_id(task.get_id())
 
-    # response_object = {
-    #     "status": "success",
-    #     "data": {
-    #         "task_id": task.get_id()
-    #     }
-    # }
-    # return jsonify(response_object), 202
-
-    return redirect(url_for("main.get_status", task_id=task.get_id()))
+    response_object = {
+        "status": "success",
+        "data": {
+            "task_id": task.get_id(),
+            "paper_id": paper.id
+        }
+    }
+    return jsonify(response_object), 202
 
 
-@bp.route("/tasks/<task_id>", methods=["GET"])
-def get_status(task_id):
+@bp.route("/bht_status/<paper_id>", methods=["GET"])
+def bht_status(paper_id):
+    paper = Paper.query.get(paper_id)
+    if paper is None:
+        flash(f"No such paper {paper_id}")
+        return redirect(url_for('main.papers'))
+    task_id = paper.task_id
     with Connection(redis.from_url(current_app.config["REDIS_URL"])):
         q = Queue()
         task = q.fetch_job(task_id)
@@ -120,28 +156,12 @@ def get_status(task_id):
                 "task_id": task.get_id(),
                 "task_status": task.get_status(),
                 "task_result": task.result,
+                "paper_id": paper.id
             },
         }
     else:
         response_object = {"status": "error"}
     return jsonify(response_object)
-
-
-@bp.route('/cat/<paper_name>', methods=['GET'])
-def cat(paper_name):
-    search_pattern = os.path.join(current_app.config['WEB_UPLOAD_DIR'], '**', paper_name, '*bibheliotech' '*.txt')
-    print(search_pattern)
-    catalog_paths = glob.glob(search_pattern, recursive=True)
-    if len(catalog_paths) == 0:
-        flash(f"No catalog for paper {paper_name}")
-        # raise WebResultError(f"Not any catalog for paper in {paper_name}")
-        redirect(url_for('main.papers'))
-    found_file = catalog_paths[0]
-    if not os.path.isfile(found_file):
-        flash(f"No such file for paper {paper_name}")
-        # raise WebResultError(f"No such file {found_file}")
-        return redirect(url_for('main.index'))
-    return send_file(found_file)
 
 
 @bp.route('/catalogs', methods=['GET'])

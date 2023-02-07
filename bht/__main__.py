@@ -82,10 +82,10 @@ def run_file(orig_pdf_file, result_base_dir):
     search_pattern = os.path.join(dest_pdf_dir, '**', '*bibheliotech*.txt')
     print(f"searching {search_pattern}")
     result_catalogs = glob.glob(search_pattern, recursive=True)
-    found_file = result_catalogs[0]
-    if not os.path.isfile(found_file):
-        raise BhtResultError(f"No such file {found_file}")
-    return found_file
+    catalog_file = result_catalogs[0]
+    if not os.path.isfile(catalog_file):
+        raise BhtResultError(f"No such file {catalog_file}")
+    return catalog_file
 
 
 if __name__ == '__main__':
