@@ -6,19 +6,19 @@
 {% for paper in papers_list %}
 <div class="row ">
     <div class="col-3 ">{{paper.title}}</div>
-    <div class="col-1 "><a href="{{url_for('main.pdf', paper_title=paper.title)}}" title="Get pdf file">pdf</a></div>
+    <div class="col-1 "><a href="{{url_for('main.pdf', paper_id=paper.id)}}" title="Get pdf file">pdf</a></div>
     <div class="col-1 ">
         {% if paper.cat_path %}
-        <a href="{{url_for('main.cat', paper_title=paper.title)}}" title="Get catalog file">cat</a>
+        <a href="{{url_for('main.cat', paper_id=paper.id)}}" title="Get catalog file">cat</a>
         {% else %}
         <span style="text-decoration: line-through;" title="No catalog file">cat</span>
         {% endif %}
     </div>
     <div class="col-1 ">
-        <button class='run-bht' title="Run bht pipeline on this file" data-paper_title="{{paper.title}}">run</button>
+        <button class='run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">run</button>
     </div>
     <div class="col-1">
-        <span id="bht-status-{{paper.title}}">a</span>
+        <span id="bht-status-{{paper.id}}">a</span>
     </div>
 </div>
 {%endfor%}
@@ -38,12 +38,12 @@
 $('.run-bht').on('click', function() {
   $.ajax({
     url: '/bht_run',
-    data: { paper_title: $(this).data('paper_title') },
+    data: { paper_id: $(this).data('paper_id') },
     method: 'POST'
   })
   .done((res) => {
     console.log('bht task sent with id: ', res.data.task_id)
-    setStatus(res.data.paper_title)
+    setStatus(res.data.paper_id)
   })
   .fail((err) => {
     console.log(err);
@@ -51,18 +51,18 @@ $('.run-bht').on('click', function() {
 });
 
 
-function setStatus(paper_title) {
+function setStatus(paper_id) {
   $.ajax({
-    url: `/bht_status/${paper_title}`,
+    url: `/bht_status/${paper_id}`,
     method: 'GET',
   })
   .done((res) => {
-    const statusElmtId = '#bht-status-'+res.data.paper_title
+    const statusElmtId = '#bht-status-'+res.data.paper_id
     $(statusElmtId).html(res.data.task_status)
     const taskStatus = res.data.task_status;
     if (taskStatus === 'finished' || taskStatus === 'failed') return false;
     setTimeout(function () {
-      setStatus(res.data.paper_title);
+      setStatus(res.data.paper_id);
     }, 1000);
   })
   .fail((err) => {

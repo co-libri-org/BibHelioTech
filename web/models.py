@@ -11,7 +11,7 @@ class Paper(db.Model):
     task_id = db.Column(db.String, unique=True)
 
     def __repr__(self):
-        return f'<Paper {self.title} {self.pdf_path} {self.cat_path} {self.task_id}>'
+        return f'<Paper {self.id} {self.title} {self.pdf_path} {self.cat_path} {self.task_id}>'
 
     def set_task_id(self, task_id):
         self.task_id = task_id

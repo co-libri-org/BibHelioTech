@@ -34,11 +34,11 @@ def configuration():
     return render_template("configuration.html", configuration=current_app.config)
 
 
-def get_paper_file(paper_title, file_type):
+def get_paper_file(paper_id, file_type):
     file_path = None
-    paper = Paper.query.filter_by(title=paper_title).one_or_none()
+    paper = Paper.query.get(paper_id)
     if paper is None:
-        flash(f"No such paper {paper_title}")
+        flash(f"No such paper {paper_id}")
         return None
 
     if file_type == 'pdf':
@@ -47,7 +47,7 @@ def get_paper_file(paper_title, file_type):
         file_path = paper.cat_path
 
     if file_path is None:
-        flash(f"No {file_type} file for paper {paper_title}")
+        flash(f"No {file_type} file for paper {paper_id}")
         return None
 
     if not os.path.isabs(file_path):
@@ -56,18 +56,18 @@ def get_paper_file(paper_title, file_type):
     return file_path
 
 
-@bp.route('/pdf/<paper_title>')
-def pdf(paper_title):
-    file_path = get_paper_file(paper_title, 'pdf')
+@bp.route('/pdf/<paper_id>')
+def pdf(paper_id):
+    file_path = get_paper_file(paper_id, 'pdf')
     if file_path is None:
         return redirect(url_for('main.papers'))
     else:
         return send_file(file_path)
 
 
-@bp.route('/cat/<paper_title>', methods=['GET'])
-def cat(paper_title):
-    file_path = get_paper_file(paper_title, 'cat')
+@bp.route('/cat/<paper_id>', methods=['GET'])
+def cat(paper_id):
+    file_path = get_paper_file(paper_id, 'cat')
     if file_path is None:
         return redirect(url_for('main.papers'))
     else:
@@ -112,32 +112,32 @@ def upload():
 
 @bp.route('/bht_run', methods=["POST"])
 def bht_run():
-    paper_title = request.form["paper_title"]
-    found_pdf_file = get_paper_file(paper_title, 'pdf')
+    paper_id = request.form["paper_id"]
+    found_pdf_file = get_paper_file(paper_id, 'pdf')
     if found_pdf_file is None:
         return redirect(url_for('main.papers'))
     with Connection(redis.from_url(current_app.config["REDIS_URL"])):
         q = Queue()
         task = q.enqueue(bht_run_file, args=(found_pdf_file, current_app.config['WEB_UPLOAD_DIR']), job_timeout=600)
 
-    paper = Paper.query.filter_by(title=paper_title).one_or_none()
+    paper = Paper.query.get(paper_id)
     paper.set_task_id(task.get_id())
 
     response_object = {
         "status": "success",
         "data": {
             "task_id": task.get_id(),
-            "paper_title": paper.title
+            "paper_id": paper.id
         }
     }
     return jsonify(response_object), 202
 
 
-@bp.route("/bht_status/<paper_title>", methods=["GET"])
-def bht_status(paper_title):
-    paper = Paper.query.filter_by(title=paper_title).one_or_none()
+@bp.route("/bht_status/<paper_id>", methods=["GET"])
+def bht_status(paper_id):
+    paper = Paper.query.get(paper_id)
     if paper is None:
-        flash(f"No such paper {paper_title}")
+        flash(f"No such paper {paper_id}")
         return redirect(url_for('main.papers'))
     task_id = paper.task_id
     with Connection(redis.from_url(current_app.config["REDIS_URL"])):
@@ -150,7 +150,7 @@ def bht_status(paper_title):
                 "task_id": task.get_id(),
                 "task_status": task.get_status(),
                 "task_result": task.result,
-                "paper_title": paper.title
+                "paper_id": paper.id
             },
         }
     else:
