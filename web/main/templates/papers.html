@@ -9,13 +9,13 @@
     <div class="col-1 "><a href="{{url_for('main.pdf', paper_title=paper.title)}}" title="Get pdf file">pdf</a></div>
     <div class="col-1 ">
         {% if paper.cat_path %}
-        <a  href="{{url_for('main.cat', paper_title=paper.title)}}" title="Get catalog file">cat</a>
+        <a href="{{url_for('main.cat', paper_title=paper.title)}}" title="Get catalog file">cat</a>
         {% else %}
-        <span    style="text-decoration: line-through;" title="No catalog file">cat</span>
+        <span style="text-decoration: line-through;" title="No catalog file">cat</span>
         {% endif %}
     </div>
     <div class="col-1 ">
-        <a href="{{url_for('main.bht', paper_title=paper.title)}}" title="Run bht pipeline on this file">run</a>
+        <button class='run-bht' title="Run bht pipeline on this file" data-paper_title="{{paper.title}}">run</button>
     </div>
 </div>
 {%endfor%}
@@ -27,5 +27,26 @@
         <input type=submit value=Upload>
     </form>
 </div>
+
+{%endblock%}
+
+{% block scripts %}
+<script>
+$('.run-bht').on('click', function() {
+  $.ajax({
+    url: '/bht_task',
+    data: { paper_title: $(this).data('paper_title') },
+    method: 'POST'
+  })
+  .done((res) => {
+    console.log(res.data.task_id)
+  })
+  .fail((err) => {
+    console.log(err);
+  });
+});
+
+
+</script>
 
 {%  endblock %}
