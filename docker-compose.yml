@@ -1,19 +1,21 @@
 version: "3.3"
+name: "bht"
 services:
 
-    bibheliotech:
-        image: bibheliotech
+    web:
+        image: web
         build:
             context: .
             args:
-                - USER_UID
-                - USER_GID
+                - USER_UID=1000
+                - USER_GID=1000
         command: gunicorn --bind 0.0.0.0:5000 bht_web:app
+        ports:
+          - "5000:5000"
         expose:
             - 5000
         volumes:
-            #- .:/home/bibheliotech/BibHelioTech # uncomment for code linking
-            - ./DATA:/home/bibheliotech/BibHelioTech/DATA
+            - bht_data:/home/bibheliotech/BibHelioTech/DATA:rw
         depends_on:
           grobid:
             condition: service_healthy
@@ -26,28 +28,25 @@ services:
         dockerfile: Dockerfile.grobid
 
     worker:
-      image: bibheliotech
+      image: web
       command: python manage.py run_worker
       volumes:
-        - ./DATA:/home/bibheliotech/BibHelioTech/DATA
+        - bht_data:/home/bibheliotech/BibHelioTech/DATA:rw
       depends_on:
-        - bibheliotech
+        - web
 
     nginx:
       image: nginx
       volumes:
         - ./ressources/web_nginx.docker.conf:/etc/nginx/conf.d/default.conf
       ports:
-        - 80:80
+        - "80:80"
       depends_on:
-        - bibheliotech
+        - web
 
     redis:
       image: redis:6.2-alpine
-#      healthcheck:
-#        test: ["CMD", "redis-cli", "ping"]
-#        interval: 1s
-#        timeout: 3s
-#        retries: 30
 
 
+volumes:
+  bht_data:
