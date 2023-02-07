@@ -9,8 +9,8 @@ from flask import send_from_directory, render_template, current_app, request, fl
     jsonify
 
 from . import bp
-from bht.__main__ import run_file as bht_run_file
 from web.models import Paper
+from web.bht_proxy import runfile_and_updatedb
 
 
 def allowed_file(filename):
@@ -118,7 +118,7 @@ def bht_run():
         return redirect(url_for('main.papers'))
     with Connection(redis.from_url(current_app.config["REDIS_URL"])):
         q = Queue()
-        task = q.enqueue(bht_run_file, args=(found_pdf_file, current_app.config['WEB_UPLOAD_DIR']), job_timeout=600)
+        task = q.enqueue(runfile_and_updatedb, args=(paper_id, found_pdf_file, current_app.config['WEB_UPLOAD_DIR']), job_timeout=600)
 
     paper = Paper.query.get(paper_id)
     paper.set_task_id(task.get_id())

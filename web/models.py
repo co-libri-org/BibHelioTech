@@ -17,3 +17,8 @@ class Paper(db.Model):
         self.task_id = task_id
         db.session.add(self)
         db.session.commit()
+
+    def set_cat_path(self, cat_path):
+        self.cat_path = cat_path
+        db.session.add(self)
+        db.session.commit()
