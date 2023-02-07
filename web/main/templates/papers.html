@@ -18,7 +18,7 @@
         <button class='run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">run</button>
     </div>
     <div class="col-1">
-        <span id="bht-status-{{paper.id}}">a</span>
+        <span class="bht-status" id="bht-status-{{paper.id}}"></span>
     </div>
 </div>
 {%endfor%}
@@ -35,6 +35,7 @@
 
 {% block scripts %}
 <script>
+
 $('.run-bht').on('click', function() {
   $.ajax({
     url: '/bht_run',
@@ -57,7 +58,9 @@ function setStatus(paper_id) {
     method: 'GET',
   })
   .done((res) => {
+    if (res.status === 'error' ) return false;
     const statusElmtId = '#bht-status-'+res.data.paper_id
+    $(statusElmtId).attr('title', 'task id: '+res.data.task_id)
     $(statusElmtId).html(res.data.task_status)
     const taskStatus = res.data.task_status;
     if (taskStatus === 'finished' || taskStatus === 'failed') return false;
@@ -69,6 +72,11 @@ function setStatus(paper_id) {
     console.log(err);
   });
 }
+
+$('.bht-status').each(function(index){
+    const paperId = $(this).attr('id').substring(11);
+    setStatus(paperId);
+});
 </script>
 
 {%  endblock %}
