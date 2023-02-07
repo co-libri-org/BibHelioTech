@@ -65,10 +65,14 @@ function setStatus(paper_id) {
     $(statusElmtId).attr('title', 'task id: '+res.data.task_id)
     $(statusElmtId).html(res.data.task_status)
     const taskStatus = res.data.task_status;
-    if (taskStatus === 'finished' || taskStatus === 'failed') return false;
+    if (taskStatus === 'finished' ) {
+        const catElementId = '#cat-link-'+res.data.paper_id;
+        $(catElementId).attr('class', 'cat-link');
+    }
+    if ( taskStatus === 'failed') return false;
     setTimeout(function () {
       setStatus(res.data.paper_id);
-    }, 1000);
+    }, 5000);
   })
   .fail((err) => {
     console.log(err);
