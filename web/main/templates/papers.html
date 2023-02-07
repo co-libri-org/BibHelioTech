@@ -5,7 +5,7 @@
 
 {% for paper in papers_list %}
 <div class="row ">
-    <div class="col-4 ">{{paper.title}}</div>
+    <div class="col-3 ">{{paper.title}}</div>
     <div class="col-1 "><a href="{{url_for('main.pdf', paper_title=paper.title)}}" title="Get pdf file">pdf</a></div>
     <div class="col-1 ">
         {% if paper.cat_path %}
@@ -16,6 +16,9 @@
     </div>
     <div class="col-1 ">
         <button class='run-bht' title="Run bht pipeline on this file" data-paper_title="{{paper.title}}">run</button>
+    </div>
+    <div class="col-1">
+        <span id="bht-status-{{paper.title}}">a</span>
     </div>
 </div>
 {%endfor%}
@@ -34,12 +37,13 @@
 <script>
 $('.run-bht').on('click', function() {
   $.ajax({
-    url: '/bht_task',
+    url: '/bht_run',
     data: { paper_title: $(this).data('paper_title') },
     method: 'POST'
   })
   .done((res) => {
-    console.log(res.data.task_id)
+    console.log('bht task sent with id: ', res.data.task_id)
+    setStatus(res.data.paper_title)
   })
   .fail((err) => {
     console.log(err);
@@ -47,6 +51,24 @@ $('.run-bht').on('click', function() {
 });
 
 
+function setStatus(paper_title) {
+  $.ajax({
+    url: `/bht_status/${paper_title}`,
+    method: 'GET',
+  })
+  .done((res) => {
+    const statusElmtId = '#bht-status-'+res.data.paper_title
+    $(statusElmtId).html(res.data.task_status)
+    const taskStatus = res.data.task_status;
+    if (taskStatus === 'finished' || taskStatus === 'failed') return false;
+    setTimeout(function () {
+      setStatus(res.data.paper_title);
+    }, 1000);
+  })
+  .fail((err) => {
+    console.log(err);
+  });
+}
 </script>
 
 {%  endblock %}

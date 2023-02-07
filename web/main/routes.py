@@ -110,8 +110,8 @@ def upload():
         # return render_template("upload_form.html")
 
 
-@bp.route('/bht_task', methods=["POST"])
-def bht_task():
+@bp.route('/bht_run', methods=["POST"])
+def bht_run():
     paper_title = request.form["paper_title"]
     found_pdf_file = get_paper_file(paper_title, 'pdf')
     if found_pdf_file is None:
@@ -126,14 +126,20 @@ def bht_task():
     response_object = {
         "status": "success",
         "data": {
-            "task_id": task.get_id()
+            "task_id": task.get_id(),
+            "paper_title": paper.title
         }
     }
     return jsonify(response_object), 202
 
 
-@bp.route("/tasks/<task_id>", methods=["GET"])
-def get_status(task_id):
+@bp.route("/bht_status/<paper_title>", methods=["GET"])
+def bht_status(paper_title):
+    paper = Paper.query.filter_by(title=paper_title).one_or_none()
+    if paper is None:
+        flash(f"No such paper {paper_title}")
+        return redirect(url_for('main.papers'))
+    task_id = paper.task_id
     with Connection(redis.from_url(current_app.config["REDIS_URL"])):
         q = Queue()
         task = q.fetch_job(task_id)
@@ -144,6 +150,7 @@ def get_status(task_id):
                 "task_id": task.get_id(),
                 "task_status": task.get_status(),
                 "task_result": task.result,
+                "paper_title": paper.title
             },
         }
     else:
