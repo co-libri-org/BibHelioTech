@@ -1,0 +1,5 @@
+.cat-link-disabled {
+    pointer-events: none;
+    text-decoration-line: line-through;
+    color: black;
+}

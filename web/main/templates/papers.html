@@ -9,10 +9,12 @@
     <div class="col-1 "><a href="{{url_for('main.pdf', paper_id=paper.id)}}" title="Get pdf file">pdf</a></div>
     <div class="col-1 ">
         {% if paper.cat_path %}
-        <a href="{{url_for('main.cat', paper_id=paper.id)}}" title="Get catalog file">cat</a>
+            {% set cat_class = "cat-link" %}
         {% else %}
-        <span style="text-decoration: line-through;" title="No catalog file">cat</span>
+            {% set cat_class = "cat-link-disabled" %}
         {% endif %}
+        <a class="{{cat_class}}" id="cat-link-{{paper.id}}" href="{{url_for('main.cat', paper_id=paper.id)}}"
+           title="Get catalog file">cat</a>
     </div>
     <div class="col-1 ">
         <button class='run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">run</button>
@@ -77,6 +79,8 @@ $('.bht-status').each(function(index){
     const paperId = $(this).attr('id').substring(11);
     setStatus(paperId);
 });
+
+
 </script>
 
 {%  endblock %}
