@@ -79,12 +79,37 @@ or run inside container itself
 
 ## Continuous integration and deployment
 
-- lint
-- tests
-- github actions
-- ovh-deploy
+Make sure to fullfill any dependency first:
 
-## Manual installation 
+    pip install -r requirements-tests.txt
+
+### flake8 linter
+
+flake8, along with its pep8-naming plugin allow to make sure our code is properly formated before commitinge.
+give it a try:
+
+    cp ressources/flake8 ./.flake8
+    flake8
+
+### pre-commit
+
+    cp ressources/pre-commit-config.ymal  .pre-commit-config.yaml
+    pip install pre-commit
+    pre-commit install
+
+then any commit will run the plugins to check files format, and python style.
+
+As a first try, you can
+
+    pre-commit run --all-files
+
+it also embeds calls to flake8 and black plugin.
+
+### tests
+### github actions
+### ovh-deploy
+
+## Manual installation
 
 You would be advised to look at `./docker/Dockerfile` for more tips.
 
@@ -97,7 +122,7 @@ source venv/bin/activate
 pip install wheel
 pip install -r requirements.txt
 ```
-1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/ 
+1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/
 1. Update the `edu/stanford/nlp/models/sutime/english.sutime.txt` under  jars/stanford-corenlp-4.0.0-models.jar/
 
 
@@ -112,7 +137,7 @@ STEP 2: tesseract 5.1.0 installation (Ubuntu exemple)
 STEP 3: GROBID (0.7.1) installation
 
 * install GROBID under ../
-* Follow install instruction on: https://grobid.readthedocs.io/en/latest/Install-Grobid/ 
+* Follow install instruction on: https://grobid.readthedocs.io/en/latest/Install-Grobid/
 * Make sure you have JVM 8 used by default !
 
 or run a grobid docker container
