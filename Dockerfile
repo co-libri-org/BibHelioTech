@@ -59,5 +59,5 @@ COPY . .
 RUN cp ./ressources/grobid-client-config.json-dist ./grobid-client-config.json &&\
     cp ./ressources/bht-config.yml-dist ./bht-config.yml
 
-RUN chown -R bibheliotech:bibheliotech /home/bibheliotech/BibHelioTech/DATA
+RUN chown -R bibheliotech:bibheliotech /home/bibheliotech/
 USER bibheliotech
