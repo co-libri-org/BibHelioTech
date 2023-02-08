@@ -1,0 +1,6 @@
+[pytest]
+testpaths = tests
+python_files = *_tests.py
+log_level = INFO
+log_cli = True
+console_output_style = classic

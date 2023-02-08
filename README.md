@@ -106,7 +106,17 @@ As a first try, you can
 it also embeds calls to flake8 and black plugin.
 
 ### tests
+
+    cp ressources/pytest.ini-dist ./pytest.ini
+    PYTHONPATH=. pytest
+
 ### github actions
+
+Github actions yml files are stored in  the `.github/workflows/` directory.
+
+- one for deployment to the ovh dev server
+- one for running integration tests
+
 ### ovh-deploy
 
 ## Manual installation
