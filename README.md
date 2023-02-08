@@ -19,6 +19,8 @@ Its main purpose is to retrieve events of interest which have been studied and p
 
 ## Docker image building
 
+Please, use a recent docker compose plugin version: https://docs.docker.com/compose/install/linux/
+
 After first install (git clone), `docker compose build` and `docker compose up -d`,
 make sure you have created the database:
 
@@ -33,14 +35,16 @@ build it first
 
     docker compose build
 
-run all
+then run all
 
     docker compose up --detach
 
 - will launch all services
 - and flask application
 
-access web interface through `http://localhost` 
+access web interface through `http://localhost` , or any domainname reverse proxying to the host.
+
+If you'd better run on another port, edit the nginx service in the `docker-compose.yml` file.
 
 ### Dev mode
 
@@ -72,6 +76,13 @@ or run inside container itself
 
     docker compose run --rm bibheliotech bash
     PYTHON_PATH=. python bht
+
+## Continuous integration and deployment
+
+- lint
+- tests
+- github actions
+- ovh-deploy
 
 ## Manual installation 
 
@@ -121,6 +132,31 @@ Now run the main pipeline:
     python bht
 
 Optionally if you want to have AMDA catalogues by satellites, you need to run "SATS_catalogue_generator.py".
+
+## Versionning and git workflows
+
+`VERSION.txt` holds the current project version in a semver model. (Also see `CHANGELOG.md`)
+
+Each delivery stage is tagged `0.X.0` as the `1.0.0` goal will be the first major release that is not already reached.
+
+While going towards a minor release, the project reaches some intermediate steps:
+call it an agile sprint, or a git feature branch.
+
+Each of those steps is labelled with the version number, followed by the '.pre' keyword, and a number for the step.
+
+For example, lets say we are heading towards the `0.3.0` goal, and that we're on the fifth sprint after the `0.2.0` release, the
+version number will be `0.3.0.pre-5`
+
+While on a branch, the sprint is not fullfilled, thus `VERSION.txt` should contain `0.3.0.pre-5-dev` .
+
+We're using a basic git branch model, where each feature or sprint is a branch, merged in `main` branch for delivery.
+
+The merges are done with the `--no-ff` option, so the history can show the branch/sprints worklow.
+
+Any VERSION change is git tagged with `v` prepended. In the later example, that will be
+
+    git tag -a v0.3.0.pre-5 -m "v0.3.0.pre-5 Release"
+    git push origin --tags
 
 ## License
 
