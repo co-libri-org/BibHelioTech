@@ -2,6 +2,7 @@ services:
   web:
     build:
       context: .
+      target: bht-test
       args:
         - USER_UID=$USER_UID
         - USER_GID=$USER_GID
@@ -11,6 +12,7 @@ services:
     volumes:
       - ./web:/home/bibheliotech/BibHelioTech/web
       - ./DATA:/home/bibheliotech/BibHelioTech/DATA
+
 
   nginx:
     entrypoint: [ "echo", "Service foo disabled" ]

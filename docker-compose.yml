@@ -6,6 +6,7 @@ services:
         image: web
         build:
             context: .
+            target: bht-prod
             args:
                 - USER_UID=1000
                 - USER_GID=1000
