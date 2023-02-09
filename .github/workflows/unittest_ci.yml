@@ -30,6 +30,9 @@ jobs:
       - name: Build Docker stack
         run: |
           docker compose -f docker-compose.tests.yml up -d --build
+          docker compose logs grobid
+          docker compose logs redis
+          docker ps -a
       - name: Test with pytest
         run: |
           cp ressources/grobid-client-config.json-dist grobid-client-config.json
