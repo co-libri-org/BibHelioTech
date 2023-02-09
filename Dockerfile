@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:22.04 as bht-prod
 LABEL maintainer="Benjamin Renard <benjamin.renard@irap.omp.eu>,\
                   Richard Hitier <hitier.richard@gmail.com>"
 
@@ -61,3 +61,10 @@ RUN cp ./ressources/grobid-client-config.json-dist ./grobid-client-config.json &
 
 RUN chown -R bibheliotech:bibheliotech /home/bibheliotech/
 USER bibheliotech
+
+FROM bht-prod AS bht-test
+ENV PYTHONPATH="/home/bibheliotech/BibHelioTech:$PYTHONPATH"
+RUN cp ./ressources/flake8-dist ./.flake8 && \
+    cp ressources/bht-config.yml-dist ./bht-config.yml && \
+    cp ressources/pytest.ini-dist ./pytest.ini
+RUN pip install -r requirements-tests.txt
