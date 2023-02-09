@@ -12,13 +12,16 @@ class BaseTestCase(unittest.TestCase):
         test_pdf_file_orig = os.path.join(
             yml_settings["BHT_RESSOURCES_DIR"], "2016GL069787-test.pdf"
         )
-        self.test_pdf_file_dest = os.path.join(self.pdf_directory, "2016GL069787.pdf")
+        self.test_pdf_file_dest = os.path.join(
+            self.pdf_directory, "2016GL069787-test.pdf"
+        )
         shutil.copy(test_pdf_file_orig, self.test_pdf_file_dest)
         self.test_tei_file = os.path.join(self.pdf_directory, "2016GL069787.tei.xml")
 
     def tearDown(self):
-        if os.path.isfile(self.test_tei_file):
-            os.remove(self.test_tei_file)
+        for file in [self.test_pdf_file_dest, self.test_tei_file]:
+            if os.path.isfile(file):
+                os.remove(file)
 
 
 class AdsTestCase(BaseTestCase):
