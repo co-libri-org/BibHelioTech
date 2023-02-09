@@ -33,6 +33,10 @@ jobs:
           docker compose logs grobid
           docker compose logs redis
           docker ps -a
+      - name: Set hostnames
+        run: |
+          sudo echo "127.0.0.1 grobid" | sudo tee -a /etc/hosts
+          sudo echo "127.0.0.1 redis" | sudo tee -a /etc/hosts
       - name: Test with pytest
         run: |
           cp ressources/grobid-client-config.json-dist grobid-client-config.json
