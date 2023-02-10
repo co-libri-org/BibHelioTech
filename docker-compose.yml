@@ -1,4 +1,3 @@
-version: "3.3"
 name: "bht"
 services:
 
@@ -6,14 +5,11 @@ services:
         image: web
         build:
             context: .
+            target: bht-prod
             args:
                 - USER_UID=1000
                 - USER_GID=1000
         command: gunicorn --bind 0.0.0.0:5000 bht_web:app
-        ports:
-          - "5000:5000"
-        expose:
-            - 5000
         volumes:
             - bht_data:/home/bibheliotech/BibHelioTech/DATA:rw
         depends_on:
@@ -23,9 +19,17 @@ services:
             condition: service_started
 
     grobid:
-      build:
-        context: .
-        dockerfile: Dockerfile.grobid
+      image: lfoppiano/grobid:0.7.2
+      # thank you to:
+      # https://github.com/elifesciences/sciencebeam-orchester/blob/develop/docker-compose.yml#L27-L34
+      healthcheck:
+        test: [
+          "CMD", "bash", "-c",
+          "while ! timeout 1 bash -c 'echo > /dev/tcp/localhost/8070'; do sleep 10; done"
+        ]
+        interval: 10s
+        timeout: 10s
+        retries: 5
 
     worker:
       image: web
