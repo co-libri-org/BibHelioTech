@@ -107,8 +107,18 @@ it also embeds calls to flake8 and black plugin.
 
 ### tests
 
+either run on your workdir, but launch grobid and redis first:
+
+    docker-compose -f docker-compose.tests.yml
+    cp ressources/bht-config.yml-dist ./bht-config.yml
     cp ressources/pytest.ini-dist ./pytest.ini
-    PYTHONPATH=. pytest
+    pytest
+
+or use the whole docker stack
+
+    cp docker-compose.override.yml-dist docker-compose.override.yml
+    docker compose up -d --build
+    docker compose run web pytest
 
 ### github actions
 
@@ -117,7 +127,12 @@ Github actions yml files are stored in  the `.github/workflows/` directory.
 - one for deployment to the ovh dev server
 - one for running integration tests
 
-### ovh-deploy
+usage tips:
+
+    git push -f origin HEAD:ovh-deploy
+    git push -f origin HEAD:test
+
+### ovh-deploy: see above
 
 ## Manual installation
 
