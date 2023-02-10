@@ -22,7 +22,10 @@ Changes are kept under subsections:
 Should be noted only functionnal changes,
 or major refactoring improvments.
 
-## [M.m.p] - yyyy-mm-dd - Short Description
-### Fixed
+## [0.3.0-pre.1] - 2023-02-10 - CI/CD Enhancements
 ### Changed
+- Removed *jpg and other results from git repo
+- Updated files formats
 ### New
+- Added github actions for tests and deploy
+- Added precommit checks
