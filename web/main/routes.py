@@ -5,8 +5,8 @@ from rq import Connection, Queue
 
 from werkzeug.utils import secure_filename
 
-from flask import send_from_directory, render_template, current_app, request, flash, redirect, url_for, send_file, \
-    jsonify
+from flask import render_template, current_app, request, flash, redirect, url_for, send_file, \
+    jsonify, Response
 
 from . import bp
 from web.models import Paper
@@ -85,6 +85,16 @@ def papers(name=None):
     else:
         flash("Uploaded " + name)
         return redirect(url_for('main.papers'))
+
+
+@bp.route('/upload_from_url', methods=['POST'])
+def upload_from_url():
+    if request.method == 'POST':
+        pdf_url = request.form.get('pdf_url')
+        if pdf_url is None:
+            return Response("No valid parameters for url", status=400, )
+        else:
+            return redirect(url_for('main.papers'))
 
 
 @bp.route('/upload', methods=['POST'])
