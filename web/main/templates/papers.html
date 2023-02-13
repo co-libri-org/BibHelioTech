@@ -32,6 +32,14 @@
         <input type=submit value=Upload>
     </form>
 </div>
+<hr class="mt-5 mb-5">
+<div class="row mb-5">
+    <h4>Upload from URL</h4>
+    <form action={{url_for('main.upload_from_url')}} method=post enctype=multipart/form-data>
+        <input type=file_url name=file_url>
+        <input type=submit value=Upload>
+    </form>
+</div>
 
 {%endblock%}
 
