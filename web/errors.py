@@ -6,11 +6,19 @@ class WebError(Exception):
         super().__init__(self.message)
 
 
+class PdfFileError(WebError):
+    """File or Dir path error"""
+
+    pass
+
+
 class WebPathError(WebError):
     """File or Dir path error"""
+
     pass
 
 
 class WebResultError(WebError):
     """Result error"""
+
     pass
