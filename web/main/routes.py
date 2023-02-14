@@ -1,11 +1,11 @@
 import glob
 import os
-from typing import re
+import re
 
 import redis
 import requests
-import werkzeug
 import filetype
+
 from requests import RequestException
 from rq import Connection, Queue
 
@@ -66,7 +66,6 @@ def get_file_from_url(url):
         raise PdfFileError("No pdf in url")
     try:
         with requests.get(url) as r:
-            filename = ""
             if "Content-Disposition" in r.headers.keys():
                 filename = re.findall(
                     "filename=(.+)", r.headers["Content-Disposition"]
@@ -75,14 +74,27 @@ def get_file_from_url(url):
                 filename = url.split("/")[-1]
     except RequestException as e:
         raise (e)
-    filename = werkzeug.utils.secure_filename(filename)
-    open(filename, "wb").write(r.content)
-    _file_path = os.path.abspath(filename)
+    return r.content, filename
+
+
+def save_to_db(file_stream, filename):
+    filename = secure_filename(filename)
+    upload_dir = current_app.config["WEB_UPLOAD_DIR"]
+    if not os.path.isdir(upload_dir):
+        os.makedirs(upload_dir)
+    _file_path = os.path.join(upload_dir, filename)
+    with open(_file_path, "wb") as _fd:
+        _fd.write(file_stream)
     if not os.path.isfile(_file_path):
         raise PdfFileError(f"no such file: {_file_path}")
     if not filetype.guess(_file_path).mime == "application/pdf":
         raise Exception(f"{_file_path} is not pdf ")
     return _file_path
+    paper_title = filename.replace(".pdf", "")
+    paper = Paper(title=paper_title, pdf_path=_file_path)
+    db.session.add(paper)
+    db.session.commit()
+    file_stream.close()
 
 
 @bp.route("/")
@@ -140,6 +152,8 @@ def upload_from_url():
             status=400,
         )
     else:
+        fp, filename = get_file_from_url(pdf_url)
+        save_to_db(fp, filename)
         return redirect(url_for("main.papers"))
 
 
@@ -156,16 +170,7 @@ def upload():
         flash("No selected file")
         return redirect(url_for("main.papers"))
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        upload_dir = current_app.config["WEB_UPLOAD_DIR"]
-        if not os.path.isdir(upload_dir):
-            os.makedirs(upload_dir)
-        file_path = os.path.join(upload_dir, filename)
-        file.save(file_path)
-        paper_title = file.filename.replace(".pdf", "")
-        paper = Paper(title=paper_title, pdf_path=file_path)
-        db.session.add(paper)
-        db.session.commit()
+        save_to_db(file.stream, file.filename)
         flash(f"Uploaded {file.filename}")
         return redirect(url_for("main.papers"))
 

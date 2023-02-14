@@ -55,7 +55,7 @@ class TestUploadPdf:
         response = test_client.post(
             "/upload_from_url",
             data={
-                "pdf_url": "https://api.istex.fr/ark:/67375/80W-QC194JKZ-X/fulltext.pdf"
+                "pdf_url": "https://angeo.copernicus.org/articles/28/233/2010/angeo-28-233-2010.pdf"
             },
         )
         assert response.status_code == 302
