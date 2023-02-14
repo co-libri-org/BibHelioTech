@@ -89,12 +89,11 @@ def save_to_db(file_stream, filename):
         raise PdfFileError(f"no such file: {_file_path}")
     if not filetype.guess(_file_path).mime == "application/pdf":
         raise Exception(f"{_file_path} is not pdf ")
-    return _file_path
     paper_title = filename.replace(".pdf", "")
     paper = Paper(title=paper_title, pdf_path=_file_path)
     db.session.add(paper)
     db.session.commit()
-    file_stream.close()
+    return paper.id
 
 
 @bp.route("/")
