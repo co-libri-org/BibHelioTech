@@ -133,43 +133,41 @@ def papers(name=None):
 
 @bp.route("/upload_from_url", methods=["POST"])
 def upload_from_url():
-    if request.method == "POST":
-        pdf_url = request.form.get("pdf_url")
-        if pdf_url is None:
-            return Response(
-                "No valid parameters for url",
-                status=400,
-            )
-        else:
-            return redirect(url_for("main.papers"))
+    pdf_url = request.form.get("pdf_url")
+    if pdf_url is None:
+        return Response(
+            "No valid parameters for url",
+            status=400,
+        )
+    else:
+        return redirect(url_for("main.papers"))
 
 
 @bp.route("/upload", methods=["POST"])
 def upload():
-    if request.method == "POST":
-        # check if the post request has the file part
-        if "file" not in request.files:
-            flash("No file part")
-            return redirect(url_for("main.papers"))
-        file = request.files["file"]
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == "":
-            flash("No selected file")
-            return redirect(url_for("main.papers"))
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            upload_dir = current_app.config["WEB_UPLOAD_DIR"]
-            if not os.path.isdir(upload_dir):
-                os.makedirs(upload_dir)
-            file_path = os.path.join(upload_dir, filename)
-            file.save(file_path)
-            paper_title = file.filename.replace(".pdf", "")
-            paper = Paper(title=paper_title, pdf_path=file_path)
-            db.session.add(paper)
-            db.session.commit()
-            flash(f"Uploaded {file.filename}")
-            return redirect(url_for("main.papers"))
+    # check if the post request has the file part
+    if "file" not in request.files:
+        flash("No file part")
+        return redirect(url_for("main.papers"))
+    file = request.files["file"]
+    # If the user does not select a file, the browser submits an
+    # empty file without a filename.
+    if file.filename == "":
+        flash("No selected file")
+        return redirect(url_for("main.papers"))
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        upload_dir = current_app.config["WEB_UPLOAD_DIR"]
+        if not os.path.isdir(upload_dir):
+            os.makedirs(upload_dir)
+        file_path = os.path.join(upload_dir, filename)
+        file.save(file_path)
+        paper_title = file.filename.replace(".pdf", "")
+        paper = Paper(title=paper_title, pdf_path=file_path)
+        db.session.add(paper)
+        db.session.commit()
+        flash(f"Uploaded {file.filename}")
+        return redirect(url_for("main.papers"))
 
 
 @bp.route("/bht_run", methods=["POST"])
