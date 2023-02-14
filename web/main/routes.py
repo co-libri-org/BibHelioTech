@@ -38,6 +38,28 @@ def allowed_file(filename):
     )
 
 
+def get_paper_file(paper_id, file_type):
+    file_path = None
+    paper = Paper.query.get(paper_id)
+    if paper is None:
+        flash(f"No such paper {paper_id}")
+        return None
+
+    if file_type == "pdf":
+        file_path = paper.pdf_path
+    elif file_type == "cat":
+        file_path = paper.cat_path
+
+    if file_path is None:
+        flash(f"No {file_type} file for paper {paper_id}")
+        return None
+
+    if not os.path.isabs(file_path):
+        file_path = os.path.join(current_app.config["WEB_UPLOAD_DIR"], file_path)
+
+    return file_path
+
+
 def get_file_from_url(url):
     r = requests.get(url)
     if not r.headers["Content-Type"] == "application/pdf":
@@ -77,28 +99,6 @@ def about():
 @bp.route("/configuration")
 def configuration():
     return render_template("configuration.html", configuration=current_app.config)
-
-
-def get_paper_file(paper_id, file_type):
-    file_path = None
-    paper = Paper.query.get(paper_id)
-    if paper is None:
-        flash(f"No such paper {paper_id}")
-        return None
-
-    if file_type == "pdf":
-        file_path = paper.pdf_path
-    elif file_type == "cat":
-        file_path = paper.cat_path
-
-    if file_path is None:
-        flash(f"No {file_type} file for paper {paper_id}")
-        return None
-
-    if not os.path.isabs(file_path):
-        file_path = os.path.join(current_app.config["WEB_UPLOAD_DIR"], file_path)
-
-    return file_path
 
 
 @bp.route("/pdf/<paper_id>")
