@@ -6,6 +6,24 @@ from bht_config import yml_settings
 from bht.published_date_finder import published_date_finder
 from bht.GROBID_generator import GROBID_generation
 from tests.conftest import skip_slow_test
+from web import db
+from web.models import Paper
+
+
+class TestDb:
+    def test_db_created(self, app):
+        """
+        GIVEN an instanciated app
+        WHEN db session is used for saving an object
+        THEN check that the object was saved
+        """
+        my_path = "/paper/path/to.pdf"
+        my_title = "Paper Title"
+        paper = Paper(title=my_title, pdf_path=my_path)
+        db.session.add(paper)
+        db.session.commit()
+        found_paper = Paper.query.filter_by(title=my_title).one()
+        assert found_paper.pdf_path == my_path
 
 
 class BaseTestCase(unittest.TestCase):
