@@ -12,7 +12,7 @@ skip_slow_test = pytest.mark.skipif(
 )
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="module", autouse=True)
 def app():
     app = create_app(TestConfig)
 

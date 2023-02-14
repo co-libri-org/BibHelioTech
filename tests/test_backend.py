@@ -11,9 +11,9 @@ from web.models import Paper
 
 
 class TestDb:
-    def test_db_created(self, app):
+    def test_db_created(self):
         """
-        GIVEN an instanciated app
+        GIVEN a Flask app (see autouse fixture in conftest.py )
         WHEN db session is used for saving an object
         THEN check that the object was saved
         """
