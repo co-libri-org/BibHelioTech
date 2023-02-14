@@ -1,4 +1,4 @@
-import os.path
+from filetype import filetype
 
 from tests import conftest
 from web.main.routes import get_file_from_url
@@ -7,10 +7,10 @@ from web.main.routes import get_file_from_url
 @conftest.skip_slow_test
 class TestFrontUtils:
     def test_get_file_from_url(self):
-        file_path = get_file_from_url(
+        content, file_path = get_file_from_url(
             "https://angeo.copernicus.org/articles/28/233/2010/angeo-28-233-2010.pdf"
         )
-        assert os.path.isfile(file_path)
+        assert filetype.guess(content).mime == "application/pdf"
 
 
 class TestPapersPage:
