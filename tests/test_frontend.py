@@ -1,16 +1,45 @@
+import os.path
+
 from filetype import filetype
 
-from tests import conftest
-from web.main.routes import get_file_from_url
+from tests.conftest import skip_slow_test
+from web.main.routes import get_file_from_url, save_to_db
+from web.models import Paper
 
 
-@conftest.skip_slow_test
 class TestFrontUtils:
+    """
+    GIVEN an url returning a pdf file
+    WHEN the get_file_from_url() is called
+    THEN check that the file was saved
+    """
+
+    @skip_slow_test
     def test_get_file_from_url(self):
         content, file_path = get_file_from_url(
             "https://angeo.copernicus.org/articles/28/233/2010/angeo-28-233-2010.pdf"
         )
         assert filetype.guess(content).mime == "application/pdf"
+
+    # TODO: test  getfilefromurl with bad url
+    # TODO: test  getfilefromurl with no file
+    # TODO: test  getfilefromurl with wrong file  format
+
+    def test_save_to_db(self, pdf_for_test, app):
+        """
+        GIVEN a file object and a name (from disk file)
+        WHEN the save_to_db() is called (in an app_context, see autouse fixture)
+        THEN check that the Paper object is saved
+        """
+        with open(pdf_for_test, "rb") as _fd:
+            p_id = save_to_db(_fd.read(), os.path.basename(pdf_for_test))
+        guessed_title = os.path.basename(pdf_for_test).replace(".pdf", "")
+        paper = Paper.query.filter_by(title=guessed_title).one_or_none()
+        assert paper is not None
+        assert paper.id == p_id
+        assert paper.pdf_path == os.path.join(
+            app.config["WEB_UPLOAD_DIR"], os.path.basename(pdf_for_test)
+        )
 
 
 class TestPapersPage:
