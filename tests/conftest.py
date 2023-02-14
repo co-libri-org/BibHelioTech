@@ -2,6 +2,7 @@ import pytest
 import os
 
 from web import create_app
+from web.config import TestConfig
 
 skip_slow_test = pytest.mark.skipif(
     os.environ.get("BHT_SKIPSLOWTESTS") is not None, reason="Slow test skipping"
@@ -10,7 +11,7 @@ skip_slow_test = pytest.mark.skipif(
 
 @pytest.fixture(scope="module")
 def test_client():
-    flask_app = create_app()
+    flask_app = create_app(TestConfig)
 
     # Create a test client using the Flask application configured for testing
     with flask_app.test_client() as testing_client:
