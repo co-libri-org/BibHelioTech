@@ -26,6 +26,14 @@ def app():
 
 
 @pytest.fixture(scope="module")
+def tei_for_test():
+    test_tei_file = os.path.join(yml_settings["BHT_PAPERS_DIR"], "2016GL069787.tei.xml")
+    yield test_tei_file
+    if os.path.isfile(test_tei_file):
+        os.remove(test_tei_file)
+
+
+@pytest.fixture(scope="module")
 def pdf_for_test():
     test_pdf_file_orig = os.path.join(
         yml_settings["BHT_RESSOURCES_DIR"], "2016GL069787-test.pdf"
