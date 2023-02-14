@@ -14,5 +14,9 @@ services:
       - ./DATA:/home/bibheliotech/BibHelioTech/DATA
 
 
+  worker:
+    volumes:
+      - ./DATA:/home/bibheliotech/BibHelioTech/DATA:rw
+
   nginx:
     entrypoint: [ "echo", "Service foo disabled" ]
