@@ -131,6 +131,11 @@ you may want to skip slow tests:
     export BHT_SKIPSLOWTESTS=True
     python -m pytest tests
 
+or allow ISTEX tests if you have IP authorisation
+
+    export BHT_DONTSKIPISTEX=True
+    python -m pytest tests
+
 ### github actions
 
 Github actions yml files are stored in  the `.github/workflows/` directory.

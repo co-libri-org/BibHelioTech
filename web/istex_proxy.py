@@ -12,5 +12,13 @@ def istex_params_to_json(istex_params):
             raise IstexParamError("HEY ! Should set all keys")
     r = requests.get(url=ISTEX_BASE_URL, params=istex_params)
     istex_response = r.json()
-    return istex_response
+    our_response = []
+    for hit in istex_response["hits"]:
+        our_hit = {
+            "title": hit["title"],
+            "abstract": hit["abstract"],
+            "pdf_url": "whatever",
+        }
+        our_response.append(our_hit)
+    return our_response
     # assert len(istex_response['hits']) == 150

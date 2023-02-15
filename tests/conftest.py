@@ -7,8 +7,16 @@ from bht_config import yml_settings
 from web import create_app, db
 from web.config import TestConfig
 
+skip_istex = pytest.mark.skipif(
+    os.environ.get("BHT_DONTSKIPISTEX") is None
+    or not os.environ.get("BHT_DONTSKIPISTEX"),
+    reason="ISTEX skipping (no auth)",
+)
+
 skip_slow_test = pytest.mark.skipif(
-    os.environ.get("BHT_SKIPSLOWTESTS") is not None, reason="Slow test skipping"
+    os.environ.get("BHT_SKIPSLOWTESTS") is not None
+    and os.environ.get("BHT_SKIPSLOWTESTS"),
+    reason="Slow test skipping",
 )
 
 
