@@ -1,10 +1,14 @@
 import os
 
+import pytest
+
 from bht_config import yml_settings
 from bht.published_date_finder import published_date_finder
 from bht.GROBID_generator import GROBID_generation
 from tests.conftest import skip_slow_test
 from web import db
+from web.errors import IstexParamError
+from web.istex_proxy import istex_params_to_json
 from web.models import Paper
 
 
@@ -41,3 +45,13 @@ class TestGrobid:
             yml_settings["BHT_PAPERS_DIR"]
         )  # generate the XML GROBID file
         assert os.path.isfile(tei_for_test)
+
+
+class TestIstex:
+    def test_params_to_json_missing_key(self):
+        with pytest.raises(IstexParamError):
+            istex_params_to_json({"key": "value"})
+
+    def test_params_to_json(self, istex_request):
+        pass
+        # assert 'hits' in r.json()

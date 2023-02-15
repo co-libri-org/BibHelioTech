@@ -52,3 +52,17 @@ def pdf_for_test():
 @pytest.fixture(scope="module")
 def test_client(app):
     yield app.test_client()
+
+
+@pytest.fixture(scope="module")
+def istex_params():
+    _publication_date = "[2020 *]"
+    _abstract = "solar AND wind"
+    _params = {
+        "q": f"(publicationDate:{_publication_date} AND abstract:({_abstract}))",
+        "facet": "corpusName[*]",
+        "size": 150,
+        "output": "*",
+        "stats": "",
+    }
+    yield _params
