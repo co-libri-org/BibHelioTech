@@ -22,6 +22,18 @@ Changes are kept under subsections:
 Should be noted only functionnal changes,
 or major refactoring improvments.
 
+## [M.m.p] - yyyy-mm-dd - ------------------
+### Fixed
+### Changed
+### New
+
+## [0.3.0-pre.2] - - 2023-02-15 - Add download from url field
+### Changed
+- All tests done with pytest and fixtures
+### New
+- Upload_from_url field
+- Add TestConfig with sqlite in-memory
+
 ## [0.3.0-pre.1] - 2023-02-10 - CI/CD Enhancements
 ### Changed
 - Removed *jpg and other results from git repo

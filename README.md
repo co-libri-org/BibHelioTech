@@ -1,6 +1,7 @@
 # BibHelioTech
 
-[![DOI](https://zenodo.org/badge/515186537.svg)](https://zenodo.org/badge/latestdoi/515186537)
+
+[![DOI](https://zenodo.org/badge/599997124.svg)](https://zenodo.org/badge/latestdoi/599997124)
 [![License](https://img.shields.io/github/license/ADablanc/BibHelioTech.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 
@@ -111,14 +112,24 @@ either run on your workdir, but launch grobid and redis first:
 
     docker-compose -f docker-compose.tests.yml
     cp ressources/bht-config.yml-dist ./bht-config.yml
+    python -m pytest tests
+
+alternately, run with ini file
+
     cp ressources/pytest.ini-dist ./pytest.ini
     pytest
+
 
 or use the whole docker stack
 
     cp docker-compose.override.yml-dist docker-compose.override.yml
     docker compose up -d --build
     docker compose run web pytest
+
+you may want to skip slow tests:
+
+    export BHT_SKIPSLOWTESTS=True
+    python -m pytest tests
 
 ### github actions
 
