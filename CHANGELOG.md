@@ -27,6 +27,11 @@ or major refactoring improvments.
 ### Changed
 ### New
 
+## [0.3.0-pre.3] - - 2023-mm-dd - ---------------------------
+### Fixed
+### Changed
+### New
+
 ## [0.3.0-pre.2] - - 2023-02-15 - Add download from url field
 ### Changed
 - All tests done with pytest and fixtures
