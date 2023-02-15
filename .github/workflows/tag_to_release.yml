@@ -1,22 +1,18 @@
 on:
   push:
-    branches:
-      - "main"
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'v*'
 
 name: Create Release
 
 jobs:
+
   build:
-    name: Create Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+    - uses: actions/checkout@v3
+    - uses: ncipollo/release-action@v1
+      with:
+        name: Release ${{ github.ref }}
