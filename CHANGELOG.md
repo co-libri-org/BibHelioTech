@@ -27,10 +27,12 @@ or major refactoring improvments.
 ### Changed
 ### New
 
-## [0.3.0-pre.2] - - yyyy-mm-dd - ------------------
-### Fix
+## [0.3.0-pre.2] - - 2023-02-15 - Add download from url field
 ### Changed
+- All tests done with pytest and fixtures
 ### New
+- Upload_from_url field
+- Add TestConfig with sqlite in-memory
 
 ## [0.3.0-pre.1] - 2023-02-10 - CI/CD Enhancements
 ### Changed
