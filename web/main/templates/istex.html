@@ -2,13 +2,18 @@
 {%  block more_head %}
 {%  endblock %}
 {% block content %}
-<hr class="mt-5 mb-5">
 <div class="row mb-5">
     <h4>Refresh ISTEX request</h4>
-    <form>
+    <form method="post" action="{{url_for('main.istex_from_url')}}">
         <input type=url name=istex_req_url>
         <input type=submit value="Get ISTEX">
     </form>
 </div>
+<hr class="mt-5 mb-5">
+{% for istex in istex_list %}
+<div class="row ">
+    <div class="col-3 ">{{istex.title}}</div>
+</div>
+{%endfor%}
 
 {% endblock %}

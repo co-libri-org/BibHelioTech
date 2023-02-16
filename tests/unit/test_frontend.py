@@ -1,4 +1,3 @@
-import json
 import os.path
 
 from filetype import filetype
@@ -115,16 +114,12 @@ class TestIstexRoutes:
     def test_istex_from_url(self, test_client, istex_url):
         """
         GIVEN a Flask application and an ISTEX url
-        WHEN the '/istex_from_url' page is posted to (POST)
-        THEN check that a '202' status code is returned
-             with proper json response
+        WHEN the '/istex_from_url' form action is posted to (POST)
+        THEN check that a '200' status code is returned
+             with proper response content
         """
         response = test_client.post(
             "/istex_from_url", data={"istex_req_url": istex_url}
         )
-        assert response.status_code == 202
-        json_response = json.loads(response.data)
-        from pprint import pprint
-
-        pprint(json_response)
-        assert len(json_response.get("data").get("istex_json")) == 150
+        assert response.status_code == 200
+        assert b"The solar wind from a stellar perspective" in response.data

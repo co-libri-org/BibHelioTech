@@ -199,14 +199,16 @@ def bht_run():
     return jsonify(response_object), 202
 
 
+@bp.route("/istex", methods=["GET"])
+def istex():
+    return render_template("istex.html", istex_list=[])
+
+
 @bp.route("/istex_from_url", methods=["POST"])
 def istex_from_url():
     istex_req_url = request.form["istex_req_url"]
-    response_object = {
-        "status": "success",
-        "data": {"istex_json": istex_url_to_json(istex_req_url)},
-    }
-    return jsonify(response_object), 202
+    istex_list = istex_url_to_json(istex_req_url)
+    return render_template("istex.html", istex_list=istex_list)
 
 
 @bp.route("/bht_status/<paper_id>", methods=["GET"])
@@ -241,8 +243,3 @@ def catalogs():
         recursive=True,
     )
     return render_template("catalogs.html", catalogs=_catalogs)
-
-
-@bp.route("/istex", methods=["GET"])
-def istex():
-    return render_template("istex.html")
