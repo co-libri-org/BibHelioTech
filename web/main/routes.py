@@ -28,6 +28,7 @@ from web import db
 from web.models import Paper
 from web.bht_proxy import runfile_and_updatedb
 from web.errors import PdfFileError
+from web.istex_proxy import istex_url_to_json
 
 
 def allowed_file(filename):
@@ -196,6 +197,13 @@ def bht_run():
         "data": {"task_id": task.get_id(), "paper_id": paper.id},
     }
     return jsonify(response_object), 202
+
+
+@bp.route("/istex_from_url", methods=["POST"])
+def istex_from_url():
+    istex_url = request.form["istex_url"]
+    istex_response = istex_url_to_json(istex_url)
+    return jsonify(istex_response), 202
 
 
 @bp.route("/bht_status/<paper_id>", methods=["GET"])

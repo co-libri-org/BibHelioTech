@@ -1,3 +1,4 @@
+import json
 import os.path
 
 from filetype import filetype
@@ -99,13 +100,26 @@ class TestUploadPdf:
 
 
 @skip_istex
-class TestIstexPage:
+class TestIstexRoutes:
     def test_istex_page(self, test_client):
         """
         GIVEN a Flask application configured for testing
         WHEN the '/istex' page is get from (GET)
         THEN check that a '200' status code is returned
+             with proper content
         """
         response = test_client.get("/istex")
         assert response.status_code == 200
         assert b'<input type=submit value="Get ISTEX">' in response.data
+
+    def test_istex_from_url(self, test_client, istex_url):
+        """
+        GIVEN a Flask application and an ISTEX url
+        WHEN the '/istex_from_url' page is posted to (POST)
+        THEN check that a '202' status code is returned
+             with proper json response
+        """
+        response = test_client.post("/istex_from_url", data={"istex_url": istex_url})
+        assert response.status_code == 202
+        json_response = json.loads(response.data)
+        assert len(json_response) == 150
