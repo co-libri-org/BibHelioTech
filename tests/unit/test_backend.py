@@ -8,7 +8,7 @@ from bht.GROBID_generator import GROBID_generation
 from tests.conftest import skip_slow_test, skip_istex
 from web import db
 from web.errors import IstexParamError
-from web.istex_proxy import istex_params_to_json
+from web.istex_proxy import istex_params_to_json, istex_url_to_json
 from web.models import Paper
 
 
@@ -60,3 +60,9 @@ class TestIstex:
         assert "title" in istex_list[0]
         assert "abstract" in istex_list[0]
         assert "pdf_url" in istex_list[0]
+
+    def test_url_to_json(self, istex_url):
+        istex_list = istex_url_to_json(istex_url)
+        assert len(istex_list) == 150
+        assert "title" in istex_list[0]
+        assert "abstract" in istex_list[0]
