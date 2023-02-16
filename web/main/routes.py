@@ -230,3 +230,8 @@ def catalogs():
         recursive=True,
     )
     return render_template("catalogs.html", catalogs=_catalogs)
+
+
+@bp.route("/istex", methods=["GET"])
+def istex():
+    return render_template("istex.html")
