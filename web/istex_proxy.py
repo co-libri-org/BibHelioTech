@@ -12,7 +12,8 @@ def istex_request_to_json(r):
         our_hit = {
             "title": hit["title"],
             "abstract": hit["abstract"],
-            "pdf_url": "whatever",
+            "ark": hit["ark"][0],
+            "pdf_url": hit["fulltext"][0]["uri"],
         }
         our_response.append(our_hit)
     return our_response

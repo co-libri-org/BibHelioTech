@@ -12,7 +12,17 @@
 <hr class="mt-5 mb-5">
 {% for istex in istex_list %}
 <div class="row ">
-    <div class="col-3 ">{{istex.title}}</div>
+    <div class="col-3" title="{{istex.title}}">{{istex.ark}}</div>
+    <div class="col-1 ">
+        <a class="{{istex_class}}" id="istex-link-{{istex.ark}}" href="{{istex.pdf_url}}"
+           title="Get istex file">pdf</a>
+    </div>
+    <div class="col-1 ">
+        <form method="post" action="{{url_for('main.upload_from_url')}}">
+            <input type="hidden" name="pdf_url" value="{{istex.pdf_url}}">
+            <input type=submit value="Add">
+        </form>
+    </div>
 </div>
 {%endfor%}
 
