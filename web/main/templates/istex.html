@@ -1,7 +1,14 @@
 {% extends "base_page.html" %}
 {%  block more_head %}
-<title>Istex</title>
 {%  endblock %}
 {% block content %}
+<hr class="mt-5 mb-5">
+<div class="row mb-5">
+    <h4>Refresh ISTEX request</h4>
+    <form>
+        <input type=url name=istex_req_url>
+        <input type=submit value="Get ISTEX">
+    </form>
+</div>
 
 {% endblock %}

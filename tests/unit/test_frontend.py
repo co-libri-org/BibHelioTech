@@ -108,3 +108,4 @@ class TestIstexPage:
         """
         response = test_client.get("/istex")
         assert response.status_code == 200
+        assert b'<input type=submit value="Get ISTEX">' in response.data
