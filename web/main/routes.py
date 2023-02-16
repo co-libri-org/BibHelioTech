@@ -201,9 +201,12 @@ def bht_run():
 
 @bp.route("/istex_from_url", methods=["POST"])
 def istex_from_url():
-    istex_url = request.form["istex_url"]
-    istex_response = istex_url_to_json(istex_url)
-    return jsonify(istex_response), 202
+    istex_req_url = request.form["istex_req_url"]
+    response_object = {
+        "status": "success",
+        "data": {"istex_json": istex_url_to_json(istex_req_url)},
+    }
+    return jsonify(response_object), 202
 
 
 @bp.route("/bht_status/<paper_id>", methods=["GET"])

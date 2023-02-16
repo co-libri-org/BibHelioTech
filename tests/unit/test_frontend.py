@@ -119,7 +119,12 @@ class TestIstexRoutes:
         THEN check that a '202' status code is returned
              with proper json response
         """
-        response = test_client.post("/istex_from_url", data={"istex_url": istex_url})
+        response = test_client.post(
+            "/istex_from_url", data={"istex_req_url": istex_url}
+        )
         assert response.status_code == 202
         json_response = json.loads(response.data)
-        assert len(json_response) == 150
+        from pprint import pprint
+
+        pprint(json_response)
+        assert len(json_response.get("data").get("istex_json")) == 150
