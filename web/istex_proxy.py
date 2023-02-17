@@ -12,7 +12,9 @@ def istex_request_to_json(r):
         our_hit = {
             "title": hit["title"],
             "abstract": hit["abstract"],
-            "ark": hit["ark"][0],
+            "first_author": hit["author"][0]["name"],
+            "journal": hit["host"]["title"],
+            "year": hit["publicationDate"],
             "pdf_url": hit["fulltext"][0]["uri"],
         }
         our_response.append(our_hit)

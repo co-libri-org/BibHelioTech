@@ -58,6 +58,9 @@ class TestIstex:
         istex_list = istex_params_to_json(istex_params)
         assert len(istex_list) == 150
         assert "title" in istex_list[0]
+        assert "first_author" in istex_list[0]
+        assert "journal" in istex_list[0]
+        assert "year" in istex_list[0]
         assert "abstract" in istex_list[0]
         assert "pdf_url" in istex_list[0]
 
