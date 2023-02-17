@@ -205,6 +205,7 @@ def istex():
         return render_template("istex.html", istex_list=[])
     elif request.method == "POST":
         istex_req_url = request.form["istex_req_url"]
+        flash(istex_req_url)
         istex_list = istex_url_to_json(istex_req_url)
         return render_template("istex.html", istex_list=istex_list)
 
