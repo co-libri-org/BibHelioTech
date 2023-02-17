@@ -22,3 +22,13 @@ class WebResultError(WebError):
     """Result error"""
 
     pass
+
+
+class IstexError(Exception):
+    def __init__(self, message="ISTEX Error"):
+        self.message = message
+        super().__init__(self.message)
+
+
+class IstexParamError(IstexError):
+    pass

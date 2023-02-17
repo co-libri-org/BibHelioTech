@@ -3,3 +3,10 @@
     text-decoration-line: line-through;
     color: black;
 }
+
+.nav-link {
+    color: black !important;
+}
+.nav-link.active {
+    background-color: #ffc107 !important;
+}

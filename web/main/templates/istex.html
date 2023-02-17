@@ -1,0 +1,46 @@
+{% extends "base_page.html" %}
+{%  block more_head %}
+{%  endblock %}
+{% block content %}
+<div class="row mb-5">
+    <h4>ISTEX request url</h4>
+    <form method="post" action="{{url_for('main.istex')}}">
+        <input type=url name=istex_req_url>
+        <input type=submit value="Get ISTEX">
+    </form>
+</div>
+<hr class="mt-5 mb-5">
+<table class="table-hover table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Year</th>
+        <th scope="col">Author</th>
+        <th scope="col">Journal</th>
+        <th scope="col">pdf</th>
+        <th scope="col">add</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for istex in istex_list %}
+    <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td class="text-truncate" style="max-width: 350px;" title="{{istex.title}}">{{istex.title}}</td>
+        <td>{{istex.year}}</td>
+        <td>{{istex.first_author}}</td>
+        <td>{{istex.journal}}</td>
+        <td><a class="btn btn-warning" id="istex-link-{{istex.ark}}" href="{{istex.pdf_url}}"
+               title="Get istex file">pdf</a></td>
+        <td>
+            <form method="post" action="{{url_for('main.upload_from_url')}}">
+                <input type="hidden" name="pdf_url" value="{{istex.pdf_url}}">
+                <input type=submit value="add" class="btn btn-warning" title="Add to local database">
+            </form>
+        </td>
+    </tr>
+    {%endfor%}
+    </tbody>
+</table>
+
+{% endblock %}

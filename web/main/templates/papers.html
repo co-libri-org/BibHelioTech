@@ -2,44 +2,64 @@
 {%  block more_head %}
 {%  endblock %}
 {% block content %}
-
-{% for paper in papers_list %}
-<div class="row ">
-    <div class="col-3 ">{{paper.title}}</div>
-    <div class="col-1 "><a href="{{url_for('main.pdf', paper_id=paper.id)}}" title="Get pdf file">pdf</a></div>
-    <div class="col-1 ">
-        {% if paper.cat_path %}
+<div class="row">
+    <div class="col">
+        <h4>Upload new File</h4>
+        <form action={{url_for('main.upload')}} method=post enctype=multipart/form-data>
+            <input type=file name=file>
+            <input type=submit value=Upload>
+        </form>
+    </div>
+    <div class="col">
+        <h4>Upload from URL</h4>
+        <form action={{url_for('main.upload_from_url')}} method=post enctype=multipart/form-data>
+            <input type=url name=pdf_url>
+            <input type=submit value=Upload>
+        </form>
+    </div>
+</div>
+<hr class="mt-5 mb-5">
+<table class="table-hover table">
+    <thead>
+    <tr>
+        <th scope="col" style="width: 20px;">#</th>
+        <th scope="col" style="width: 680px;">Title</th>
+        <th scope="col" style="width: 80px;">pdf</th>
+        <th scope="col" style="width: 80px;">cat</th>
+        <th scope="col" style="width: 80px;">run</th>
+        <th scope="col" style="width: 80px;">status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for paper in papers_list %}
+    <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td>{{paper.title}}</td>
+        <td>
+            <a class="btn btn-warning" href="{{url_for('main.pdf', paper_id=paper.id)}}" title="Get pdf file">pdf</a>
+        </td>
+        <td>
+            {% if paper.cat_path %}
             {% set cat_class = "cat-link" %}
-        {% else %}
+            {% else %}
             {% set cat_class = "cat-link-disabled" %}
-        {% endif %}
-        <a class="{{cat_class}}" id="cat-link-{{paper.id}}" href="{{url_for('main.cat', paper_id=paper.id)}}"
-           title="Get catalog file">cat</a>
-    </div>
-    <div class="col-1 ">
-        <button class='run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">run</button>
-    </div>
-    <div class="col-1">
-        <span class="bht-status" id="bht-status-{{paper.id}}"></span>
-    </div>
-</div>
-{%endfor%}
-<hr class="mt-5 mb-5">
-<div class="row mb-5">
-    <h4>Upload new File</h4>
-    <form action={{url_for('main.upload')}} method=post enctype=multipart/form-data>
-        <input type=file name=file>
-        <input type=submit value=Upload>
-    </form>
-</div>
-<hr class="mt-5 mb-5">
-<div class="row mb-5">
-    <h4>Upload from URL</h4>
-    <form action={{url_for('main.upload_from_url')}} method=post enctype=multipart/form-data>
-        <input type=url name=pdf_url>
-        <input type=submit value=Upload>
-    </form>
-</div>
+            {% endif %}
+            <a class="btn btn-warning {{cat_class}}" id="cat-link-{{paper.id}}"
+               href="{{url_for('main.cat', paper_id=paper.id)}}"
+               title="Get catalog file">cat</a>
+        </td>
+        <td>
+            <button class='btn btn-warning run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">
+                run
+            </button>
+        </td>
+        <td style="width: 80px;">
+            <span class="bht-status" id="bht-status-{{paper.id}}"></span>
+        </td>
+    </tr>
+    {%endfor%}
+    </tbody>
+</table>
 
 {%endblock%}
 
@@ -93,6 +113,8 @@ $('.bht-status').each(function(index){
 });
 
 
+
+
 </script>
 
-{%  endblock %}
+{% endblock %}
