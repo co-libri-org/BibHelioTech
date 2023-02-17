@@ -2,7 +2,23 @@
 {%  block more_head %}
 {%  endblock %}
 {% block content %}
-
+<div class="row">
+    <div class="col">
+        <h4>Upload new File</h4>
+        <form action={{url_for('main.upload')}} method=post enctype=multipart/form-data>
+            <input type=file name=file>
+            <input type=submit value=Upload>
+        </form>
+    </div>
+    <div class="col">
+        <h4>Upload from URL</h4>
+        <form action={{url_for('main.upload_from_url')}} method=post enctype=multipart/form-data>
+            <input type=url name=pdf_url>
+            <input type=submit value=Upload>
+        </form>
+    </div>
+</div>
+<hr class="mt-5 mb-5">
 <table class="table-hover table">
     <thead>
     <tr>
@@ -44,22 +60,6 @@
     {%endfor%}
     </tbody>
 </table>
-<hr class="mt-5 mb-5">
-<div class="row mb-5">
-    <h4>Upload new File</h4>
-    <form action={{url_for('main.upload')}} method=post enctype=multipart/form-data>
-        <input type=file name=file>
-        <input type=submit value=Upload>
-    </form>
-</div>
-<hr class="mt-5 mb-5">
-<div class="row mb-5">
-    <h4>Upload from URL</h4>
-    <form action={{url_for('main.upload_from_url')}} method=post enctype=multipart/form-data>
-        <input type=url name=pdf_url>
-        <input type=submit value=Upload>
-    </form>
-</div>
 
 {%endblock%}
 
@@ -111,10 +111,6 @@ $('.bht-status').each(function(index){
     const paperId = $(this).attr('id').substring(11);
     setStatus(paperId);
 });
-
-
-
-
 
 
 
