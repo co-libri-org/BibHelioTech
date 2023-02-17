@@ -10,20 +10,37 @@
     </form>
 </div>
 <hr class="mt-5 mb-5">
-{% for istex in istex_list %}
-<div class="row ">
-    <div class="col-3" title="{{istex.title}}">{{istex.ark}}</div>
-    <div class="col-1 ">
-        <a class="{{istex_class}}" id="istex-link-{{istex.ark}}" href="{{istex.pdf_url}}"
-           title="Get istex file">pdf</a>
-    </div>
-    <div class="col-1 ">
-        <form method="post" action="{{url_for('main.upload_from_url')}}">
-            <input type="hidden" name="pdf_url" value="{{istex.pdf_url}}">
-            <input type=submit value="Add">
-        </form>
-    </div>
-</div>
-{%endfor%}
+<table class="table-hover table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Title</th>
+        <th scope="col">Year</th>
+        <th scope="col">Author</th>
+        <th scope="col">Journal</th>
+        <th scope="col">pdf</th>
+        <th scope="col">add</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for istex in istex_list %}
+    <tr>
+        <th scope="row">{{loop.index}}</th>
+        <td class="text-truncate" style="max-width: 350px;" title="{{istex.title}}">{{istex.title}}</td>
+        <td>{{istex.year}}</td>
+        <td>{{istex.first_author}}</td>
+        <td>{{istex.journal}}</td>
+        <td><a class="{{istex_class}}" id="istex-link-{{istex.ark}}" href="{{istex.pdf_url}}"
+               title="Get istex file">pdf</a></td>
+        <td>
+            <form method="post" action="{{url_for('main.upload_from_url')}}">
+                <input type="hidden" name="pdf_url" value="{{istex.pdf_url}}">
+                <input type=submit value="Add">
+            </form>
+        </td>
+    </tr>
+    {%endfor%}
+    </tbody>
+</table>
 
 {% endblock %}

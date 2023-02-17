@@ -10,6 +10,7 @@ def istex_request_to_json(r):
     our_response = []
     for hit in istex_response["hits"]:
         our_hit = {
+            "small_title": hit["title"][0:61] + " ...",
             "title": hit["title"],
             "abstract": hit["abstract"],
             "first_author": hit["author"][0]["name"],
