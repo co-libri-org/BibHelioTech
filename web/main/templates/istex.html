@@ -30,12 +30,12 @@
         <td>{{istex.year}}</td>
         <td>{{istex.first_author}}</td>
         <td>{{istex.journal}}</td>
-        <td><a class="{{istex_class}}" id="istex-link-{{istex.ark}}" href="{{istex.pdf_url}}"
+        <td><a class="btn btn-warning" id="istex-link-{{istex.ark}}" href="{{istex.pdf_url}}"
                title="Get istex file">pdf</a></td>
         <td>
             <form method="post" action="{{url_for('main.upload_from_url')}}">
                 <input type="hidden" name="pdf_url" value="{{istex.pdf_url}}">
-                <input type=submit value="Add">
+                <input type=submit value="add" class="btn btn-warning" title="Add to local database">
             </form>
         </td>
     </tr>

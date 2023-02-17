@@ -6,18 +6,18 @@
 {% for paper in papers_list %}
 <div class="row ">
     <div class="col-3 ">{{paper.title}}</div>
-    <div class="col-1 "><a href="{{url_for('main.pdf', paper_id=paper.id)}}" title="Get pdf file">pdf</a></div>
+    <div class="col-1 "><a class="btn btn-warning" href="{{url_for('main.pdf', paper_id=paper.id)}}" title="Get pdf file">pdf</a></div>
     <div class="col-1 ">
         {% if paper.cat_path %}
             {% set cat_class = "cat-link" %}
         {% else %}
             {% set cat_class = "cat-link-disabled" %}
         {% endif %}
-        <a class="{{cat_class}}" id="cat-link-{{paper.id}}" href="{{url_for('main.cat', paper_id=paper.id)}}"
+        <a class="btn btn-warning {{cat_class}}" id="cat-link-{{paper.id}}" href="{{url_for('main.cat', paper_id=paper.id)}}"
            title="Get catalog file">cat</a>
     </div>
     <div class="col-1 ">
-        <button class='run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">run</button>
+        <button class='btn btn-warning run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">run</button>
     </div>
     <div class="col-1">
         <span class="bht-status" id="bht-status-{{paper.id}}"></span>
