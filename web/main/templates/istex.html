@@ -4,7 +4,7 @@
 {% block content %}
 <div class="row mb-5">
     <h4>Refresh ISTEX request</h4>
-    <form method="post" action="{{url_for('main.istex_from_url')}}">
+    <form method="post" action="{{url_for('main.istex')}}">
         <input type=url name=istex_req_url>
         <input type=submit value="Get ISTEX">
     </form>

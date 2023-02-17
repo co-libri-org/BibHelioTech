@@ -199,16 +199,21 @@ def bht_run():
     return jsonify(response_object), 202
 
 
-@bp.route("/istex", methods=["GET"])
+@bp.route("/istex", methods=["GET", "POST"])
 def istex():
-    return render_template("istex.html", istex_list=[])
+    if request.method == "GET":
+        return render_template("istex.html", istex_list=[])
+    elif request.method == "POST":
+        istex_req_url = request.form["istex_req_url"]
+        istex_list = istex_url_to_json(istex_req_url)
+        return render_template("istex.html", istex_list=istex_list)
 
 
 @bp.route("/istex_from_url", methods=["POST"])
 def istex_from_url():
     istex_req_url = request.form["istex_req_url"]
     istex_list = istex_url_to_json(istex_req_url)
-    return render_template("istex.html", istex_list=istex_list)
+    return redirect(url_for("main.istex", istex_list=istex_list))
 
 
 @bp.route("/bht_status/<paper_id>", methods=["GET"])

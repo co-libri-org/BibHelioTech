@@ -118,8 +118,6 @@ class TestIstexRoutes:
         THEN check that a '200' status code is returned
              with proper response content
         """
-        response = test_client.post(
-            "/istex_from_url", data={"istex_req_url": istex_url}
-        )
+        response = test_client.post("/istex", data={"istex_req_url": istex_url})
         assert response.status_code == 200
         assert b"The solar wind from a stellar perspective" in response.data
