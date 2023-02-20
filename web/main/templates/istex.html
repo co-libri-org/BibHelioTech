@@ -13,18 +13,20 @@
 <table class="table-hover table">
     <thead>
     <tr>
-        <th scope="col">#</th>
-        <th scope="col">Title</th>
-        <th scope="col">Year</th>
-        <th scope="col">Author</th>
-        <th scope="col">Journal</th>
-        <th scope="col-1">pdf</th>
-        <th scope="col-1">add</th>
+        <th scope="col" class="col"><input id="checkAll" type="checkbox" title="Select all papers"></th>
+        <th scope="col" class="col">#</th>
+        <th scope="col" class="col">Title</th>
+        <th scope="col" class="col">Year</th>
+        <th scope="col" class="col">Author</th>
+        <th scope="col" class="col">Journal</th>
+        <th scope="col" class="col">pdf</th>
+        <th scope="col" class="col">add</th>
     </tr>
     </thead>
     <tbody>
     {% for istex in istex_list %}
     <tr>
+        <th scope="col"><input id="istex-check-{{istex.id}}" type="checkbox"></th>
         <th scope="row">{{loop.index}}</th>
         <td class="title-cell text-truncate" style="max-width: 350px;" title="Show abstract"
             data-bs-toggle="modal" data-title="{{istex.title}}" data-abstract="{{istex.abstract}}"
@@ -33,7 +35,7 @@
         <td>{{istex.year}}</td>
         <td>{{istex.first_author}}</td>
         <td>{{istex.journal}}</td>
-        <td><a class="btn btn-warning" id="istex-link-{{istex.ark}}" href="{{istex.pdf_url}}"
+        <td><a class="btn btn-warning" id="istex-link-{{istex.id}}" href="{{istex.pdf_url}}"
                title="Get istex file">pdf</a></td>
         <td>
             <form method="post" action="{{url_for('main.upload_from_url')}}">
@@ -45,6 +47,10 @@
     {%endfor%}
     </tbody>
 </table>
+
+<div class="content">
+    <button  class="btn btn-warning" id="addAll" title="Add all checked papers">add all</button>
+</div>
 
 <div id="abstract-modal" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
@@ -70,6 +76,8 @@
 
 $(document).ready(function() {
 
+    // Show abstract in a modal windaw when title clicked
+    //
     $("#abstract-modal").on("show.bs.modal", function(event) {
         // Get the button that triggered the modal
         var button = $(event.relatedTarget);
@@ -77,6 +85,18 @@ $(document).ready(function() {
         // Change modal title
         $(this).find(".modal-title").text(button.data("title"));
         $(this).find(".modal-body").children("p").text(button.data("abstract"));
+    });
+
+    // (de)Select  all checkboxes when main is (de)selected
+    //
+    $("#checkAll").click(function(){
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+    $("#addAll").click(function(){
+        $("input:checked").not($('#checkAll')).each(function() {
+            alert ( $(this).attr('id') )
+          });
     });
 });
 

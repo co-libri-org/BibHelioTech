@@ -98,3 +98,8 @@ def istex_url():
         "stats": "",
     }
     yield "https://api.istex.fr/document/?" + urlencode(_params)
+
+
+@pytest.fixture(scope="module")
+def istex_id():
+    yield "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"

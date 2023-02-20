@@ -28,7 +28,7 @@ from web import db
 from web.models import Paper
 from web.bht_proxy import runfile_and_updatedb
 from web.errors import PdfFileError
-from web.istex_proxy import istex_url_to_json
+from web.istex_proxy import istex_url_to_json, istex_id_to_url
 
 
 def allowed_file(filename):
@@ -181,6 +181,20 @@ def upload_from_url():
         fp, filename = get_file_from_url(pdf_url)
         save_to_db(fp, filename)
         return redirect(url_for("main.papers"))
+
+
+@bp.route("/upload_istex_id", methods=["POST"])
+def upload_istex_id():
+    istex_id = request.form.get("istex_id")
+    if istex_id is None:
+        return Response(
+            "No valid parameters for url",
+            status=400,
+        )
+    else:
+        fp, filename = get_file_from_url(istex_id_to_url(istex_id))
+        save_to_db(fp, filename)
+        # return redirect(url_for("main.papers"))
 
 
 @bp.route("/upload", methods=["POST"])
