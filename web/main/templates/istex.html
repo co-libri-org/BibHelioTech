@@ -26,7 +26,10 @@
     {% for istex in istex_list %}
     <tr>
         <th scope="row">{{loop.index}}</th>
-        <td class="title-cell text-truncate" style="max-width: 350px;" title="{{istex.title}}">{{istex.title}}</td>
+        <td class="title-cell text-truncate" style="max-width: 350px;" title="Show abstract"
+            data-bs-toggle="modal" data-title="{{istex.title}}" data-abstract="{{istex.abstract}}"
+            data-bs-target="#abstract-modal">{{istex.title}}
+        </td>
         <td>{{istex.year}}</td>
         <td>{{istex.first_author}}</td>
         <td>{{istex.journal}}</td>
@@ -43,4 +46,39 @@
     </tbody>
 </table>
 
+<div id="abstract-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to save changes to this document before closing?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+
+$(document).ready(function() {
+
+    $("#abstract-modal").on("show.bs.modal", function(event) {
+        // Get the button that triggered the modal
+        var button = $(event.relatedTarget);
+
+        // Change modal title
+        $(this).find(".modal-title").text(button.data("title"));
+        $(this).find(".modal-body").children("p").text(button.data("abstract"));
+    });
+});
+
+</script>
 {% endblock %}
