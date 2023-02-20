@@ -39,14 +39,9 @@
             <a class="btn btn-warning" href="{{url_for('main.pdf', paper_id=paper.id)}}" title="Get pdf file">pdf</a>
         </td>
         <td>
-            {% if paper.cat_path %}
-            {% set disabled = "" %}
-            {% else %}
-            {% set disabled = "disabled" %}
-            {% endif %}
             <a class="btn btn-warning cat-link" id="cat-link-{{paper.id}}"
                href="{{url_for('main.cat', paper_id=paper.id)}}"
-               title="Get catalog file" {{disabled}}>cat</a>
+               title="Get catalog file" {{disabled(not paper.cat_path)}}>cat</a>
         </td>
         <td>
             <button class='btn btn-warning run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">

@@ -3,7 +3,7 @@ a.btn-warning:hover {
     border: solid 1pt lightgrey !important ;
 }
 
-a.cat-link[disabled] {
+a.btn[disabled] {
     background-color: grey;
     text-decoration-line: line-through;
     border: solid black 1pt;
