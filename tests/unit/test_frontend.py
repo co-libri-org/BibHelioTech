@@ -71,7 +71,7 @@ class TestPapersRoutes:
         THEN check that the response has deleted the paper in db
         """
         paper_id = paper_for_test.id
-        response = test_client.post(f"/paper/del/{paper_id}")
+        response = test_client.get(f"/paper/del/{paper_id}")
         assert response.status_code == 302
         assert Paper.query.get(paper_id) is None
 

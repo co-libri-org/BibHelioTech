@@ -141,7 +141,7 @@ def cat(paper_id):
         return send_file(file_path)
 
 
-@bp.route("/paper/del/<paper_id>", methods=["POST"])
+@bp.route("/paper/del/<paper_id>", methods=["GET"])
 def paper_del(paper_id):
     paper = Paper.query.get(paper_id)
     if paper is None:
