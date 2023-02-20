@@ -2,12 +2,11 @@ button.btn-warning:hover,
 a.btn-warning:hover {
     border: solid 1pt lightgrey !important ;
 }
-a.btn-warning.cat-link-disabled {
+
+a.cat-link[disabled] {
     background-color: grey;
     text-decoration-line: line-through;
     border: solid black 1pt;
-}
-.cat-link-disabled {
     pointer-events: none;
     text-decoration-line: line-through;
     color: black;

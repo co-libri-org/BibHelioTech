@@ -27,7 +27,7 @@
         <th scope="col" style="width: 80px;">pdf</th>
         <th scope="col" style="width: 80px;">cat</th>
         <th scope="col" style="width: 80px;">run</th>
-        <th scope="col" style="width: 80px;">status</th>
+        <th scope="col" style="width: 150px;">status</th>
     </tr>
     </thead>
     <tbody>
@@ -40,13 +40,13 @@
         </td>
         <td>
             {% if paper.cat_path %}
-            {% set cat_class = "cat-link" %}
+            {% set disabled = "" %}
             {% else %}
-            {% set cat_class = "cat-link-disabled" %}
+            {% set disabled = "disabled" %}
             {% endif %}
-            <a class="btn btn-warning {{cat_class}}" id="cat-link-{{paper.id}}"
+            <a class="btn btn-warning cat-link" id="cat-link-{{paper.id}}"
                href="{{url_for('main.cat', paper_id=paper.id)}}"
-               title="Get catalog file">cat</a>
+               title="Get catalog file" {{disabled}}>cat</a>
         </td>
         <td>
             <button class='btn btn-warning run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">
@@ -91,11 +91,11 @@ function setStatus(paper_id) {
     if (res.status === 'error' ) return false;
     const statusElmtId = '#bht-status-'+res.data.paper_id
     $(statusElmtId).attr('title', 'task id: '+res.data.task_id)
-    $(statusElmtId).html(res.data.task_status)
+    $(statusElmtId).html(res.data.task_status)//+" "+res.data.task_elapsed)
     const taskStatus = res.data.task_status;
     if (taskStatus === 'finished' ) {
         const catElementId = '#cat-link-'+res.data.paper_id;
-        $(catElementId).attr('class', 'cat-link');
+        $(catElementId).removeAttr('disabled')
     }
     if ( taskStatus === 'failed') return false;
     setTimeout(function () {
@@ -111,6 +111,7 @@ $('.bht-status').each(function(index){
     const paperId = $(this).attr('id').substring(11);
     setStatus(paperId);
 });
+
 
 
 
