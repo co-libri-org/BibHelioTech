@@ -181,6 +181,31 @@ def upload():
         return redirect(url_for("main.papers"))
 
 
+@bp.route("/bht_status/<paper_id>", methods=["GET"])
+def bht_status(paper_id):
+    paper = Paper.query.get(paper_id)
+    if paper is None:
+        flash(f"No such paper {paper_id}")
+        return redirect(url_for("main.papers"))
+    task_id = paper.task_id
+    with Connection(redis.from_url(current_app.config["REDIS_URL"])):
+        q = Queue()
+        task = q.fetch_job(task_id)
+    if task:
+        response_object = {
+            "status": "success",
+            "data": {
+                "task_id": task.get_id(),
+                "task_status": task.get_status(),
+                "task_result": task.result,
+                "paper_id": paper.id,
+            },
+        }
+    else:
+        response_object = {"status": "error"}
+    return jsonify(response_object)
+
+
 @bp.route("/bht_run", methods=["POST"])
 def bht_run():
     paper_id = request.form["paper_id"]
@@ -221,31 +246,6 @@ def istex_from_url():
     istex_req_url = request.form["istex_req_url"]
     istex_list = istex_url_to_json(istex_req_url)
     return redirect(url_for("main.istex", istex_list=istex_list))
-
-
-@bp.route("/bht_status/<paper_id>", methods=["GET"])
-def bht_status(paper_id):
-    paper = Paper.query.get(paper_id)
-    if paper is None:
-        flash(f"No such paper {paper_id}")
-        return redirect(url_for("main.papers"))
-    task_id = paper.task_id
-    with Connection(redis.from_url(current_app.config["REDIS_URL"])):
-        q = Queue()
-        task = q.fetch_job(task_id)
-    if task:
-        response_object = {
-            "status": "success",
-            "data": {
-                "task_id": task.get_id(),
-                "task_status": task.get_status(),
-                "task_result": task.result,
-                "paper_id": paper.id,
-            },
-        }
-    else:
-        response_object = {"status": "error"}
-    return jsonify(response_object)
 
 
 @bp.route("/catalogs", methods=["GET"])
