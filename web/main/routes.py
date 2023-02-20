@@ -97,6 +97,12 @@ def save_to_db(file_stream, filename):
     return paper.id
 
 
+@bp.app_template_filter("staticversion")
+def staticversion_filter(filename):
+    newfilename = "{0}?v={1}".format(filename, current_app.config["VERSION"])
+    return newfilename
+
+
 @bp.route("/")
 def index():
     # return render_template("index.html")
