@@ -5,10 +5,14 @@ a.btn-warning:hover {
     border: solid 1pt grey !important ;
 }
 
-a.nav-link.active,
+
 input.btn-warning,
 button.btn-warning,
 a.btn-warning {
+    padding: 5px;
+    border: solid 1pt lightgrey !important ;
+}
+a.nav-link.active{
     border: solid 1pt lightgrey !important ;
 }
 a.nav-link:hover {
