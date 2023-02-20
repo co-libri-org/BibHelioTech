@@ -1,5 +1,17 @@
+a.nav-link.active:hover ,
+input.btn-warning:hover,
 button.btn-warning:hover,
 a.btn-warning:hover {
+    border: solid 1pt grey !important ;
+}
+
+a.nav-link.active,
+input.btn-warning,
+button.btn-warning,
+a.btn-warning {
+    border: solid 1pt lightgrey !important ;
+}
+a.nav-link:hover {
     border: solid 1pt lightgrey !important ;
 }
 
@@ -15,7 +27,7 @@ a.btn[disabled] {
 
 .nav-link {
     color: black !important;
-    border: 1pt solid white;
+    border: 1pt solid white !important;
 }
 
 /*
