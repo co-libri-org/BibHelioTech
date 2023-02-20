@@ -23,3 +23,8 @@ a.btn-warning.cat-link-disabled {
     background-color: var(--bs-btn-hover-bg) !important;
 }
 */
+
+.title-cell:hover {
+    cursor: pointer;
+    background-color:var(--bs-warning);
+}
