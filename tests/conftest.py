@@ -7,6 +7,8 @@ import os
 from bht_config import yml_settings
 from web import create_app, db
 from web.config import TestConfig
+from web.main.routes import save_to_db
+from web.models import Paper
 
 skip_istex = pytest.mark.skipif(
     os.environ.get("BHT_DONTSKIPISTEX") is None
@@ -36,9 +38,7 @@ def app():
 
 @pytest.fixture(scope="module")
 def tei_for_test():
-    test_tei_file = os.path.join(
-        yml_settings["BHT_PAPERS_DIR"], "2016GL069787.tei.xml"
-    )
+    test_tei_file = os.path.join(yml_settings["BHT_PAPERS_DIR"], "2016GL069787.tei.xml")
     yield test_tei_file
     if os.path.isfile(test_tei_file):
         os.remove(test_tei_file)
@@ -58,6 +58,13 @@ def pdf_for_test():
 
     if os.path.isfile(test_pdf_file_dest):
         os.remove(test_pdf_file_dest)
+
+
+@pytest.fixture(scope="function")
+def paper_for_test(pdf_for_test):
+    with open(pdf_for_test, "rb", buffering=0) as fp:
+        paper_id = save_to_db(fp.readall(), os.path.basename(pdf_for_test))
+    return Paper.query.get(paper_id)
 
 
 @pytest.fixture(scope="module")

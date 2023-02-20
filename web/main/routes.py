@@ -141,6 +141,22 @@ def cat(paper_id):
         return send_file(file_path)
 
 
+@bp.route("/paper/del/<paper_id>", methods=["POST"])
+def paper_del(paper_id):
+    paper = Paper.query.get(paper_id)
+    if paper is None:
+        flash(f"No such paper {paper_id}")
+        return redirect(url_for("main.papers"))
+    if paper.has_cat:
+        os.remove(paper.cat_path)
+    if paper.has_pdf:
+        os.remove(paper.pdf_path)
+    db.session.delete(paper)
+    db.session.commit()
+    flash(f"Paper {paper_id} deleted")
+    return redirect(url_for("main.papers"))
+
+
 @bp.route("/papers/<name>")
 @bp.route("/papers")
 def papers(name=None):
@@ -202,6 +218,7 @@ def bht_status(paper_id):
                 "task_id": task.get_id(),
                 "task_status": task.get_status(),
                 "task_result": task.result,
+                # :w"task_elapsed": datetime.datetime.now() - task.started_at,
                 "paper_id": paper.id,
             },
         }

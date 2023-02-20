@@ -63,6 +63,19 @@ class TestPapersPage:
         assert b"Upload from URL" in response.data
 
 
+class TestPapersRoutes:
+    def test_paper_del(self, test_client, paper_for_test):
+        """
+        GIVEN a Flask application configured for testing
+        WHEN the '/paper/del' page is requested (POST)
+        THEN check that the response has deleted the paper in db
+        """
+        paper_id = paper_for_test.id
+        response = test_client.post(f"/paper/del/{paper_id}")
+        assert response.status_code == 302
+        assert Paper.query.get(paper_id) is None
+
+
 class TestUploadPdf:
     def test_upload_with_wrongparam(self, test_client):
         """
