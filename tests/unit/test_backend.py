@@ -27,6 +27,11 @@ class TestDb:
         found_paper = Paper.query.filter_by(title=my_title).one()
         assert found_paper.pdf_path == my_path
 
+    def test_has_path(self):
+        paper = Paper(title="my Paper", pdf_path="/this/is/a/path.pdf")
+        assert not paper.has_cat
+        assert not paper.has_pdf
+
 
 class TestAds:
     def test_published_date(self):
@@ -45,6 +50,11 @@ class TestGrobid:
             yml_settings["BHT_PAPERS_DIR"]
         )  # generate the XML GROBID file
         assert os.path.isfile(tei_for_test)
+
+
+class TestRq:
+    def test_bht_status(self):
+        pass
 
 
 @skip_istex

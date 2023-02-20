@@ -3,8 +3,9 @@ a.btn-warning:hover {
     border: solid 1pt lightgrey !important ;
 }
 
+button.btn[disabled] ,
 a.btn[disabled] {
-    background-color: grey;
+    background-color: lightgrey;
     text-decoration-line: line-through;
     border: solid black 1pt;
     pointer-events: none;

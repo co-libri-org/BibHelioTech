@@ -46,9 +46,9 @@ def get_paper_file(paper_id, file_type):
         flash(f"No such paper {paper_id}")
         return None
 
-    if file_type == "pdf":
+    if file_type == "pdf" and paper.has_pdf:
         file_path = paper.pdf_path
-    elif file_type == "cat":
+    elif file_type == "cat" and paper.has_cat:
         file_path = paper.cat_path
 
     if file_path is None:
@@ -57,6 +57,10 @@ def get_paper_file(paper_id, file_type):
 
     if not os.path.isabs(file_path):
         file_path = os.path.join(current_app.config["WEB_UPLOAD_DIR"], file_path)
+
+    if not os.path.isfile(file_path):
+        flash(f"No {file_type} file for paper {paper_id}")
+        return None
 
     return file_path
 

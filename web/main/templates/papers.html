@@ -36,15 +36,19 @@
         <th scope="row">{{loop.index}}</th>
         <td>{{paper.title}}</td>
         <td>
-            <a class="btn btn-warning" href="{{url_for('main.pdf', paper_id=paper.id)}}" title="Get pdf file">pdf</a>
+            <a class="btn btn-warning"
+               href="{{url_for('main.pdf', paper_id=paper.id)}}"
+               title="Get pdf file" {{disabled(not paper.has_pdf)}}>pdf</a>
         </td>
         <td>
             <a class="btn btn-warning cat-link" id="cat-link-{{paper.id}}"
                href="{{url_for('main.cat', paper_id=paper.id)}}"
-               title="Get catalog file" {{disabled(not paper.cat_path)}}>cat</a>
+               title="Get catalog file" {{disabled(not paper.has_cat)}}>cat</a>
         </td>
         <td>
-            <button class='btn btn-warning run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">
+            <button class='btn btn-warning run-bht'
+                    title="Run bht pipeline on this file" data-paper_id="{{paper.id}}"
+                    {{disabled(not paper.has_pdf)}}>
                 run
             </button>
         </td>
@@ -106,6 +110,11 @@ $('.bht-status').each(function(index){
     const paperId = $(this).attr('id').substring(11);
     setStatus(paperId);
 });
+
+
+
+
+
 
 
 
