@@ -24,6 +24,7 @@
     <tr>
         <th scope="col" style="width: 20px;">#</th>
         <th scope="col" style="width: 680px;">Title</th>
+        <th scope="col" style="width: 80px;">del</th>
         <th scope="col" style="width: 80px;">pdf</th>
         <th scope="col" style="width: 80px;">cat</th>
         <th scope="col" style="width: 80px;">run</th>
@@ -35,6 +36,13 @@
     <tr>
         <th scope="row">{{loop.index}}</th>
         <td>{{paper.title}}</td>
+        <td>
+            <a class="btn btn-warning"
+               href="{{url_for('main.paper_del', paper_id=paper.id)}}"
+               title="Remove paper from database">
+                del
+            </a>
+        </td>
         <td>
             <a class="btn btn-warning"
                href="{{url_for('main.pdf', paper_id=paper.id)}}"
@@ -64,6 +72,8 @@
 
 {% block scripts %}
 <script>
+
+// BHT tasks management
 
 $('.run-bht').on('click', function() {
   $.ajax({
@@ -110,15 +120,6 @@ $('.bht-status').each(function(index){
     const paperId = $(this).attr('id').substring(11);
     setStatus(paperId);
 });
-
-
-
-
-
-
-
-
-
 
 </script>
 
