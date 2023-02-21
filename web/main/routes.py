@@ -1,4 +1,5 @@
 import glob
+import json
 import os
 import re
 
@@ -78,7 +79,7 @@ def get_file_from_url(url):
             else:
                 filename = url.split("/")[-1]
     except RequestException as e:
-        raise (e)
+        raise e
     return r.content, filename
 
 
@@ -183,9 +184,9 @@ def upload_from_url():
         return redirect(url_for("main.papers"))
 
 
-@bp.route("/upload_istex_id", methods=["POST"])
-def upload_istex_id():
-    istex_id = request.form.get("istex_id")
+@bp.route("/istex_upload_id", methods=["POST"])
+def istex_upload_id():
+    istex_id = request.json.get("istex_id")
     if istex_id is None:
         return Response(
             "No valid parameters for url",
@@ -193,8 +194,9 @@ def upload_istex_id():
         )
     else:
         fp, filename = get_file_from_url(istex_id_to_url(istex_id))
-        save_to_db(fp, filename)
-        # return redirect(url_for("main.papers"))
+        filename = istex_id + ".pdf"
+        paper_id = save_to_db(fp, filename)
+        return jsonify({"success": "true", "paper_id": paper_id}), 201
 
 
 @bp.route("/upload", methods=["POST"])
@@ -265,6 +267,17 @@ def bht_run():
     return jsonify(response_object), 202
 
 
+@bp.route("/istex_test", methods=["GET"])
+def istex_test():
+    from web.istex_proxy import istex_json_to_json
+
+    with open(
+        os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
+    ) as fp:
+        istex_list = istex_json_to_json(json.load(fp))
+    return render_template("istex.html", istex_list=istex_list)
+
+
 @bp.route("/istex", methods=["GET", "POST"])
 def istex():
     if request.method == "GET":
@@ -278,6 +291,11 @@ def istex():
 
 @bp.route("/istex_from_url", methods=["POST"])
 def istex_from_url():
+    """
+    Given an istex api url (found in the form request)
+    Parse the json response data
+    Redirect to istex main page to display papers list
+    """
     istex_req_url = request.form["istex_req_url"]
     istex_list = istex_url_to_json(istex_req_url)
     return redirect(url_for("main.istex", istex_list=istex_list))

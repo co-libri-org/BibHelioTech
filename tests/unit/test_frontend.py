@@ -134,3 +134,23 @@ class TestIstexRoutes:
         response = test_client.post("/istex", data={"istex_req_url": istex_url})
         assert response.status_code == 200
         assert b"The solar wind from a stellar perspective" in response.data
+
+    def test_istex_upload_id(self, test_client, istex_id):
+        """
+        GIVEN a Flask application and an ISTEX ID
+        WHEN the '/istex_upload_istex_id' REST endpoint is posted to json request
+        THEN check that a '201' status code is returned
+             with proper response content (json with success and paper id)
+        """
+        import json
+
+        response = test_client.post(
+            "/istex_upload_id",
+            data=json.dumps(dict(istex_id=istex_id)),
+            content_type="application/json",
+        )
+        # first check we go success to request
+        assert response.status_code == 201
+        # then test that paper was indeed inseted in db
+        paper = Paper.query.get(response.json["paper_id"])
+        assert paper.title == "Proton-proton collisional age to order solar wind types"
