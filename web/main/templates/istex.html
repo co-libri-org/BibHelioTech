@@ -26,7 +26,7 @@
     <tbody>
     {% for istex in istex_list %}
     <tr>
-        <th scope="col"><input id="istex-check-{{istex.id}}" type="checkbox"></th>
+        <th scope="col"><input id="istex-check-{{istex.id}}" value="{{istex.id}}" type="checkbox"></th>
         <th scope="row">{{loop.index}}</th>
         <td class="title-cell text-truncate" style="max-width: 350px;" title="Show abstract"
             data-bs-toggle="modal" data-title="{{istex.title}}" data-abstract="{{istex.abstract}}"
@@ -76,7 +76,7 @@
 
 $(document).ready(function() {
 
-    // Show abstract in a modal windaw when title clicked
+    // Show abstract in a modal windaw (yes, a 'windaw', like a 'squaw') when title clicked
     //
     $("#abstract-modal").on("show.bs.modal", function(event) {
         // Get the button that triggered the modal
@@ -95,7 +95,15 @@ $(document).ready(function() {
 
     $("#addAll").click(function(){
         $("input:checked").not($('#checkAll')).each(function() {
-            alert ( $(this).attr('id') )
+            istex_id = $(this).val()
+            $.post({
+                url: "{{url_for('main.istex_upload_id')}}",
+                data: JSON.stringify({ istex_id: istex_id}),
+                contentType: 'application/json; charset=utf-8'
+            })
+              .done(function( data ) {
+                alert( "Data Loaded: " + data );
+              });
           });
     });
 });
