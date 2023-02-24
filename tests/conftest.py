@@ -23,9 +23,13 @@ skip_slow_test = pytest.mark.skipif(
 )
 
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def app():
     app = create_app(TestConfig)
+    app.config.update(
+        # Change the port that the liveserver listens on as we don't want to conflict with running:5000
+        LIVESERVER_PORT=8943
+    )
 
     app_context = app.app_context()
     app_context.push()
