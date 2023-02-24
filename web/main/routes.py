@@ -42,7 +42,7 @@ def allowed_file(filename):
 
 def get_paper_file(paper_id, file_type):
     file_path = None
-    paper = Paper.query.get(paper_id)
+    paper = db.session.get(Paper, paper_id)
     if paper is None:
         flash(f"No such paper {paper_id}")
         return None
@@ -144,7 +144,7 @@ def cat(paper_id):
 
 @bp.route("/paper/del/<paper_id>", methods=["GET"])
 def paper_del(paper_id):
-    paper = Paper.query.get(paper_id)
+    paper = db.session.get(Paper, paper_id)
     if paper is None:
         flash(f"No such paper {paper_id}")
         return redirect(url_for("main.papers"))
@@ -219,7 +219,7 @@ def upload():
 
 @bp.route("/bht_status/<paper_id>", methods=["GET"])
 def bht_status(paper_id):
-    paper = Paper.query.get(paper_id)
+    paper = db.session.get(Paper, paper_id)
     if paper is None:
         flash(f"No such paper {paper_id}")
         return redirect(url_for("main.papers"))
@@ -257,7 +257,7 @@ def bht_run():
             job_timeout=600,
         )
 
-    paper = Paper.query.get(paper_id)
+    paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
 
     response_object = {

@@ -64,7 +64,7 @@ def pdf_for_test():
 def paper_for_test(pdf_for_test):
     with open(pdf_for_test, "rb", buffering=0) as fp:
         paper_id = save_to_db(fp.readall(), os.path.basename(pdf_for_test))
-    return Paper.query.get(paper_id)
+    return db.session.get(Paper, paper_id)
 
 
 @pytest.fixture(scope="module")

@@ -3,6 +3,7 @@ import os.path
 from filetype import filetype
 
 from tests.conftest import skip_slow_test, skip_istex
+from web import db
 from web.main.routes import get_file_from_url, save_to_db
 from web.models import Paper
 
@@ -73,7 +74,7 @@ class TestPapersRoutes:
         paper_id = paper_for_test.id
         response = test_client.get(f"/paper/del/{paper_id}")
         assert response.status_code == 302
-        assert Paper.query.get(paper_id) is None
+        assert db.session.get(Paper, paper_id) is None
 
 
 class TestUploadPdf:
@@ -152,5 +153,5 @@ class TestIstexRoutes:
         # first check we go success to request
         assert response.status_code == 201
         # then test that paper was indeed inseted in db
-        paper = Paper.query.get(response.json["paper_id"])
+        paper = db.session.get(Paper, response.json["paper_id"])
         assert paper.title == "Proton-proton collisional age to order solar wind types"
