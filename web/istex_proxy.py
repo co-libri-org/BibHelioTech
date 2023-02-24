@@ -7,12 +7,8 @@ ISTEX_BASE_URL = "https://api.istex.fr/document/"
 
 def istex_id_to_url(istex_id):
     req_url = ISTEX_BASE_URL + istex_id
-    from pprint import pprint
-
-    pprint(req_url)
     r = requests.get(url=req_url)
     document_json = r.json()
-    pprint(document_json)
     pdf_url = document_json["fulltext"][0]["uri"]
     return pdf_url
 
