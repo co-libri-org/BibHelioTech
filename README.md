@@ -1,22 +1,24 @@
 # BibHelioTech
 
-
 [![DOI](https://zenodo.org/badge/599997124.svg)](https://zenodo.org/badge/latestdoi/599997124)
 [![License](https://img.shields.io/github/license/ADablanc/BibHelioTech.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/RichardHitier/BibHelioTech)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/RichardHitier/BibHelioTech/unittest_ci.yml?label=Tests)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/RichardHitier/BibHelioTech?label=Version)
 
-
-
 ## BibHelioTech project description
-BibHelioTech is a program for the recognition of temporal expressions and entities (satellites, instruments, regions) extracted from scientific articles in the field of heliophysics.
 
-It was developed at IRAP (Institut de Recherche en Astrophysique et Planétologie, Toulouse https://www.irap.omp.eu/) in the frame of an internship by A. Dablanc supervised by V. Génot.
+BibHelioTech is a program for the recognition of temporal expressions and entities (satellites, instruments, regions)
+extracted from scientific articles in the field of heliophysics.
 
-Its main purpose is to retrieve events of interest which have been studied and published, and associate them with the full context of the observations. It produces standardized catalogues of events (time intervals, satellites, instruments, regions, metrics) which can then be exploited in space physics visualization tools such as AMDA (http://amda.cdpp.eu/).
+It was developed at IRAP (Institut de Recherche en Astrophysique et Planétologie, Toulouse https://www.irap.omp.eu/) in
+the frame of an internship by A. Dablanc supervised by V. Génot.
+
+Its main purpose is to retrieve events of interest which have been studied and published, and associate them with the
+full context of the observations. It produces standardized catalogues of events (time intervals, satellites,
+instruments, regions, metrics) which can then be exploited in space physics visualization tools such as
+AMDA (http://amda.cdpp.eu/).
 
 ## Docker image building
 
@@ -30,7 +32,6 @@ make sure you have created the database:
 ### Web interface
 
 We use docker compose for the link between bibheliotech and dependency containers.
-
 
 build it first
 
@@ -106,6 +107,12 @@ As a first try, you can
 
 it also embeds calls to flake8 and black plugin.
 
+To make sure you follow those formats, you can install plugins.
+For pycharm:
+
+https://black.readthedocs.io/en/stable/integrations/editors.html
+https://pypi.org/project/flake8-for-pycharm/
+
 ### tests
 
 either run on your workdir, but launch grobid and redis first:
@@ -118,7 +125,6 @@ alternately, run with ini file
 
     cp ressources/pytest.ini-dist ./pytest.ini
     pytest
-
 
 or use the whole docker stack
 
@@ -138,7 +144,7 @@ or allow ISTEX tests if you have IP authorisation
 
 ### github actions
 
-Github actions yml files are stored in  the `.github/workflows/` directory.
+Github actions yml files are stored in the `.github/workflows/` directory.
 
 - one for deployment to the ovh dev server
 - one for running integration tests
@@ -157,15 +163,16 @@ You would be advised to look at `./docker/Dockerfile` for more tips.
 STEP 1: install all dependency
 
 1. install pip dependencies
+
 ```
 python3 -m venv venv
 source venv/bin/activate
 pip install wheel
 pip install -r requirements.txt
 ```
-1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/
-1. Update the `edu/stanford/nlp/models/sutime/english.sutime.txt` under  jars/stanford-corenlp-4.0.0-models.jar/
 
+1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/
+1. Update the `edu/stanford/nlp/models/sutime/english.sutime.txt` under jars/stanford-corenlp-4.0.0-models.jar/
 
 STEP 2: tesseract 5.1.0 installation (Ubuntu exemple)
 
@@ -189,6 +196,7 @@ STEP 4: GROBID python client installation
 * copy grobid-client-config.json-dist grobid-client-config.json
 
 ## User guide
+
 Make sure the GROBID server is running
 
 Copy any Heliophysics articles in pdf format under ./DATA/Papers/
@@ -210,7 +218,8 @@ call it an agile sprint, or a git feature branch.
 
 Each of those steps is labelled with the version number, followed by the '.pre' keyword, and a number for the step.
 
-For example, lets say we are heading towards the `0.3.0` goal, and that we're on the fifth sprint after the `0.2.0` release, the
+For example, lets say we are heading towards the `0.3.0` goal, and that we're on the fifth sprint after the `0.2.0`
+release, the
 version number will be `0.3.0.pre-5`
 
 While on a branch, the sprint is not fullfilled, thus `VERSION.txt` should contain `0.3.0.pre-5-dev` .
@@ -229,6 +238,7 @@ Any VERSION change is git tagged with `v` prepended. In the later example, that 
 If you use or contribute to BibHelioTech, you agree to use it or share your contribution following the LICENSE file.
 
 ## Authors
+
 * [Axel Dablanc](axel.alain.dablanc@gmail.com)
 * [Vincent Génot](vincent.genot@irap.omp.eu)
 * [Richard Hitier](hitier.richard@gmail.com)
