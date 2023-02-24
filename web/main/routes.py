@@ -96,7 +96,11 @@ def save_to_db(file_stream, filename):
     if not filetype.guess(_file_path).mime == "application/pdf":
         raise Exception(f"{_file_path} is not pdf ")
     paper_title = filename.replace(".pdf", "")
-    paper = Paper(title=paper_title, pdf_path=_file_path)
+    paper = Paper.query.filter_by(title=paper_title).one_or_none()
+    if paper is None:
+        paper = Paper(title=paper_title, pdf_path=_file_path)
+    else:
+        paper.pdf_path = _file_path
     db.session.add(paper)
     db.session.commit()
     return paper.id

@@ -64,7 +64,13 @@ def pdf_for_test():
 def paper_for_test(pdf_for_test):
     with open(pdf_for_test, "rb", buffering=0) as fp:
         paper_id = save_to_db(fp.readall(), os.path.basename(pdf_for_test))
-    return db.session.get(Paper, paper_id)
+    paper = db.session.get(Paper, paper_id)
+    yield paper
+    # make sure paper exists before deleting
+    paper = db.session.get(Paper, paper_id)
+    if paper is not None:
+        db.session.delete(paper)
+        db.session.commit()
 
 
 @pytest.fixture(scope="module")
