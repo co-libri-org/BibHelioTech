@@ -50,7 +50,7 @@ If you'd better run on another port, edit the nginx service in the `docker-compo
 
 ### Dev mode
 
-An override compose file is available in `ressources/` dir
+An override compose file is available in `resources/` dir
 
     cp .env-dist .env
     $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
@@ -90,12 +90,12 @@ Make sure to fullfill any dependency first:
 flake8, along with its pep8-naming plugin allow to make sure our code is properly formated before commitinge.
 give it a try:
 
-    cp ressources/flake8 ./.flake8
+    cp resources/flake8 ./.flake8
     flake8
 
 ### pre-commit
 
-    cp ressources/pre-commit-config.ymal  .pre-commit-config.yaml
+    cp resources/pre-commit-config.ymal  .pre-commit-config.yaml
     pip install pre-commit
     pre-commit install
 
@@ -118,12 +118,12 @@ https://pypi.org/project/flake8-for-pycharm/
 either run on your workdir, but launch grobid and redis first:
 
     docker-compose -f docker-compose.tests.yml
-    cp ressources/bht-config.yml-dist ./bht-config.yml
+    cp resources/bht-config.yml-dist ./bht-config.yml
     python -m pytest tests
 
 alternately, run with ini file
 
-    cp ressources/pytest.ini-dist ./pytest.ini
+    cp resources/pytest.ini-dist ./pytest.ini
     pytest
 
 or use the whole docker stack

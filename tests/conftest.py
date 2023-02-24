@@ -47,7 +47,7 @@ def tei_for_test():
 @pytest.fixture(scope="module")
 def pdf_for_test():
     test_pdf_file_orig = os.path.join(
-        yml_settings["BHT_RESSOURCES_DIR"], "2016GL069787-test.pdf"
+        yml_settings["BHT_RESOURCES_DIR"], "2016GL069787-test.pdf"
     )
     test_pdf_file_dest = os.path.join(
         yml_settings["BHT_PAPERS_DIR"], "2016GL069787-test.pdf"
