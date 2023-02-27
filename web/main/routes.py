@@ -27,7 +27,7 @@ from flask import (
 from . import bp
 from web import db
 from web.models import Paper
-from web.bht_proxy import runfile_and_updatedb
+from web.bht_proxy import get_pipe_callback
 from web.errors import PdfFileError
 from web.istex_proxy import istex_url_to_json, istex_id_to_url
 
@@ -237,7 +237,7 @@ def bht_status(paper_id):
             "data": {
                 "task_id": task.get_id(),
                 "task_status": task.get_status(),
-                "task_result": task.result,
+                "task_result": task.return_value(),
                 # :w"task_elapsed": datetime.datetime.now() - task.started_at,
                 "paper_id": paper.id,
             },
@@ -252,14 +252,15 @@ def bht_run():
     paper_id = request.form["paper_id"]
     found_pdf_file = get_paper_file(paper_id, "pdf")
     if found_pdf_file is None:
+        flash("No file for that paper.")
         return redirect(url_for("main.papers"))
-    with Connection(redis.from_url(current_app.config["REDIS_URL"])):
-        q = Queue()
-        task = q.enqueue(
-            runfile_and_updatedb,
-            args=(paper_id, found_pdf_file, current_app.config["WEB_UPLOAD_DIR"]),
-            job_timeout=600,
-        )
+    # with current_app.app_context():
+    q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
+    task = q.enqueue(
+        get_pipe_callback(test=current_app.config["TESTING"]),
+        args=(paper_id, current_app.config["WEB_UPLOAD_DIR"]),
+        job_timeout=600,
+    )
 
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
