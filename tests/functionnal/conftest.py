@@ -8,6 +8,12 @@ from selenium.webdriver.firefox.options import Options
 
 from web.main.routes import save_to_db
 
+skip_selenium = pytest.mark.skipif(
+    os.environ.get("BHT_DONTSKIPSELENIUM") is None
+    or not os.environ.get("BHT_DONTSKIPSELENIUM"),
+    reason="SELENIUM Skipping",
+)
+
 
 @pytest.fixture(scope="module")
 def firefox_driver():

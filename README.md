@@ -134,13 +134,15 @@ or use the whole docker stack
 
 you may want to skip slow tests:
 
-    export BHT_SKIPSLOWTESTS=True
-    python -m pytest tests
+    BHT_SKIPSLOWTESTS=True python -m pytest tests
 
 or allow ISTEX tests if you have IP authorisation
 
-    export BHT_DONTSKIPISTEX=True
-    python -m pytest tests
+    BHT_DONTSKIPISTEX=True python -m pytest tests
+
+or allow Selenium functionnal tests if available
+
+    BHT_DONTSKIPSELENIUM=True python -m pytest tests
 
 ### github actions
 
