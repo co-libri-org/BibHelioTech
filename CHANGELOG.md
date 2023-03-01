@@ -28,6 +28,10 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.4.0-pre.1] - yyyy-mm-dd - Global description of changes
+### Fixed
+### Changed
+### New
 
 ## [0.3.0] - - 2023-03-01 - Jobs displayed - Minor Release
 ### Changed
