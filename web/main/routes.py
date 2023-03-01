@@ -246,9 +246,9 @@ def bht_status(paper_id):
         task_status = job.get_status(refresh=True)
         elapsed = ""
         if task_status == "started":
-            elapsed = (
-                str(datetime.utcnow() - task_started).split(".")[0].split(":")[-1] + "s"
-            )
+            elapsed = str(datetime.utcnow() - task_started).split(".")[0]
+        elif task_status == "finished":
+            elapsed = str(job.ended_at - task_started).split(".")[0]
         response_object = {
             "status": "success",
             "data": {

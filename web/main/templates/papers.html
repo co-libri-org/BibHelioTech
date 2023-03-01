@@ -106,16 +106,16 @@ function setStatus(paper_id) {
 
     $(spinnerElmtId).removeClass('d-inline-block')
     $(spinnerElmtId).addClass('d-none')
+
     $(statusElmtId).html(res.data.task_status)
+    $(statusElmtId).html(res.data.task_status+" "+res.data.task_elapsed)
+    $(statusElmtId).attr('title', 'Started: '+res.data.task_started)
 
     if (taskStatus === 'started' ) {
         $(spinnerElmtId).removeClass('d-none')
         $(spinnerElmtId).addClass('d-inline-block')
-        $(statusElmtId).attr('title', 'task id: '+res.data.task_id)
-        $(statusElmtId).html(res.data.task_status+" "+res.data.task_elapsed)
     }
     if (taskStatus === 'finished' ) {
-        $(statusElmtId).attr('title', 'Started: '+res.data.task_started)
         const catElementId = '#cat-link-'+res.data.paper_id;
         $(catElementId).removeAttr('disabled')
         return false
