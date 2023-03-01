@@ -8,7 +8,9 @@ import requests
 import filetype
 
 from requests import RequestException
-from rq import Connection, Queue
+from rq import Queue
+from rq.exceptions import NoSuchJobError
+from rq.job import Job
 
 from werkzeug.utils import secure_filename
 
@@ -228,17 +230,32 @@ def bht_status(paper_id):
         flash(f"No such paper {paper_id}")
         return redirect(url_for("main.papers"))
     task_id = paper.task_id
-    with Connection(redis.from_url(current_app.config["REDIS_URL"])):
-        q = Queue()
-        task = q.fetch_job(task_id)
-    if task:
+    try:
+        job = Job.fetch(
+            task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
+        )
+    except NoSuchJobError:
+        job = None
+
+    if job:
+        from datetime import datetime
+
+        task_started = job.started_at
+        task_result = job.return_value()
+        task_status = job.get_status(refresh=True)
+        elapsed = ""
+        if task_status == "started":
+            elapsed = (
+                str(datetime.utcnow() - task_started).split(".")[0].split(":")[-1] + "s"
+            )
         response_object = {
             "status": "success",
             "data": {
-                "task_id": task.get_id(),
-                "task_status": task.get_status(),
-                "task_result": task.return_value(),
-                # :w"task_elapsed": datetime.datetime.now() - task.started_at,
+                "task_id": task_id,
+                "task_status": task_status,
+                "task_result": task_result,
+                "task_elapsed": elapsed,
+                "task_started": task_started,
                 "paper_id": paper.id,
             },
         }
@@ -254,7 +271,6 @@ def bht_run():
     if found_pdf_file is None:
         flash("No file for that paper.")
         return redirect(url_for("main.papers"))
-    # with current_app.app_context():
     q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
     task = q.enqueue(
         get_pipe_callback(test=current_app.config["TESTING"]),
