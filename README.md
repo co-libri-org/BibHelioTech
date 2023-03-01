@@ -156,10 +156,19 @@ you may want to skip slow tests:
 or allow ISTEX tests if you have IP authorisation
 
     BHT_DONTSKIPISTEX=True python -m pytest tests
+    # defaults to False, that is it wont run istex tests
 
 or allow Selenium functionnal tests if available
 
     BHT_DONTSKIPSELENIUM=True python -m pytest tests
+    # defaults to False, that is it wont run selenium tests
+
+a whole test would then look like
+
+    export BHT_DONTSKIPSELENIUM=True
+    export BHT_DONTSKIPISTEX=True
+    export BHT_SKIPSLOWTESTS=False
+    python -m pytest tests
 
 ### github actions
 
