@@ -3,11 +3,17 @@
 {%  endblock %}
 {% block content %}
 <div class="row mb-5">
-    <h4>ISTEX request url</h4>
-    <form method="post" action="{{url_for('main.istex')}}">
-        <input type=url name=istex_req_url>
-        <input type=submit value="Get ISTEX">
-    </form>
+    <div class="col">
+        <h4>ISTEX request url</h4>
+        <form method="post" action="{{url_for('main.istex')}}">
+            <input type=url name=istex_req_url>
+            <input type=submit value="Get ISTEX">
+        </form>
+    </div>
+    <div class="col">
+        <h4>More on ISTEX: <a href="https://demo.istex.fr">demo</a> and <a href="https://api.istex.fr">api</a>.
+        </h4>
+    </div>
 </div>
 <hr class="mt-5 mb-5">
 <table class="table-hover table">
@@ -49,7 +55,7 @@
 </table>
 
 <div class="content">
-    <button  class="btn btn-warning" id="addAll" title="Add all checked papers">add all</button>
+    <button class="btn btn-warning" id="addAll" title="Add all checked papers">add all</button>
 </div>
 
 <div id="abstract-modal" class="modal fade" tabindex="-1">
@@ -112,6 +118,8 @@ $(document).ready(function() {
           });
     });
 });
+
+
 
 </script>
 {% endblock %}
