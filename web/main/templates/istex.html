@@ -17,7 +17,7 @@
         <th scope="col" class="col">#</th>
         <th scope="col" class="col">Title</th>
         <th scope="col" class="col">Year</th>
-        <th scope="col" class="col">Author</th>
+        <th scope="col" class="col">First Author</th>
         <th scope="col" class="col">Journal</th>
         <th scope="col" class="col">pdf</th>
         <th scope="col" class="col">add</th>
@@ -32,8 +32,8 @@
             data-bs-toggle="modal" data-title="{{istex.title}}" data-abstract="{{istex.abstract}}"
             data-bs-target="#abstract-modal">{{istex.title}}
         </td>
-        <td>{{istex.year}}</td>
-        <td>{{istex.first_author}}</td>
+        <td class="istex-year">{{istex.year}}</td>
+        <td class="istex-first_author">{{istex.first_author}}</td>
         <td>{{istex.journal}}</td>
         <td><a class="btn btn-warning" id="istex-link-{{istex.id}}" href="{{istex.pdf_url}}"
                title="Get istex file">pdf</a></td>
@@ -56,7 +56,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirmation</h5>
+                <h5 class="modal-heading">Confirmation</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -82,9 +82,14 @@ $(document).ready(function() {
         // Get the button that triggered the modal
         var button = $(event.relatedTarget);
 
-        // Change modal title
-        $(this).find(".modal-title").text(button.data("title"));
-        $(this).find(".modal-body").children("p").text(button.data("abstract"));
+        // Change modal content
+        var article_author = button.siblings(".istex-first_author").text()  +" et al."
+        var article_year = button.siblings(".istex-year").text()
+        var article_title = button.text()
+        var article_abstract = button.data("abstract")
+        var modal_heading = article_title+', ' +article_author+', '+article_year
+        $(this).find(".modal-heading").text(modal_heading);
+        $(this).find(".modal-body").children("p").text(article_abstract);
     });
 
     // (de)Select  all checkboxes when main is (de)selected
