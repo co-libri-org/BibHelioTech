@@ -18,3 +18,4 @@ redis
 rq
 Flask-SQLAlchemy
 filetype
+Werkzeug

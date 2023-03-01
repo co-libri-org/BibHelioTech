@@ -178,6 +178,7 @@ def papers(name=None):
 
 @bp.route("/upload_from_url", methods=["POST"])
 def upload_from_url():
+    # TODO: refactor merge with istex_upload_id()
     pdf_url = request.form.get("pdf_url")
     if pdf_url is None:
         return Response(
