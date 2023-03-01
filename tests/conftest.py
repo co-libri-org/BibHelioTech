@@ -6,7 +6,6 @@ import os
 
 from bht_config import yml_settings
 from web import create_app, db
-from web.config import TestConfig
 from web.main.routes import save_to_db
 from web.models import Paper
 
@@ -25,7 +24,7 @@ skip_slow_test = pytest.mark.skipif(
 
 @pytest.fixture(scope="session", autouse=True)
 def app():
-    app = create_app(TestConfig)
+    app = create_app(bht_env="testing")
     app.config.update(
         # Change the port that the liveserver listens on as we don't want to conflict with running:5000
         LIVESERVER_PORT=8943

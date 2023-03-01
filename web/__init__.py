@@ -1,14 +1,28 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from web.config import Config
+from web.config import Config, ProdConfig, DevConfig, TestConfig
 
 db = SQLAlchemy()
 
 
-def create_app(config_class=Config):
+def create_app(bht_env=None):
+    """App factory method
+    takes environment variable as arg to choose between configuration:
+    production, development, testing or default
+
+    @return: running app
+    """
     app = Flask(__name__)
 
-    config_instance = config_class()
+    if bht_env is None or bht_env == "production":
+        config_instance = ProdConfig()
+    elif bht_env == "development":
+        config_instance = DevConfig()
+    elif bht_env == "testing":
+        config_instance = TestConfig()
+    else:
+        config_instance = Config()
+
     app.config.from_object(config_instance)
 
     db.init_app(app)

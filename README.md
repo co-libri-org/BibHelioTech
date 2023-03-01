@@ -66,6 +66,23 @@ Current web dir is also mounted as volume so you can change python code without 
 Mainly runs flask in debug mode (skipping gunicorn), and
 linking host files to container for live update.
 
+#### FLASK_ENV
+This environment variable is deprecated. We wont use it.
+The FLASK_DEBUG var can be set through cli option:
+
+    BHT_ENV=development flask --debug --app bht_web run
+
+But we could also want to run the application in development or testing mode.
+For that, you can trigger the create_app() passing it the BHT_ENV variable:
+
+    BHT_ENV=development flask --debug --app bht_web run
+
+BHT_ENV can take 3 possible values:
+
+- 'production' (default)
+- 'development'
+- 'testing'
+
 ### Running files treatement under ./DATA/
 
 This will compute all `*pdf` papers in `./DATA/` directory
