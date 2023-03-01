@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Version numbering will follow those principles:
 - MAJOR: for big changes, like inner architecture
-- MINOR: for new functionnalities, like adding hardware and corresponding servers and clients.
-- PATCH: when fixing bugs or adding very small details for previous MINOR functionnality.
+- MINOR: for new functionalities, like adding hardware and corresponding servers and clients.
+- PATCH: when fixing bugs or adding very small details for previous MINOR functionality.
 
 `Unreleased` version holds ongoing changes.
 
@@ -19,15 +19,26 @@ Changes are kept under subsections:
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
-Should be noted only functionnal changes,
-or major refactoring improvments.
+Should be noted only functional changes,
+or major refactoring improvements.
 
-## [M.m.p] - yyyy-mm-dd - ------------------
+## [M.m.p] - yyyy-mm-dd - Global description of changes
 ### Fixed
 ### Changed
 ### New
 
-## [0.3.0-pre.3] - - 2023-02-17 - ---------------------------
+--------------------------------------------------------------------------------
+
+## [0.3.0] - - 2023-03-01 - Jobs displayed - Minor Release
+### Changed
+- More style enhancement
+### New
+- Del papers
+- Add (all) from istex
+- Functional tests with Selenium
+- Jobs status displayed
+
+## [0.3.0-pre.3] - - 2023-02-17 - Get from Istex
 ### Changed
 - New buttons style (Orange)
 ### New
