@@ -1,4 +1,17 @@
+version: '3.7'
 services:
+    rq-dashboard:
+      image: jaredv/rq-docker:0.0.2
+      command: rq-dashboard -H rq-server
+      ports:
+        - 9181:9181
+
+    rq-worker:
+      image: jaredv/rq-docker:0.0.2
+      command: rq worker -u redis://redis:6379 high normal low
+      deploy:
+        replicas: 3
+
     redis:
       image: redis:6.2-alpine
       ports:

@@ -3,34 +3,45 @@
 {%  endblock %}
 {% block content %}
 <div class="row mb-5">
-    <h4>ISTEX request url</h4>
-    <form method="post" action="{{url_for('main.istex')}}">
-        <input type=url name=istex_req_url>
-        <input type=submit value="Get ISTEX">
-    </form>
+    <div class="col">
+        <h4>ISTEX request url</h4>
+        <form method="post" action="{{url_for('main.istex')}}">
+            <input type=url name=istex_req_url>
+            <input type=submit value="Get ISTEX">
+        </form>
+    </div>
+    <div class="col">
+        <h4>More on ISTEX: <a href="https://demo.istex.fr">demo</a> and <a href="https://api.istex.fr">api</a>.
+        </h4>
+    </div>
 </div>
 <hr class="mt-5 mb-5">
 <table class="table-hover table">
     <thead>
     <tr>
-        <th scope="col">#</th>
-        <th scope="col">Title</th>
-        <th scope="col">Year</th>
-        <th scope="col">Author</th>
-        <th scope="col">Journal</th>
-        <th scope="col">pdf</th>
-        <th scope="col">add</th>
+        <th scope="col" class="col"><input id="checkAll" type="checkbox" title="Select all papers"></th>
+        <th scope="col" class="col">#</th>
+        <th scope="col" class="col">Title</th>
+        <th scope="col" class="col">Year</th>
+        <th scope="col" class="col">First Author</th>
+        <th scope="col" class="col">Journal</th>
+        <th scope="col" class="col">pdf</th>
+        <th scope="col" class="col">add</th>
     </tr>
     </thead>
     <tbody>
     {% for istex in istex_list %}
     <tr>
+        <th scope="col"><input id="istex-check-{{istex.id}}" value="{{istex.id}}" type="checkbox"></th>
         <th scope="row">{{loop.index}}</th>
-        <td class="text-truncate" style="max-width: 350px;" title="{{istex.title}}">{{istex.title}}</td>
-        <td>{{istex.year}}</td>
-        <td>{{istex.first_author}}</td>
+        <td class="title-cell text-truncate" style="max-width: 350px;" title="Show abstract"
+            data-bs-toggle="modal" data-title="{{istex.title}}" data-abstract="{{istex.abstract}}"
+            data-bs-target="#abstract-modal">{{istex.title}}
+        </td>
+        <td class="istex-year">{{istex.year}}</td>
+        <td class="istex-first_author">{{istex.first_author}}</td>
         <td>{{istex.journal}}</td>
-        <td><a class="btn btn-warning" id="istex-link-{{istex.ark}}" href="{{istex.pdf_url}}"
+        <td><a class="btn btn-warning" id="istex-link-{{istex.id}}" href="{{istex.pdf_url}}"
                title="Get istex file">pdf</a></td>
         <td>
             <form method="post" action="{{url_for('main.upload_from_url')}}">
@@ -43,4 +54,72 @@
     </tbody>
 </table>
 
+<div class="content">
+    <button class="btn btn-warning" id="addAll" title="Add all checked papers">add all</button>
+</div>
+
+<div id="abstract-modal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-heading">Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to save changes to this document before closing?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+
+$(document).ready(function() {
+
+    // Show abstract in a modal windaw (yes, a 'windaw', like a 'squaw') when title clicked
+    //
+    $("#abstract-modal").on("show.bs.modal", function(event) {
+        // Get the button that triggered the modal
+        var button = $(event.relatedTarget);
+
+        // Change modal content
+        var article_author = button.siblings(".istex-first_author").text()  +" et al."
+        var article_year = button.siblings(".istex-year").text()
+        var article_title = button.text()
+        var article_abstract = button.data("abstract")
+        var modal_heading = article_title+', ' +article_author+', '+article_year
+        $(this).find(".modal-heading").text(modal_heading);
+        $(this).find(".modal-body").children("p").text(article_abstract);
+    });
+
+    // (de)Select  all checkboxes when main is (de)selected
+    //
+    $("#checkAll").click(function(){
+        $('input:checkbox').not(this).prop('checked', this.checked);
+    });
+
+    $("#addAll").click(function(){
+        $("input:checked").not($('#checkAll')).each(function() {
+            istex_id = $(this).val()
+            $.post({
+                url: "{{url_for('main.istex_upload_id')}}",
+                data: JSON.stringify({ istex_id: istex_id}),
+                contentType: 'application/json; charset=utf-8'
+            })
+              .done(function( data ) {
+                alert("Done with: "+istex_id);
+              });
+          });
+    });
+});
+
+
+
+</script>
 {% endblock %}

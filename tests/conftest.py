@@ -6,7 +6,8 @@ import os
 
 from bht_config import yml_settings
 from web import create_app, db
-from web.config import TestConfig
+from web.main.routes import save_to_db
+from web.models import Paper
 
 skip_istex = pytest.mark.skipif(
     os.environ.get("BHT_DONTSKIPISTEX") is None
@@ -21,9 +22,13 @@ skip_slow_test = pytest.mark.skipif(
 )
 
 
-@pytest.fixture(scope="module", autouse=True)
+@pytest.fixture(scope="session", autouse=True)
 def app():
-    app = create_app(TestConfig)
+    app = create_app(bht_env="testing")
+    app.config.update(
+        # Change the port that the liveserver listens on as we don't want to conflict with running:5000
+        LIVESERVER_PORT=8943
+    )
 
     app_context = app.app_context()
     app_context.push()
@@ -36,9 +41,7 @@ def app():
 
 @pytest.fixture(scope="module")
 def tei_for_test():
-    test_tei_file = os.path.join(
-        yml_settings["BHT_PAPERS_DIR"], "2016GL069787.tei.xml"
-    )
+    test_tei_file = os.path.join(yml_settings["BHT_PAPERS_DIR"], "2016GL069787.tei.xml")
     yield test_tei_file
     if os.path.isfile(test_tei_file):
         os.remove(test_tei_file)
@@ -47,7 +50,7 @@ def tei_for_test():
 @pytest.fixture(scope="module")
 def pdf_for_test():
     test_pdf_file_orig = os.path.join(
-        yml_settings["BHT_RESSOURCES_DIR"], "2016GL069787-test.pdf"
+        yml_settings["BHT_RESOURCES_DIR"], "2016GL069787-test.pdf"
     )
     test_pdf_file_dest = os.path.join(
         yml_settings["BHT_PAPERS_DIR"], "2016GL069787-test.pdf"
@@ -58,6 +61,19 @@ def pdf_for_test():
 
     if os.path.isfile(test_pdf_file_dest):
         os.remove(test_pdf_file_dest)
+
+
+@pytest.fixture(scope="function")
+def paper_for_test(pdf_for_test):
+    with open(pdf_for_test, "rb", buffering=0) as fp:
+        paper_id = save_to_db(fp.readall(), os.path.basename(pdf_for_test))
+    paper = db.session.get(Paper, paper_id)
+    yield paper
+    # make sure paper exists before deleting
+    paper = db.session.get(Paper, paper_id)
+    if paper is not None:
+        db.session.delete(paper)
+        db.session.commit()
 
 
 @pytest.fixture(scope="module")
@@ -91,3 +107,8 @@ def istex_url():
         "stats": "",
     }
     yield "https://api.istex.fr/document/?" + urlencode(_params)
+
+
+@pytest.fixture(scope="module")
+def istex_id():
+    yield "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"

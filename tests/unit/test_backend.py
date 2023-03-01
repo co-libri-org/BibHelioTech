@@ -7,8 +7,9 @@ from bht.published_date_finder import published_date_finder
 from bht.GROBID_generator import GROBID_generation
 from tests.conftest import skip_slow_test, skip_istex
 from web import db
+from web.bht_proxy import pipe_paper, pipe_paper_mocked, get_pipe_callback
 from web.errors import IstexParamError
-from web.istex_proxy import istex_params_to_json, istex_url_to_json
+from web.istex_proxy import istex_params_to_json, istex_url_to_json, istex_id_to_url
 from web.models import Paper
 
 
@@ -26,6 +27,11 @@ class TestDb:
         db.session.commit()
         found_paper = Paper.query.filter_by(title=my_title).one()
         assert found_paper.pdf_path == my_path
+
+    def test_has_path(self):
+        paper = Paper(title="my Paper", pdf_path="/this/is/a/path.pdf")
+        assert not paper.has_cat
+        assert not paper.has_pdf
 
 
 class TestAds:
@@ -45,6 +51,30 @@ class TestGrobid:
             yml_settings["BHT_PAPERS_DIR"]
         )  # generate the XML GROBID file
         assert os.path.isfile(tei_for_test)
+
+
+class TestRq:
+    def test_bht_status(self):
+        pass
+
+
+class TestBhtProxy:
+    def test_get_pipe_callback(self):
+        notest_callback = get_pipe_callback(test=False)
+        test_callback = get_pipe_callback(test=True)
+        assert test_callback.__name__ == "pipe_paper_mocked"
+        assert notest_callback.__name__ == "pipe_paper"
+
+    def test_pipepaper_mocked(self):
+        max_secs = 10
+        slept = pipe_paper_mocked(min_secs=1, max_secs=max_secs)
+        assert slept <= max_secs
+        pass
+
+    def test_pipepaper(self, paper_for_test):
+        assert not paper_for_test.has_cat
+        pipe_paper(paper_for_test.id, yml_settings["BHT_PAPERS_DIR"])
+        assert paper_for_test.has_cat
 
 
 @skip_istex
@@ -69,3 +99,7 @@ class TestIstex:
         assert len(istex_list) == 150
         assert "title" in istex_list[0]
         assert "abstract" in istex_list[0]
+
+    def test_id_to_url(self, istex_id):
+        istex_url = istex_id_to_url(istex_id)
+        assert istex_id in istex_url

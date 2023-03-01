@@ -1,4 +1,5 @@
 import glob
+import json
 import os
 import re
 
@@ -7,7 +8,9 @@ import requests
 import filetype
 
 from requests import RequestException
-from rq import Connection, Queue
+from rq import Queue
+from rq.exceptions import NoSuchJobError
+from rq.job import Job
 
 from werkzeug.utils import secure_filename
 
@@ -26,9 +29,9 @@ from flask import (
 from . import bp
 from web import db
 from web.models import Paper
-from web.bht_proxy import runfile_and_updatedb
+from web.bht_proxy import get_pipe_callback
 from web.errors import PdfFileError
-from web.istex_proxy import istex_url_to_json
+from web.istex_proxy import istex_url_to_json, istex_id_to_url
 
 
 def allowed_file(filename):
@@ -41,14 +44,14 @@ def allowed_file(filename):
 
 def get_paper_file(paper_id, file_type):
     file_path = None
-    paper = Paper.query.get(paper_id)
+    paper = db.session.get(Paper, paper_id)
     if paper is None:
         flash(f"No such paper {paper_id}")
         return None
 
-    if file_type == "pdf":
+    if file_type == "pdf" and paper.has_pdf:
         file_path = paper.pdf_path
-    elif file_type == "cat":
+    elif file_type == "cat" and paper.has_cat:
         file_path = paper.cat_path
 
     if file_path is None:
@@ -57,6 +60,10 @@ def get_paper_file(paper_id, file_type):
 
     if not os.path.isabs(file_path):
         file_path = os.path.join(current_app.config["WEB_UPLOAD_DIR"], file_path)
+
+    if not os.path.isfile(file_path):
+        flash(f"No {file_type} file for paper {paper_id}")
+        return None
 
     return file_path
 
@@ -74,7 +81,7 @@ def get_file_from_url(url):
             else:
                 filename = url.split("/")[-1]
     except RequestException as e:
-        raise (e)
+        raise e
     return r.content, filename
 
 
@@ -91,10 +98,20 @@ def save_to_db(file_stream, filename):
     if not filetype.guess(_file_path).mime == "application/pdf":
         raise Exception(f"{_file_path} is not pdf ")
     paper_title = filename.replace(".pdf", "")
-    paper = Paper(title=paper_title, pdf_path=_file_path)
+    paper = Paper.query.filter_by(title=paper_title).one_or_none()
+    if paper is None:
+        paper = Paper(title=paper_title, pdf_path=_file_path)
+    else:
+        paper.pdf_path = _file_path
     db.session.add(paper)
     db.session.commit()
     return paper.id
+
+
+@bp.app_template_filter("staticversion")
+def staticversion_filter(filename):
+    newfilename = "{0}?v={1}".format(filename, current_app.config["VERSION"])
+    return newfilename
 
 
 @bp.route("/")
@@ -131,6 +148,22 @@ def cat(paper_id):
         return send_file(file_path)
 
 
+@bp.route("/paper/del/<paper_id>", methods=["GET"])
+def paper_del(paper_id):
+    paper = db.session.get(Paper, paper_id)
+    if paper is None:
+        flash(f"No such paper {paper_id}")
+        return redirect(url_for("main.papers"))
+    if paper.has_cat:
+        os.remove(paper.cat_path)
+    if paper.has_pdf:
+        os.remove(paper.pdf_path)
+    db.session.delete(paper)
+    db.session.commit()
+    flash(f"Paper {paper_id} deleted")
+    return redirect(url_for("main.papers"))
+
+
 @bp.route("/papers/<name>")
 @bp.route("/papers")
 def papers(name=None):
@@ -145,6 +178,7 @@ def papers(name=None):
 
 @bp.route("/upload_from_url", methods=["POST"])
 def upload_from_url():
+    # TODO: refactor merge with istex_upload_id()
     pdf_url = request.form.get("pdf_url")
     if pdf_url is None:
         return Response(
@@ -155,6 +189,21 @@ def upload_from_url():
         fp, filename = get_file_from_url(pdf_url)
         save_to_db(fp, filename)
         return redirect(url_for("main.papers"))
+
+
+@bp.route("/istex_upload_id", methods=["POST"])
+def istex_upload_id():
+    istex_id = request.json.get("istex_id")
+    if istex_id is None:
+        return Response(
+            "No valid parameters for url",
+            status=400,
+        )
+    else:
+        fp, filename = get_file_from_url(istex_id_to_url(istex_id))
+        filename = istex_id + ".pdf"
+        paper_id = save_to_db(fp, filename)
+        return jsonify({"success": "true", "paper_id": paper_id}), 201
 
 
 @bp.route("/upload", methods=["POST"])
@@ -175,21 +224,62 @@ def upload():
         return redirect(url_for("main.papers"))
 
 
+@bp.route("/bht_status/<paper_id>", methods=["GET"])
+def bht_status(paper_id):
+    paper = db.session.get(Paper, paper_id)
+    if paper is None:
+        flash(f"No such paper {paper_id}")
+        return redirect(url_for("main.papers"))
+    task_id = paper.task_id
+    try:
+        job = Job.fetch(
+            task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
+        )
+    except NoSuchJobError:
+        job = None
+
+    if job:
+        from datetime import datetime
+
+        task_started = job.started_at
+        task_result = job.return_value()
+        task_status = job.get_status(refresh=True)
+        elapsed = ""
+        if task_status == "started":
+            elapsed = str(datetime.utcnow() - task_started).split(".")[0]
+        elif task_status == "finished":
+            elapsed = str(job.ended_at - task_started).split(".")[0]
+        response_object = {
+            "status": "success",
+            "data": {
+                "task_id": task_id,
+                "task_status": task_status,
+                "task_result": task_result,
+                "task_elapsed": elapsed,
+                "task_started": task_started,
+                "paper_id": paper.id,
+            },
+        }
+    else:
+        response_object = {"status": "error"}
+    return jsonify(response_object)
+
+
 @bp.route("/bht_run", methods=["POST"])
 def bht_run():
     paper_id = request.form["paper_id"]
     found_pdf_file = get_paper_file(paper_id, "pdf")
     if found_pdf_file is None:
+        flash("No file for that paper.")
         return redirect(url_for("main.papers"))
-    with Connection(redis.from_url(current_app.config["REDIS_URL"])):
-        q = Queue()
-        task = q.enqueue(
-            runfile_and_updatedb,
-            args=(paper_id, found_pdf_file, current_app.config["WEB_UPLOAD_DIR"]),
-            job_timeout=600,
-        )
+    q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
+    task = q.enqueue(
+        get_pipe_callback(test=current_app.config["TESTING"]),
+        args=(paper_id, current_app.config["WEB_UPLOAD_DIR"]),
+        job_timeout=600,
+    )
 
-    paper = Paper.query.get(paper_id)
+    paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
 
     response_object = {
@@ -197,6 +287,17 @@ def bht_run():
         "data": {"task_id": task.get_id(), "paper_id": paper.id},
     }
     return jsonify(response_object), 202
+
+
+@bp.route("/istex_test", methods=["GET"])
+def istex_test():
+    from web.istex_proxy import istex_json_to_json
+
+    with open(
+        os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
+    ) as fp:
+        istex_list = istex_json_to_json(json.load(fp))
+    return render_template("istex.html", istex_list=istex_list)
 
 
 @bp.route("/istex", methods=["GET", "POST"])
@@ -212,34 +313,14 @@ def istex():
 
 @bp.route("/istex_from_url", methods=["POST"])
 def istex_from_url():
+    """
+    Given an istex api url (found in the form request)
+    Parse the json response data
+    Redirect to istex main page to display papers list
+    """
     istex_req_url = request.form["istex_req_url"]
     istex_list = istex_url_to_json(istex_req_url)
     return redirect(url_for("main.istex", istex_list=istex_list))
-
-
-@bp.route("/bht_status/<paper_id>", methods=["GET"])
-def bht_status(paper_id):
-    paper = Paper.query.get(paper_id)
-    if paper is None:
-        flash(f"No such paper {paper_id}")
-        return redirect(url_for("main.papers"))
-    task_id = paper.task_id
-    with Connection(redis.from_url(current_app.config["REDIS_URL"])):
-        q = Queue()
-        task = q.fetch_job(task_id)
-    if task:
-        response_object = {
-            "status": "success",
-            "data": {
-                "task_id": task.get_id(),
-                "task_status": task.get_status(),
-                "task_result": task.result,
-                "paper_id": paper.id,
-            },
-        }
-    else:
-        response_object = {"status": "error"}
-    return jsonify(response_object)
 
 
 @bp.route("/catalogs", methods=["GET"])

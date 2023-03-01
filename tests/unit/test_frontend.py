@@ -3,6 +3,7 @@ import os.path
 from filetype import filetype
 
 from tests.conftest import skip_slow_test, skip_istex
+from web import db
 from web.main.routes import get_file_from_url, save_to_db
 from web.models import Paper
 
@@ -63,6 +64,19 @@ class TestPapersPage:
         assert b"Upload from URL" in response.data
 
 
+class TestPapersRoutes:
+    def test_paper_del(self, test_client, paper_for_test):
+        """
+        GIVEN a Flask application configured for testing
+        WHEN the '/paper/del' page is requested (POST)
+        THEN check that the response has deleted the paper in db
+        """
+        paper_id = paper_for_test.id
+        response = test_client.get(f"/paper/del/{paper_id}")
+        assert response.status_code == 302
+        assert db.session.get(Paper, paper_id) is None
+
+
 class TestUploadPdf:
     def test_upload_with_wrongparam(self, test_client):
         """
@@ -121,3 +135,24 @@ class TestIstexRoutes:
         response = test_client.post("/istex", data={"istex_req_url": istex_url})
         assert response.status_code == 200
         assert b"The solar wind from a stellar perspective" in response.data
+
+    def test_istex_upload_id(self, test_client, istex_id):
+        """
+        GIVEN a Flask application and an ISTEX ID
+        WHEN the '/istex_upload_istex_id' REST endpoint is posted to json request
+        THEN check that a '201' status code is returned
+             with proper response content (json with success and paper id)
+        """
+        import json
+
+        response = test_client.post(
+            "/istex_upload_id",
+            data=json.dumps(dict(istex_id=istex_id)),
+            content_type="application/json",
+        )
+        # first check we go success to request
+        assert response.status_code == 201
+        # then test that paper was indeed inseted in db
+        paper = db.session.get(Paper, response.json["paper_id"])
+        # assert paper.title == "Proton-proton collisional age to order solar wind types"
+        assert paper.title == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"

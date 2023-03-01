@@ -24,10 +24,11 @@
     <tr>
         <th scope="col" style="width: 20px;">#</th>
         <th scope="col" style="width: 680px;">Title</th>
-        <th scope="col" style="width: 80px;">pdf</th>
-        <th scope="col" style="width: 80px;">cat</th>
-        <th scope="col" style="width: 80px;">run</th>
-        <th scope="col" style="width: 80px;">status</th>
+        <th scope="col" style="width: 40px;">del</th>
+        <th scope="col" style="width: 40px;">pdf</th>
+        <th scope="col" style="width: 40px;">cat</th>
+        <th scope="col" style="width: 40px;">run</th>
+        <th scope="col" style="width: 150px;">status</th>
     </tr>
     </thead>
     <tbody>
@@ -36,25 +37,32 @@
         <th scope="row">{{loop.index}}</th>
         <td>{{paper.title}}</td>
         <td>
-            <a class="btn btn-warning" href="{{url_for('main.pdf', paper_id=paper.id)}}" title="Get pdf file">pdf</a>
+            <a class="btn btn-warning"
+               href="{{url_for('main.paper_del', paper_id=paper.id)}}"
+               title="Remove paper from database">
+                del
+            </a>
         </td>
         <td>
-            {% if paper.cat_path %}
-            {% set cat_class = "cat-link" %}
-            {% else %}
-            {% set cat_class = "cat-link-disabled" %}
-            {% endif %}
-            <a class="btn btn-warning {{cat_class}}" id="cat-link-{{paper.id}}"
+            <a class="btn btn-warning"
+               href="{{url_for('main.pdf', paper_id=paper.id)}}"
+               title="Get pdf file" {{disabled(not paper.has_pdf)}}>pdf</a>
+        </td>
+        <td>
+            <a class="btn btn-warning cat-link" id="cat-link-{{paper.id}}"
                href="{{url_for('main.cat', paper_id=paper.id)}}"
-               title="Get catalog file">cat</a>
+               title="Get catalog file" {{disabled(not paper.has_cat)}}>cat</a>
         </td>
         <td>
-            <button class='btn btn-warning run-bht' title="Run bht pipeline on this file" data-paper_id="{{paper.id}}">
+            <button class='btn btn-warning run-bht'
+                    title="Run bht pipeline on this file" data-paper_id="{{paper.id}}"
+                    {{disabled(not paper.has_pdf)}}>
                 run
             </button>
         </td>
         <td style="width: 80px;">
             <span class="bht-status" id="bht-status-{{paper.id}}"></span>
+            <span class="spinner-border spinner-border-sm text-warning d-none" id="spinner-{{paper.id}}"></span>
         </td>
     </tr>
     {%endfor%}
@@ -65,6 +73,8 @@
 
 {% block scripts %}
 <script>
+
+// BHT tasks management
 
 $('.run-bht').on('click', function() {
   $.ajax({
@@ -89,18 +99,34 @@ function setStatus(paper_id) {
   })
   .done((res) => {
     if (res.status === 'error' ) return false;
-    const statusElmtId = '#bht-status-'+res.data.paper_id
-    $(statusElmtId).attr('title', 'task id: '+res.data.task_id)
-    $(statusElmtId).html(res.data.task_status)
+    const spinnerElmtId = '#spinner-'+res.data.paper_id
+
     const taskStatus = res.data.task_status;
+    const statusElmtId = '#bht-status-'+res.data.paper_id
+
+    $(spinnerElmtId).removeClass('d-inline-block')
+    $(spinnerElmtId).addClass('d-none')
+
+    $(statusElmtId).html(res.data.task_status)
+    $(statusElmtId).html(res.data.task_status+" "+res.data.task_elapsed)
+    $(statusElmtId).attr('title', 'Started: '+res.data.task_started)
+
+    if (taskStatus === 'started' ) {
+        $(spinnerElmtId).removeClass('d-none')
+        $(spinnerElmtId).addClass('d-inline-block')
+    }
     if (taskStatus === 'finished' ) {
         const catElementId = '#cat-link-'+res.data.paper_id;
-        $(catElementId).attr('class', 'cat-link');
+        $(catElementId).removeAttr('disabled')
+        return false
     }
-    if ( taskStatus === 'failed') return false;
+    if ( taskStatus === 'failed'){
+        $(catElementId).addAttr('disabled')
+         return false;
+    }
     setTimeout(function () {
       setStatus(res.data.paper_id);
-    }, 5000);
+    }, 1000);
   })
   .fail((err) => {
     console.log(err);
@@ -111,9 +137,6 @@ $('.bht-status').each(function(index){
     const paperId = $(this).attr('id').substring(11);
     setStatus(paperId);
 });
-
-
-
 
 </script>
 

@@ -1,4 +1,29 @@
-.cat-link-disabled {
+a.nav-link.active:hover ,
+input.btn-warning:hover,
+button.btn-warning:hover,
+a.btn-warning:hover {
+    border: solid 1pt grey !important ;
+}
+
+
+input.btn-warning,
+button.btn-warning,
+a.btn-warning {
+    padding: 5px;
+    border: solid 1pt lightgrey !important ;
+}
+a.nav-link.active{
+    border: solid 1pt lightgrey !important ;
+}
+a.nav-link:hover {
+    border: solid 1pt lightgrey !important ;
+}
+
+button.btn[disabled] ,
+a.btn[disabled] {
+    background-color: lightgrey;
+    text-decoration-line: line-through;
+    border: solid black 1pt;
     pointer-events: none;
     text-decoration-line: line-through;
     color: black;
@@ -6,7 +31,16 @@
 
 .nav-link {
     color: black !important;
+    border: 1pt solid white !important;
 }
+
+/*
 .nav-link.active {
-    background-color: #ffc107 !important;
+    background-color: var(--bs-btn-hover-bg) !important;
+}
+*/
+
+.title-cell:hover {
+    cursor: pointer;
+    background-color:var(--bs-warning);
 }

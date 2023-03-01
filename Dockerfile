@@ -49,22 +49,22 @@ WORKDIR /home/bibheliotech/BibHelioTech
 COPY ./requirements.txt ./requirements.txt
 RUN pip install wheel && pip install -r requirements.txt
 
-COPY ./ressources ./ressources
-WORKDIR /home/bibheliotech/BibHelioTech/ressources
+COPY ./resources ./resources
+WORKDIR /home/bibheliotech/BibHelioTech/resources
 RUN jar uf $VIRTUAL_ENV/lib/python3.10/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar \
            edu/stanford/nlp/models/sutime/english.sutime.txt
 
 WORKDIR /home/bibheliotech/BibHelioTech
 COPY . .
-RUN cp ./ressources/grobid-client-config.json-dist ./grobid-client-config.json &&\
-    cp ./ressources/bht-config.yml-dist ./bht-config.yml
+RUN cp ./resources/grobid-client-config.json-dist ./grobid-client-config.json &&\
+    cp ./resources/bht-config.yml-dist ./bht-config.yml
 
 RUN chown -R bibheliotech:bibheliotech /home/bibheliotech/
 USER bibheliotech
 
 FROM bht-prod AS bht-test
 ENV PYTHONPATH="/home/bibheliotech/BibHelioTech:$PYTHONPATH"
-RUN cp ./ressources/flake8-dist ./.flake8 && \
-    cp ressources/bht-config.yml-dist ./bht-config.yml && \
-    cp ressources/pytest.ini-dist ./pytest.ini
+RUN cp ./resources/flake8-dist ./.flake8 && \
+    cp resources/bht-config.yml-dist ./bht-config.yml && \
+    cp resources/pytest.ini-dist ./pytest.ini
 RUN pip install -r requirements-tests.txt

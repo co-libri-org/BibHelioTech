@@ -1,22 +1,24 @@
 # BibHelioTech
 
-
 [![DOI](https://zenodo.org/badge/599997124.svg)](https://zenodo.org/badge/latestdoi/599997124)
 [![License](https://img.shields.io/github/license/ADablanc/BibHelioTech.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
-
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/RichardHitier/BibHelioTech)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/RichardHitier/BibHelioTech/unittest_ci.yml?label=Tests)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/RichardHitier/BibHelioTech?label=Version)
 
-
-
 ## BibHelioTech project description
-BibHelioTech is a program for the recognition of temporal expressions and entities (satellites, instruments, regions) extracted from scientific articles in the field of heliophysics.
 
-It was developed at IRAP (Institut de Recherche en Astrophysique et Planétologie, Toulouse https://www.irap.omp.eu/) in the frame of an internship by A. Dablanc supervised by V. Génot.
+BibHelioTech is a program for the recognition of temporal expressions and entities (satellites, instruments, regions)
+extracted from scientific articles in the field of heliophysics.
 
-Its main purpose is to retrieve events of interest which have been studied and published, and associate them with the full context of the observations. It produces standardized catalogues of events (time intervals, satellites, instruments, regions, metrics) which can then be exploited in space physics visualization tools such as AMDA (http://amda.cdpp.eu/).
+It was developed at IRAP (Institut de Recherche en Astrophysique et Planétologie, Toulouse https://www.irap.omp.eu/) in
+the frame of an internship by A. Dablanc supervised by V. Génot.
+
+Its main purpose is to retrieve events of interest which have been studied and published, and associate them with the
+full context of the observations. It produces standardized catalogues of events (time intervals, satellites,
+instruments, regions, metrics) which can then be exploited in space physics visualization tools such as
+AMDA (http://amda.cdpp.eu/).
 
 ## Docker image building
 
@@ -30,7 +32,6 @@ make sure you have created the database:
 ### Web interface
 
 We use docker compose for the link between bibheliotech and dependency containers.
-
 
 build it first
 
@@ -49,7 +50,7 @@ If you'd better run on another port, edit the nginx service in the `docker-compo
 
 ### Dev mode
 
-An override compose file is available in `ressources/` dir
+An override compose file is available in `resources/` dir
 
     cp .env-dist .env
     $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
@@ -64,6 +65,23 @@ Current web dir is also mounted as volume so you can change python code without 
 
 Mainly runs flask in debug mode (skipping gunicorn), and
 linking host files to container for live update.
+
+#### FLASK_ENV
+This environment variable is deprecated. We wont use it.
+The FLASK_DEBUG var can be set through cli option:
+
+    BHT_ENV=development flask --debug --app bht_web run
+
+But we could also want to run the application in development or testing mode.
+For that, you can trigger the create_app() passing it the BHT_ENV variable:
+
+    BHT_ENV=development flask --debug --app bht_web run
+
+BHT_ENV can take 3 possible values:
+
+- 'production' (default)
+- 'development'
+- 'testing'
 
 ### Running files treatement under ./DATA/
 
@@ -89,12 +107,12 @@ Make sure to fullfill any dependency first:
 flake8, along with its pep8-naming plugin allow to make sure our code is properly formated before commitinge.
 give it a try:
 
-    cp ressources/flake8 ./.flake8
+    cp resources/flake8 ./.flake8
     flake8
 
 ### pre-commit
 
-    cp ressources/pre-commit-config.ymal  .pre-commit-config.yaml
+    cp resources/pre-commit-config.ymal  .pre-commit-config.yaml
     pip install pre-commit
     pre-commit install
 
@@ -106,19 +124,24 @@ As a first try, you can
 
 it also embeds calls to flake8 and black plugin.
 
+To make sure you follow those formats, you can install plugins.
+For pycharm:
+
+https://black.readthedocs.io/en/stable/integrations/editors.html
+https://pypi.org/project/flake8-for-pycharm/
+
 ### tests
 
 either run on your workdir, but launch grobid and redis first:
 
     docker-compose -f docker-compose.tests.yml
-    cp ressources/bht-config.yml-dist ./bht-config.yml
+    cp resources/bht-config.yml-dist ./bht-config.yml
     python -m pytest tests
 
 alternately, run with ini file
 
-    cp ressources/pytest.ini-dist ./pytest.ini
+    cp resources/pytest.ini-dist ./pytest.ini
     pytest
-
 
 or use the whole docker stack
 
@@ -128,17 +151,28 @@ or use the whole docker stack
 
 you may want to skip slow tests:
 
-    export BHT_SKIPSLOWTESTS=True
-    python -m pytest tests
+    BHT_SKIPSLOWTESTS=True python -m pytest tests
 
 or allow ISTEX tests if you have IP authorisation
 
+    BHT_DONTSKIPISTEX=True python -m pytest tests
+    # defaults to False, that is it wont run istex tests
+
+or allow Selenium functionnal tests if available
+
+    BHT_DONTSKIPSELENIUM=True python -m pytest tests
+    # defaults to False, that is it wont run selenium tests
+
+a whole test would then look like
+
+    export BHT_DONTSKIPSELENIUM=True
     export BHT_DONTSKIPISTEX=True
+    export BHT_SKIPSLOWTESTS=False
     python -m pytest tests
 
 ### github actions
 
-Github actions yml files are stored in  the `.github/workflows/` directory.
+Github actions yml files are stored in the `.github/workflows/` directory.
 
 - one for deployment to the ovh dev server
 - one for running integration tests
@@ -157,15 +191,16 @@ You would be advised to look at `./docker/Dockerfile` for more tips.
 STEP 1: install all dependency
 
 1. install pip dependencies
+
 ```
 python3 -m venv venv
 source venv/bin/activate
 pip install wheel
 pip install -r requirements.txt
 ```
-1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/
-1. Update the `edu/stanford/nlp/models/sutime/english.sutime.txt` under  jars/stanford-corenlp-4.0.0-models.jar/
 
+1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/
+1. Update the `edu/stanford/nlp/models/sutime/english.sutime.txt` under jars/stanford-corenlp-4.0.0-models.jar/
 
 STEP 2: tesseract 5.1.0 installation (Ubuntu exemple)
 
@@ -189,6 +224,7 @@ STEP 4: GROBID python client installation
 * copy grobid-client-config.json-dist grobid-client-config.json
 
 ## User guide
+
 Make sure the GROBID server is running
 
 Copy any Heliophysics articles in pdf format under ./DATA/Papers/
@@ -210,7 +246,8 @@ call it an agile sprint, or a git feature branch.
 
 Each of those steps is labelled with the version number, followed by the '.pre' keyword, and a number for the step.
 
-For example, lets say we are heading towards the `0.3.0` goal, and that we're on the fifth sprint after the `0.2.0` release, the
+For example, lets say we are heading towards the `0.3.0` goal, and that we're on the fifth sprint after the `0.2.0`
+release, the
 version number will be `0.3.0.pre-5`
 
 While on a branch, the sprint is not fullfilled, thus `VERSION.txt` should contain `0.3.0.pre-5-dev` .
@@ -229,6 +266,7 @@ Any VERSION change is git tagged with `v` prepended. In the later example, that 
 If you use or contribute to BibHelioTech, you agree to use it or share your contribution following the LICENSE file.
 
 ## Authors
+
 * [Axel Dablanc](axel.alain.dablanc@gmail.com)
 * [Vincent Génot](vincent.genot@irap.omp.eu)
 * [Richard Hitier](hitier.richard@gmail.com)
