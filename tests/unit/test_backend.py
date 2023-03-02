@@ -10,7 +10,72 @@ from web import db
 from web.bht_proxy import pipe_paper, pipe_paper_mocked, get_pipe_callback
 from web.errors import IstexParamError
 from web.istex_proxy import istex_params_to_json, istex_url_to_json, istex_id_to_url
-from web.models import Paper
+from web.models import Paper, Doi, Mission, Instrument, Region, HpEvent
+
+
+class TestModels:
+    def test_paper(self):
+        """
+        GIVEN Paper model
+        WHEN class is instantiated
+        THEN verify existence
+        """
+        paper = Paper(title="title", pdf_path="path")
+        assert paper.title == "title"
+        assert paper.pdf_path == "path"
+
+    def test_hpevent(self):
+        """
+        GIVEN HP_EVENT model
+        WHEN class is instantiated
+        THEN verify existence
+        """
+        hp_event = HpEvent(
+            doi=Doi("doi"),
+            mission=Mission("mission"),
+            instrument=Instrument("instrument"),
+            region=Region("region"),
+        )
+        assert hp_event.doi.doi == "doi"
+        assert hp_event.mission.name == "mission"
+        assert hp_event.instrument.name == "instrument"
+        assert hp_event.region.name == "region"
+
+    def test_doi(self):
+        """
+        GIVEN Doi model
+        WHEN class is instantiated
+        THEN verify existence
+        """
+        doi = Doi(doi="whatever")
+        assert doi.doi == "whatever"
+
+    def test_mission(self):
+        """
+        GIVEN Mission model
+        WHEN class is instantiated
+        THEN verify existence
+        """
+        mission = Mission(name="mission-name")
+        assert mission.name == "mission-name"
+
+    def test_instrument(self):
+        """
+        GIVEN Instrument model
+        WHEN class is instantiated
+        THEN verify existence
+        """
+        instrument = Instrument(name="instrument-name")
+        assert instrument.name == "instrument-name"
+
+    def test_region(self):
+        """
+        GIVEN Region model
+        WHEN class is instantiated
+        THEN verify existence
+        """
+        region = Region(name="region-name")
+        assert region.name == "region-name"
 
 
 class TestDb:
