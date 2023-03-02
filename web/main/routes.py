@@ -219,7 +219,7 @@ def upload():
         flash("No selected file")
         return redirect(url_for("main.papers"))
     if file and allowed_file(file.filename):
-        save_to_db(file.stream, file.filename)
+        save_to_db(file.read(), file.filename)
         flash(f"Uploaded {file.filename}")
         return redirect(url_for("main.papers"))
 

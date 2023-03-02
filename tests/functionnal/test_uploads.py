@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from flask import url_for, request
 from selenium.webdriver.common.by import By
@@ -26,10 +28,21 @@ class TestUploadPdf:
         firefox_driver.find_element(By.XPATH, "//form").submit()
         # check result page
         wait = WebDriverWait(firefox_driver, 2)
-        have_it = wait.until(
+        has_flash_msg = wait.until(
             ec.presence_of_element_located((By.XPATH, "//ul[@class='flashes']"))
         )
-        assert have_it
-        # flash_elmt = firefox_driver.find_element(By.XPATH, "//ul[@class='flashes']/li")
-        # assert flash_elmt.text == 'ho'
-        # look for paper in db
+        assert has_flash_msg
+
+        flash_elmt = firefox_driver.find_element(By.XPATH, "//ul[@class='flashes']/li")
+        assert flash_elmt.text == f"Uploaded {os.path.basename(pdf_for_test)}"
+
+        file_table_line = firefox_driver.find_element(By.XPATH, "//tbody/tr")
+        assert file_table_line
+
+        # TODO: look for paper in db
+        # from web.models import Paper
+        # from web import db
+        # papers = db.session.query(Paper).all()
+        # for p in papers:
+        #     print(p)
+        # assert False
