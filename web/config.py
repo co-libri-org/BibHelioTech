@@ -1,6 +1,6 @@
 import os
 
-from bht_config import yml_settings
+from bht_config import yml_settings, BHT_ROOT_DIR
 
 
 class Config(object):
@@ -39,3 +39,4 @@ class TestConfig(Config):
     UPLOAD_FOLDER = "test-upload/"
     # Set sqlite to in memory for tests
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    BHT_RESOURCES_DIR = os.path.join(BHT_ROOT_DIR, "resources-test")
