@@ -37,10 +37,36 @@ class HpEvent(db.Model):
         date_format = "%Y-%m-%dT%H:%M:%S.%f"
         self.start_date = datetime.datetime.strptime(start_date, date_format)
         self.stop_date = datetime.datetime.strptime(stop_date, date_format)
-        self.doi = Doi(doi)
-        self.mission = Mission(mission)
-        self.instrument = Instrument(instrument)
-        self.region = Region(region)
+        self.set_doi(doi)
+        self.set_mission(mission)
+        self.set_instrument(instrument)
+        self.set_region(region)
+
+    def set_doi(self, doi_str):
+        doi = db.session.query(Doi).filter_by(doi=doi_str).one_or_none()
+        if doi is None:
+            doi = Doi(doi_str)
+        self.doi = doi
+
+    def set_mission(self, mission_str):
+        mission = db.session.query(Mission).filter_by(name=mission_str).one_or_none()
+        if mission is None:
+            mission = Mission(mission_str)
+        self.mission = mission
+
+    def set_instrument(self, instr_str):
+        instrument = (
+            db.session.query(Instrument).filter_by(name=instr_str).one_or_none()
+        )
+        if instrument is None:
+            instrument = Instrument(instr_str)
+        self.instrument = instrument
+
+    def set_region(self, region_str):
+        region = db.session.query(Region).filter_by(name=region_str).one_or_none()
+        if region is None:
+            region = Region(region_str)
+        self.region = region
 
 
 class Doi(db.Model):
