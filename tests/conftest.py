@@ -8,7 +8,7 @@ from flask import current_app
 
 from web import create_app, db
 from web.main.routes import save_to_db
-from web.models import Paper
+from web.models import Paper, HpEvent
 
 skip_istex = pytest.mark.skipif(
     os.environ.get("BHT_DONTSKIPISTEX") is None
@@ -48,6 +48,37 @@ def tei_for_test():
     yield test_tei_file
     if os.path.isfile(test_tei_file):
         os.remove(test_tei_file)
+
+
+@pytest.fixture(scope="module")
+def hpevents_list():
+    hpevents_list = [
+        HpEvent(
+            "2007-07-16T19:50:00.000",
+            "2007-07-16T20:37:00.000",
+            "doiA",
+            "missionA",
+            "instrumentA",
+            "regionA",
+        ),
+        HpEvent(
+            "2007-07-16T19:50:00.000",
+            "2007-07-16T20:37:00.000",
+            "doiB",
+            "missionB",
+            "instrumentB",
+            "regionB",
+        ),
+        HpEvent(
+            "2007-07-16T19:50:00.000",
+            "2007-07-16T20:37:00.000",
+            "doiC",
+            "missionC",
+            "instrumentC",
+            "regionC",
+        ),
+    ]
+    return hpevents_list
 
 
 @pytest.fixture(scope="module")

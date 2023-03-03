@@ -24,41 +24,15 @@ class TestModels:
         assert paper.title == "title"
         assert paper.pdf_path == "path"
 
-    def test_catalog(self):
+    def test_catalog(self, hpevents_list):
         """
         GIVEN HpEvent List and Catalog Model
         WHEN events are added to catalog
         THEN verify existence and integrity
         """
-        events = [
-            HpEvent(
-                "2007-07-16T19:50:00.000",
-                "2007-07-16T20:37:00.000",
-                "doiA",
-                "missionA",
-                "instrumentA",
-                "regionA",
-            ),
-            HpEvent(
-                "2007-07-16T19:50:00.000",
-                "2007-07-16T20:37:00.000",
-                "doiB",
-                "missionB",
-                "instrumentB",
-                "regionB",
-            ),
-            HpEvent(
-                "2007-07-16T19:50:00.000",
-                "2007-07-16T20:37:00.000",
-                "doiC",
-                "missionC",
-                "instrumentC",
-                "regionC",
-            ),
-        ]
         c = Catalog()
         db.session.add(c)
-        for event in events:
+        for event in hpevents_list:
             db.session.add(event)
             c.hp_events.append(event)
             db.session.commit
