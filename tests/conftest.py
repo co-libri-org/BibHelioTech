@@ -4,7 +4,8 @@ from urllib.parse import urlencode
 import pytest
 import os
 
-from bht_config import yml_settings
+from flask import current_app
+
 from web import create_app, db
 from web.main.routes import save_to_db
 from web.models import Paper
@@ -41,7 +42,9 @@ def app():
 
 @pytest.fixture(scope="module")
 def tei_for_test():
-    test_tei_file = os.path.join(yml_settings["BHT_PAPERS_DIR"], "2016GL069787.tei.xml")
+    test_tei_file = os.path.join(
+        current_app.config["BHT_PAPERS_DIR"], "2016GL069787.tei.xml"
+    )
     yield test_tei_file
     if os.path.isfile(test_tei_file):
         os.remove(test_tei_file)
@@ -50,10 +53,10 @@ def tei_for_test():
 @pytest.fixture(scope="module")
 def pdf_for_test():
     test_pdf_file_orig = os.path.join(
-        yml_settings["BHT_RESOURCES_DIR"], "2016GL069787-test.pdf"
+        current_app.config["BHT_RESOURCES_DIR"], "2016GL069787-test.pdf"
     )
     test_pdf_file_dest = os.path.join(
-        yml_settings["BHT_PAPERS_DIR"], "2016GL069787-test.pdf"
+        current_app.config["BHT_PAPERS_DIR"], "2016GL069787-test.pdf"
     )
     shutil.copy(test_pdf_file_orig, test_pdf_file_dest)
 
