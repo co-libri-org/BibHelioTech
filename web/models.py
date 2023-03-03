@@ -1,22 +1,46 @@
+import datetime
 import os.path
 
 from web import db
+
+
+class Catalog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    hp_events = db.relationship("HpEvent", back_populates="catalog")
 
 
 class HpEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date)
     stop_date = db.Column(db.Date)
-    doi_id = db.Column(db.Integer, db.ForeignKey("doi.id"), primary_key=True)
-    mission_id = db.Column(db.Integer, db.ForeignKey("mission.id"), primary_key=True)
-    instrument_id = db.Column(
-        db.Integer, db.ForeignKey("instrument.id"), primary_key=True
-    )
-    region_id = db.Column(db.Integer, db.ForeignKey("region.id"), primary_key=True)
+    doi_id = db.Column(db.Integer, db.ForeignKey("doi.id"))
+    mission_id = db.Column(db.Integer, db.ForeignKey("mission.id"))
+    instrument_id = db.Column(db.Integer, db.ForeignKey("instrument.id"))
+    region_id = db.Column(db.Integer, db.ForeignKey("region.id"))
     doi = db.relationship("Doi", back_populates="hp_events")
     mission = db.relationship("Mission", back_populates="hp_events")
     instrument = db.relationship("Instrument", back_populates="hp_events")
     region = db.relationship("Region", back_populates="hp_events")
+
+    catalog = db.relationship("Catalog", back_populates="hp_events")
+    catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"))
+
+    def __init__(
+        self,
+        start_date: str,
+        stop_date: str,
+        doi: str,
+        mission: str,
+        instrument: str,
+        region: str,
+    ):
+        date_format = "%Y%M%d"
+        self.start_date = datetime.datetime.strptime(start_date, date_format)
+        self.stop_date = datetime.datetime.strptime(stop_date, date_format)
+        self.doi = Doi(doi)
+        self.mission = Mission(mission)
+        self.instrument = Instrument(instrument)
+        self.region = Region(region)
 
 
 class Doi(db.Model):

@@ -10,7 +10,7 @@ from web import db
 from web.bht_proxy import pipe_paper, pipe_paper_mocked, get_pipe_callback
 from web.errors import IstexParamError
 from web.istex_proxy import istex_params_to_json, istex_url_to_json, istex_id_to_url
-from web.models import Paper, Doi, Mission, Instrument, Region, HpEvent
+from web.models import Paper, Doi, Mission, Instrument, Region, HpEvent, Catalog
 
 
 class TestModels:
@@ -24,22 +24,49 @@ class TestModels:
         assert paper.title == "title"
         assert paper.pdf_path == "path"
 
-    def test_hpevent(self):
+    def test_catalog(self):
         """
-        GIVEN HP_EVENT model
-        WHEN class is instantiated
-        THEN verify existence
+        GIVEN HpEvent List and Catalog Model
+        WHEN events are added to catalog
+        THEN verify existence and integrity
         """
-        hp_event = HpEvent(
-            doi=Doi("doi"),
-            mission=Mission("mission"),
-            instrument=Instrument("instrument"),
-            region=Region("region"),
+        events = [
+            HpEvent(
+                "20200101", "20200102", "doiA", "missionA", "instrumentA", "regionA"
+            ),
+            HpEvent(
+                "20200101", "20200102", "doiB", "missionB", "instrumentB", "regionB"
+            ),
+            HpEvent(
+                "20200101", "20200102", "doiC", "missionC", "instrumentC", "regionC"
+            ),
+        ]
+        c = Catalog()
+        db.session.add(c)
+        for event in events:
+            db.session.add(event)
+            c.hp_events.append(event)
+            db.session.commit
+
+    def test_hpevent_constructor(self):
+        """
+        GIVEN HpEvent model
+        WHEN class is instantiated and db added
+        THEN verify integrity
+        """
+        hp_event_in = HpEvent(
+            "20200101", "20200102", "doi", "mission", "instrument", "region"
         )
-        assert hp_event.doi.doi == "doi"
-        assert hp_event.mission.name == "mission"
-        assert hp_event.instrument.name == "instrument"
-        assert hp_event.region.name == "region"
+        db.session.add(hp_event_in)
+        db.session.commit()
+        hp_event_out = db.session.query(HpEvent).one()
+        import datetime
+
+        assert type(hp_event_out.start_date) is datetime.date
+        assert hp_event_out.doi.doi == "doi"
+        assert hp_event_out.mission.name == "mission"
+        assert hp_event_out.instrument.name == "instrument"
+        assert hp_event_out.region.name == "region"
 
     def test_doi(self):
         """
