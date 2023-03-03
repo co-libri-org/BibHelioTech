@@ -51,6 +51,15 @@ def tei_for_test():
 
 
 @pytest.fixture(scope="module")
+def cat_for_test():
+    test_cat_file_orig = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"],
+        "105194angeo282332010_bibheliotech_V1.txt",
+    )
+    yield test_cat_file_orig
+
+
+@pytest.fixture(scope="module")
 def pdf_for_test():
     test_pdf_file_orig = os.path.join(
         current_app.config["BHT_RESOURCES_DIR"], "2016GL069787-test.pdf"
@@ -59,9 +68,9 @@ def pdf_for_test():
         current_app.config["BHT_PAPERS_DIR"], "2016GL069787-test.pdf"
     )
     shutil.copy(test_pdf_file_orig, test_pdf_file_dest)
-
+    #
     yield test_pdf_file_dest
-
+    #
     if os.path.isfile(test_pdf_file_dest):
         os.remove(test_pdf_file_dest)
 

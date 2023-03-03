@@ -34,7 +34,7 @@ class HpEvent(db.Model):
         instrument: str,
         region: str,
     ):
-        date_format = "%Y%M%d"
+        date_format = "%Y-%m-%dT%H:%M:%S.%f"
         self.start_date = datetime.datetime.strptime(start_date, date_format)
         self.stop_date = datetime.datetime.strptime(stop_date, date_format)
         self.doi = Doi(doi)
