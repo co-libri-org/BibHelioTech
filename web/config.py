@@ -15,10 +15,6 @@ class Config(object):
         yml_settings["WEB_DB_DIR"], "bht_web.db"
     )
 
-    def __init__(self) -> object:
-        # Get config keys from the settings dictionnary
-        self.__dict__.update(yml_settings)
-
 
 class ProdConfig(Config):
     # Simple production wrapper for Config
@@ -39,4 +35,4 @@ class TestConfig(Config):
     UPLOAD_FOLDER = "test-upload/"
     # Set sqlite to in memory for tests
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
-    BHT_RESOURCES_DIR = os.path.join(BHT_ROOT_DIR, "resources-test")
+    BHT_RESOURCES_DIR = os.path.join(BHT_ROOT_DIR, "resources-tests")
