@@ -32,13 +32,28 @@ class TestModels:
         """
         events = [
             HpEvent(
-                "20200101", "20200102", "doiA", "missionA", "instrumentA", "regionA"
+                "2007-07-16T19:50:00.000",
+                "2007-07-16T20:37:00.000",
+                "doiA",
+                "missionA",
+                "instrumentA",
+                "regionA",
             ),
             HpEvent(
-                "20200101", "20200102", "doiB", "missionB", "instrumentB", "regionB"
+                "2007-07-16T19:50:00.000",
+                "2007-07-16T20:37:00.000",
+                "doiB",
+                "missionB",
+                "instrumentB",
+                "regionB",
             ),
             HpEvent(
-                "20200101", "20200102", "doiC", "missionC", "instrumentC", "regionC"
+                "2007-07-16T19:50:00.000",
+                "2007-07-16T20:37:00.000",
+                "doiC",
+                "missionC",
+                "instrumentC",
+                "regionC",
             ),
         ]
         c = Catalog()
@@ -48,6 +63,15 @@ class TestModels:
             c.hp_events.append(event)
             db.session.commit
 
+    def test_hpevent_from_dict(self, hpevent_dict_for_test):
+        """
+        GIVEN a hp_event dict
+        WHEN create hpevent instance
+        THEN verify integrity
+        """
+        hpevent = HpEvent(**hpevent_dict_for_test)
+        assert hpevent.doi.doi == hpevent_dict_for_test["doi"]
+
     def test_hpevent_constructor(self):
         """
         GIVEN HpEvent model
@@ -55,7 +79,12 @@ class TestModels:
         THEN verify integrity
         """
         hp_event_in = HpEvent(
-            "20200101", "20200102", "doi", "mission", "instrument", "region"
+            "2007-07-16T19:50:00.000",
+            "2007-07-16T20:37:00.000",
+            "doi",
+            "mission",
+            "instrument",
+            "region",
         )
         db.session.add(hp_event_in)
         db.session.commit()

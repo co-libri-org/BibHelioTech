@@ -51,6 +51,19 @@ def tei_for_test():
 
 
 @pytest.fixture(scope="module")
+def hpevent_dict_for_test():
+    hpevent_dict = {
+        "start_date": "2007-07-16T19:50:00.000",
+        "stop_date": "2007-07-16T20:00:00.000",
+        "doi": "https://doi.org/10.1029/2010JA015404",
+        "mission": "THEMIS-A",
+        "instrument": "FGM-ESA",
+        "region": "Earth.Magnetosheath",
+    }
+    return hpevent_dict
+
+
+@pytest.fixture(scope="module")
 def cat_for_test():
     test_cat_file_orig = os.path.join(
         current_app.config["BHT_RESOURCES_DIR"],
