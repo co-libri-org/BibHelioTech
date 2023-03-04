@@ -5,10 +5,11 @@ from web.models import HpEvent
 
 
 def catfile_to_rows(catfile):
-    """From a catalog file
+    """Get all rows of a catalog file as  dict
+
        -  read each line, rid of comments
        -  create a hp_event_dict
-    @return hpevent_dict list
+    :return: hpevent_dict list
     """
     hpeventdict_list = []
     with open(catfile, newline="") as csvfile:
@@ -30,9 +31,9 @@ def catfile_to_rows(catfile):
 
 
 def catfile_to_db(catfile):
-    """From a catalog file
-        save content to db as hpevents
-    @return nothing
+    """Save a catalog file's content to db as hpevents
+
+    :return: nothing
     """
     for hpevent_dict in catfile_to_rows(catfile):
         hpevent = HpEvent(**hpevent_dict)

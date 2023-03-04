@@ -45,13 +45,13 @@ class HpEvent(db.Model):
     def set_doi(self, doi_str):
         doi = db.session.query(Doi).filter_by(doi=doi_str).one_or_none()
         if doi is None:
-            doi = Doi(doi_str)
+            doi = Doi(doi=doi_str)
         self.doi = doi
 
     def set_mission(self, mission_str):
         mission = db.session.query(Mission).filter_by(name=mission_str).one_or_none()
         if mission is None:
-            mission = Mission(mission_str)
+            mission = Mission(name=mission_str)
         self.mission = mission
 
     def set_instrument(self, instr_str):
@@ -59,13 +59,13 @@ class HpEvent(db.Model):
             db.session.query(Instrument).filter_by(name=instr_str).one_or_none()
         )
         if instrument is None:
-            instrument = Instrument(instr_str)
+            instrument = Instrument(name=instr_str)
         self.instrument = instrument
 
     def set_region(self, region_str):
         region = db.session.query(Region).filter_by(name=region_str).one_or_none()
         if region is None:
-            region = Region(region_str)
+            region = Region(name=region_str)
         self.region = region
 
 
@@ -74,17 +74,11 @@ class Doi(db.Model):
     doi = db.Column(db.String, unique=True, nullable=False)
     hp_events = db.relationship("HpEvent", back_populates="doi")
 
-    def __init__(self, doi):
-        self.doi = doi
-
 
 class Mission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     hp_events = db.relationship("HpEvent", back_populates="mission")
-
-    def __init__(self, name):
-        self.name = name
 
 
 class Instrument(db.Model):
@@ -92,17 +86,11 @@ class Instrument(db.Model):
     name = db.Column(db.String, unique=True, nullable=False)
     hp_events = db.relationship("HpEvent", back_populates="instrument")
 
-    def __init__(self, name):
-        self.name = name
-
 
 class Region(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     hp_events = db.relationship("HpEvent", back_populates="region")
-
-    def __init__(self, name):
-        self.name = name
 
 
 class Paper(db.Model):
