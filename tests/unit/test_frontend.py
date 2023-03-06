@@ -8,6 +8,18 @@ from web.main.routes import get_file_from_url, save_to_db
 from web.models import Paper
 
 
+class TestCatalogs:
+    def test_catalog_page(self, test_client):
+        """
+        GIVEN a flask app
+        WHEN the catalog page is requested
+        THEN check that page is returned
+        """
+        response = test_client.get("/catalogs")
+        assert response.status_code == 200
+        assert b"Catalogs by Mission" in response.data
+
+
 class TestFrontUtils:
     @skip_slow_test
     def test_get_file_from_url(self):
