@@ -71,6 +71,16 @@ class TestModels:
         assert hp_event_out.instrument.name == "instrument"
         assert hp_event_out.region.name == "region"
 
+    def test_hpevent_get_dict(self, hpevent_dict_for_test):
+        """
+        GIVEN an hpevent dict
+        WHEN HpEvent is created with that dict
+        THEN verify output dict is the same
+        """
+        hpevent_in = HpEvent(**hpevent_dict_for_test)
+        dict_out = hpevent_in.get_dict()
+        assert hpevent_dict_for_test == dict_out
+
     def test_doi(self):
         """
         GIVEN Doi model

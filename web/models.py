@@ -3,6 +3,8 @@ import os.path
 
 from web import db
 
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
+
 
 class Catalog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -34,13 +36,25 @@ class HpEvent(db.Model):
         instrument: str,
         region: str,
     ):
-        date_format = "%Y-%m-%dT%H:%M:%S.%f"
-        self.start_date = datetime.datetime.strptime(start_date, date_format)
-        self.stop_date = datetime.datetime.strptime(stop_date, date_format)
+        self.start_date = datetime.datetime.strptime(start_date, DATE_FORMAT)
+        self.stop_date = datetime.datetime.strptime(stop_date, DATE_FORMAT)
         self.set_doi(doi)
         self.set_mission(mission)
         self.set_instrument(instrument)
         self.set_region(region)
+
+    def get_dict(self):
+        r_dict = {
+            "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
+                0:-3
+            ],
+            "stop_date": datetime.datetime.strftime(self.stop_date, DATE_FORMAT)[0:-3],
+            "doi": self.doi.doi,
+            "mission": self.mission.name,
+            "instrument": self.instrument.name,
+            "region": self.region.name,
+        }
+        return r_dict
 
     def set_doi(self, doi_str):
         doi = db.session.query(Doi).filter_by(doi=doi_str).one_or_none()
