@@ -21,9 +21,9 @@ def catfile_to_rows(catfile):
                 "start_date": row[0],
                 "stop_date": row[1],
                 "doi": row[2],
-                "mission": row[2],
-                "instrument": row[2],
-                "region": row[2],
+                "mission": row[3],
+                "instrument": row[4],
+                "region": row[5],
             }
 
             hpeventdict_list.append(hpevent_dict)
