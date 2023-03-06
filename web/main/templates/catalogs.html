@@ -2,11 +2,42 @@
 {%  block more_head %}
 {%  endblock %}
 {% block content %}
-<h4>Catalogs by Mission</h4>
-<ul>
-    {% for catalog in catalogs %}
-    <li>{{catalog}}</li>
-    {%endfor%}
+<h4>Catalogs by Mission:</h4>
+{% for mission in missions %}
+<button class="btn btn-warning mission-catalog" data-mission_id="{{mission.id}}">{{mission.name}}</button>
+{%endfor%}
+<hr class="mt-5 mb-5">
+<div id="events" class="container">
 
-</ul>
+</div>
+{%  endblock %}
+
+{% block scripts %}
+<script>
+$('.mission-catalog').on('click', function() {
+    $.get({
+        url: '{{url_for("main.api_catalogs")}}',
+        data: {mission_id: $(this).data("mission_id")}
+    })
+    .done((res) => {
+        console.log('Events requested for mission id: ', res.data.mission_id)
+        alert(res.data)
+        setCatalog(res.data)
+    })
+    .fail((err) => {
+        console.log(err);
+    });
+});
+
+function setCatalog(events) {
+    $.each(events, function(idx, event){
+        var row  = $('<div class="row"></div>')
+        row.append($('<div class="col">'+event.start_date+'</div>'))
+        row.append($('<div class="col">'+event.stop_date+'</div>'))
+        row.append($('<div class="col">'+event.doi+'</div>'))
+        $("#events").append(row)
+    });
+}
+
+</script>
 {%  endblock %}

@@ -1,4 +1,3 @@
-import glob
 import json
 import os
 import re
@@ -28,7 +27,7 @@ from flask import (
 
 from . import bp
 from web import db
-from web.models import Paper
+from web.models import Paper, Mission, HpEvent
 from web.bht_proxy import get_pipe_callback
 from web.errors import PdfFileError
 from web.istex_proxy import istex_url_to_json, istex_id_to_url
@@ -325,8 +324,19 @@ def istex_from_url():
 
 @bp.route("/catalogs", methods=["GET"])
 def catalogs():
-    _catalogs = glob.glob(
-        os.path.join(current_app.config["BHT_PAPERS_DIR"], "**", "*bibhelio*.txt"),
-        recursive=True,
-    )
-    return render_template("catalogs.html", catalogs=_catalogs)
+    _missions = [
+        {"name": _m.name, "id": _m.id} for _m in db.session.query(Mission).all()
+    ]
+    return render_template("catalogs.html", missions=_missions)
+
+
+@bp.route("/api/catalogs", methods=["GET"])
+def api_catalogs():
+    mission_id = request.args.get("mission_id")
+    print(mission_id)
+    # events_list = db.session.query(HpEvent).
+    events_list = [
+        event.get_dict() for event in HpEvent.query.filter_by(mission_id=mission_id)
+    ]
+    response_object = {"status": "success", "data": events_list}
+    return jsonify(response_object)
