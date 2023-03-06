@@ -43,6 +43,10 @@ class HpEvent(db.Model):
         self.set_instrument(instrument)
         self.set_region(region)
 
+    def __repr__(self):
+        r_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission_id}:{self.mission.name} {self.instrument.name}"
+        return r_str
+
     def get_dict(self):
         r_dict = {
             "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
