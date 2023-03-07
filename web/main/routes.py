@@ -333,10 +333,12 @@ def catalogs():
 @bp.route("/api/catalogs", methods=["GET"])
 def api_catalogs():
     mission_id = request.args.get("mission_id")
-    print(mission_id)
     # events_list = db.session.query(HpEvent).
     events_list = [
         event.get_dict() for event in HpEvent.query.filter_by(mission_id=mission_id)
     ]
-    response_object = {"status": "success", "data": events_list}
+    response_object = {
+        "status": "success",
+        "data": {"events": events_list, "mission_id": mission_id},
+    }
     return jsonify(response_object)

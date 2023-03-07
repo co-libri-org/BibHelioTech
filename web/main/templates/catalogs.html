@@ -7,37 +7,58 @@
 <button class="btn btn-warning mission-catalog" data-mission_id="{{mission.id}}">{{mission.name}}</button>
 {%endfor%}
 <hr class="mt-5 mb-5">
-<div id="events" class="container">
+<table class="table-hover table">
+    <thead>
+    <tr>
+        <th scope="col" class="col-2">start</th>
+        <th scope="col" class="col-2">stop</th>
+        <th scope="col" class="col-4">doi</th>
+        <th scope="col" class="col-1">mission</th>
+        <th scope="col" class="col-1">instrument</th>
+        <th scope="col" class="col-1">region</th>
+    </tr>
+    </thead>
+    <tbody id="events">
+    </tbody>
+</table>
 
-</div>
 {%  endblock %}
 
 {% block scripts %}
 <script>
+// For each mission button, attach a call back:
+// - retrieving events from the catalogs' api url
+// - sending the resulting list to the setCatalog()
 $('.mission-catalog').on('click', function() {
     $.get({
         url: '{{url_for("main.api_catalogs")}}',
         data: {mission_id: $(this).data("mission_id")}
     })
     .done((res) => {
-        console.log('Events requested for mission id: ', res.data.mission_id)
-        alert(res.data)
-        setCatalog(res.data)
+        console.log('Events requested for mission id: ', res.data.mission_id);
+        setCatalog(res.data.events);
     })
     .fail((err) => {
         console.log(err);
     });
 });
 
+// Fill in rows with  a given list of event
+// But first delete container
 function setCatalog(events) {
+    $("#events").empty();
     $.each(events, function(idx, event){
-        var row  = $('<div class="row"></div>')
-        row.append($('<div class="col">'+event.start_date+'</div>'))
-        row.append($('<div class="col">'+event.stop_date+'</div>'))
-        row.append($('<div class="col">'+event.doi+'</div>'))
-        $("#events").append(row)
+        var row  = $('<tr></tr>');
+        row.append($('<td>'+event.start_date+'</td>'));
+        row.append($('<td>'+event.stop_date+'</td>'));
+        row.append($('<td>'+event.doi+'</td>'));
+        row.append($('<td>'+event.mission+'</td>'));
+        row.append($('<td>'+event.instrument+'</td>'));
+        row.append($('<td>'+event.region+'</td>'));
+        $("#events").append(row);
     });
 }
+
 
 </script>
 {%  endblock %}
