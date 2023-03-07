@@ -343,3 +343,18 @@ def api_catalogs():
         "data": {"events": events_list, "mission_id": mission_id},
     }
     return jsonify(response_object)
+
+
+@bp.route("/api/push_catalog", methods=["POST"])
+def api_push_catalog():
+    """Inserts hp_events to db from paper's  catalog
+
+    :argument: paper_id in POST request as json
+    :method: GET
+    :return: json result
+    """
+    paper_id = request.json.get("paper_id")
+    paper = db.session.get(Paper, paper_id)
+    paper.push_cat()
+    response_object = {"status": "success"}
+    return jsonify(response_object), 201
