@@ -1,6 +1,9 @@
 from web import db
-from web.cat_tools import catfile_to_rows, catfile_to_db
+from web.models import catfile_to_rows, catfile_to_db
 from web.models import HpEvent
+
+
+# TODO: move to TestModels
 
 
 class TestCatTools:

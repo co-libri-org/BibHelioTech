@@ -4,7 +4,7 @@ from flask import current_app
 from rq import Connection, Worker
 from flask.cli import FlaskGroup
 from web import create_app, db
-from web.cat_tools import catfile_to_db
+from web.models import catfile_to_db
 from web.models import Paper, HpEvent
 
 cli = FlaskGroup(create_app=create_app)
