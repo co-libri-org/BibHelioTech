@@ -121,6 +121,7 @@ def pdf_for_test():
 
 @pytest.fixture(scope="function")
 def paper_for_test(pdf_for_test):
+    """Adds a paper's pdf to db"""
     with open(pdf_for_test, "rb", buffering=0) as fp:
         paper_id = save_to_db(fp.readall(), os.path.basename(pdf_for_test))
     paper = db.session.get(Paper, paper_id)

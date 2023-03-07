@@ -11,6 +11,8 @@ DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 def catfile_to_rows(catfile):
     """Get all rows of a catalog file as  dict
 
+      TODO: should move to Paper or Catalog method
+
        -  read each line, rid of comments
        -  create a hp_event_dict
     :return: hpevent_dict list
@@ -36,6 +38,7 @@ def catfile_to_rows(catfile):
 
 def catfile_to_db(catfile):
     """Save a catalog file's content to db as hpevents
+
     TODO: should move to Paper or Catalog method
 
     :return: nothing
@@ -157,6 +160,7 @@ class Paper(db.Model):
     pdf_path = db.Column(db.String, unique=True, nullable=False)
     cat_path = db.Column(db.String, unique=True)
     task_id = db.Column(db.String, unique=True)
+    cat_in_db = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"<Paper {self.id} {self.title} {self.pdf_path} {self.cat_path} {self.task_id}>"

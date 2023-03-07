@@ -24,6 +24,15 @@ class TestModels:
         assert paper.title == "title"
         assert paper.pdf_path == "path"
 
+    def test_paper_cat_in_db(self):
+        """
+        GIVEN Paper model
+        WHEN class is instantiated
+        THEN verify catalog not in db first
+        """
+        paper = Paper(title="title", pdf_path="path")
+        assert not paper.cat_in_db
+
     def test_catalog(self, hpevents_list):
         """
         GIVEN HpEvent List and Catalog Model
