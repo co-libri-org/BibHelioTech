@@ -88,8 +88,9 @@ $('.run-bht').on('click', function() {
     method: 'POST'
   })
   .done((res) => {
-    console.log('bht task sent with id: ', res.data.task_id)
-    setStatus(res.data.paper_id)
+    console.log('bht task sent with id: ', res.data.task_id);
+    setStatus(res.data.paper_id);
+    location.reload();
   })
   .fail((err) => {
     console.log(err);
