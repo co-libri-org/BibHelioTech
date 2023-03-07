@@ -52,7 +52,7 @@
             <a class="btn btn-warning cat-link position-relative" id="cat-link-{{paper.id}}"
                href="{{url_for('main.cat', paper_id=paper.id)}}"
                title="Get catalog file{{' (not in db)' if not paper.cat_in_db}}" {{disabled(not paper.has_cat)}}>cat
-                {% if not paper.cat_in_db %}
+                {% if paper.has_cat and not paper.cat_in_db %}
                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                 </span>
                 {% endif %}
