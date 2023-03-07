@@ -11,7 +11,10 @@
             {{paper.title}}
         </td>
         <td class="col-6">
-            <button class="btn btn-warning add-catalog" data-paper_id="{{paper.id}}">add in db</button>
+            <button class="btn btn-warning add-catalog position-relative" data-paper_id="{{paper.id}}">add in db
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                </span>
+            </button>
         </td>
     </tr>
     {% endfor %}
