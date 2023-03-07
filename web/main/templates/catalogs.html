@@ -45,6 +45,25 @@
 
 {% block scripts %}
 <script>
+// For each un-added catalog button, attach callback:
+// - pushing the catalog id
+// - reloading the page
+$('.add-catalog').on('click', function() {
+    paper_id = $(this).data('paper_id')
+    $.post({
+        url: "{{url_for('main.api_push_catalog')}}",
+        data: JSON.stringify({ paper_id: paper_id}),
+        contentType: 'application/json; charset=utf-8'
+    })
+    .done((res) => {
+        console.log('Catalog added to db for paper id: ', res.data.paper_id);
+        location.reload();
+    })
+    .fail((err) => {
+    console.log(err);
+    });
+});
+
 // For each mission button, attach a call back:
 // - retrieving events from the catalogs' api url
 // - sending the resulting list to the setCatalog()
@@ -77,8 +96,6 @@ function setCatalog(events) {
         $("#events").append(row);
     });
 }
-
-
 
 
 </script>
