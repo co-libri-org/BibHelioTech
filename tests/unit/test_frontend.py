@@ -19,6 +19,16 @@ class TestCatalogs:
         assert response.status_code == 200
         assert b"Catalogs by Mission" in response.data
 
+    def test_catalog_page_2(self, test_client, paper_for_test):
+        """
+        GIVEN a flask app and paper_for_test in db
+        WHEN the catalog page is requested
+        THEN check that page contains non_added catalogs
+        """
+        response = test_client.get("/catalogs")
+        assert response.status_code == 200
+        assert b"Catalogs to add:" in response.data
+
 
 class TestFrontUtils:
     @skip_slow_test

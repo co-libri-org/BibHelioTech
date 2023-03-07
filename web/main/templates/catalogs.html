@@ -2,10 +2,26 @@
 {%  block more_head %}
 {%  endblock %}
 {% block content %}
+{% if not catalogs|length == 0 %}
+<h4>Catalogs to add in database:</h4>
+<table class="table-hover table">
+    {% for paper in catalogs %}
+    <tr>
+        <td class="col-2">
+            {{paper.title}}
+        </td>
+        <td class="col-6">
+            <button class="btn btn-warning add-catalog" data-paper_id="{{paper.id}}">add in db</button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<hr class="mt-5 mb-5">
+{% endif %}
 <h4>Catalogs by Mission:</h4>
 {% for mission in missions %}
 <button class="btn btn-warning mission-catalog" data-mission_id="{{mission.id}}">{{mission.name}}</button>
-{%endfor%}
+{% endfor %}
 <hr class="mt-5 mb-5">
 <table class="table-hover table">
     <thead>
@@ -58,6 +74,8 @@ function setCatalog(events) {
         $("#events").append(row);
     });
 }
+
+
 
 
 </script>

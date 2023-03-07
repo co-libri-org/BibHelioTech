@@ -327,7 +327,8 @@ def catalogs():
     _missions = [
         {"name": _m.name, "id": _m.id} for _m in db.session.query(Mission).all()
     ]
-    return render_template("catalogs.html", missions=_missions)
+    _catalogs = Paper.query.filter_by(cat_in_db=False).all()
+    return render_template("catalogs.html", missions=_missions, catalogs=_catalogs)
 
 
 @bp.route("/api/catalogs", methods=["GET"])
