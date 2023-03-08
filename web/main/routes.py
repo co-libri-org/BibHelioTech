@@ -328,7 +328,7 @@ def catalogs():
     """UI page to retrieve catalogs by mission"""
     # rebuild all missions as dict, keeping only what we need
     _missions = [
-        {"name": _m.name, "id": _m.id}
+        {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
         for _m in db.session.query(Mission).order_by(Mission.name).all()
     ]
     # build a list of papers with catalogs, but not already inserted in db
@@ -357,8 +357,11 @@ def api_catalogs():
         "status": "success",
         "data": {
             "events": events_list,
-            "mission_id": mission_id,
-            "mission_name": mission.name,
+            "mission": {
+                "id": mission.id,
+                "name": mission.name,
+                "num_events": len(mission.hp_events),
+            },
         },
     }
     return jsonify(response_object)
