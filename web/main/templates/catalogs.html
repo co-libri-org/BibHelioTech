@@ -2,6 +2,10 @@
 {%  block more_head %}
 {%  endblock %}
 {% block content %}
+{#
+    Show a list of catalogs files not already inserted in db
+    --------------------------------------------------------
+#}
 {% if not catalogs|length == 0 %}
 <h4>Catalogs to add in database:</h4>
 <table class="table-hover table">
@@ -21,18 +25,27 @@
 </table>
 <hr class="mt-5 mb-5">
 {% endif %}
-<h4>Catalogs by Mission:</h4>
+{#
+    Show missions found in db as clickable buttons, triggering mission's events display
+    -----------------------------------------------------------------------------------
+#}
+<h4 class="mb-5">Catalogs by Mission:</h4>
 {% for mission in missions %}
-<button class="btn btn-warning mission-catalog" data-mission_id="{{mission.id}}">{{mission.name}}</button>
+<button class="btn mission-catalog" data-mission_id="{{mission.id}}" title="Show events for mission {{mission.name}}">{{mission.name}}</button>
 {% endfor %}
 <hr class="mt-5 mb-5">
-<div>
-    <a class="btn btn-warning invisible" id="get-catalog-txt"
+{#
+    Show found events when mission button was clicked
+    -------------------------------------------------
+#}
+<div class="mb-5">
+    {#  Display Selected mission and Button for downloading at text catalog #}
+    <span id="get-catalog-title" class="h5"></span>
+    <a class="btn btn-warning invisible ms-3" id="get-catalog-txt"
        href="#"
        title="Get catalog as txt">
         Download
     </a>
-    <span id="get-catalog-title" class="h5"></span>
 </div>
 <table class="table-hover table">
     <thead>
@@ -45,7 +58,7 @@
     </tr>
     </thead>
     <tbody id="events">
-    {# body will be fill in by js callback setCatalog() #}
+    {# this tbody will be filled in by js callback setCatalog() at '.mission-catalog' btn click #}
     </tbody>
 </table>
 
@@ -53,6 +66,7 @@
 
 {% block scripts %}
 <script>
+
 // For each un-added catalog button, attach callback:
 // - pushing the catalog id
 // - reloading the page
@@ -76,6 +90,7 @@ $('.add-catalog').on('click', function() {
 // - retrieving events from the catalogs' api url
 // - sending the resulting list to the setCatalog()
 // - showing the download button
+// - enlightening this mission among missions buttons
 $('.mission-catalog').on('click', function() {
     $.get({
         url: '{{url_for("main.api_catalogs")}}',
@@ -87,6 +102,10 @@ $('.mission-catalog').on('click', function() {
         setDownloadBtn(res.data.mission_id, res.data.mission_name);
         // Then show the list of events on screen
         setCatalog(res.data.events);
+        // And enlighten current mission button after removing previous
+        $('.mission-catalog.btn-warning').removeClass('btn-warning');
+        $(this).addClass('btn-warning');
+
     })
     .fail((err) => {
         console.log(err);
@@ -120,6 +139,7 @@ function setCatalog(events) {
         $("#events").append(row);
     });
 }
+
 
 
 
