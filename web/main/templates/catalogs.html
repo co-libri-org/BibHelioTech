@@ -40,7 +40,6 @@
         <th scope="col" class="col-2">start</th>
         <th scope="col" class="col-2">stop</th>
         <th scope="col" class="col-4">doi</th>
-        <th scope="col" class="col-1">mission</th>
         <th scope="col" class="col-1">instruments</th>
         <th scope="col" class="col-1">region</th>
     </tr>
@@ -116,7 +115,6 @@ function setCatalog(events) {
         row.append($('<td>'+event.start_date+'</td>'));
         row.append($('<td>'+event.stop_date+'</td>'));
         row.append($('<td>'+event.doi+'</td>'));
-        row.append($('<td>'+event.mission+'</td>'));
         row.append($('<td>'+event.instrument+'</td>'));
         row.append($('<td>'+event.region+'</td>'));
         $("#events").append(row);
