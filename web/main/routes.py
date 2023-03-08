@@ -328,7 +328,8 @@ def catalogs():
     """UI page to retrieve catalogs by mission"""
     # rebuild all missions as dict, keeping only what we need
     _missions = [
-        {"name": _m.name, "id": _m.id} for _m in db.session.query(Mission).all()
+        {"name": _m.name, "id": _m.id}
+        for _m in db.session.query(Mission).order_by(Mission.name).all()
     ]
     # build a list of papers with catalogs, but not already inserted in db
     _catalogs = [
@@ -345,8 +346,12 @@ def api_catalogs():
     """
     mission_id = request.args.get("mission_id")
     mission = Mission.query.get(mission_id)
+    # TODO: extract to method and merge common code
     events_list = [
-        event.get_dict() for event in HpEvent.query.filter_by(mission_id=mission_id)
+        event.get_dict()
+        for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
+            HpEvent.start_date
+        )
     ]
     response_object = {
         "status": "success",
@@ -373,8 +378,12 @@ def api_catalogs_txt():
             f"No valid parameters for url: {mission_id} {mission}",
             status=400,
         )
+    # TODO: extract to method and merge common code
     events_list = [
-        event.get_dict() for event in HpEvent.query.filter_by(mission_id=mission_id)
+        event.get_dict()
+        for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
+            HpEvent.start_date
+        )
     ]
     catalog_txt_stream = rows_to_catstring(events_list, mission.name)
     date_now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
