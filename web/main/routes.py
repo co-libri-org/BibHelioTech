@@ -325,6 +325,7 @@ def istex_from_url():
 
 @bp.route("/catalogs", methods=["GET"])
 def catalogs():
+    """UI page to retrieve catalogs by mission"""
     # rebuild all missions as dict, keeping only what we need
     _missions = [
         {"name": _m.name, "id": _m.id} for _m in db.session.query(Mission).all()
@@ -338,13 +339,22 @@ def catalogs():
 
 @bp.route("/api/catalogs", methods=["GET"])
 def api_catalogs():
+    """Get the events list for a given mission
+    :parameter: mission_id  in get request
+    :return: list of events as dict
+    """
     mission_id = request.args.get("mission_id")
+    mission = Mission.query.get(mission_id)
     events_list = [
         event.get_dict() for event in HpEvent.query.filter_by(mission_id=mission_id)
     ]
     response_object = {
         "status": "success",
-        "data": {"events": events_list, "mission_id": mission_id},
+        "data": {
+            "events": events_list,
+            "mission_id": mission_id,
+            "mission_name": mission.name,
+        },
     }
     return jsonify(response_object)
 

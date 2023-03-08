@@ -14,7 +14,7 @@ def rows_to_catstring(events_list, catalog_name):
     :parameter: dict events list
     :return: string to write to txt file
     """
-    date_now = datetime.datetime.now().strftime("%Y%m%d %H:%M:%S")
+    date_now = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     r_string = f"""
 # Name: {catalog_name};
 # BibHelioTechVersion: {yml_settings["BHT_VERSION"]};

@@ -26,6 +26,12 @@
 <button class="btn btn-warning mission-catalog" data-mission_id="{{mission.id}}">{{mission.name}}</button>
 {% endfor %}
 <hr class="mt-5 mb-5">
+<div class="position-relative pb-5">
+    <button class="btn btn-warning invisible position-absolute end-0" id="get-catalog-txt"
+            title="Get catalog as txt">
+        Download
+    </button>
+</div>
 <table class="table-hover table">
     <thead>
     <tr>
@@ -38,6 +44,7 @@
     </tr>
     </thead>
     <tbody id="events">
+    {# body will be fill in by js callback setCatalog() #}
     </tbody>
 </table>
 
@@ -67,6 +74,7 @@ $('.add-catalog').on('click', function() {
 // For each mission button, attach a call back:
 // - retrieving events from the catalogs' api url
 // - sending the resulting list to the setCatalog()
+// - showing the download button
 $('.mission-catalog').on('click', function() {
     $.get({
         url: '{{url_for("main.api_catalogs")}}',
@@ -74,6 +82,9 @@ $('.mission-catalog').on('click', function() {
     })
     .done((res) => {
         console.log('Events requested for mission id: ', res.data.mission_id);
+        get_catalog_btn = $('#get-catalog-txt')
+        get_catalog_btn.removeClass('invisible').addClass('visible')
+        get_catalog_btn.attr("title", "Get txt catalog for mission "+res.data.mission_name)
         setCatalog(res.data.events);
     })
     .fail((err) => {
@@ -81,6 +92,7 @@ $('.mission-catalog').on('click', function() {
     });
 });
 
+// When a mission-catalog button is clicked
 // Fill in rows with  a given list of event
 // But first delete container
 function setCatalog(events) {
@@ -96,6 +108,11 @@ function setCatalog(events) {
         $("#events").append(row);
     });
 }
+
+
+
+
+
 
 
 </script>
