@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 import re
@@ -27,7 +28,7 @@ from flask import (
 
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent
+from web.models import Paper, Mission, HpEvent, rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.errors import PdfFileError
 from web.istex_proxy import istex_url_to_json, istex_id_to_url
@@ -338,7 +339,6 @@ def catalogs():
 @bp.route("/api/catalogs", methods=["GET"])
 def api_catalogs():
     mission_id = request.args.get("mission_id")
-    # events_list = db.session.query(HpEvent).
     events_list = [
         event.get_dict() for event in HpEvent.query.filter_by(mission_id=mission_id)
     ]
@@ -347,6 +347,36 @@ def api_catalogs():
         "data": {"events": events_list, "mission_id": mission_id},
     }
     return jsonify(response_object)
+
+
+@bp.route("/api/catalogs/txt", methods=["GET"])
+def api_catalogs_txt():
+    """Download the txt version of the catalog for the mission
+
+    :parameter: mission_id  in get request
+    :return: catalog text file as attachment
+    """
+    mission_id = request.args.get("mission_id")
+    mission = Mission.query.get(mission_id) if mission_id else None
+    if mission_id is None or mission is None:
+        return Response(
+            f"No valid parameters for url: {mission_id} {mission}",
+            status=400,
+        )
+    events_list = [
+        event.get_dict() for event in HpEvent.query.filter_by(mission_id=mission_id)
+    ]
+    catalog_txt_stream = rows_to_catstring(events_list, "this catalog")
+    date_now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    file_name = f"{mission.name}_{date_now}_bibheliotech.txt"
+    upload_dir = current_app.config["WEB_UPLOAD_DIR"]
+    if not os.path.exists(upload_dir):
+        os.makedirs(upload_dir)
+    file_path = os.path.join(upload_dir, file_name)
+    with open(file_path, "w") as fd:
+        fd.write(catalog_txt_stream)
+        fd.close()
+    return send_file(file_path, as_attachment=True, download_name=file_name)
 
 
 @bp.route("/api/push_catalog", methods=["POST"])

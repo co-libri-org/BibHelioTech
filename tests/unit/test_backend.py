@@ -55,6 +55,8 @@ class TestModels:
             db.session.add(event)
             c.hp_events.append(event)
             db.session.commit
+        # TODO: where assert is ?
+        assert False
 
     def test_hpevent_from_dict(self, hpevent_dict_for_test):
         """

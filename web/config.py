@@ -24,7 +24,7 @@ class ProdConfig(Config):
 class DevConfig(Config):
     # Set DEBUG with `flask run --debug` option
     TESTING = True
-    UPLOAD_FOLDER = "dev-upload/"
+    WEB_UPLOAD_DIR = os.path.join(BHT_ROOT_DIR, "dev-upload/")
 
 
 class TestConfig(Config):
@@ -32,7 +32,7 @@ class TestConfig(Config):
     # Set DEBUG with `flask run --debug` option
     # Ignore @login_required decorator
     # LOGIN_DISABLED = True
-    UPLOAD_FOLDER = "test-upload/"
+    WEB_UPLOAD_DIR = os.path.join(BHT_ROOT_DIR, "test-upload/")
     # Set sqlite to in memory for tests
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     BHT_RESOURCES_DIR = os.path.join(BHT_ROOT_DIR, "resources-tests")

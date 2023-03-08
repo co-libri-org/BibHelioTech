@@ -51,6 +51,13 @@ def tei_for_test():
 
 
 @pytest.fixture(scope="module")
+def hpevents_in_db(hpevents_list):
+    for event in hpevents_list:
+        db.session.add(event)
+        db.session.commit
+
+
+@pytest.fixture(scope="module")
 def hpevents_list():
     hpevents_list = [
         HpEvent(
