@@ -65,12 +65,21 @@ def db(app):
 
 
 @pytest.fixture(scope="function")
-def paper_for_test(pdf_for_test, cat_for_test):
+def paper_with_cat(paper_for_test, cat_for_test):
+    """Add a paper's with catalog to db"""
+    paper_for_test.set_cat_path(cat_for_test)
+    _db.session.add(paper_for_test)
+    _db.session.commit()
+    #
+    yield paper_for_test
+
+
+@pytest.fixture(scope="function")
+def paper_for_test(pdf_for_test):
     """Add a paper's pdf to db"""
     with open(pdf_for_test, "rb", buffering=0) as fp:
         paper_id = pdf_to_db(fp.readall(), os.path.basename(pdf_for_test))
     paper = _db.session.get(Paper, paper_id)
-    paper.set_cat_path(cat_for_test)
     _db.session.add(paper)
     _db.session.commit()
     #

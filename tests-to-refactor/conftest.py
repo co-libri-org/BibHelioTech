@@ -1,7 +1,4 @@
 import pytest
-import os
-
-from flask import current_app
 
 from web import db
 
@@ -16,16 +13,6 @@ def fresh_db():
     # db.session.drop_all()
     # db.session.close()
     pass
-
-
-@pytest.fixture(scope="module")
-def tei_for_test():
-    test_tei_file = os.path.join(
-        current_app.config["BHT_PAPERS_DIR"], "2016GL069787.tei.xml"
-    )
-    yield test_tei_file
-    if os.path.isfile(test_tei_file):
-        os.remove(test_tei_file)
 
 
 @pytest.fixture(scope="function")

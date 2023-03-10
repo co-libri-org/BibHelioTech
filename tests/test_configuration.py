@@ -14,17 +14,27 @@ def test_configuration(app):
     assert "resources-tests" in app.config["BHT_RESOURCES_DIR"]
 
 
+def test_paper_with_cat(paper_with_cat):
+    """
+    GIVEN the paper_with_cat fixture
+    WHEN used
+    THEN check attributes
+    """
+    assert type(paper_with_cat) is Paper
+    assert paper_with_cat.has_cat
+    assert "105194angeo282332010_bibheliotech_V1.txt" in paper_with_cat.cat_path
+
+
 def test_paper_for_test(paper_for_test):
     """
-    GIVEN the Paper class
-    WHEN an instance is created
+    GIVEN the paper_for_test fixture
+    WHEN used
     THEN check attributes
     """
     assert type(paper_for_test) is Paper
-    assert paper_for_test.has_cat
+    assert not paper_for_test.has_cat
     assert paper_for_test.has_pdf
     assert not paper_for_test.cat_in_db
-    assert "105194angeo282332010_bibheliotech_V1.txt" in paper_for_test.cat_path
 
 
 def test_yml_configuration():
