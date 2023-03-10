@@ -18,5 +18,5 @@ class TestCatTools:
 
     def test_rows_to_catstring(self, cat_for_test):
         hp_events = catfile_to_rows(cat_for_test)
-        cat_str = rows_to_catstring(hp_events, "wath")
-        assert len(cat_str) == 6880
+        cat_str = rows_to_catstring(hp_events, "what")
+        assert len(cat_str) == 6900

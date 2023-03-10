@@ -49,14 +49,14 @@ class TestModels:
         WHEN events are added to catalog
         THEN verify existence and integrity
         """
-        c = Catalog()
-        db.session.add(c)
+        c_in = Catalog()
+        db.session.add(c_in)
         for event in hpevents_list:
             db.session.add(event)
-            c.hp_events.append(event)
-            db.session.commit
-        # TODO: where assert is ?
-        assert False
+            c_in.hp_events.append(event)
+        db.session.commit
+        c_out = Catalog.query.one()
+        assert len(c_out.hp_events) == 3
 
     def test_hpevent_from_dict(self, hpevent_dict_for_test):
         """
@@ -83,7 +83,8 @@ class TestModels:
         )
         db.session.add(hp_event_in)
         db.session.commit()
-        hp_event_out = db.session.query(HpEvent).one()
+        event_id = hp_event_in.id
+        hp_event_out = db.session.get(HpEvent, event_id)
         import datetime
 
         assert type(hp_event_out.start_date) is datetime.date

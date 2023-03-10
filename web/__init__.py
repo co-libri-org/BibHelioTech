@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -15,6 +17,8 @@ def create_app(bht_env=None):
     @return: running app
     """
     app = Flask(__name__)
+    date = datetime.datetime.now()
+    print("-+#-+#-+#-+#-+#-+#-+#-+#-+#-+#", date)
 
     if bht_env is None or bht_env == "production":
         config_instance = ProdConfig()

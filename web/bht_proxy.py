@@ -32,7 +32,7 @@ def pipe_paper_mocked(p_id=None, b_dir=None, min_secs=5, max_secs=20):
 def pipe_paper(paper_id, basedir):
     """From a paper id create the catalog
 
-    - find the corresponding the pdf file
+    - find the corresponding pdf file
     - pass it to the bht pipeline
     - store the resulting catalog
     - update db

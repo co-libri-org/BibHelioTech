@@ -25,6 +25,9 @@ class DevConfig(Config):
     # Set DEBUG with `flask run --debug` option
     TESTING = True
     WEB_UPLOAD_DIR = os.path.join(BHT_ROOT_DIR, "dev-upload/")
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
+        yml_settings["WEB_DB_DIR"], "bht_web-dev.db"
+    )
 
 
 class TestConfig(Config):
@@ -34,5 +37,8 @@ class TestConfig(Config):
     # LOGIN_DISABLED = True
     WEB_UPLOAD_DIR = os.path.join(BHT_ROOT_DIR, "test-upload/")
     # Set sqlite to in memory for tests
+    SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
+        yml_settings["WEB_DB_DIR"], "bht_web-test.db"
+    )
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     BHT_RESOURCES_DIR = os.path.join(BHT_ROOT_DIR, "resources-tests")

@@ -18,13 +18,17 @@ skip_selenium = pytest.mark.skipif(
 @pytest.fixture(scope="module")
 def firefox_driver():
     options = Options()
-    options.add_argument("-headless")
+    # options.add_argument("-headless")
     driver = webdriver.Firefox(options=options)
     yield driver
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session")
 def paperslist_for_tests():
+    """Add to db a list of pdf papers found in DATA/Papers-dist/ dir
+
+    :return: list of papers id from db
+    """
     papers_ids = []
     papers_dir = os.path.join(current_app.config["BHT_DATA_DIR"], "Papers-dist")
     pdf_list = glob.glob(

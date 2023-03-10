@@ -25,19 +25,32 @@ skip_slow_test = pytest.mark.skipif(
 
 @pytest.fixture(scope="session", autouse=True)
 def app():
-    app = create_app(bht_env="testing")
-    app.config.update(
+    from datetime import datetime
+
+    date = datetime.now()
+    print("-+#-+#-+#-+#-+#-+#-+#-+#-+#-+#", date)
+    _app = create_app(bht_env="testing")
+    _app.config.update(
         # Change the port that the liveserver listens on as we don't want to conflict with running:5000
         LIVESERVER_PORT=8943
     )
 
-    app_context = app.app_context()
+    app_context = _app.app_context()
     app_context.push()
     db.create_all()
+    yield _app
 
-    yield app
 
-    # clean up / reset resources here
+@pytest.fixture(scope="function", autouse=True)
+def fresh_db():
+    # db_file = current_app.config["SQLALCHEMY_DATABASE_URI"].split("sqlite:///")[1]
+    # if os.path.exists(db_file):
+    #     os.remove(db_file)
+    # yield db
+    # db.session.rollback()
+    # db.session.drop_all()
+    # db.session.close()
+    pass
 
 
 @pytest.fixture(scope="module")
@@ -50,7 +63,7 @@ def tei_for_test():
         os.remove(test_tei_file)
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def hpevents_in_db(hpevents_list):
     for event in hpevents_list:
         db.session.add(event)
@@ -103,11 +116,18 @@ def hpevent_dict_for_test():
 
 @pytest.fixture(scope="module")
 def cat_for_test():
+    filename = "105194angeo282332010_bibheliotech_V1.txt"
     test_cat_file_orig = os.path.join(
         current_app.config["BHT_RESOURCES_DIR"],
-        "105194angeo282332010_bibheliotech_V1.txt",
+        filename,
     )
-    yield test_cat_file_orig
+    test_cat_file_dest = os.path.join(current_app.config["BHT_PAPERS_DIR"], filename)
+    shutil.copy(test_cat_file_orig, test_cat_file_dest)
+    yield test_cat_file_dest
+    if os.path.isfile(test_cat_file_dest):
+        os.remove(test_cat_file_dest)
+    assert not os.path.exists(test_cat_file_dest)
+    assert os.path.exists(test_cat_file_orig)
 
 
 @pytest.fixture(scope="module")
@@ -132,7 +152,7 @@ def paper_for_test(pdf_for_test, cat_for_test):
     with open(pdf_for_test, "rb", buffering=0) as fp:
         paper_id = save_to_db(fp.readall(), os.path.basename(pdf_for_test))
     paper = db.session.get(Paper, paper_id)
-    paper.cat_path = cat_for_test
+    paper.set_cat_path(cat_for_test)
     db.session.commit()
     yield paper
     # make sure paper exists before deleting

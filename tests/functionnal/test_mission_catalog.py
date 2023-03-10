@@ -4,7 +4,7 @@ from flask import url_for
 
 
 class TestApiCatalogs:
-    def test_api_push_catalog(self, test_client):
+    def test_api_push_catalog(self, test_client, paper_for_test):
         pushcatalog_url = url_for("main.api_push_catalog")
         response = test_client.post(
             pushcatalog_url,

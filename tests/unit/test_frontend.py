@@ -1,6 +1,7 @@
 import os.path
 
 from filetype import filetype
+from flask import current_app
 
 from tests.conftest import skip_slow_test, skip_istex
 from web import db
@@ -27,7 +28,7 @@ class TestCatalogs:
         """
         response = test_client.get("/catalogs")
         assert response.status_code == 200
-        assert b"Catalogs to add:" in response.data
+        assert b"Catalogs to add in database:" in response.data
 
 
 class TestFrontUtils:
@@ -47,7 +48,7 @@ class TestFrontUtils:
     # TODO: test  getfilefromurl with no file
     # TODO: test  getfilefromurl with wrong file  format
 
-    def test_save_to_db(self, pdf_for_test, app):
+    def test_save_to_db(self, pdf_for_test):
         """
         GIVEN a file object and a name (from disk file)
         WHEN the save_to_db() is called (in an app_context, see autouse fixture)
@@ -60,7 +61,7 @@ class TestFrontUtils:
         assert paper is not None
         assert paper.id == p_id
         assert paper.pdf_path == os.path.join(
-            app.config["WEB_UPLOAD_DIR"], os.path.basename(pdf_for_test)
+            current_app.config["WEB_UPLOAD_DIR"], os.path.basename(pdf_for_test)
         )
 
 
@@ -174,7 +175,6 @@ class TestIstexRoutes:
         )
         # first check we go success to request
         assert response.status_code == 201
-        # then test that paper was indeed inseted in db
+        # then test that paper was indeed inserted in db
         paper = db.session.get(Paper, response.json["paper_id"])
-        # assert paper.title == "Proton-proton collisional age to order solar wind types"
         assert paper.title == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"
