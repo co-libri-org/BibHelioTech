@@ -209,8 +209,6 @@ class Paper(db.Model):
 
     def push_cat(self):
         """Insert our catalog's events to db"""
-        print("Do we :", self.cat_in_db)
-        print("Do we :", self.has_cat)
         if not self.cat_in_db and self.has_cat:
             self.cat_in_db = True
             catfile_to_db(self.cat_path)
