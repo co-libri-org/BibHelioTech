@@ -22,7 +22,7 @@ jobs:
           if [ -f requirements-tests.txt ]; then pip install -r requirements-tests.txt; fi
       - name: Lint with flake8
         run: |
-          cp ressources/flake8-dist .flake8
+          cp resources/flake8-dist .flake8
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
@@ -39,8 +39,8 @@ jobs:
           sudo echo "127.0.0.1 redis" | sudo tee -a /etc/hosts
       - name: Test with pytest
         run: |
-          cp ressources/grobid-client-config.json-dist grobid-client-config.json
-          cp ressources/bht-config.yml-dist bht-config.yml
-          cp ressources/pytest.ini-dist pytest.ini
+          cp resources/grobid-client-config.json-dist grobid-client-config.json
+          cp resources/bht-config.yml-dist bht-config.yml
+          cp resources/pytest.ini-dist pytest.ini
           python manage.py create_db
           pytest

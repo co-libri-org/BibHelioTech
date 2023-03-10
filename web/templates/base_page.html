@@ -13,12 +13,10 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
     {% block more_head %}{% endblock %}
-    <!--<body class="text-center ">-->
+</head>
 <body>
 
 <main>
-    <h1 class="visually-hidden">Headers examples</h1>
-
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
@@ -29,7 +27,11 @@
             <ul class="nav nav-pills">
                 <li class="nav-item"><a href="{{url_for('main.papers')}}" class="nav-link {{page_active('papers')}}">Papers</a>
                 </li>
-                <li class="nav-item"><a href="{{url_for('main.istex')}}" class="nav-link {{page_active('istex')}}">Istex</a>
+                <li class="nav-item"><a href="{{url_for('main.istex')}}"
+                                        class="nav-link {{page_active('istex')}}">Istex</a>
+                </li>
+                <li class="nav-item"><a href="{{url_for('main.catalogs')}}"
+                                        class="nav-link {{page_active('catalogs')}}">Catalogs</a>
                 </li>
                 <li class="nav-item"><a href="{{url_for('main.about')}}"
                                         class="nav-link {{page_active('about')}}">About</a></li>

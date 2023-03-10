@@ -4,10 +4,11 @@ from urllib.parse import urlencode
 import pytest
 import os
 
-from bht_config import yml_settings
+from flask import current_app
+
 from web import create_app, db
 from web.main.routes import save_to_db
-from web.models import Paper
+from web.models import Paper, HpEvent
 
 skip_istex = pytest.mark.skipif(
     os.environ.get("BHT_DONTSKIPISTEX") is None
@@ -41,33 +42,98 @@ def app():
 
 @pytest.fixture(scope="module")
 def tei_for_test():
-    test_tei_file = os.path.join(yml_settings["BHT_PAPERS_DIR"], "2016GL069787.tei.xml")
+    test_tei_file = os.path.join(
+        current_app.config["BHT_PAPERS_DIR"], "2016GL069787.tei.xml"
+    )
     yield test_tei_file
     if os.path.isfile(test_tei_file):
         os.remove(test_tei_file)
 
 
 @pytest.fixture(scope="module")
+def hpevents_in_db(hpevents_list):
+    for event in hpevents_list:
+        db.session.add(event)
+        db.session.commit
+
+
+@pytest.fixture(scope="module")
+def hpevents_list():
+    hpevents_list = [
+        HpEvent(
+            "2007-07-16T19:50:00.000",
+            "2007-07-16T20:37:00.000",
+            "doiA",
+            "missionA",
+            "instrumentA",
+            "regionA",
+        ),
+        HpEvent(
+            "2007-07-16T19:50:00.000",
+            "2007-07-16T20:37:00.000",
+            "doiB",
+            "missionB",
+            "instrumentB",
+            "regionB",
+        ),
+        HpEvent(
+            "2007-07-16T19:50:00.000",
+            "2007-07-16T20:37:00.000",
+            "doiC",
+            "missionC",
+            "instrumentC",
+            "regionC",
+        ),
+    ]
+    return hpevents_list
+
+
+@pytest.fixture(scope="module")
+def hpevent_dict_for_test():
+    hpevent_dict = {
+        "start_date": "2007-07-16T19:50:00.000",
+        "stop_date": "2007-07-16T20:18:00.000",
+        "doi": "https://doi.org/10.1029/2010JA015404",
+        "mission": "THEMIS-A",
+        "instrument": "FGM-ESA",
+        "region": "Earth.Magnetosheath",
+    }
+    return hpevent_dict
+
+
+@pytest.fixture(scope="module")
+def cat_for_test():
+    test_cat_file_orig = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"],
+        "105194angeo282332010_bibheliotech_V1.txt",
+    )
+    yield test_cat_file_orig
+
+
+@pytest.fixture(scope="module")
 def pdf_for_test():
     test_pdf_file_orig = os.path.join(
-        yml_settings["BHT_RESOURCES_DIR"], "2016GL069787-test.pdf"
+        current_app.config["BHT_RESOURCES_DIR"], "2016GL069787-test.pdf"
     )
     test_pdf_file_dest = os.path.join(
-        yml_settings["BHT_PAPERS_DIR"], "2016GL069787-test.pdf"
+        current_app.config["BHT_PAPERS_DIR"], "2016GL069787-test.pdf"
     )
     shutil.copy(test_pdf_file_orig, test_pdf_file_dest)
-
+    #
     yield test_pdf_file_dest
-
+    #
     if os.path.isfile(test_pdf_file_dest):
         os.remove(test_pdf_file_dest)
 
 
 @pytest.fixture(scope="function")
-def paper_for_test(pdf_for_test):
+def paper_for_test(pdf_for_test, cat_for_test):
+    """Adds a paper's pdf to db"""
     with open(pdf_for_test, "rb", buffering=0) as fp:
         paper_id = save_to_db(fp.readall(), os.path.basename(pdf_for_test))
     paper = db.session.get(Paper, paper_id)
+    paper.cat_path = cat_for_test
+    db.session.commit()
     yield paper
     # make sure paper exists before deleting
     paper = db.session.get(Paper, paper_id)

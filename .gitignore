@@ -12,3 +12,4 @@ bht-config.yml
 docker-compose.override.yml
 grobid-client-config.json
 pytest.ini
+geckodriver.log

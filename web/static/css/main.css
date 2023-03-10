@@ -5,11 +5,11 @@ a.btn-warning:hover {
     border: solid 1pt grey !important ;
 }
 
-
 input.btn-warning,
 button.btn-warning,
+.mission-catalog ,
 a.btn-warning {
-    padding: 5px;
+    padding: 6px !important;
     border: solid 1pt lightgrey !important ;
 }
 a.nav-link.active{
@@ -17,6 +17,19 @@ a.nav-link.active{
 }
 a.nav-link:hover {
     border: solid 1pt lightgrey !important ;
+}
+
+#get-catalog-txt {
+margin-top: -25px;
+padding: 1px 2px !important;
+}
+
+.mission-catalog{
+    margin-bottom: 8px;
+    margin-right: 5px;
+}
+.mission-catalog:hover{
+    border: solid 1pt grey !important ;
 }
 
 button.btn[disabled] ,

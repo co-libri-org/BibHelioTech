@@ -1,4 +1,4 @@
-import glob
+import datetime
 import json
 import os
 import re
@@ -28,7 +28,7 @@ from flask import (
 
 from . import bp
 from web import db
-from web.models import Paper
+from web.models import Paper, Mission, HpEvent, rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.errors import PdfFileError
 from web.istex_proxy import istex_url_to_json, istex_id_to_url
@@ -219,7 +219,7 @@ def upload():
         flash("No selected file")
         return redirect(url_for("main.papers"))
     if file and allowed_file(file.filename):
-        save_to_db(file.stream, file.filename)
+        save_to_db(file.read(), file.filename)
         flash(f"Uploaded {file.filename}")
         return redirect(url_for("main.papers"))
 
@@ -325,8 +325,93 @@ def istex_from_url():
 
 @bp.route("/catalogs", methods=["GET"])
 def catalogs():
-    _catalogs = glob.glob(
-        os.path.join(current_app.config["BHT_PAPERS_DIR"], "**", "*bibhelio*.txt"),
-        recursive=True,
-    )
-    return render_template("catalogs.html", catalogs=_catalogs)
+    """UI page to retrieve catalogs by mission"""
+    # rebuild all missions as dict, keeping only what we need
+    _missions = [
+        {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
+        for _m in db.session.query(Mission).order_by(Mission.name).all()
+    ]
+    # build a list of papers with catalogs, but not already inserted in db
+    _catalogs = [
+        paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
+    ]
+    return render_template("catalogs.html", missions=_missions, catalogs=_catalogs)
+
+
+@bp.route("/api/catalogs", methods=["GET"])
+def api_catalogs():
+    """Get the events list for a given mission
+    :parameter: mission_id  in get request
+    :return: list of events as dict
+    """
+    mission_id = request.args.get("mission_id")
+    mission = Mission.query.get(mission_id)
+    # TODO: extract to method and merge common code
+    events_list = [
+        event.get_dict()
+        for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
+            HpEvent.start_date
+        )
+    ]
+    response_object = {
+        "status": "success",
+        "data": {
+            "events": events_list,
+            "mission": {
+                "id": mission.id,
+                "name": mission.name,
+                "num_events": len(mission.hp_events),
+            },
+        },
+    }
+    return jsonify(response_object)
+
+
+@bp.route("/api/catalogs/txt", methods=["GET"])
+def api_catalogs_txt():
+    """Download the txt version of the catalog for the mission
+
+    :parameter: mission_id  in get request
+    :return: catalog text file as attachment
+    """
+    mission_id = request.args.get("mission_id")
+    mission = Mission.query.get(mission_id) if mission_id else None
+    if mission_id is None or mission is None:
+        return Response(
+            f"No valid parameters for url: {mission_id} {mission}",
+            status=400,
+        )
+    # TODO: extract to method and merge common code
+    events_list = [
+        event.get_dict()
+        for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
+            HpEvent.start_date
+        )
+    ]
+    catalog_txt_stream = rows_to_catstring(events_list, mission.name)
+    date_now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    bht_version = current_app.config["BHT_VERSION"]
+    file_name = f"{mission.name}_{date_now}_bibheliotech_V{bht_version}.txt"
+    upload_dir = current_app.config["WEB_UPLOAD_DIR"]
+    if not os.path.exists(upload_dir):
+        os.makedirs(upload_dir)
+    file_path = os.path.join(upload_dir, file_name)
+    with open(file_path, "w") as fd:
+        fd.write(catalog_txt_stream)
+        fd.close()
+    return send_file(file_path, as_attachment=True, download_name=file_name)
+
+
+@bp.route("/api/push_catalog", methods=["POST"])
+def api_push_catalog():
+    """Inserts hp_events to db from paper's  catalog
+
+    :argument: paper_id in POST request as json
+    :method: GET
+    :return: json result
+    """
+    paper_id = request.json.get("paper_id")
+    paper = db.session.get(Paper, paper_id)
+    paper.push_cat()
+    response_object = {"status": "success", "data": {"paper_id": paper_id}}
+    return jsonify(response_object), 201

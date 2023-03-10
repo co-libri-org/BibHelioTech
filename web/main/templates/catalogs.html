@@ -2,10 +2,163 @@
 {%  block more_head %}
 {%  endblock %}
 {% block content %}
-<ul>
-    {% for catalog in catalogs %}
-    <li>{{catalog}}</li>
-    {%endfor%}
+{#
+Show a list of catalogs files not already inserted in db
+--------------------------------------------------------
+#}
+{% if not catalogs|length == 0 %}
+<h4>Catalogs to add in database:</h4>
+<table class="table-hover table">
+    {% for paper in catalogs %}
+    <tr>
+        <td class="col-2">
+            {{paper.title}}
+        </td>
+        <td class="col-6">
+            <button class="btn btn-warning add-catalog position-relative" data-paper_id="{{paper.id}}">add in db
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                </span>
+            </button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<hr class="mt-5 mb-5">
+{% endif %}
+{#
+Show missions found in db as clickable buttons, triggering mission's events display
+-----------------------------------------------------------------------------------
+#}
+<h4 class="mb-5">Catalogs by Mission:</h4>
+{% for mission in missions %}
+<button class="btn mission-catalog" data-mission_id="{{mission.id}}"
+        title="Show {{mission.num_events}} events for mission {{mission.name}}">
+    {{mission.name}}
+    <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
+</button>
+{% endfor %}
+<hr class="mt-5 mb-5">
+{#
+Show found events when mission button was clicked
+-------------------------------------------------
+#}
+<div class="mb-5">
+    {# Display Selected mission and Button for downloading at text catalog #}
+    <span id="get-catalog-title" class="h5"></span>
+    <a class="btn btn-warning invisible ms-3" id="get-catalog-txt"
+       href="#"
+       title="Get catalog as txt">
+        Download
+    </a>
+</div>
+<table class="table-hover table">
+    <thead>
+    <tr>
+        <th scope="col" class="col-2">start</th>
+        <th scope="col" class="col-2">stop</th>
+        <th scope="col" class="col-4">doi</th>
+        <th scope="col" class="col-1">instruments</th>
+        <th scope="col" class="col-1">region</th>
+    </tr>
+    </thead>
+    <tbody id="events">
+    {# this tbody will be filled in by js callback setCatalog() at '.mission-catalog' btn click #}
+    </tbody>
+</table>
 
-</ul>
+{%  endblock %}
+
+{% block scripts %}
+<script>
+
+// For each un-added catalog button, attach callback:
+// - pushing the catalog id
+// - reloading the page
+$('.add-catalog').on('click', function() {
+    paper_id = $(this).data('paper_id')
+    $.post({
+        url: "{{url_for('main.api_push_catalog')}}",
+        data: JSON.stringify({ paper_id: paper_id}),
+        contentType: 'application/json; charset=utf-8'
+    })
+    .done((res) => {
+        console.log('Catalog added to db for paper id: ', res.data.paper_id);
+        location.reload();
+    })
+    .fail((err) => {
+    console.log(err);
+    });
+});
+
+// For each mission button, attach a call back:
+// - retrieving events from the catalogs' api url
+// - sending the resulting list to the setCatalog()
+// - showing the download button
+// - enlightening this mission among missions buttons
+$('.mission-catalog').on('click', function() {
+    $.get({
+        url: '{{url_for("main.api_catalogs")}}',
+        data: {mission_id: $(this).data("mission_id")}
+    })
+    .done((res) => {
+        console.log('Events requested for mission id: ', res.data.mission_id);
+        // First configure  the download button
+        setDownloadBtn(res.data.mission);
+        // Then show the list of events on screen
+        setCatalog(res.data.events);
+        // And enlighten current mission button after removing previous
+        $('.mission-catalog.btn-warning').removeClass('btn-warning');
+        $(this).addClass('btn-warning');
+
+    })
+    .fail((err) => {
+        console.log(err);
+    });
+});
+
+// At mission view catalog set the download button
+//  - showing it, changing title and content
+//  - setting href for later click
+function setDownloadBtn(mission){
+    if( mission.num_events < 2 ){
+        event_string = "event"
+        }
+    else {
+        event_string = "events"
+        }
+    $('#get-catalog-title').text(mission.num_events+" "+event_string+" for "+mission.name)
+    get_catalog_btn = $('#get-catalog-txt')
+    get_catalog_btn.removeClass('invisible').addClass('visible')
+    get_catalog_btn.attr("title", "Get txt catalog for mission "+mission.name)
+    get_catalog_url = '{{url_for("main.api_catalogs_txt")}}?'+$.param({mission_id: mission.id});
+    get_catalog_btn.attr("href", get_catalog_url)
+}
+
+// When a mission-catalog button is clicked
+// Fill in rows with  a given list of event
+// But first delete container
+function setCatalog(events) {
+    $("#events").empty();
+    $.each(events, function(idx, event){
+        var row  = $('<tr></tr>');
+        row.append($('<td>'+event.start_date+'</td>'));
+        row.append($('<td>'+event.stop_date+'</td>'));
+        row.append($('<td>'+event.doi+'</td>'));
+        row.append($('<td>'+event.instrument+'</td>'));
+        row.append($('<td>'+event.region+'</td>'));
+        $("#events").append(row);
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+</script>
 {%  endblock %}

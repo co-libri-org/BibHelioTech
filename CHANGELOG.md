@@ -28,8 +28,22 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.4.0-pre.2] - yyyy-mm-dd - xxxxxxxxxxxxxxxxxxxxxxxxxxx
+### Fixed
+### Changed
+### New
 
-## [0.3.0] - - 2023-03-01 - Jobs displayed - Minor Release
+## [0.4.0-pre.1] - 2023-03-10 - Build and download Catalog by mission
+### Fixed
+- HpEvent hour in date bug
+### New
+- Catalogs page allows mission selecting and catalog download
+- Mission button with num events
+- Catalog models contains hpevents
+- Catalog to db and db to Catalog tools
+- RESTFull api endpoints
+
+## [0.3.0] - - 2023-03-01 - Display jobs statuses
 ### Changed
 - More style enhancement
 ### New
