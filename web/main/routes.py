@@ -304,6 +304,7 @@ def bht_run():
 
 @bp.route("/istex_test", methods=["GET"])
 def istex_test():
+    # TODO: merge with istex/ route, and apply same thing as with get_pipe_callback()
     from web.istex_proxy import istex_json_to_json
 
     with open(
