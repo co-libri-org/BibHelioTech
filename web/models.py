@@ -9,7 +9,7 @@ DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
 
 def rows_to_catstring(events_list, catalog_name):
-    """Make a text in amda catalog format
+    """Build a text file of events in amda catalog format
 
     :parameter: dict events list
     :return: string to write to txt file
@@ -88,8 +88,8 @@ class Catalog(db.Model):
 
 class HpEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    start_date = db.Column(db.Date)
-    stop_date = db.Column(db.Date)
+    start_date = db.Column(db.DateTime)
+    stop_date = db.Column(db.DateTime)
     doi_id = db.Column(db.Integer, db.ForeignKey("doi.id"))
     mission_id = db.Column(db.Integer, db.ForeignKey("mission.id"))
     instrument_id = db.Column(db.Integer, db.ForeignKey("instrument.id"))

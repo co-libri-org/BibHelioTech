@@ -102,6 +102,20 @@ class TestModels:
         dict_out = hpevent_in.get_dict()
         assert hpevent_dict_for_test == dict_out
 
+    def test_hpevent_get_dict_hour(self, hpevent_dict_for_test):
+        """
+        GIVEN an hpevent dict
+        WHEN HpEvent is created and saved to db
+        THEN verify the original hour's minutes is kept
+        """
+        hpevent_in = HpEvent(**hpevent_dict_for_test)
+        db.session.add(hpevent_in)
+        db.session.commit()
+        hp_event_out = db.session.query(HpEvent).one()
+        dict_out = hp_event_out.get_dict()
+        print(hp_event_out.start_date, hp_event_out.stop_date)
+        assert hpevent_dict_for_test == dict_out
+
     def test_doi(self):
         """
         GIVEN Doi model
