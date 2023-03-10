@@ -396,7 +396,7 @@ def api_catalogs_txt():
     :return: catalog text file as attachment
     """
     mission_id = request.args.get("mission_id")
-    mission = Mission.query.get(mission_id) if mission_id else None
+    mission = db.session.get(Mission, mission_id) if mission_id else None
     if mission_id is None or mission is None:
         return Response(
             f"No valid parameters for url: {mission_id} {mission}",

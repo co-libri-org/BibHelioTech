@@ -4,6 +4,13 @@ import pytest
 from flask import current_app
 
 
+@pytest.fixture(scope="function")
+def hpevents_in_db(hpevents_list, db):
+    for event in hpevents_list:
+        db.session.add(event)
+        db.session.commit
+
+
 @pytest.fixture(scope="module")
 def tei_for_test():
     import os
