@@ -1,6 +1,27 @@
 from web.models import Paper, Catalog, HpEvent, Doi, Mission, Instrument, Region
 
 
+class TestDb:
+    def test_db_created(self, db):
+        """
+        GIVEN a Flask app (see autouse fixture in conftest.py )
+        WHEN db session is used for saving an object
+        THEN check that the object was saved
+        """
+        my_path = "/paper/path/to.pdf"
+        my_title = "Paper Title"
+        paper = Paper(title=my_title, pdf_path=my_path)
+        db.session.add(paper)
+        db.session.commit()
+        found_paper = Paper.query.filter_by(title=my_title).one()
+        assert found_paper.pdf_path == my_path
+
+    def test_has_path(self):
+        paper = Paper(title="my Paper", pdf_path="/this/is/a/path.pdf")
+        assert not paper.has_cat
+        assert not paper.has_pdf
+
+
 class TestModels:
     def test_paper(self):
         """

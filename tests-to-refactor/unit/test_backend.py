@@ -6,44 +6,9 @@ from bht_config import yml_settings
 from bht.published_date_finder import published_date_finder
 from bht.GROBID_generator import GROBID_generation
 from tests.conftest import skip_slow_test, skip_istex
-from web import db
 from web.bht_proxy import pipe_paper, pipe_paper_mocked, get_pipe_callback
 from web.errors import IstexParamError
 from web.istex_proxy import istex_params_to_json, istex_url_to_json, istex_id_to_url
-from web.models import Paper
-
-
-class TestModels:
-    def test_paper(self):
-        """
-        GIVEN Paper model
-        WHEN class is instantiated
-        THEN verify existence
-        """
-        paper = Paper(title="title", pdf_path="path")
-        assert paper.title == "title"
-        assert paper.pdf_path == "path"
-
-
-class TestDb:
-    def test_db_created(self):
-        """
-        GIVEN a Flask app (see autouse fixture in conftest.py )
-        WHEN db session is used for saving an object
-        THEN check that the object was saved
-        """
-        my_path = "/paper/path/to.pdf"
-        my_title = "Paper Title"
-        paper = Paper(title=my_title, pdf_path=my_path)
-        db.session.add(paper)
-        db.session.commit()
-        found_paper = Paper.query.filter_by(title=my_title).one()
-        assert found_paper.pdf_path == my_path
-
-    def test_has_path(self):
-        paper = Paper(title="my Paper", pdf_path="/this/is/a/path.pdf")
-        assert not paper.has_cat
-        assert not paper.has_pdf
 
 
 class TestAds:
