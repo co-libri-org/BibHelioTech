@@ -9,6 +9,11 @@ from web import db as _db
 from web.main.routes import pdf_to_db
 from web.models import Paper, HpEvent
 
+skip_bht = pytest.mark.skipif(
+    os.environ.get("BHT_DONTSKIPBHT") is None or not os.environ.get("BHT_DONTSKIPBHT"),
+    reason="BHT skipping (too long)",
+)
+
 
 @pytest.fixture(scope="session", autouse=True)
 def app():
