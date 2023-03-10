@@ -2,6 +2,7 @@ import os
 import shutil
 
 import pytest
+import logging
 from flask import current_app
 
 from web import create_app
@@ -25,6 +26,11 @@ skip_slow_test = pytest.mark.skipif(
     and os.environ.get("BHT_SKIPSLOWTESTS"),
     reason="Slow test skipping",
 )
+
+# Dont Log WERKZEUG MESSAGES
+#
+log = logging.getLogger("werkzeug")
+log.setLevel(logging.ERROR)
 
 
 @pytest.fixture(scope="session", autouse=True)

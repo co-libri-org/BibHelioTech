@@ -3,8 +3,6 @@ import os
 
 import pytest
 from flask import current_app
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 
 from web.main.routes import pdf_to_db
 
@@ -13,14 +11,6 @@ skip_selenium = pytest.mark.skipif(
     or not os.environ.get("BHT_DONTSKIPSELENIUM"),
     reason="SELENIUM Skipping",
 )
-
-
-@pytest.fixture(scope="module")
-def firefox_driver():
-    options = Options()
-    # options.add_argument("-headless")
-    driver = webdriver.Firefox(options=options)
-    yield driver
 
 
 @pytest.fixture(scope="session")
