@@ -85,7 +85,15 @@ def get_file_from_url(url):
     return r.content, filename
 
 
-def save_to_db(file_stream, filename):
+def pdf_to_db(file_stream, filename):
+    """Push Paper to db from a pdf stream
+
+    Update Paper's pdf content if exists
+
+    :parameter: file_stream the file content
+    :parameter: filename
+    :return: the paper's id
+    """
     filename = secure_filename(filename)
     upload_dir = current_app.config["WEB_UPLOAD_DIR"]
     if not os.path.isdir(upload_dir):
@@ -192,7 +200,7 @@ def upload_from_url():
         )
     else:
         fp, filename = get_file_from_url(pdf_url)
-        save_to_db(fp, filename)
+        pdf_to_db(fp, filename)
         return redirect(url_for("main.papers"))
 
 
@@ -207,7 +215,7 @@ def istex_upload_id():
     else:
         fp, filename = get_file_from_url(istex_id_to_url(istex_id))
         filename = istex_id + ".pdf"
-        paper_id = save_to_db(fp, filename)
+        paper_id = pdf_to_db(fp, filename)
         return jsonify({"success": "true", "paper_id": paper_id}), 201
 
 
@@ -224,7 +232,7 @@ def upload():
         flash("No selected file")
         return redirect(url_for("main.papers"))
     if file and allowed_file(file.filename):
-        save_to_db(file.read(), file.filename)
+        pdf_to_db(file.read(), file.filename)
         flash(f"Uploaded {file.filename}")
         return redirect(url_for("main.papers"))
 

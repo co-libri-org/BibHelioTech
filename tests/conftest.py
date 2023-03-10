@@ -6,7 +6,7 @@ from flask import current_app
 
 from web import create_app
 from web import db as _db
-from web.main.routes import save_to_db
+from web.main.routes import pdf_to_db
 from web.models import Paper, HpEvent
 
 
@@ -49,9 +49,9 @@ def db(app):
 
 @pytest.fixture(scope="function")
 def paper_for_test(pdf_for_test, cat_for_test):
-    """Adds a paper's pdf to db"""
+    """Add a paper's pdf to db"""
     with open(pdf_for_test, "rb", buffering=0) as fp:
-        paper_id = save_to_db(fp.readall(), os.path.basename(pdf_for_test))
+        paper_id = pdf_to_db(fp.readall(), os.path.basename(pdf_for_test))
     paper = _db.session.get(Paper, paper_id)
     paper.set_cat_path(cat_for_test)
     _db.session.add(paper)

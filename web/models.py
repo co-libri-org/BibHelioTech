@@ -78,7 +78,7 @@ def catfile_to_db(catfile):
     for hpevent_dict in catfile_to_rows(catfile):
         hpevent = HpEvent(**hpevent_dict)
         db.session.add(hpevent)
-    db.session.commit()
+        db.session.commit()
 
 
 class Catalog(db.Model):

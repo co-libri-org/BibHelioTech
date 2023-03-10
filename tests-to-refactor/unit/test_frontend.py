@@ -5,7 +5,7 @@ from flask import current_app
 
 from tests.conftest import skip_slow_test, skip_istex
 from web import db
-from web.main.routes import get_file_from_url, save_to_db
+from web.main.routes import get_file_from_url, pdf_to_db
 from web.models import Paper
 
 
@@ -55,7 +55,7 @@ class TestFrontUtils:
         THEN check that the Paper object is saved
         """
         with open(pdf_for_test, "rb") as _fd:
-            p_id = save_to_db(_fd.read(), os.path.basename(pdf_for_test))
+            p_id = pdf_to_db(_fd.read(), os.path.basename(pdf_for_test))
         guessed_title = os.path.basename(pdf_for_test).replace(".pdf", "")
         paper = Paper.query.filter_by(title=guessed_title).one_or_none()
         assert paper is not None
