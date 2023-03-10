@@ -12,7 +12,7 @@ from web.models import Paper
 @pytest.mark.usefixtures("live_server")
 class TestRunPapers:
     def test_papers_added(self, firefox_driver, paperslist_for_tests):
-        print("memory", current_app.config["SQLALCHEMY_DATABASE_URI"])
+        print("------ memory", current_app.config["SQLALCHEMY_DATABASE_URI"])
         papers_url = request.url + url_for("main.papers")
         assert len(paperslist_for_tests) > 0
         papers_in_db = Paper.query.all()

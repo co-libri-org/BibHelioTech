@@ -40,5 +40,5 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
         yml_settings["WEB_DB_DIR"], "bht_web-test.db"
     )
-    SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
+    # SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     BHT_RESOURCES_DIR = os.path.join(BHT_ROOT_DIR, "resources-tests")
