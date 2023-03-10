@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
-from tests.functionnal.conftest import skip_selenium
+from tests.functional.conftest import skip_selenium
 
 
 @skip_selenium
@@ -38,11 +38,3 @@ class TestUploadPdf:
 
         file_table_line = firefox_driver.find_element(By.XPATH, "//tbody/tr")
         assert file_table_line
-
-        # TODO: look for paper in db
-        # from web.models import Paper
-        # from web import db
-        # papers = db.session.query(Paper).all()
-        # for p in papers:
-        #     print(p)
-        # assert False
