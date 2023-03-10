@@ -1,4 +1,13 @@
 from web.bht_proxy import get_pipe_callback, pipe_paper_mocked
+from web.istex_proxy import istex_url_to_json
+
+
+class TestBhtIstex:
+    def test_url_to_json(self, istex_url):
+        istex_list = istex_url_to_json(istex_url)
+        assert len(istex_list) == 150
+        assert "title" in istex_list[0]
+        assert "abstract" in istex_list[0]
 
 
 class TestBhtProxy:

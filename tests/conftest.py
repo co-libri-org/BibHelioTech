@@ -14,6 +14,18 @@ skip_bht = pytest.mark.skipif(
     reason="BHT skipping (too long)",
 )
 
+skip_istex = pytest.mark.skipif(
+    os.environ.get("BHT_DONTSKIPISTEX") is None
+    or not os.environ.get("BHT_DONTSKIPISTEX"),
+    reason="ISTEX skipping (no auth)",
+)
+
+skip_slow_test = pytest.mark.skipif(
+    os.environ.get("BHT_SKIPSLOWTESTS") is not None
+    and os.environ.get("BHT_SKIPSLOWTESTS"),
+    reason="Slow test skipping",
+)
+
 
 @pytest.fixture(scope="session", autouse=True)
 def app():

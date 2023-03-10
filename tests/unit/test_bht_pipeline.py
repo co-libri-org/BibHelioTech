@@ -4,7 +4,7 @@ from web.bht_proxy import pipe_paper
 
 
 @skip_bht
-class TestBht:
+class TestBhtPipeline:
     def test_pipepaper(self, paper_for_test):
         """
         GIVEN the pipepaper method

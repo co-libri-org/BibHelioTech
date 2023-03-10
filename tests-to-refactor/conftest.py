@@ -1,23 +1,9 @@
-from urllib.parse import urlencode
-
 import pytest
 import os
 
 from flask import current_app
 
 from web import db
-
-skip_istex = pytest.mark.skipif(
-    os.environ.get("BHT_DONTSKIPISTEX") is None
-    or not os.environ.get("BHT_DONTSKIPISTEX"),
-    reason="ISTEX skipping (no auth)",
-)
-
-skip_slow_test = pytest.mark.skipif(
-    os.environ.get("BHT_SKIPSLOWTESTS") is not None
-    and os.environ.get("BHT_SKIPSLOWTESTS"),
-    reason="Slow test skipping",
-)
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -52,36 +38,3 @@ def hpevents_in_db(hpevents_list):
 @pytest.fixture(scope="module")
 def test_client(app):
     yield app.test_client()
-
-
-@pytest.fixture(scope="module")
-def istex_params():
-    _publication_date = "[2020 *]"
-    _abstract = "solar AND wind"
-    _params = {
-        "q": f"(publicationDate:{_publication_date} AND abstract:({_abstract}))",
-        "facet": "corpusName[*]",
-        "size": 150,
-        "output": "*",
-        "stats": "",
-    }
-    yield _params
-
-
-@pytest.fixture(scope="module")
-def istex_url():
-    _publication_date = "[2020 *]"
-    _abstract = "solar AND wind"
-    _params = {
-        "q": f"(publicationDate:{_publication_date} AND abstract:({_abstract}))",
-        "facet": "corpusName[*]",
-        "size": 150,
-        "output": "*",
-        "stats": "",
-    }
-    yield "https://api.istex.fr/document/?" + urlencode(_params)
-
-
-@pytest.fixture(scope="module")
-def istex_id():
-    yield "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"
