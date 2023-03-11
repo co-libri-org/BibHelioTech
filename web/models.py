@@ -217,7 +217,6 @@ class Paper(db.Model):
     def has_cat(self):
         try:
             has_cat = os.path.isfile(self.cat_path)
-            print(f"{self.cat_path} in disk: {has_cat}")
         except TypeError:
             has_cat = False
         return has_cat

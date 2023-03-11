@@ -177,12 +177,7 @@ def paper_del(paper_id):
 def papers(name=None):
     if not name:
         # get all uploaded pdf stored in db
-        print("memory", current_app.config["SQLALCHEMY_DATABASE_URI"])
         papers_list = db.session.query(Paper).all()
-        print(
-            "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ ",
-            len(papers_list),
-        )
         return render_template("papers.html", papers_list=papers_list)
     else:
         flash("Uploaded " + name)
@@ -349,13 +344,6 @@ def catalogs():
     _catalogs = [
         paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
     ]
-    for paper in Paper.query.filter_by(cat_in_db=False).all():
-        print(
-            f"title: {paper.title}, has_cat: {paper.has_cat}, cat_path: {paper.cat_path}, cat_in_db: {paper.cat_in_db}"
-        )
-    print(
-        f"-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-{len(_catalogs)}+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+"
-    )
     return render_template("catalogs.html", missions=_missions, catalogs=_catalogs)
 
 
