@@ -2,11 +2,13 @@ import datetime
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 from bht_config import yml_settings
 from web.config import Config, ProdConfig, DevConfig, TestConfig
 
 db = SQLAlchemy()
+mig = Migrate()
 
 
 def create_app(bht_env=None):
@@ -35,6 +37,7 @@ def create_app(bht_env=None):
     app.config.from_object(config_instance)
 
     db.init_app(app)
+    mig.init_app(app, db)
 
     from web.main import bp as main_bp
 

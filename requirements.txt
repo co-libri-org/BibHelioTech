@@ -19,3 +19,5 @@ rq
 Flask-SQLAlchemy
 filetype
 Werkzeug
+flask-migrate
+Flask-Migrate
