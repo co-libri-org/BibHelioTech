@@ -28,10 +28,10 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
-## [0.4.0-pre.2] - yyyy-mm-dd - xxxxxxxxxxxxxxxxxxxxxxxxxxx
-### Fixed
+## [0.4.0-pre.2] - 2023-03-11 - Refactor tests structure
 ### Changed
-### New
+- tests tree
+
 
 ## [0.4.0-pre.1] - 2023-03-10 - Build and download Catalog by mission
 ### Fixed
