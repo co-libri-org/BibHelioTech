@@ -85,7 +85,15 @@ def get_file_from_url(url):
     return r.content, filename
 
 
-def save_to_db(file_stream, filename):
+def pdf_to_db(file_stream, filename):
+    """Push Paper to db from a pdf stream
+
+    Update Paper's pdf content if exists
+
+    :parameter: file_stream the file content
+    :parameter: filename
+    :return: the paper's id
+    """
     filename = secure_filename(filename)
     upload_dir = current_app.config["WEB_UPLOAD_DIR"]
     if not os.path.isdir(upload_dir):
@@ -169,7 +177,7 @@ def paper_del(paper_id):
 def papers(name=None):
     if not name:
         # get all uploaded pdf stored in db
-        papers_list = Paper.query.all()
+        papers_list = db.session.query(Paper).all()
         return render_template("papers.html", papers_list=papers_list)
     else:
         flash("Uploaded " + name)
@@ -187,7 +195,7 @@ def upload_from_url():
         )
     else:
         fp, filename = get_file_from_url(pdf_url)
-        save_to_db(fp, filename)
+        pdf_to_db(fp, filename)
         return redirect(url_for("main.papers"))
 
 
@@ -202,7 +210,7 @@ def istex_upload_id():
     else:
         fp, filename = get_file_from_url(istex_id_to_url(istex_id))
         filename = istex_id + ".pdf"
-        paper_id = save_to_db(fp, filename)
+        paper_id = pdf_to_db(fp, filename)
         return jsonify({"success": "true", "paper_id": paper_id}), 201
 
 
@@ -219,7 +227,7 @@ def upload():
         flash("No selected file")
         return redirect(url_for("main.papers"))
     if file and allowed_file(file.filename):
-        save_to_db(file.read(), file.filename)
+        pdf_to_db(file.read(), file.filename)
         flash(f"Uploaded {file.filename}")
         return redirect(url_for("main.papers"))
 
@@ -291,6 +299,7 @@ def bht_run():
 
 @bp.route("/istex_test", methods=["GET"])
 def istex_test():
+    # TODO: merge with istex/ route, and apply same thing as with get_pipe_callback()
     from web.istex_proxy import istex_json_to_json
 
     with open(
@@ -331,7 +340,7 @@ def catalogs():
         {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
         for _m in db.session.query(Mission).order_by(Mission.name).all()
     ]
-    # build a list of papers with catalogs, but not already inserted in db
+    # build a list of papers with catalogs not already inserted in db
     _catalogs = [
         paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
     ]
@@ -375,7 +384,7 @@ def api_catalogs_txt():
     :return: catalog text file as attachment
     """
     mission_id = request.args.get("mission_id")
-    mission = Mission.query.get(mission_id) if mission_id else None
+    mission = db.session.get(Mission, mission_id) if mission_id else None
     if mission_id is None or mission is None:
         return Response(
             f"No valid parameters for url: {mission_id} {mission}",

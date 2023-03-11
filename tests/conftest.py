@@ -1,14 +1,19 @@
+import os
 import shutil
-from urllib.parse import urlencode
 
 import pytest
-import os
-
+import logging
 from flask import current_app
 
-from web import create_app, db
-from web.main.routes import save_to_db
+from web import create_app
+from web import db as _db
+from web.main.routes import pdf_to_db
 from web.models import Paper, HpEvent
+
+skip_bht = pytest.mark.skipif(
+    os.environ.get("BHT_DONTSKIPBHT") is None or not os.environ.get("BHT_DONTSKIPBHT"),
+    reason="BHT skipping (too long)",
+)
 
 skip_istex = pytest.mark.skipif(
     os.environ.get("BHT_DONTSKIPISTEX") is None
@@ -22,39 +27,106 @@ skip_slow_test = pytest.mark.skipif(
     reason="Slow test skipping",
 )
 
+# Dont Log WERKZEUG MESSAGES
+#
+log = logging.getLogger("werkzeug")
+log.setLevel(logging.ERROR)
+
 
 @pytest.fixture(scope="session", autouse=True)
 def app():
-    app = create_app(bht_env="testing")
-    app.config.update(
+    from datetime import datetime
+
+    date = datetime.now()
+    print("-+#-+#-+#-+#-+#-+#-+#-+#-+#-+#", date)
+    _app = create_app(bht_env="testing")
+    _app.config.update(
         # Change the port that the liveserver listens on as we don't want to conflict with running:5000
         LIVESERVER_PORT=8943
     )
 
-    app_context = app.app_context()
-    app_context.push()
-    db.create_all()
+    _ctx = _app.app_context()
+    _ctx.push()
+    #
+    yield _app
+    #
+    _ctx.pop()
 
-    yield app
 
-    # clean up / reset resources here
+@pytest.fixture(scope="session", autouse=True)
+def db(app):
+    """Session-wide test database."""
+    # db_file = current_app.config["SQLALCHEMY_DATABASE_URI"].split("sqlite:///")[1]
+    # if os.path.exists(db_file):
+    #     os.remove(db_file)
+
+    _db.app = app
+    _db.create_all()
+    #
+    yield _db
+    #
+    _db.session.rollback()
+    _db.drop_all()
+    _db.session.close()
+
+
+@pytest.fixture(scope="function")
+def paper_with_cat(paper_for_test, cat_for_test):
+    """Add a paper's with catalog to db"""
+    paper_for_test.set_cat_path(cat_for_test)
+    _db.session.add(paper_for_test)
+    _db.session.commit()
+    #
+    yield paper_for_test
+
+
+@pytest.fixture(scope="function")
+def paper_for_test(pdf_for_test):
+    """Add a paper's pdf to db"""
+    with open(pdf_for_test, "rb", buffering=0) as fp:
+        paper_id = pdf_to_db(fp.readall(), os.path.basename(pdf_for_test))
+    paper = _db.session.get(Paper, paper_id)
+    _db.session.add(paper)
+    _db.session.commit()
+    #
+    yield paper
+    # make sure paper exists before deleting
+    paper = _db.session.get(Paper, paper_id)
+    if paper is not None:
+        _db.session.delete(paper)
+        _db.session.commit()
 
 
 @pytest.fixture(scope="module")
-def tei_for_test():
-    test_tei_file = os.path.join(
-        current_app.config["BHT_PAPERS_DIR"], "2016GL069787.tei.xml"
+def pdf_for_test():
+    test_pdf_file_orig = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "2016GL069787-test.pdf"
     )
-    yield test_tei_file
-    if os.path.isfile(test_tei_file):
-        os.remove(test_tei_file)
+    test_pdf_file_dest = os.path.join(
+        current_app.config["BHT_PAPERS_DIR"], "2016GL069787-test.pdf"
+    )
+    shutil.copy(test_pdf_file_orig, test_pdf_file_dest)
+    #
+    yield test_pdf_file_dest
+    #
+    if os.path.isfile(test_pdf_file_dest):
+        os.remove(test_pdf_file_dest)
 
 
 @pytest.fixture(scope="module")
-def hpevents_in_db(hpevents_list):
-    for event in hpevents_list:
-        db.session.add(event)
-        db.session.commit
+def cat_for_test():
+    filename = "105194angeo282332010_bibheliotech_V1.txt"
+    test_cat_file_orig = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"],
+        filename,
+    )
+    test_cat_file_dest = os.path.join(current_app.config["BHT_PAPERS_DIR"], filename)
+    shutil.copy(test_cat_file_orig, test_cat_file_dest)
+    #
+    yield test_cat_file_dest
+    #
+    if os.path.isfile(test_cat_file_dest):
+        os.remove(test_cat_file_dest)
 
 
 @pytest.fixture(scope="module")
@@ -99,82 +171,3 @@ def hpevent_dict_for_test():
         "region": "Earth.Magnetosheath",
     }
     return hpevent_dict
-
-
-@pytest.fixture(scope="module")
-def cat_for_test():
-    test_cat_file_orig = os.path.join(
-        current_app.config["BHT_RESOURCES_DIR"],
-        "105194angeo282332010_bibheliotech_V1.txt",
-    )
-    yield test_cat_file_orig
-
-
-@pytest.fixture(scope="module")
-def pdf_for_test():
-    test_pdf_file_orig = os.path.join(
-        current_app.config["BHT_RESOURCES_DIR"], "2016GL069787-test.pdf"
-    )
-    test_pdf_file_dest = os.path.join(
-        current_app.config["BHT_PAPERS_DIR"], "2016GL069787-test.pdf"
-    )
-    shutil.copy(test_pdf_file_orig, test_pdf_file_dest)
-    #
-    yield test_pdf_file_dest
-    #
-    if os.path.isfile(test_pdf_file_dest):
-        os.remove(test_pdf_file_dest)
-
-
-@pytest.fixture(scope="function")
-def paper_for_test(pdf_for_test, cat_for_test):
-    """Adds a paper's pdf to db"""
-    with open(pdf_for_test, "rb", buffering=0) as fp:
-        paper_id = save_to_db(fp.readall(), os.path.basename(pdf_for_test))
-    paper = db.session.get(Paper, paper_id)
-    paper.cat_path = cat_for_test
-    db.session.commit()
-    yield paper
-    # make sure paper exists before deleting
-    paper = db.session.get(Paper, paper_id)
-    if paper is not None:
-        db.session.delete(paper)
-        db.session.commit()
-
-
-@pytest.fixture(scope="module")
-def test_client(app):
-    yield app.test_client()
-
-
-@pytest.fixture(scope="module")
-def istex_params():
-    _publication_date = "[2020 *]"
-    _abstract = "solar AND wind"
-    _params = {
-        "q": f"(publicationDate:{_publication_date} AND abstract:({_abstract}))",
-        "facet": "corpusName[*]",
-        "size": 150,
-        "output": "*",
-        "stats": "",
-    }
-    yield _params
-
-
-@pytest.fixture(scope="module")
-def istex_url():
-    _publication_date = "[2020 *]"
-    _abstract = "solar AND wind"
-    _params = {
-        "q": f"(publicationDate:{_publication_date} AND abstract:({_abstract}))",
-        "facet": "corpusName[*]",
-        "size": 150,
-        "output": "*",
-        "stats": "",
-    }
-    yield "https://api.istex.fr/document/?" + urlencode(_params)
-
-
-@pytest.fixture(scope="module")
-def istex_id():
-    yield "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"

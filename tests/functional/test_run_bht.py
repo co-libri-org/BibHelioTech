@@ -1,20 +1,24 @@
 import pytest
-from flask import url_for, request
+from flask import url_for, request, current_app
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
-from tests.functionnal.conftest import skip_selenium
+from tests.functional.conftest import skip_selenium
+from web.models import Paper
 
 
 @skip_selenium
 @pytest.mark.usefixtures("live_server")
 class TestRunPapers:
     def test_papers_added(self, firefox_driver, paperslist_for_tests):
+        print("------ memory", current_app.config["SQLALCHEMY_DATABASE_URI"])
         papers_url = request.url + url_for("main.papers")
+        assert len(paperslist_for_tests) > 0
+        papers_in_db = Paper.query.all()
+        assert len(papers_in_db) == 6
         firefox_driver.get(papers_url)
         elems = firefox_driver.find_elements(By.XPATH, "//tbody/tr")
-        assert len(paperslist_for_tests) > 0
         assert len(elems) == len(paperslist_for_tests)
 
     def test_have_run_btn(self, firefox_driver, paperslist_for_tests):

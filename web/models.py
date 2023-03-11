@@ -78,7 +78,7 @@ def catfile_to_db(catfile):
     for hpevent_dict in catfile_to_rows(catfile):
         hpevent = HpEvent(**hpevent_dict)
         db.session.add(hpevent)
-    db.session.commit()
+        db.session.commit()
 
 
 class Catalog(db.Model):
@@ -209,8 +209,6 @@ class Paper(db.Model):
 
     def push_cat(self):
         """Insert our catalog's events to db"""
-        print("Do we :", self.cat_in_db)
-        print("Do we :", self.has_cat)
         if not self.cat_in_db and self.has_cat:
             self.cat_in_db = True
             catfile_to_db(self.cat_path)
