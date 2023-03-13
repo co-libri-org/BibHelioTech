@@ -21,7 +21,7 @@ def create_app(bht_env=None):
     app = Flask(__name__)
     date = datetime.datetime.now()
     print(
-        f"-+#-+#-+#-+#-+#-+#-+#-+#-+#-+# CREATE APP {date} -+#-+#-+#-+#-+#-+#-+#-+#-+#-+#"
+        f"#+-#+-#+-#+-#+-#+-#+-#+-#+-#+- CREATE APP {date} -+#-+#-+#-+#-+#-+#-+#-+#-+#-+#"
     )
 
     if bht_env is None or bht_env == "production":
