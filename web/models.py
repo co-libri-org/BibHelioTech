@@ -207,11 +207,14 @@ class Paper(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def push_cat(self):
+    def push_cat(self, force=False):
         """Insert our catalog's events to db"""
-        if not self.cat_in_db and self.has_cat:
-            self.cat_in_db = True
-            catfile_to_db(self.cat_path)
+        # do it if not already done, or force
+        if not self.cat_in_db or force:
+            # only if there is a file
+            if self.has_cat:
+                self.cat_in_db = True
+                catfile_to_db(self.cat_path)
 
     @property
     def has_cat(self):

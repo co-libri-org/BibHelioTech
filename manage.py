@@ -1,7 +1,8 @@
 import click
 import redis
-from flask import current_app
 from rq import Connection, Worker
+from flask import current_app
+from flask_migrate import upgrade
 from flask.cli import FlaskGroup
 from web import create_app, db
 from web.models import catfile_to_db
@@ -21,6 +22,35 @@ def show_config():
 @cli.command("create_db")
 def create_db():
     db.create_all()
+
+
+@cli.command("upgrade_db")
+def upgrade_db():
+    """Upgrade running db with new structure
+
+    - using flask-migrate alembic functionalities
+    - upgrading db tables if necessary
+
+    Here we use a (bad ?) hack to guess in what version the current code base is before applying some changes.
+    """
+
+    def hpevents_datetime_migrate():
+        """Reparse catalogs txt files and fixe the hpevent datetime value
+
+        the bug was fixed in the commit '6b38c89 Fix the missing hours in hpevent bug'
+        """
+        # delete all events
+        for _e in HpEvent.query.all():
+            db.session.delete(_e)
+            db.session.commit()
+        # then parse catalogs again
+        for _p in Paper.query.all():
+            _p.push_cat(force=True)
+            db.session.commit()
+
+    upgrade()
+    if "0.4.0-pre-3" in current_app.config["VERSION"]:
+        hpevents_datetime_migrate()
 
 
 @cli.command("mock_papers")
