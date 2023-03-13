@@ -28,6 +28,11 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.4.0-pre.3] - 2023-03-13 - DB Migration
+### New
+- db migration with alembic
+- logging system
+
 ## [0.4.0-pre.2] - 2023-03-11 - Refactor tests structure
 ### Changed
 - tests tree

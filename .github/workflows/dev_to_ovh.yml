@@ -26,3 +26,4 @@ jobs:
             git pull
             docker compose build
             docker compose up -d
+            docker compose run -e FLASK_APP=web web flask db upgrade

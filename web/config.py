@@ -17,13 +17,15 @@ class Config(object):
 
 
 class ProdConfig(Config):
-    # Simple production wrapper for Config
-    pass
+    LOG_TO_STDOUT = False
+    LOG_FILENAME = "bht.log"
 
 
 class DevConfig(Config):
     # Set DEBUG with `flask run --debug` option
     TESTING = True
+    LOG_TO_STDOUT = False
+    LOG_FILENAME = "dev_log.log"
     WEB_UPLOAD_DIR = os.path.join(BHT_ROOT_DIR, "dev-upload/")
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
         yml_settings["WEB_DB_DIR"], "bht_web-dev.db"
@@ -35,6 +37,7 @@ class TestConfig(Config):
     # Set DEBUG with `flask run --debug` option
     # Ignore @login_required decorator
     # LOGIN_DISABLED = True
+    LOG_TO_STDOUT = True
     WEB_UPLOAD_DIR = os.path.join(BHT_ROOT_DIR, "test-upload/")
     # Set sqlite to in memory for tests
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(

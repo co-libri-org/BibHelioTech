@@ -83,7 +83,7 @@ BHT_ENV can take 3 possible values:
 - 'development'
 - 'testing'
 
-### Running files treatement under ./DATA/
+### Running files treatment under ./DATA/
 
 This will compute all `*pdf` papers in `./DATA/` directory
 
@@ -98,9 +98,32 @@ or run inside container itself
 
 ## Continuous integration and deployment
 
-Make sure to fullfill any dependency first:
+Make sure to fulfill any dependency first:
 
     pip install -r requirements-tests.txt
+
+### db migration
+
+In order to make sure we use the latest db structure on distant deployed versions,
+we recommend the usage of the SqlAlchemy migration tool.
+
+It needs the environment variable FLASK_APP.
+
+After db structure was changed, you can save a migration script:
+
+    FLASK_APP=web flask db migrate
+    git add migrations
+    git commit -m "Db migration"
+
+After deployment:
+
+    FLASK_APP=web flask db upgrade
+
+If running through docker then try
+
+    docker compose run FLASK_APP=web flask db upgrade
+
+Also see https://flask-migrate.readthedocs.io/en/latest/
 
 ### flake8 linter
 
@@ -140,9 +163,9 @@ either run on your workdir, but launch grobid and redis first:
 
 see tests/README.md for more info on tests
 
-### github actions
+### GitHub actions
 
-Github actions yml files are stored in the `.github/workflows/` directory.
+GitHub actions yml files are stored in the `.github/workflows/` directory.
 
 - one for deployment to the ovh dev server
 - one for running integration tests
@@ -205,7 +228,7 @@ Now run the main pipeline:
 
 Optionally if you want to have AMDA catalogues by satellites, you need to run "SATS_catalogue_generator.py".
 
-## Versionning and git workflows
+## Versioning and git workflows
 
 `VERSION.txt` holds the current project version in a semver model. (Also see `CHANGELOG.md`)
 

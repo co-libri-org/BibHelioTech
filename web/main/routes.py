@@ -339,6 +339,7 @@ def catalogs():
     _missions = [
         {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
         for _m in db.session.query(Mission).order_by(Mission.name).all()
+        if len(_m.hp_events) > 0
     ]
     # build a list of papers with catalogs not already inserted in db
     _catalogs = [
