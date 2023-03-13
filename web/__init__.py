@@ -1,14 +1,14 @@
-import datetime
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 from bht_config import yml_settings
+from web.app_logger import AppLogger
 from web.config import Config, ProdConfig, DevConfig, TestConfig
 
 db = SQLAlchemy()
 mig = Migrate()
+app_logger = AppLogger()
 
 
 def create_app(bht_env=None):
@@ -19,10 +19,6 @@ def create_app(bht_env=None):
     @return: running app
     """
     app = Flask(__name__)
-    date = datetime.datetime.now()
-    print(
-        f"#+-#+-#+-#+-#+-#+-#+-#+-#+-#+- CREATE APP {date} -+#-+#-+#-+#-+#-+#-+#-+#-+#-+#"
-    )
 
     if bht_env is None or bht_env == "production":
         config_instance = ProdConfig()
@@ -36,8 +32,13 @@ def create_app(bht_env=None):
     app.config.from_mapping(yml_settings)
     app.config.from_object(config_instance)
 
+    app_logger.init_app(app)
     db.init_app(app)
     mig.init_app(app, db)
+
+    app.logger.info(
+        "#+-#+-#+-#+-#+-#+-#+-#+-#+-#+- CREATE APP -+#-+#-+#-+#-+#-+#-+#-+#-+#-+#"
+    )
 
     from web.main import bp as main_bp
 
