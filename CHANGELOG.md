@@ -28,6 +28,11 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.4.0-pre.4-dev] - yyyy-mm-dd - Global description of changes
+### Fixed
+### Changed
+### New
+
 ## [0.4.0-pre.3] - 2023-03-13 - DB Migration
 ### New
 - db migration with alembic
