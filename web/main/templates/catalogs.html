@@ -145,10 +145,11 @@ function setCatalog(events) {
         row.append($('<td>'+event.stop_date+'</td>'));
         row.append($('<td>'+event.doi+'</td>'));
         row.append($('<td>'+event.instrument+'</td>'));
-        row.append($('<td>'+event.region+'</td>'));
+        row.append($('<td><span class="region-value" title="as defined by the SPASE data model">'+event.region+'</span></td>'));
         $("#events").append(row);
     });
 }
+
 
 
 
