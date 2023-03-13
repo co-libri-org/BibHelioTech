@@ -1,5 +1,8 @@
+import os
+
 import click
 import redis
+from pathlib import Path
 from rq import Connection, Worker
 from flask import current_app
 from flask_migrate import upgrade
@@ -24,33 +27,65 @@ def create_db():
     db.create_all()
 
 
+@cli.command("refresh_events")
+def refresh_events():
+    """Reparse catalogs txt files
+
+    - delete events
+    - readd
+
+    Can be used in conjonction with refresh_papers() that has to be run first.
+
+    This method was first writen to fix the hpevent datetime value in db
+    A db bug that was fixed in the commit '6b38c89 Fix the missing hours in hpevent bug'
+    """
+    # delete all events
+    for _e in HpEvent.query.all():
+        db.session.delete(_e)
+        db.session.commit()
+    # then parse catalogs again
+    for _p in Paper.query.all():
+        _p.push_cat(force=True)
+        db.session.commit()
+
+
+@cli.command("refresh_papers")
+def refresh_papers():
+    """Parse the files on disk and update db
+
+    - delete all from db
+    - parse disk and re insert pdf and txt files
+    """
+    for _p in Paper.query.all():
+        db.session.delete(_p)
+        db.session.commit()
+    # Search for directories in base directory
+    # that has pdf file and txt file
+    # If so, build Paper and add to
+    for _d in os.listdir(current_app.config["WEB_UPLOAD_DIR"]):
+        found_path = os.path.join(current_app.config["WEB_UPLOAD_DIR"], _d)
+        if os.path.isdir(found_path):
+            pdf_file = os.path.join(found_path, _d) + ".pdf"
+            try:
+                cat_file = str(list(Path(found_path).glob("*bibheliotech_V1.txt"))[0])
+                # cat_file.
+            except IndexError:
+                cat_file = "no_cat_file"
+            # print (type(cat_file))
+            if os.path.isfile(pdf_file) and os.path.isfile(cat_file):
+                _p = Paper(title=_d, pdf_path=pdf_file, cat_path=cat_file)
+                db.session.add(_p)
+                db.session.commit()
+                print(_p)
+
+
 @cli.command("upgrade_db")
 def upgrade_db():
     """Upgrade running db with new structure
 
-    - using flask-migrate alembic functionalities
-    - upgrading db tables if necessary
-
-    Here we use a (bad ?) hack to guess in what version the current code base is before applying some changes.
+    - use of the alembic method
     """
-
-    def hpevents_datetime_migrate():
-        """Reparse catalogs txt files and fixe the hpevent datetime value
-
-        the bug was fixed in the commit '6b38c89 Fix the missing hours in hpevent bug'
-        """
-        # delete all events
-        for _e in HpEvent.query.all():
-            db.session.delete(_e)
-            db.session.commit()
-        # then parse catalogs again
-        for _p in Paper.query.all():
-            _p.push_cat(force=True)
-            db.session.commit()
-
     upgrade()
-    if "0.4.0-pre-3" in current_app.config["VERSION"]:
-        hpevents_datetime_migrate()
 
 
 @cli.command("mock_papers")
