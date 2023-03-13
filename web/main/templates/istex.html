@@ -13,7 +13,8 @@
             <input type="submit" value="Get papers from Istex api">
         </div>
         <div class="col-5 position-relative">
-            <h6 class="position-absolute end-0">More on Istex: <a href="https://demo.istex.fr">demo</a> and <a href="https://api.istex.fr">api</a>.
+            <h6 class="position-absolute end-0">More on Istex: <a href="https://demo.istex.fr">demo</a> and <a
+                    href="https://api.istex.fr">api</a>.
             </h6>
         </div>
     </div>
@@ -27,6 +28,9 @@
     </p>
 </div>
 {% endif %}
+{% if istex_list|length == 0 %}
+<h6>No paper found</h6>
+{% else %}
 <table class="table-hover table">
     <thead>
     <tr>
@@ -68,6 +72,7 @@
 <div class="content">
     <button class="btn btn-warning" id="addAll" title="Add all checked papers">add all</button>
 </div>
+{% endif %}
 
 <div id="abstract-modal" class="modal fade" tabindex="-1">
     <div class="modal-dialog">
@@ -129,6 +134,7 @@ $(document).ready(function() {
           });
     });
 });
+
 
 
 
