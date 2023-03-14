@@ -1,0 +1,9 @@
+[flake8]
+exclude =
+    *.pyc,
+    .git,
+    __pycache__,
+    venv
+max-complexity = 10
+max-line-length = 131
+indent-size = 4
