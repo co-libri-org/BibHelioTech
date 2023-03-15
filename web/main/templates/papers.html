@@ -53,9 +53,12 @@
                href="{{url_for('main.cat', paper_id=paper.id)}}"
                title="Get catalog file{{' (not in db)' if not paper.cat_in_db}}" {{disabled(not paper.has_cat)}}>cat
                 {% if paper.has_cat and not paper.cat_in_db %}
-                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                </span>
+                    {%set circle_visibility = "visible"%}
+                {% else %}
+                    {%set circle_visibility = "invisible"%}
                 {% endif %}
+                <span class="{{circle_visibility}} position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                </span>
             </a>
         </td>
         <td>
@@ -124,6 +127,7 @@ function setStatus(paper_id) {
     if (taskStatus === 'finished' ) {
         const catElementId = '#cat-link-'+res.data.paper_id;
         $(catElementId).removeAttr('disabled')
+        $(catElementId).find('span').removeClass('invisible').addClass('visible')
         return false
     }
     if ( taskStatus === 'failed'){
