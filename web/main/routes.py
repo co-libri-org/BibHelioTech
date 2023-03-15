@@ -125,7 +125,7 @@ def staticversion_filter(filename):
 @bp.route("/")
 def index():
     # return render_template("index.html")
-    return redirect(url_for("main.papers"))
+    return redirect(url_for("main.catalogs"))
 
 
 @bp.route("/about")
@@ -347,7 +347,34 @@ def catalogs():
     _catalogs = [
         paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
     ]
-    return render_template("catalogs.html", missions=_missions, catalogs=_catalogs)
+
+    # now get some stats and pack as dict
+    all_papers = Paper.query.all()
+    all_missions = Mission.query.all()
+    all_events = HpEvent.query.all()
+    if len(all_events) > 1:
+        events_start_dates_asc = sorted(
+            [_e.start_date for _e in all_events], reverse=False
+        )
+        events_stop_dates_dsc = sorted(
+            [_e.stop_date for _e in all_events], reverse=True
+        )
+        global_start = events_start_dates_asc[0]
+        global_stop = events_stop_dates_dsc[0]
+    else:
+        global_start = ""
+        global_stop = ""
+
+    _db_stats = {
+        "num_events": len(all_events),
+        "num_papers": len(all_papers),
+        "num_missions": len(all_missions),
+        "global_start": global_start.strftime("%Y-%m-%d"),
+        "global_stop": global_stop.strftime("%Y-%m-%d"),
+    }
+    return render_template(
+        "catalogs.html", missions=_missions, catalogs=_catalogs, db_stats=_db_stats
+    )
 
 
 @bp.route("/api/catalogs", methods=["GET"])

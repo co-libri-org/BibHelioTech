@@ -2,6 +2,20 @@
 {% block more_head %}
 {% endblock %}
 {% block content %}
+{% if db_stats.num_events > 0 %}
+<blockquote class="text-center">
+    <p class="lead fs-4">
+       {{db_stats.num_papers}} Papers processed to find
+    </p>
+    <p class="lead fs-4">
+        {{db_stats.num_events}} Events accross {{db_stats.num_missions}} Missions
+    </p>
+    <p class="lead fs-4">
+        from {{db_stats.global_start}} to {{db_stats.global_stop}}
+    </p>
+</blockquote>
+<hr class="mt-5 mb-5">
+{% endif %}
 {#
 Show a list of catalogs files not already inserted in db
 --------------------------------------------------------
