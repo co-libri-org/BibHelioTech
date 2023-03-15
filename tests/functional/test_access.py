@@ -32,4 +32,4 @@ class TestBasicAccess:
         firefox_driver.get(base_url)
         elem = firefox_driver.find_element(By.XPATH, "//h4[@class='mb-5']")
         assert elem is not None
-        assert elem.text == "Catalogs by Mission:"
+        assert elem.text == "Available Missions:"

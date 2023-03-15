@@ -337,12 +337,14 @@ def istex_from_url():
 @bp.route("/catalogs", methods=["GET"])
 def catalogs():
     """UI page to retrieve catalogs by mission"""
+
     # rebuild all missions as dict, keeping only what we need
     _missions = [
         {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
         for _m in db.session.query(Mission).order_by(Mission.name).all()
         if len(_m.hp_events) > 0
     ]
+
     # build a list of papers with catalogs not already inserted in db
     _catalogs = [
         paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat

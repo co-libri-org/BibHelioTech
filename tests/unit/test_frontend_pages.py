@@ -58,7 +58,7 @@ class TestCatalogsPage:
         """
         response = client.get("/catalogs")
         assert response.status_code == 200
-        assert b"Catalogs by Mission" in response.data
+        assert b"Available Missions:" in response.data
 
     def test_catalog_page_2(self, client, paper_with_cat):
         """

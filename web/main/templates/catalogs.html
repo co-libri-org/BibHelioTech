@@ -43,7 +43,7 @@ Show a list of catalogs files not already inserted in db
 Show missions found in db as clickable buttons, triggering mission's events display
 -----------------------------------------------------------------------------------
 #}
-<h4 class="mb-5">Catalogs by Mission:</h4>
+<h4 class="mb-5">Available Missions:</h4>
 {% for mission in missions %}
 <button class="btn mission-catalog" data-mission_id="{{mission.id}}"
         title="Show {{mission.num_events}} events for mission {{mission.name}}">
@@ -65,7 +65,7 @@ Show found events when mission button was clicked
         Download
     </a>
 </div>
-<table class="table-hover table">
+<table id="events-table" class="table-hover table invisible">
     <thead>
     <tr>
         <th scope="col" class="col-2">start</th>
@@ -75,7 +75,7 @@ Show found events when mission button was clicked
         <th scope="col" class="col-1">region</th>
     </tr>
     </thead>
-    <tbody id="events">
+    <tbody id="events-body">
     {# this tbody will be filled in by js callback setCatalog() at '.mission-catalog' btn click #}
     </tbody>
 </table>
@@ -152,7 +152,9 @@ function setDownloadBtn(mission){
 // Fill in rows with  a given list of event
 // But first delete container
 function setCatalog(events) {
-    $("#events").empty();
+    $("#events-table").removeClass("invisible").addClass("visible")
+    eventsBodyElmnt = $("#events-body")
+    eventsBodyElmnt.empty();
     $.each(events, function(idx, event){
         var row  = $('<tr></tr>');
         row.append($('<td>'+event.start_date+'</td>'));
@@ -160,8 +162,11 @@ function setCatalog(events) {
         row.append($('<td><a href="'+event.doi+'">'+event.doi+'</a></td>'));
         row.append($('<td>'+event.instrument+'</td>'));
         row.append($('<td><span class="region-value" title="as defined by the SPASE data model">'+event.region+'</span></td>'));
-        $("#events").append(row);
+        eventsBodyElmnt.append(row);
     });
 }
+
+
+
 </script>
 {%  endblock %}
