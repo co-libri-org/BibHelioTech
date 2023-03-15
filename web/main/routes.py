@@ -361,8 +361,8 @@ def catalogs():
         events_stop_dates_dsc = sorted(
             [_e.stop_date for _e in all_events], reverse=True
         )
-        global_start = events_start_dates_asc[0]
-        global_stop = events_stop_dates_dsc[0]
+        global_start = events_start_dates_asc[0].strftime("%Y-%m-%d")
+        global_stop = events_stop_dates_dsc[0].strftime("%Y-%m-%d")
     else:
         global_start = ""
         global_stop = ""
@@ -371,8 +371,8 @@ def catalogs():
         "num_events": len(all_events),
         "num_papers": len(all_papers),
         "num_missions": len(all_missions),
-        "global_start": global_start.strftime("%Y-%m-%d"),
-        "global_stop": global_stop.strftime("%Y-%m-%d"),
+        "global_start": global_start,
+        "global_stop": global_stop,
     }
     return render_template(
         "catalogs.html", missions=_missions, catalogs=_catalogs, db_stats=_db_stats
