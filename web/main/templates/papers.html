@@ -91,6 +91,7 @@ $('.run-bht').on('click', function() {
     method: 'POST'
   })
   .done((res) => {
+    //TODO: dont get task_id any more
     console.log('bht task sent with id: ', res.data.task_id);
     setStatus(res.data.paper_id);
     location.reload();

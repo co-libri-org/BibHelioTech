@@ -286,6 +286,8 @@ def bht_run():
     if found_pdf_file is None:
         flash("No file for that paper.")
         return redirect(url_for("main.papers"))
+
+    # TODO: CUT START
     q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
     task = q.enqueue(
         get_pipe_callback(test=current_app.config["TESTING"]),
@@ -295,10 +297,14 @@ def bht_run():
 
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
+    # TODO: CUT END
 
     response_object = {
         "status": "success",
-        "data": {"task_id": task.get_id(), "paper_id": paper.id},
+        "data": {
+            "task_id": task.get_id(),
+            "paper_id": paper.id,
+        },  # TODO: get rid of task_id
     }
     return jsonify(response_object), 202
 
