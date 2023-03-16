@@ -30,6 +30,8 @@ class TestBasicAccess:
         """
         base_url = request.url + url_for("main.catalogs")
         firefox_driver.get(base_url)
-        elem = firefox_driver.find_element(By.XPATH, "//h4[@class='mb-5']")
+        elem = firefox_driver.find_element(
+            By.XPATH, "//h4[text()='Available Missions:']"
+        )
         assert elem is not None
         assert elem.text == "Available Missions:"

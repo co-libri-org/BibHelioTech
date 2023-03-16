@@ -4,17 +4,17 @@
 {% block content %}
 {% if db_stats.num_events > 0 %}
 <blockquote class="text-center">
-    <p class="lead fs-4">
+    <p class="lead fs-4 mb-0">
        {{db_stats.num_papers}} Papers processed to find
     </p>
-    <p class="lead fs-4">
+    <p class="lead fs-4 mb-0">
         {{db_stats.num_events}} Events accross {{db_stats.num_missions}} Missions
     </p>
-    <p class="lead fs-4">
+    <p class="lead fs-4 mb-0">
         from {{db_stats.global_start}} to {{db_stats.global_stop}}
     </p>
 </blockquote>
-<hr class="mt-5 mb-5">
+<hr class="mt-2 mb-3">
 {% endif %}
 {#
 Show a list of catalogs files not already inserted in db
@@ -37,13 +37,13 @@ Show a list of catalogs files not already inserted in db
     </tr>
     {% endfor %}
 </table>
-<hr class="mt-5 mb-5">
+<hr class="mt-2 mb-3">
 {% endif %}
 {#
 Show missions found in db as clickable buttons, triggering mission's events display
 -----------------------------------------------------------------------------------
 #}
-<h4 class="mb-5">Available Missions:</h4>
+<h4 class="mb-3">Available Missions:</h4>
 {% for mission in missions %}
 <button class="btn mission-catalog" data-mission_id="{{mission.id}}"
         title="Show {{mission.num_events}} events for mission {{mission.name}}">
@@ -51,12 +51,12 @@ Show missions found in db as clickable buttons, triggering mission's events disp
     <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
 </button>
 {% endfor %}
-<hr class="mt-5 mb-5">
+<hr class="mt-2 mb-3">
 {#
 Show found events when mission button was clicked
 -------------------------------------------------
 #}
-<div class="mb-5">
+<div class="mb-3">
     {# Display Selected mission and Button for downloading at text catalog #}
     <span id="get-catalog-title" class="h5"></span>
     <a class="btn btn-warning invisible ms-3" id="get-catalog-txt"
