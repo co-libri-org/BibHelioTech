@@ -20,7 +20,15 @@ def create_app(bht_env=None):
     """
     app = Flask(__name__)
 
-    if bht_env is None or bht_env == "production":
+    # FLASK_ENV is deprecated
+    # Set BHT_ENV  to choose your configuration
+    # defaults to "production"
+    import os
+
+    bht_env = os.environ.get("BHT_ENV", "production")
+
+    # Choose running mode, and corresponding configuration
+    if bht_env == "production":
         config_instance = ProdConfig()
     elif bht_env == "development":
         config_instance = DevConfig()
@@ -32,14 +40,18 @@ def create_app(bht_env=None):
     app.config.from_mapping(yml_settings)
     app.config.from_object(config_instance)
 
+    # Initialize other plugins
     app_logger.init_app(app)
     db.init_app(app)
     mig.init_app(app, db)
 
+    app.logger.debug(f"Running mode: {bht_env}")
+    app.logger.debug(f"Db set to {app.config['SQLALCHEMY_DATABASE_URI']} ")
     app.logger.info(
         "#+-#+-#+-#+-#+-#+-#+-#+-#+-#+- CREATE APP -+#-+#-+#-+#-+#-+#-+#-+#-+#-+#"
     )
 
+    # Initialize blueprints
     from web.main import bp as main_bp
 
     app.register_blueprint(main_bp)
