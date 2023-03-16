@@ -40,20 +40,29 @@ def create_app(bht_env=None):
     app.config.from_mapping(yml_settings)
     app.config.from_object(config_instance)
 
+    # Set htpasswd protection if needed
+    if "FLASK_HTPASSWD_PATH" in app.config:
+        app.logger.debug(
+            f"flask-htpasswd protect by: {app.config['FLASK_HTPASSWD_PATH']}"
+        )
+        from flask_htpasswd import HtPasswdAuth
+
+        HtPasswdAuth(app)
+
     # Initialize other plugins
     app_logger.init_app(app)
     db.init_app(app)
     mig.init_app(app, db)
+
+    # Initialize blueprints
+    from web.main import bp as main_bp
+
+    app.register_blueprint(main_bp)
 
     app.logger.debug(f"Running mode: {bht_env}")
     app.logger.debug(f"Db set to {app.config['SQLALCHEMY_DATABASE_URI']} ")
     app.logger.info(
         "#+-#+-#+-#+-#+-#+-#+-#+-#+-#+- CREATE APP -+#-+#-+#-+#-+#-+#-+#-+#-+#-+#"
     )
-
-    # Initialize blueprints
-    from web.main import bp as main_bp
-
-    app.register_blueprint(main_bp)
 
     return app

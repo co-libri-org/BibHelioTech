@@ -237,7 +237,9 @@ def bht_status(paper_id):
     paper = db.session.get(Paper, paper_id)
     if paper is None:
         flash(f"No such paper {paper_id}")
-        return redirect(url_for("main.papers"))
+        return redirect(url_for("main.papers"))  #
+
+    # TODO: TO CUT TO model.bht_status()
     task_id = paper.task_id
     try:
         job = Job.fetch(
@@ -257,10 +259,14 @@ def bht_status(paper_id):
             elapsed = str(datetime.utcnow() - task_started).split(".")[0]
         elif task_status == "finished":
             elapsed = str(job.ended_at - task_started).split(".")[0]
+        # TODO: END CUTTING
+        # TODO: SET IF CONDITION HERE
+        # something like paper.bht_status() or paper.task.bht_status()
+
         response_object = {
             "status": "success",
             "data": {
-                "task_id": task_id,
+                "task_id": task_id,  # TODO: maybe remove as we wont need anymore
                 "task_status": task_status,
                 "task_result": task_result,
                 "task_elapsed": elapsed,
