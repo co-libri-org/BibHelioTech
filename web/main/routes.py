@@ -351,7 +351,7 @@ def catalogs():
     ]
 
     # now get some stats and pack as dict
-    all_papers = Paper.query.all()
+    processed_papers = [_p for _p in Paper.query.all() if _p.has_cat]
     all_missions = Mission.query.all()
     all_events = HpEvent.query.all()
     if len(all_events) > 1:
@@ -369,7 +369,7 @@ def catalogs():
 
     _db_stats = {
         "num_events": len(all_events),
-        "num_papers": len(all_papers),
+        "num_papers": len(processed_papers),
         "num_missions": len(all_missions),
         "global_start": global_start,
         "global_stop": global_stop,
