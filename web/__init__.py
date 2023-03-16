@@ -25,7 +25,8 @@ def create_app(bht_env=None):
     # defaults to "production"
     import os
 
-    bht_env = os.environ.get("BHT_ENV", "production")
+    if bht_env is None:
+        bht_env = os.environ.get("BHT_ENV", "production")
 
     # Choose running mode, and corresponding configuration
     if bht_env == "production":
