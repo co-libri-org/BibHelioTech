@@ -239,43 +239,49 @@ def bht_status(paper_id):
         flash(f"No such paper {paper_id}")
         return redirect(url_for("main.papers"))  #
 
-    # TODO: TO CUT TO model.bht_status()
-    task_id = paper.task_id
-    try:
-        job = Job.fetch(
-            task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
-        )
-    except NoSuchJobError:
-        job = None
-
-    if job:
-        from datetime import datetime
+    # TODO: CUT and delegate to Paper and Task models
+    # Get tasks info from db if task has finished
+    if paper.task_status == "finished":
+        elapsed = str(paper.task_stopped - paper.task_started).split(".")[0] + "  <<<:w"
+        data = {
+            "task_status": paper.task_status,
+            "task_elapsed": elapsed,
+            "task_started": paper.task_started,
+            "paper_id": paper.id,
+        }
+    else:  # Get tasks info from task manager
+        task_id = paper.task_id
+        try:
+            job = Job.fetch(
+                task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
+            )
+        except NoSuchJobError:
+            return jsonify({"status": "error"})
 
         task_started = job.started_at
-        task_result = job.return_value()
         task_status = job.get_status(refresh=True)
-        elapsed = ""
+        paper.set_task_status(task_status)
+        paper.set_task_started(task_started)
         if task_status == "started":
-            elapsed = str(datetime.utcnow() - task_started).split(".")[0]
+            elapsed = str(datetime.datetime.utcnow() - task_started).split(".")[0]
         elif task_status == "finished":
             elapsed = str(job.ended_at - task_started).split(".")[0]
-        # TODO: END CUTTING
-        # TODO: SET IF CONDITION HERE
-        # something like paper.bht_status() or paper.task.bht_status()
+            paper.set_task_status("finished")
+            paper.set_task_started(job.started_at)
+            paper.set_task_stopped(job.ended_at)
+        else:
+            elapsed = ""
 
-        response_object = {
-            "status": "success",
-            "data": {
-                "task_id": task_id,  # TODO: maybe remove as we wont need anymore
-                "task_status": task_status,
-                "task_result": task_result,
-                "task_elapsed": elapsed,
-                "task_started": task_started,
-                "paper_id": paper.id,
-            },
+        data = {
+            "task_status": task_status,
+            "task_elapsed": elapsed,
+            "task_started": task_started,
+            "paper_id": paper.id,
         }
-    else:
-        response_object = {"status": "error"}
+        # TODO: END CUTTING
+    if data["task_started"] is not None:
+        data["task_started"] = data["task_started"].strftime("%a, %d %b %Y - %H:%M:%S")
+    response_object = {"status": "success", "data": data}
     return jsonify(response_object)
 
 
@@ -287,7 +293,7 @@ def bht_run():
         flash("No file for that paper.")
         return redirect(url_for("main.papers"))
 
-    # TODO: CUT START
+    # TODO: CUT START and delegate to Paper and Task models
     q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
     task = q.enqueue(
         get_pipe_callback(test=current_app.config["TESTING"]),
@@ -297,14 +303,14 @@ def bht_run():
 
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
+    paper.set_task_status("queued")
     # TODO: CUT END
 
     response_object = {
         "status": "success",
         "data": {
-            "task_id": task.get_id(),
             "paper_id": paper.id,
-        },  # TODO: get rid of task_id
+        },
     }
     return jsonify(response_object), 202
 
