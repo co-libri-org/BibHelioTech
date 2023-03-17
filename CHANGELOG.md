@@ -28,6 +28,11 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.4.1] - 2023-03-17 - Fix red circle
+### Fixed
+- remove red circle when catalogue added
+- pre-commit.ci doesnt fail any more
+
 ## [0.4.0] - 2023-03-17 - 4th Prototype
 ### Fixed
 - read bht_env in any case
