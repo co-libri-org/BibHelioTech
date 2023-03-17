@@ -241,8 +241,12 @@ def bht_status(paper_id):
 
     # TODO: CUT and delegate to Paper and Task models
     # Get tasks info from db if task has finished
-    if paper.task_status == "finished":
-        elapsed = str(paper.task_stopped - paper.task_started).split(".")[0] + "  <<<:w"
+    if paper.task_status == "finished" or paper.task_status == "failed":
+        try:
+            elapsed = str(paper.task_stopped - paper.task_started).split(".")[0]
+        except Exception as e:
+            current_app.logger.error(f"Got error on paper task date: {e}")
+            elapsed = ""
         data = {
             "task_status": paper.task_status,
             "task_elapsed": elapsed,
@@ -260,17 +264,17 @@ def bht_status(paper_id):
 
         task_started = job.started_at
         task_status = job.get_status(refresh=True)
-        paper.set_task_status(task_status)
-        paper.set_task_started(task_started)
+
         if task_status == "started":
             elapsed = str(datetime.datetime.utcnow() - task_started).split(".")[0]
         elif task_status == "finished":
             elapsed = str(job.ended_at - task_started).split(".")[0]
-            paper.set_task_status("finished")
-            paper.set_task_started(job.started_at)
-            paper.set_task_stopped(job.ended_at)
         else:
             elapsed = ""
+
+        paper.set_task_status(task_status)
+        paper.set_task_started(task_started)
+        paper.set_task_stopped(job.ended_at)
 
         data = {
             "task_status": task_status,
@@ -369,7 +373,7 @@ def catalogs():
     ]
 
     # now get some stats and pack as dict
-    processed_papers = [_p for _p in Paper.query.all() if _p.has_cat]
+    processed_papers = Paper.query.filter_by(cat_in_db=True).all()
     all_missions = Mission.query.all()
     all_events = HpEvent.query.all()
     if len(all_events) > 1:
