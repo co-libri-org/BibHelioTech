@@ -25,13 +25,14 @@
             </a>
 
             <ul class="nav nav-pills">
-                <li class="nav-item"><a href="{{url_for('main.papers')}}" class="nav-link {{page_active('papers')}}">Papers</a>
+                <li class="nav-item"><a href="{{url_for('main.catalogs')}}"
+                                        class="nav-link {{page_active('catalogs')}}">Catalogs</a>
+                </li>
+                <li class="nav-item"><a href="{{url_for('main.papers')}}"
+                                        class="nav-link {{page_active('papers')}}">Papers</a>
                 </li>
                 <li class="nav-item"><a href="{{url_for('main.istex')}}"
                                         class="nav-link {{page_active('istex')}}">Istex</a>
-                </li>
-                <li class="nav-item"><a href="{{url_for('main.catalogs')}}"
-                                        class="nav-link {{page_active('catalogs')}}">Catalogs</a>
                 </li>
                 <li class="nav-item"><a href="{{url_for('main.about')}}"
                                         class="nav-link {{page_active('about')}}">About</a></li>

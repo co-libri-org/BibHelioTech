@@ -28,6 +28,19 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.4.0] - 2023-03-17 - 4th Prototype
+### Fixed
+- read bht_env in any case
+### Changed
+- IHM enhancements
+- index page is catalog now
+- store task status and show
+### New
+- cli cmd to update db from files
+- add global stats
+- set htpasswd authentication on the whole site
+- add the pre-commit.ci workflow
+
 ## [0.4.0-pre.3] - 2023-03-13 - DB Migration
 ### New
 - db migration with alembic
@@ -36,7 +49,6 @@ or major refactoring improvements.
 ## [0.4.0-pre.2] - 2023-03-11 - Refactor tests structure
 ### Changed
 - tests tree
-
 
 ## [0.4.0-pre.1] - 2023-03-10 - Build and download Catalog by mission
 ### Fixed

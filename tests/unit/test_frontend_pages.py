@@ -58,7 +58,7 @@ class TestCatalogsPage:
         """
         response = client.get("/catalogs")
         assert response.status_code == 200
-        assert b"Catalogs by Mission" in response.data
+        assert b"Available Missions:" in response.data
 
     def test_catalog_page_2(self, client, paper_with_cat):
         """
@@ -103,6 +103,6 @@ class TestIstexPage:
         """
         response = client.get("/istex")
         assert response.status_code == 200
-        assert b'<input type=submit value="Get ISTEX">' in response.data
+        assert b"Get papers from Istex api" in response.data
 
     pass

@@ -21,3 +21,5 @@ filetype
 Werkzeug
 flask-migrate
 Flask-Migrate
+flask-htpasswd
+click

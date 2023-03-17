@@ -191,14 +191,33 @@ class Paper(db.Model):
     title = db.Column(db.String, unique=True, nullable=False)
     pdf_path = db.Column(db.String, unique=True, nullable=False)
     cat_path = db.Column(db.String, unique=True)
-    task_id = db.Column(db.String, unique=True)
     cat_in_db = db.Column(db.Boolean, default=False)
+    # TODO: move to Task model ( and relative setters )
+    task_id = db.Column(db.String, unique=True)
+    task_status = db.Column(db.String)
+    task_started = db.Column(db.DateTime)
+    task_stopped = db.Column(db.DateTime)
 
     def __repr__(self):
         return f"<Paper {self.id} {self.title} {self.pdf_path} {self.cat_path} {self.task_id}>"
 
     def set_task_id(self, task_id):
         self.task_id = task_id
+        db.session.add(self)
+        db.session.commit()
+
+    def set_task_status(self, task_status):
+        self.task_status = task_status
+        db.session.add(self)
+        db.session.commit()
+
+    def set_task_started(self, task_started):
+        self.task_started = task_started
+        db.session.add(self)
+        db.session.commit()
+
+    def set_task_stopped(self, task_stopped):
+        self.task_stopped = task_stopped
         db.session.add(self)
         db.session.commit()
 

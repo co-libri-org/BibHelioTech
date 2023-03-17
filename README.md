@@ -83,6 +83,13 @@ BHT_ENV can take 3 possible values:
 - 'development'
 - 'testing'
 
+### Password protection with flask-htpasswd
+
+If you wish to run the application on the production mode, please make sure you have created the file:
+
+    apt-get install apach2-utils
+    htpasswd -c .htpasswd the_user_name
+
 ### Running files treatment under ./DATA/
 
 This will compute all `*pdf` papers in `./DATA/` directory

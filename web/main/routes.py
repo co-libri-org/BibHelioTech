@@ -125,7 +125,7 @@ def staticversion_filter(filename):
 @bp.route("/")
 def index():
     # return render_template("index.html")
-    return redirect(url_for("main.papers"))
+    return redirect(url_for("main.catalogs"))
 
 
 @bp.route("/about")
@@ -237,39 +237,55 @@ def bht_status(paper_id):
     paper = db.session.get(Paper, paper_id)
     if paper is None:
         flash(f"No such paper {paper_id}")
-        return redirect(url_for("main.papers"))
-    task_id = paper.task_id
-    try:
-        job = Job.fetch(
-            task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
-        )
-    except NoSuchJobError:
-        job = None
+        return redirect(url_for("main.papers"))  #
 
-    if job:
-        from datetime import datetime
+    # TODO: CUT and delegate to Paper and Task models
+    # Get tasks info from db if task has finished
+    if paper.task_status == "finished" or paper.task_status == "failed":
+        try:
+            elapsed = str(paper.task_stopped - paper.task_started).split(".")[0]
+        except Exception as e:
+            current_app.logger.error(f"Got error on paper task date: {e}")
+            elapsed = ""
+        data = {
+            "task_status": paper.task_status,
+            "task_elapsed": elapsed,
+            "task_started": paper.task_started,
+            "paper_id": paper.id,
+        }
+    else:  # Get tasks info from task manager
+        task_id = paper.task_id
+        try:
+            job = Job.fetch(
+                task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
+            )
+        except NoSuchJobError:
+            return jsonify({"status": "error"})
 
         task_started = job.started_at
-        task_result = job.return_value()
         task_status = job.get_status(refresh=True)
-        elapsed = ""
+
         if task_status == "started":
-            elapsed = str(datetime.utcnow() - task_started).split(".")[0]
+            elapsed = str(datetime.datetime.utcnow() - task_started).split(".")[0]
         elif task_status == "finished":
             elapsed = str(job.ended_at - task_started).split(".")[0]
-        response_object = {
-            "status": "success",
-            "data": {
-                "task_id": task_id,
-                "task_status": task_status,
-                "task_result": task_result,
-                "task_elapsed": elapsed,
-                "task_started": task_started,
-                "paper_id": paper.id,
-            },
+        else:
+            elapsed = ""
+
+        paper.set_task_status(task_status)
+        paper.set_task_started(task_started)
+        paper.set_task_stopped(job.ended_at)
+
+        data = {
+            "task_status": task_status,
+            "task_elapsed": elapsed,
+            "task_started": task_started,
+            "paper_id": paper.id,
         }
-    else:
-        response_object = {"status": "error"}
+        # TODO: END CUTTING
+    if data["task_started"] is not None:
+        data["task_started"] = data["task_started"].strftime("%a, %d %b %Y - %H:%M:%S")
+    response_object = {"status": "success", "data": data}
     return jsonify(response_object)
 
 
@@ -280,6 +296,8 @@ def bht_run():
     if found_pdf_file is None:
         flash("No file for that paper.")
         return redirect(url_for("main.papers"))
+
+    # TODO: CUT START and delegate to Paper and Task models
     q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
     task = q.enqueue(
         get_pipe_callback(test=current_app.config["TESTING"]),
@@ -289,10 +307,14 @@ def bht_run():
 
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
+    paper.set_task_status("queued")
+    # TODO: CUT END
 
     response_object = {
         "status": "success",
-        "data": {"task_id": task.get_id(), "paper_id": paper.id},
+        "data": {
+            "paper_id": paper.id,
+        },
     }
     return jsonify(response_object), 202
 
@@ -315,9 +337,11 @@ def istex():
         return render_template("istex.html", istex_list=[])
     elif request.method == "POST":
         istex_req_url = request.form["istex_req_url"]
-        flash(istex_req_url)
         istex_list = istex_url_to_json(istex_req_url)
-        return render_template("istex.html", istex_list=istex_list)
+        return render_template(
+            "istex.html", istex_list=istex_list, istex_req_url=istex_req_url
+        )
+        # return render_template("istex.html", istex_list=istex_list)
 
 
 @bp.route("/istex_from_url", methods=["POST"])
@@ -335,17 +359,46 @@ def istex_from_url():
 @bp.route("/catalogs", methods=["GET"])
 def catalogs():
     """UI page to retrieve catalogs by mission"""
+
     # rebuild all missions as dict, keeping only what we need
     _missions = [
         {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
         for _m in db.session.query(Mission).order_by(Mission.name).all()
         if len(_m.hp_events) > 0
     ]
+
     # build a list of papers with catalogs not already inserted in db
     _catalogs = [
         paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
     ]
-    return render_template("catalogs.html", missions=_missions, catalogs=_catalogs)
+
+    # now get some stats and pack as dict
+    processed_papers = Paper.query.filter_by(cat_in_db=True).all()
+    all_missions = Mission.query.all()
+    all_events = HpEvent.query.all()
+    if len(all_events) > 1:
+        events_start_dates_asc = sorted(
+            [_e.start_date for _e in all_events], reverse=False
+        )
+        events_stop_dates_dsc = sorted(
+            [_e.stop_date for _e in all_events], reverse=True
+        )
+        global_start = events_start_dates_asc[0].strftime("%Y-%m-%d")
+        global_stop = events_stop_dates_dsc[0].strftime("%Y-%m-%d")
+    else:
+        global_start = ""
+        global_stop = ""
+
+    _db_stats = {
+        "num_events": len(all_events),
+        "num_papers": len(processed_papers),
+        "num_missions": len(all_missions),
+        "global_start": global_start,
+        "global_stop": global_stop,
+    }
+    return render_template(
+        "catalogs.html", missions=_missions, catalogs=_catalogs, db_stats=_db_stats
+    )
 
 
 @bp.route("/api/catalogs", methods=["GET"])

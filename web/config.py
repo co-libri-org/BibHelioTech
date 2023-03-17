@@ -20,6 +20,11 @@ class ProdConfig(Config):
     LOG_TO_STDOUT = False
     LOG_FILENAME = "bht.log"
 
+    # flask-htpasswd extension configuration
+    FLASK_HTPASSWD_PATH = os.path.join(BHT_ROOT_DIR, ".htpasswd")
+    FLASK_SECRET = b"\x82\xde\x96\xc5L\xb4c\xd5\x17\x12*\x12\xd3\xd4\xb7\xf5"
+    FLASK_AUTH_ALL = True
+
 
 class DevConfig(Config):
     # Set DEBUG with `flask run --debug` option

@@ -48,35 +48,63 @@ def refresh_events():
         _p.push_cat(force=True)
         db.session.commit()
 
+    events = HpEvent.query.all()
+    papers = Paper.query.all()
+    print(f"Updated {len(events)} events from {len(papers)} papers")
+
 
 @cli.command("refresh_papers")
 def refresh_papers():
     """Parse the files on disk and update db
 
-    - delete all from db
-    - parse disk and re insert pdf and txt files
+    - parse disk and re-insert pdf and txt files
+
+    Directory tree structure comes from bht module, and looks like
+
+        DATA/web-upload/
+            F6114E906C3A9BA154D5BA772F661E1FC66CB974.pdf
+            F6114E906C3A9BA154D5BA772F661E1FC66CB974/
+            ├── 10105100046361202038319_bibheliotech_V1.txt
+            ├── F6114E906C3A9BA154D5BA772F661E1FC66CB974.pdf
+            └── F6114E906C3A9BA154D5BA772F661E1FC66CB974.tei.xml
+
+    where F6114E906C3A9BA154D5BA772F661E1FC66CB974 is the paper name
+    and 10105100046361202038319_bibheliotech_V1.txt the output catalog file.
+
+    (here, it is an Istex id)
+
     """
+    # First remove all papers
     for _p in Paper.query.all():
         db.session.delete(_p)
         db.session.commit()
-    # Search for directories in base directory
-    # that has pdf file and txt file
-    # If so, build Paper and add to
-    for _d in os.listdir(current_app.config["WEB_UPLOAD_DIR"]):
-        found_path = os.path.join(current_app.config["WEB_UPLOAD_DIR"], _d)
-        if os.path.isdir(found_path):
-            pdf_file = os.path.join(found_path, _d) + ".pdf"
+    # Then
+    # Search for pdf file in base directory and build corresponding Paper
+    for _f in Path(current_app.config["WEB_UPLOAD_DIR"]).glob("*.pdf"):
+        pdf_filename = os.path.basename(str(_f))
+        paper_name = pdf_filename.split(".")[0]
+        pdf_filepath = os.path.join(current_app.config["WEB_UPLOAD_DIR"], pdf_filename)
+        _p = Paper(title=paper_name, pdf_path=pdf_filepath)
+        # If subdirectory  exists and has txt catalog, update paper accordingly
+        cat_filename = None
+        paper_dir = os.path.join(current_app.config["WEB_UPLOAD_DIR"], paper_name)
+        if os.path.isdir(paper_dir):
             try:
-                cat_file = str(list(Path(found_path).glob("*bibheliotech_V1.txt"))[0])
-                # cat_file.
+                cat_filename = str(
+                    list(Path(paper_dir).glob("*bibheliotech_V1.txt"))[0]
+                )
             except IndexError:
-                cat_file = "no_cat_file"
-            # print (type(cat_file))
-            if os.path.isfile(pdf_file) and os.path.isfile(cat_file):
-                _p = Paper(title=_d, pdf_path=pdf_file, cat_path=cat_file)
-                db.session.add(_p)
-                db.session.commit()
-                print(_p)
+                cat_filename = None
+        if cat_filename is not None:
+            _p.set_cat_path(
+                os.path.join(current_app.config["WEB_UPLOAD_DIR"], cat_filename)
+            )
+
+        db.session.add(_p)
+        db.session.commit()
+
+    papers = Paper.query.all()
+    print(f"Updated {len(papers)} papers")
 
 
 @cli.command("upgrade_db")

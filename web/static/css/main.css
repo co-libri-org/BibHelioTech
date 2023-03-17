@@ -19,8 +19,20 @@ a.nav-link:hover {
     border: solid 1pt lightgrey !important ;
 }
 
+.region-value{
+    padding: 6px !important;
+    border: solid 1pt lightgrey !important ;
+    border-radius: 5pt;
+}
+.region-value:hover {
+    cursor: pointer;
+    padding: 6px !important;
+    border: solid 1pt grey !important ;
+    background-color: white;
+}
+
 #get-catalog-txt {
-margin-top: -25px;
+margin-top: -5px;
 padding: 1px 2px !important;
 }
 
