@@ -126,9 +126,11 @@ function setStatus(paper_id) {
     }
     if (taskStatus === 'finished' ) {
         const catElementId = '#cat-link-'+res.data.paper_id;
-        $(catElementId).removeAttr('disabled')
-        $(catElementId).find('span').removeClass('invisible').addClass('visible')
-        return false
+        $(catElementId).removeAttr('disabled');
+        if  ( res.data.cat_is_processed === false){
+            $(catElementId).find('span').removeClass('invisible').addClass('visible');
+            }
+        return false;
     }
     if ( taskStatus === 'failed'){
         $(catElementId).addAttr('disabled')

@@ -251,6 +251,7 @@ def bht_status(paper_id):
             "task_status": paper.task_status,
             "task_elapsed": elapsed,
             "task_started": paper.task_started,
+            "cat_is_processed": paper.has_cat and paper.cat_in_db,
             "paper_id": paper.id,
         }
     else:  # Get tasks info from task manager
@@ -280,6 +281,7 @@ def bht_status(paper_id):
             "task_status": task_status,
             "task_elapsed": elapsed,
             "task_started": task_started,
+            "cat_is_processed": paper.has_cat and paper.cat_in_db,
             "paper_id": paper.id,
         }
         # TODO: END CUTTING
