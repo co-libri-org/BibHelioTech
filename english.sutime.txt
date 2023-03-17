@@ -1023,4 +1023,3 @@
 
   # Reject anything that is just a timezone
   {  pattern: ( [ {{ tags["TIMEZONE"] }} ] ), over: NIL  }
-
