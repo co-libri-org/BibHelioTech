@@ -35,6 +35,7 @@ log.setLevel(logging.ERROR)
 
 @pytest.fixture(scope="session", autouse=True)
 def app():
+    """Session-wide flask app."""
     _app = create_app(bht_env="testing")
     _app.config.update(
         # Change the port that the liveserver listens on as we don't want to conflict with running:5000
