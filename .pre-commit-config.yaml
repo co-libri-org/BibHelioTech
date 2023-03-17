@@ -1,5 +1,6 @@
 default_language_version:
     python: python3.10
+exclude: ^bht/.*$
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -16,3 +17,4 @@ repos:
     hooks:
     -   id: flake8
         additional_dependencies: [ 'pep8-naming' ]
+        exclude: ^web/main/__init__.py$
