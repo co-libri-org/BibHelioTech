@@ -8,10 +8,10 @@ _ the program browses the folder "BibHelio_Tech/DATA/Papers
 		_ then it calls the "PDF_OCRiser" function of the "OCRiser.py" file:
 			_ this function scans the pdf to .jpg in the folder
 			_ then occludes the jpg in the "out_text.txt" file
-		
+
 		_ calls the GROBID_generation function in the file "GROBID_generator.py":
 			_ generates the GROBID in .tei.xml format
-		
+
 		_ calls the filter function of the file "OCR_filtering.py":
 			_ opens the file "out_text.txt
 				_ removes references; dates of reception, acceptance, publication
@@ -19,16 +19,16 @@ _ the program browses the folder "BibHelio_Tech/DATA/Papers
 				_ makes adjustments to time expressions
 				_ tokenize by phrase (Separator '. ') the file
 				_ writes the result to the file "out_filtered_text.txt
-		
+
 		_ calls the SUTime_treatement function in "SUTime_processing.py":
 			_ parse the time expressions in ISO 8601 format
 			_ writes the result to the "res_sutime.json" file
-		
+
 		_ calls the SUTime_transform function of the "SUTime_processing.py" file:
 			_ opens the file "res_sutime.json
 			_ performs adjustments on the SUTime results such as filling in missing years, months, days, hours, minutes, etc.
 			_ writes these results to the file "res_sutime_2.json
-		
+
 		_ calls the entities_finder function of the "Entities_finder.py" file:
 			_ opens the different spreadsheets of the Excel file "Entities_DataBank.xls
 			_ opens the file "out_filtered_text.txt
@@ -49,7 +49,7 @@ _ the program browses the folder "BibHelio_Tech/DATA/Papers
 			_ build the final dictionary list according to the following structure: {"start_time": "", "stop_time": "", "DOI": "", "sat": "", "inst": "", "reg": "", "D": "", "R": "", "SO": ""}
 			sort by ascending date
 			_ write the HPEvent in the DOI__bibheliotech_V1.txt files
-		
+
 	_ otherwise
 		_ re-execute all but the scanning and generation of the GROBID
 _ the program stops the GROBID service
