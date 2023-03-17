@@ -1,11 +1,12 @@
 # BibHelioTech
 
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/RichardHitier/BibHelioTech?label=Version)
 [![DOI](https://zenodo.org/badge/599997124.svg)](https://zenodo.org/badge/latestdoi/599997124)
 [![License](https://img.shields.io/github/license/ADablanc/BibHelioTech.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-![GitHub repo size](https://img.shields.io/github/repo-size/RichardHitier/BibHelioTech)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/RichardHitier/BibHelioTech/main.svg)](https://results.pre-commit.ci/latest/github/RichardHitier/BibHelioTech/main)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/RichardHitier/BibHelioTech/unittest_ci.yml?label=Tests)
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/RichardHitier/BibHelioTech?label=Version)
+![GitHub repo size](https://img.shields.io/github/repo-size/RichardHitier/BibHelioTech)
 
 ## BibHelioTech project description
 
