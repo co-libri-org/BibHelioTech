@@ -28,10 +28,18 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
-## [0.4.0-pre.4-dev] - yyyy-mm-dd - Global description of changes
+## [0.4.0] - 2023-03-17 - 4th Prototype
 ### Fixed
+- read bht_env in any case
 ### Changed
+- IHM enhancements
+- index page is catalog now
+- store task status and show
 ### New
+- cli cmd to update db from files
+- add global stats
+- set htpasswd authentication on the whole site
+- add the pre-commit.ci workflow
 
 ## [0.4.0-pre.3] - 2023-03-13 - DB Migration
 ### New
