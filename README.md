@@ -185,7 +185,64 @@ usage tips:
 
 ### ovh-deploy: see above
 
-## Manual installation
+## BHT User guide
+
+Bht web is
+Make sure the GROBID server is running:
+
+    docker compose -f docker-compose.tests.yml up --detach
+
+Copy any Heliophysics articles in pdf format under ./DATA/Papers/
+
+Now look at the main pipeline,
+
+    PYTHONPATH=. python bht --help
+
+run it on one file,
+
+    cp DATA/Papers-dist/angeo-39-379-2021.pdf  .
+    PYTHONPATH=. python bht -f angeo-39-379-2021.pdf
+
+then look at results:
+
+    ls angeo-39-379-2021/
+
+Or may be try it on a whole directory
+
+    cp -r DATA/Papers-dist papers
+    PYTHONPATH=. python bht -d papers
+    find papers/ -cmin -10  -name \*txt
+
+
+Optionally if you want to have AMDA catalogues by satellites, you need to run "SATS_catalogue_generator.py".
+
+## Versioning and git workflows
+
+`VERSION.txt` holds the current project version in a semver model. (Also see `CHANGELOG.md`)
+
+Each delivery stage is tagged `0.X.0` as the `1.0.0` goal will be the first major release that is not already reached.
+
+While going towards a minor release, the project reaches some intermediate steps:
+call it an agile sprint, or a git feature branch.
+
+Each of those steps is labelled with the version number, followed by the '.pre' keyword, and a number for the step.
+
+For example, lets say we are heading towards the `0.3.0` goal, and that we're on the fifth sprint after the `0.2.0`
+release, the
+version number will be `0.3.0.pre-5`
+
+While on a branch, the sprint is not fullfilled, thus `VERSION.txt` should contain `0.3.0.pre-5-dev` .
+
+We're using a basic git branch model, where each feature or sprint is a branch, merged in `main` branch for delivery.
+
+The merges are done with the `--no-ff` option, so the history can show the branch/sprints worklow.
+
+Any VERSION change is git tagged with `v` prepended. In the later example, that will be
+
+    git tag -a v0.3.0.pre-5 -m "v0.3.0.pre-5 Release"
+    git push origin --tags
+
+## Manual installation (the old way)
 
 You would be advised to look at `./docker/Dockerfile` for more tips.
 
@@ -224,43 +281,6 @@ STEP 4: GROBID python client installation
 * pip package should have been installed with requirements.txt
 * copy grobid-client-config.json-dist grobid-client-config.json
 
-## User guide
-
-Make sure the GROBID server is running
-
-Copy any Heliophysics articles in pdf format under ./DATA/Papers/
-
-Now run the main pipeline:
-
-    python bht
-
-Optionally if you want to have AMDA catalogues by satellites, you need to run "SATS_catalogue_generator.py".
-
-## Versioning and git workflows
-
-`VERSION.txt` holds the current project version in a semver model. (Also see `CHANGELOG.md`)
-
-Each delivery stage is tagged `0.X.0` as the `1.0.0` goal will be the first major release that is not already reached.
-
-While going towards a minor release, the project reaches some intermediate steps:
-call it an agile sprint, or a git feature branch.
-
-Each of those steps is labelled with the version number, followed by the '.pre' keyword, and a number for the step.
-
-For example, lets say we are heading towards the `0.3.0` goal, and that we're on the fifth sprint after the `0.2.0`
-release, the
-version number will be `0.3.0.pre-5`
-
-While on a branch, the sprint is not fullfilled, thus `VERSION.txt` should contain `0.3.0.pre-5-dev` .
-
-We're using a basic git branch model, where each feature or sprint is a branch, merged in `main` branch for delivery.
-
-The merges are done with the `--no-ff` option, so the history can show the branch/sprints worklow.
-
-Any VERSION change is git tagged with `v` prepended. In the later example, that will be
-
-    git tag -a v0.3.0.pre-5 -m "v0.3.0.pre-5 Release"
-    git push origin --tags
 
 ## License
 
