@@ -97,18 +97,30 @@ This will compute all `*pdf` papers in `./DATA/` directory
 
 run from your host directory
 
-    docker compose run --rm bibheliotech python bht
+    docker compose run --rm web python bht
 
 or run inside container itself
 
-    docker compose run --rm bibheliotech bash
+    docker compose run --rm web bash
+
+on single  file:
+
+    PYTHON_PATH=. python bht -f test-upload/angeo-28-233-2010.pdf
+
+or on the whole DATA/ directory:
+
     PYTHON_PATH=. python bht
+
 
 ## Continuous integration and deployment
 
 Make sure to fulfill any dependency first:
 
-    pip install -r requirements-tests.txt
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install wheel
+    pip install -r requirements.txt
 
 ### db migration
 
@@ -187,14 +199,26 @@ usage tips:
 
 ## BHT User guide
 
-Bht web is
-Make sure the GROBID server is running:
+First Follow previous instruction for 
 
-    docker compose -f docker-compose.tests.yml up --detach
+python environment and dependencies
+
+follow 'manual installation' section, STEP 1 and STEP 2
+
+config files ( ./bht-config.yml,  )
+
+
+    cp ./resources/grobid-client-config.json-dist ./grobid-client-config.json
+    cp resources/bht-config.yml-dist bht-config.yml
+
+
+Then make sure the GROBID server is running:
+
+    docker compose -f docker-compose.tests.yml up ( --detach )
 
 Copy any Heliophysics articles in pdf format under ./DATA/Papers/
 
-Now look at the main pipeline,
+Now look at how the main pipeline works
 
     PYTHONPATH=. python bht --help
 
@@ -250,17 +274,17 @@ STEP 1: install all dependency
 
 1. install pip dependencies
 
-```
-python3 -m venv venv
-source venv/bin/activate
-pip install wheel
-pip install -r requirements.txt
-```
+
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install wheel
+    pip install -r requirements.txt
 
 1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/
 1. Update the `edu/stanford/nlp/models/sutime/english.sutime.txt` under jars/stanford-corenlp-4.0.0-models.jar/
 
-STEP 2: tesseract 5.1.0 installation (Ubuntu exemple)
+STEP 2: tesseract 5.1.0 installation (Ubuntu example)
 
     sudo apt update
     sudo add-apt-repository ppa:alex-p/tesseract-ocr-devel
