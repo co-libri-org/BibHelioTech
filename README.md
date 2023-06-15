@@ -51,12 +51,12 @@ If you'd better run on another port, edit the nginx service in the `docker-compo
 
 ### Dev mode
 
-An override compose file is available in `resources/` dir
+An override compose file is available in root dir
 
-    cp .env-dist .env
+    cp .env.bht-dist .env
     $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
     docker compose down
-    cp docker compose.override.yml-dist docker compose.override.yml
+    cp docker-compose.override.yml-dist docker-compose.override.yml
     docker compose build
     docker compose up -d
 
