@@ -7,10 +7,7 @@ __all__ = [
     "yml_settings",
 ]
 
-yml_settings = {}
-
 BHT_ROOT_DIR = os.path.dirname(__file__)
-yml_settings["BHT_ROOT_DIR"] = BHT_ROOT_DIR
 
 config_file = os.path.join(BHT_ROOT_DIR, "bht-config.yml")
 if not os.path.isfile(config_file):
