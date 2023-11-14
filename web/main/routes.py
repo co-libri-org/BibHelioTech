@@ -285,8 +285,9 @@ def bht_status(paper_id):
             "paper_id": paper.id,
         }
         # TODO: END CUTTING
+    # TODO: set data = {} in one place only (here for ex)
     if data["task_started"] is not None:
-        data["task_started"] = data["task_started"].strftime("%a, %d %b %Y - %H:%M:%S")
+        data["task_started"] = data["task_started"].strftime("%a, %b %d, %Y - %H:%M:%S")
     response_object = {"status": "success", "data": data}
     return jsonify(response_object)
 

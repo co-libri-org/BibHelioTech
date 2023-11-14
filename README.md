@@ -51,12 +51,12 @@ If you'd better run on another port, edit the nginx service in the `docker-compo
 
 ### Dev mode
 
-An override compose file is available in `resources/` dir
+An override compose file is available in root dir
 
-    cp .env-dist .env
+    cp .env.bht-dist .env
     $(EDITOR) .env    # to set you own UID and GID from `id -u` `id -g`
     docker compose down
-    cp docker compose.override.yml-dist docker compose.override.yml
+    cp docker-compose.override.yml-dist docker-compose.override.yml
     docker compose build
     docker compose up -d
 
@@ -97,18 +97,30 @@ This will compute all `*pdf` papers in `./DATA/` directory
 
 run from your host directory
 
-    docker compose run --rm bibheliotech python bht
+    docker compose run --rm web python bht
 
 or run inside container itself
 
-    docker compose run --rm bibheliotech bash
+    docker compose run --rm web bash
+
+on single  file:
+
+    PYTHON_PATH=. python bht -f test-upload/angeo-28-233-2010.pdf
+
+or on the whole DATA/ directory:
+
     PYTHON_PATH=. python bht
+
 
 ## Continuous integration and deployment
 
 Make sure to fulfill any dependency first:
 
-    pip install -r requirements-tests.txt
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install wheel
+    pip install -r requirements.txt
 
 ### db migration
 
@@ -185,54 +197,46 @@ usage tips:
 
 ### ovh-deploy: see above
 
-## Manual installation
+## BHT User guide
 
-You would be advised to look at `./docker/Dockerfile` for more tips.
+First Follow previous instruction for 
 
-STEP 1: install all dependency
+python environment and dependencies
 
-1. install pip dependencies
+follow 'manual installation' section, STEP 1 and STEP 2
 
-```
-python3 -m venv venv
-source venv/bin/activate
-pip install wheel
-pip install -r requirements.txt
-```
+config files ( ./bht-config.yml,  )
 
-1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/
-1. Update the `edu/stanford/nlp/models/sutime/english.sutime.txt` under jars/stanford-corenlp-4.0.0-models.jar/
 
-STEP 2: tesseract 5.1.0 installation (Ubuntu exemple)
+    cp ./resources/grobid-client-config.json-dist ./grobid-client-config.json
+    cp resources/bht-config.yml-dist bht-config.yml
 
-    sudo apt update
-    sudo add-apt-repository ppa:alex-p/tesseract-ocr-devel
-    sudo apt install -y tesseract-ocr
-    sudo apt update
-    tesseract --version
 
-STEP 3: GROBID (0.7.1) installation
+Then make sure the GROBID server is running:
 
-* install GROBID under ../
-* Follow install instruction on: https://grobid.readthedocs.io/en/latest/Install-Grobid/
-* Make sure you have JVM 8 used by default !
-
-or run a grobid docker container
-
-STEP 4: GROBID python client installation
-
-* pip package should have been installed with requirements.txt
-* copy grobid-client-config.json-dist grobid-client-config.json
-
-## User guide
-
-Make sure the GROBID server is running
+    docker compose -f docker-compose.tests.yml up ( --detach )
 
 Copy any Heliophysics articles in pdf format under ./DATA/Papers/
 
-Now run the main pipeline:
+Now look at how the main pipeline works
 
-    python bht
+    PYTHONPATH=. python bht --help
+
+run it on one file,
+
+    cp DATA/Papers-dist/angeo-39-379-2021.pdf  .
+    PYTHONPATH=. python bht -f angeo-39-379-2021.pdf
+
+then look at results:
+
+    ls angeo-39-379-2021/
+
+Or may be try it on a whole directory
+
+    cp -r DATA/Papers-dist papers
+    PYTHONPATH=. python bht -d papers
+    find papers/ -cmin -10  -name \*txt
+
 
 Optionally if you want to have AMDA catalogues by satellites, you need to run "SATS_catalogue_generator.py".
 
@@ -261,6 +265,46 @@ Any VERSION change is git tagged with `v` prepended. In the later example, that 
 
     git tag -a v0.3.0.pre-5 -m "v0.3.0.pre-5 Release"
     git push origin --tags
+
+## Manual installation (the old way)
+
+You would be advised to look at `./docker/Dockerfile` for more tips.
+
+STEP 1: install all dependency
+
+1. install pip dependencies
+
+
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install wheel
+    pip install -r requirements.txt
+
+1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/
+1. Update the `edu/stanford/nlp/models/sutime/english.sutime.txt` under jars/stanford-corenlp-4.0.0-models.jar/
+
+STEP 2: tesseract 5.1.0 installation (Ubuntu example)
+
+    sudo apt update
+    sudo add-apt-repository ppa:alex-p/tesseract-ocr-devel
+    sudo apt install -y tesseract-ocr
+    sudo apt update
+    tesseract --version
+
+STEP 3: GROBID (0.7.1) installation
+
+* install GROBID under ../
+* Follow install instruction on: https://grobid.readthedocs.io/en/latest/Install-Grobid/
+* Make sure you have JVM 8 used by default !
+
+or run a grobid docker container
+
+STEP 4: GROBID python client installation
+
+* pip package should have been installed with requirements.txt
+* copy grobid-client-config.json-dist grobid-client-config.json
+
 
 ## License
 
