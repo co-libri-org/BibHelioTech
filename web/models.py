@@ -17,7 +17,7 @@ def rows_to_catstring(events_list, catalog_name):
     date_now = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     r_string = f"""
 # Name: {catalog_name};
-# BibHelioTechVersion: V{yml_settings["BHT_VERSION"]};
+# BibHelioTechVersion: V{yml_settings["BHT_PIPELINE_VERSION"]};
 # Creation Date: {date_now};
 # Description: Catalogue of events resulting from the HelioNER code
 # (Dablanc & Génot, "https://github.com/ADablanc/BibHelioTech.git")

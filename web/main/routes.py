@@ -456,8 +456,8 @@ def api_catalogs_txt():
     ]
     catalog_txt_stream = rows_to_catstring(events_list, mission.name)
     date_now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    bht_version = current_app.config["BHT_VERSION"]
-    file_name = f"{mission.name}_{date_now}_bibheliotech_V{bht_version}.txt"
+    bht_pipeline_version = current_app.config["BHT_PIPELINE_VERSION"]
+    file_name = f"{mission.name}_{date_now}_bibheliotech_V{bht_pipeline_version}.txt"
     upload_dir = current_app.config["WEB_UPLOAD_DIR"]
     if not os.path.exists(upload_dir):
         os.makedirs(upload_dir)
