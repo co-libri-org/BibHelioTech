@@ -9,7 +9,7 @@ from bht.OCRiser import PDF_OCRiser
 from bht.errors import BhtResultError
 
 
-def run_file(orig_pdf_file, result_base_dir):
+def bht_run_file(orig_pdf_file, result_base_dir):
 
     # 0- Move original file to working directory
     pdf_filename = os.path.basename(orig_pdf_file)
@@ -46,7 +46,7 @@ def run_file(orig_pdf_file, result_base_dir):
     return catalog_file
 
 
-def run_bht_dir(_base_pdf_dir):
+def bht_run_dir(_base_pdf_dir):
     for folders_or_pdf in os.listdir(_base_pdf_dir):
         folders_or_pdf_path = os.path.join(_base_pdf_dir, folders_or_pdf)
         if folders_or_pdf.endswith(

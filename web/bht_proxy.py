@@ -1,4 +1,4 @@
-from bht.pipeline import run_file as bht_run_file
+from bht.pipeline import bht_run_file
 from web import db
 from web.errors import PdfFileError
 from web.models import Paper

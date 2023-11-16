@@ -3,7 +3,7 @@ import glob
 import os
 from datetime import datetime
 
-from bht.pipeline import run_file, run_bht_dir
+from bht.pipeline import bht_run_file, bht_run_dir
 from bht_config import yml_settings
 
 if __name__ == '__main__':
@@ -44,9 +44,9 @@ if __name__ == '__main__':
 
         sys.exit()
     if args.pdf_file:
-        run_file(args.pdf_file, papers_dir)
+        bht_run_file(args.pdf_file, papers_dir)
     elif args.pdf_dir:
-        run_bht_dir(args.pdf_dir)
+        bht_run_dir(args.pdf_dir)
 
     end_time = datetime.now()
     print("TOTAL ELAPSED TIME: ---" + str(end_time - start_time) + "---")
