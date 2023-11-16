@@ -12,6 +12,15 @@ def hpevents_in_db(hpevents_list, db):
 
 
 @pytest.fixture(scope="module")
+def test_logfile(tmp_path_factory):
+    _logfile = tmp_path_factory.mktemp("test_temp") / "test.log"
+    yield _logfile
+    import os
+    if os.path.isfile(_logfile):
+        os.remove(_logfile)
+
+
+@pytest.fixture(scope="module")
 def tei_for_test():
     import os
 

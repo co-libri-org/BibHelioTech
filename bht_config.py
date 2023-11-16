@@ -17,10 +17,11 @@ if not os.path.isfile(config_file):
 with open(config_file) as f:
     yml_settings = yaml.safe_load(f)
 
+yml_settings["BHT_PIPELINE_VERSION"] = BHT_PIPELINE_VERSION
+yml_settings["BHT_LOGFILE_PATH"] = os.path.join(BHT_ROOT_DIR, yml_settings["BHT_LOGFILE_NAME"])
+
 with open(os.path.join(BHT_ROOT_DIR, "VERSION.txt")) as version_file:
     yml_settings["VERSION"] = version_file.read().strip()
-
-yml_settings["BHT_PIPELINE_VERSION"] = BHT_PIPELINE_VERSION
 
 if not os.path.isabs(yml_settings["BHT_DATA_DIR"]):
     yml_settings["BHT_DATA_DIR"] = os.path.join(
