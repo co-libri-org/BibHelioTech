@@ -3,6 +3,8 @@ from urllib.parse import urlencode
 import pytest
 from flask import current_app
 
+from bht.logging import init_logger
+
 
 @pytest.fixture(scope="function")
 def hpevents_in_db(hpevents_list, db):
@@ -18,6 +20,11 @@ def test_logfile(tmp_path_factory):
     import os
     if os.path.isfile(_logfile):
         os.remove(_logfile)
+
+@pytest.fixture(scope="module")
+def logger(tmp_path_factory, test_logfile):
+    _logger = init_logger(test_logfile)
+    yield _logger
 
 
 @pytest.fixture(scope="module")

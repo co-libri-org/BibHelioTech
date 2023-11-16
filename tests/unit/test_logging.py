@@ -10,7 +10,12 @@ class TestLogging:
         _logger = init_logger()
         assert type(_logger) is logging.Logger
 
+    def test_logger_fixture(self, logger):
+        assert type(logger) is logging.Logger
+
     def test_logfile_created(self, test_logfile):
         assert not os.path.isfile(test_logfile)
         _logger = init_logger(test_logfile)
+        _logger.debug("Test debug message")
+        _logger.info("Test info message")
         assert os.path.isfile(test_logfile)
