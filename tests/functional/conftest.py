@@ -42,3 +42,21 @@ def paperslist_for_tests():
         with open(pdf_file, "rb", buffering=0) as fp:
             papers_ids.append(pdf_to_db(fp.readall(), os.path.basename(pdf_file)))
     yield papers_ids
+
+
+@pytest.fixture(scope="session")
+def paperslist_for_tests():
+    """Add to db a list of pdf papers found in DATA/Papers-dist/ dir
+
+    :return: list of papers id from db
+    """
+    papers_ids = []
+    papers_dir = os.path.join(current_app.config["BHT_DATA_DIR"], "Papers-dist")
+    pdf_list = glob.glob(
+        os.path.join(papers_dir, "**", "angeo*pdf"),
+        recursive=True,
+    )
+    for pdf_file in pdf_list:
+        with open(pdf_file, "rb", buffering=0) as fp:
+            papers_ids.append(pdf_to_db(fp.readall(), os.path.basename(pdf_file)))
+    yield papers_ids
