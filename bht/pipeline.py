@@ -11,7 +11,7 @@ from bht.errors import BhtResultError
 
 def bht_run_file(orig_pdf_file, result_base_dir):
     """
-    Given a pdf file , go through the whole pipeline process and make a catalog
+    Given a pdf file , go through the whole pipeline process and make a cataog
 
     @param orig_pdf_file:  the sci article in pdf format
     @param result_base_dir: the root working directory

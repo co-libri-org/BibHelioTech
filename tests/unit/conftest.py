@@ -21,6 +21,7 @@ def test_logfile(tmp_path_factory):
     if os.path.isfile(_logfile):
         os.remove(_logfile)
 
+
 @pytest.fixture(scope="module")
 def logger(tmp_path_factory, test_logfile):
     _logger = init_logger(test_logfile)
