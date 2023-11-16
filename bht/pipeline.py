@@ -10,6 +10,13 @@ from bht.errors import BhtResultError
 
 
 def bht_run_file(orig_pdf_file, result_base_dir):
+    """
+    Given a pdf file , go through the whole pipeline process and make a catalog
+
+    @param orig_pdf_file:  the sci article in pdf format
+    @param result_base_dir: the root working directory
+    @return: an HPEvents catalog
+    """
 
     # 0- Move original file to working directory
     pdf_filename = os.path.basename(orig_pdf_file)
@@ -47,6 +54,12 @@ def bht_run_file(orig_pdf_file, result_base_dir):
 
 
 def bht_run_dir(_base_pdf_dir):
+    """
+    Given a base directory, operate all the  pipeline operations
+
+    @param _base_pdf_dir:
+    @return:  None
+    """
     for folders_or_pdf in os.listdir(_base_pdf_dir):
         folders_or_pdf_path = os.path.join(_base_pdf_dir, folders_or_pdf)
         if folders_or_pdf.endswith(
