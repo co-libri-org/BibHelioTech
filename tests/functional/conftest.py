@@ -5,7 +5,6 @@ import pytest
 from flask import current_app
 
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 
 from web.main.routes import pdf_to_db
 
@@ -18,8 +17,11 @@ skip_selenium = pytest.mark.skipif(
 
 @pytest.fixture(scope="module")
 def firefox_driver():
+    from selenium.webdriver.firefox.options import Options
+    from subprocess import getoutput
     options = Options()
-    options.add_argument("-headless")
+    options.add_argument("--headless")
+    options.binary_location = getoutput("find /snap/firefox -name firefox").split("\n")[-1]
     driver = webdriver.Firefox(options=options)
     yield driver
 
