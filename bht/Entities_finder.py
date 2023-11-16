@@ -166,7 +166,10 @@ def entities_finder(current_OCR_folder):
     content_upper = file.read()
     file.close()
 
-    file_name = current_OCR_folder + "/" + os.path.basename(current_OCR_folder) + ".tei.xml"
+    # file_name = current_OCR_folder + "/" + os.path.basename(current_OCR_folder) + ".tei.xml"
+    import glob
+    pattern = os.path.join(current_OCR_folder, '*.tei.xml')
+    file_name = glob.glob(pattern)[0]
     DOI = find_DOI(file_name) # retrieving the DOI of the article being processed.
 
     files_path_json = os.path.join(current_OCR_folder, "res_sutime_2.json")  # loading transformed SUTime results
