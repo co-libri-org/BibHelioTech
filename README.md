@@ -179,7 +179,7 @@ https://pypi.org/project/flake8-for-pycharm/
 
 either run on your workdir, but launch grobid and redis first:
 
-    docker-compose -f docker-compose.tests.yml
+    docker compose -f docker-compose.tests.yml up -d
     cp resources/bht-config.yml-dist ./bht-config.yml
     python -m pytest tests
 
@@ -270,7 +270,7 @@ Any VERSION change is git tagged with `v` prepended. In the later example, that 
 
 ## Manual installation (the old way)
 
-You would be advised to look at `./docker/Dockerfile` for more tips.
+You would be advised to look at `./Dockerfile` for more tips.
 
 STEP 1: install all dependency
 
