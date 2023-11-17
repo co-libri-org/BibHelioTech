@@ -1,4 +1,4 @@
-from enum import IntEnum, auto
+from enum import StrEnum, auto
 
 import requests
 
@@ -7,7 +7,7 @@ from web.errors import IstexParamError
 ISTEX_BASE_URL = "https://api.istex.fr/document/"
 
 
-class IstexDoctype(IntEnum):
+class IstexDoctype(StrEnum):
     PDF = auto()
     ZIP = auto()
     TXT = auto()
@@ -69,3 +69,14 @@ def istex_params_to_json(istex_params):
             raise IstexParamError("HEY ! Should set all keys")
     r = requests.get(url=ISTEX_BASE_URL, params=istex_params)
     return istex_json_to_json(r.json())
+
+
+def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
+    from requests import RequestException
+    istex_url = istex_id_to_url(istex_id, doc_type)
+    filename = f"{istex_id}.{doc_type}"
+    try:
+        with requests.get(istex_url) as r:
+            return r.content, filename
+    except RequestException as e:
+        raise e
