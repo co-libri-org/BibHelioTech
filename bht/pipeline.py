@@ -9,6 +9,8 @@ from bht.OCR_filtering import ocr_filter
 from bht.OCRiser import PDF_OCRiser
 from bht.bht_logging import init_logger
 from bht.errors import BhtResultError, BhtPipelineError
+from bht_config import yml_settings
+from web.istex_proxy import IstexDoctype
 
 
 class PipeStep(IntEnum):
@@ -23,23 +25,30 @@ class PipeStep(IntEnum):
 _logger = init_logger()
 
 
-def run_step_mkdir(orig_pdf_file, result_base_dir):
+def run_step_mkdir(orig_file, result_base_dir, doc_type=IstexDoctype.PDF):
     """
     Move a pdf file to same name directory
 
-    @param orig_pdf_file:
+    @param doc_type:
+    @param orig_file:
     @param result_base_dir:
     @return:
     """
     # 0- Move original file to working directory
     _logger.info("BHT PIPELINE STEP 0: creating file directory")
-    pdf_filename = os.path.basename(orig_pdf_file)
-    paper_name = pdf_filename.replace(".pdf", "")
-    dest_pdf_dir = os.path.join(result_base_dir, paper_name)
-    dest_pdf_file = os.path.join(dest_pdf_dir, pdf_filename)
-    os.makedirs(dest_pdf_dir, exist_ok=True)
-    shutil.copy(orig_pdf_file, dest_pdf_file)
-    return dest_pdf_dir
+    if doc_type == IstexDoctype.PDF:
+        filename = os.path.basename(orig_file)
+        paper_name = filename.replace(".pdf", "")
+    elif doc_type == IstexDoctype.TXT:
+        filename = "out_text.txt"
+        paper_name = orig_file.replace(".txt", "")
+    else:
+        raise (BhtPipelineError(f"Such doctype not managed {doc_type}"))
+    dest_dir = os.path.join(result_base_dir, paper_name)
+    dest_file = os.path.join(dest_dir, filename)
+    os.makedirs(dest_dir, exist_ok=True)
+    shutil.copy(orig_file, dest_file)
+    return dest_dir
 
 
 def run_step_ocr(dest_pdf_dir):
