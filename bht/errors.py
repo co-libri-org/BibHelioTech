@@ -6,6 +6,11 @@ class BhtError(Exception):
         super().__init__(self.message)
 
 
+class BhtPipelineError(BhtError):
+    """Pipeline error"""
+    pass
+
+
 class BhtPathError(BhtError):
     """File or Dir path error"""
     pass

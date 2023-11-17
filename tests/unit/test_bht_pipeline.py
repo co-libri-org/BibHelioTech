@@ -1,7 +1,9 @@
 import os
+import pytest
 
 from bht.GROBID_generator import GROBID_generation
-from bht.pipeline import run_pipeline
+from bht.errors import BhtPipelineError
+from bht.pipeline import run_pipeline, PipeStep
 from bht.published_date_finder import published_date_finder
 from bht_config import yml_settings
 from tests.conftest import skip_bht, skip_slow_test
@@ -10,6 +12,18 @@ from web.bht_proxy import pipe_paper
 
 @skip_bht
 class TestBhtPipeline:
+    def test_pipeline(self):
+        pipe_steps = [PipeStep.OCR, PipeStep.GROBID]
+        res_steps = run_pipeline("path", pipe_steps=pipe_steps)
+        assert res_steps == pipe_steps
+
+    def test_pipeline_wrong_step(self):
+        with pytest.raises(BhtPipelineError):
+            run_pipeline("path", pipe_steps=[PipeStep.OCR, PipeStep.GROBID, 1000])
+
+
+@skip_bht
+class TestBhtPipelineSteps:
     @skip_slow_test
     def test_pipepaper(self, paper_for_test):
         """

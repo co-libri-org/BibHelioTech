@@ -1,13 +1,52 @@
 import glob
 import os
 import shutil
+from enum import IntEnum, auto
 
 from bht.Entities_finder import entities_finder
 from bht.GROBID_generator import GROBID_generation
 from bht.OCR_filtering import ocr_filter
 from bht.OCRiser import PDF_OCRiser
 from bht.bht_logging import init_logger
-from bht.errors import BhtResultError
+from bht.errors import BhtResultError, BhtPipelineError
+
+
+class PipeStep(IntEnum):
+    MKDIR = auto()
+    OCR = auto()
+    GROBID = auto()
+    FILTER = auto()
+    SUTIME_1 = auto()
+    SUTIME_2 = auto()
+    ENTITIES = auto()
+
+
+def run_step_mkdir():
+    pass
+
+
+def run_step_ocr():
+    pass
+
+
+def run_step_grobid():
+    pass
+
+
+def run_step_filter():
+    pass
+
+
+def run_step_sutime_1():
+    pass
+
+
+def run_step_sutime_2():
+    pass
+
+
+def run_step_entities():
+    pass
 
 
 def bht_run_file(orig_pdf_file, result_base_dir):
@@ -104,3 +143,47 @@ def bht_run_dir(_base_pdf_dir):
                     # transforms some results of sutime to complete missing, etc ... save results in "res_sutime_2.json"
                     SUTime_transform(pdf_paths)
                     entities_finder(pdf_paths)  # entities recognition and association + writing of HPEvent
+
+
+def run_pipeline(path, path_type="pdf", pipe_steps=[]):
+    """
+
+    @param path:
+    @param path_type:
+    @param pipe_steps:
+    @return:
+    """
+    logger = init_logger()
+    done_steps = []
+    for s in pipe_steps:
+        if not isinstance(s, PipeStep):
+            raise (BhtPipelineError("So such step"))
+    if PipeStep.MKDIR in pipe_steps:
+        run_step_mkdir()
+        done_steps.append(PipeStep.MKDIR)
+
+    if PipeStep.OCR in pipe_steps:
+        run_step_ocr()
+        done_steps.append(PipeStep.OCR)
+
+    if PipeStep.GROBID in pipe_steps:
+        run_step_grobid()
+        done_steps.append(PipeStep.GROBID)
+
+    if PipeStep.FILTER in pipe_steps:
+        run_step_filter()
+        done_steps.append(PipeStep.FILTER)
+
+    if PipeStep.SUTIME_1 in pipe_steps:
+        run_step_sutime_1()
+        done_steps.append(PipeStep.SUTIME_1)
+
+    if PipeStep.SUTIME_2 in pipe_steps:
+        run_step_sutime_2()
+        done_steps.append(PipeStep.SUTIME_2)
+
+    if PipeStep.ENTITIES in pipe_steps:
+        run_step_entities()
+        done_steps.append(PipeStep.ENTITIES)
+
+    return done_steps
