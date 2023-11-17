@@ -6,6 +6,7 @@ from bht.Entities_finder import entities_finder
 from bht.GROBID_generator import GROBID_generation
 from bht.OCR_filtering import ocr_filter
 from bht.OCRiser import PDF_OCRiser
+from bht.bht_logging import init_logger
 from bht.errors import BhtResultError
 
 
@@ -18,7 +19,10 @@ def bht_run_file(orig_pdf_file, result_base_dir):
     @return: an HPEvents catalog
     """
 
+    _logger = init_logger()
+
     # 0- Move original file to working directory
+    _logger.info("BHT 0: creating file directory")
     pdf_filename = os.path.basename(orig_pdf_file)
     paper_name = pdf_filename.replace(".pdf", "")
     dest_pdf_dir = os.path.join(result_base_dir, paper_name)
@@ -27,12 +31,15 @@ def bht_run_file(orig_pdf_file, result_base_dir):
     shutil.copy(orig_pdf_file, dest_pdf_file)
 
     # 1- OCR the pdf file
+    _logger.info("BHT 1: ocerising pdf")
     PDF_OCRiser(dest_pdf_dir, dest_pdf_file)
 
     # 2- Generate the XML GROBID file
+    _logger.info("BHT 2: grobidding")
     GROBID_generation(dest_pdf_dir)
 
     # 3- Sutime processing
+    _logger.info("BHT 3: Sutime")
     from bht.SUTime_processing import SUTime, SUTime_treatement, SUTime_transform
 
     sutime = SUTime(mark_time_ranges=True, include_range=True)  # load sutime wrapper
@@ -42,10 +49,11 @@ def bht_run_file(orig_pdf_file, result_base_dir):
     SUTime_treatement(dest_pdf_dir, sutime)
     # transforms some results of sutime to complete missing, etc ... save results in "res_sutime_2.json"
     SUTime_transform(dest_pdf_dir)
-    # entities recognition and association + writing of HPEvent
+
+    # 4- Entities recognition, association and writing of HPEvent
     entities_finder(dest_pdf_dir)
     search_pattern = os.path.join(dest_pdf_dir, '**', '*bibheliotech*.txt')
-    print(f"searching {search_pattern}")
+    _logger.debug(f"searching {search_pattern}")
     result_catalogs = glob.glob(search_pattern, recursive=True)
     catalog_file = result_catalogs[0]
     if not os.path.isfile(catalog_file):

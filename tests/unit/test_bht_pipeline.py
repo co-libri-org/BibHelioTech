@@ -1,6 +1,7 @@
 import os
 
 from bht.GROBID_generator import GROBID_generation
+from bht.pipeline import run_pipeline
 from bht.published_date_finder import published_date_finder
 from bht_config import yml_settings
 from tests.conftest import skip_bht, skip_slow_test

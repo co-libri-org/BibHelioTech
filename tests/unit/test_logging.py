@@ -1,7 +1,7 @@
 import logging
 import os.path
 
-from bht.logging import init_logger
+from bht.bht_logging import init_logger
 
 
 class TestLogging:

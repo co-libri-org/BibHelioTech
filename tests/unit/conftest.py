@@ -3,7 +3,7 @@ from urllib.parse import urlencode
 import pytest
 from flask import current_app
 
-from bht.logging import init_logger
+from bht.bht_logging import init_logger
 
 
 @pytest.fixture(scope="function")
