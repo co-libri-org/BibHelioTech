@@ -5,7 +5,7 @@ from PIL import Image
 from pdf2image import convert_from_path
 
 
-def PDF_OCRiser(current_OCR_folder,PDF_file):
+def PDF_OCRiser(current_OCR_folder, PDF_file):
     '''
     Part #1 : Converting PDF to images
     '''

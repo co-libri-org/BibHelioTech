@@ -16,37 +16,69 @@ class PipeStep(IntEnum):
     OCR = auto()
     GROBID = auto()
     FILTER = auto()
-    SUTIME_1 = auto()
-    SUTIME_2 = auto()
+    SUTIME = auto()
     ENTITIES = auto()
 
 
-def run_step_mkdir():
-    pass
+_logger = init_logger()
 
 
-def run_step_ocr():
-    pass
+def run_step_mkdir(orig_pdf_file, result_base_dir):
+    """
+    Move a pdf file to same name directory
+
+    @param orig_pdf_file:
+    @param result_base_dir:
+    @return:
+    """
+    # 0- Move original file to working directory
+    _logger.info("BHT PIPELINE STEP 0: creating file directory")
+    pdf_filename = os.path.basename(orig_pdf_file)
+    paper_name = pdf_filename.replace(".pdf", "")
+    dest_pdf_dir = os.path.join(result_base_dir, paper_name)
+    dest_pdf_file = os.path.join(dest_pdf_dir, pdf_filename)
+    os.makedirs(dest_pdf_dir, exist_ok=True)
+    shutil.copy(orig_pdf_file, dest_pdf_file)
+    return dest_pdf_dir
 
 
-def run_step_grobid():
-    pass
+def run_step_ocr(dest_pdf_dir):
+    # 1- OCR the pdf file
+    _logger.info("BHT PIPELINE STEP 1: ocerising pdf")
+    search_pattern = os.path.join(dest_pdf_dir, '*.pdf')
+    dest_pdf_file = glob.glob(search_pattern, recursive=True)[0]
+    PDF_OCRiser(dest_pdf_dir, dest_pdf_file)
 
 
-def run_step_filter():
-    pass
+def run_step_grobid(dest_pdf_dir):
+    _logger.info("BHT PIPELINE STEP 2: grobidding")
+    GROBID_generation(dest_pdf_dir)
 
 
-def run_step_sutime_1():
-    pass
+def run_step_filter(dest_pdf_dir):
+    _logger.info("BHT PIPELINE STEP 3: Filtering")
+    ocr_filter(dest_pdf_dir)
 
 
-def run_step_sutime_2():
-    pass
+def run_step_sutime(dest_pdf_dir):
+    _logger.info("BHT PIPELINE STEP 4: Sutime")
+    from bht.SUTime_processing import SUTime, SUTime_treatement, SUTime_transform
+
+    sutime = SUTime(mark_time_ranges=True, include_range=True)  # load sutime wrapper
+    # SUTime read all the file and save its results in a file "res_sutime.json"
+    SUTime_treatement(dest_pdf_dir, sutime)
+    # transforms some results of sutime to complete missing, etc ... save results in "res_sutime_2.json"
+    SUTime_transform(dest_pdf_dir)
 
 
-def run_step_entities():
-    pass
+def run_step_entities(dest_pdf_dir):
+    _logger.info("BHT PIPELINE STEP 5: Search Entities")
+    entities_finder(dest_pdf_dir)
+    search_pattern = os.path.join(dest_pdf_dir, '**', '*bibheliotech*.txt')
+    _logger.debug(f"searching {search_pattern}")
+    result_catalogs = glob.glob(search_pattern, recursive=True)
+    catalog_file = result_catalogs[0]
+    return catalog_file
 
 
 def bht_run_file(orig_pdf_file, result_base_dir):
@@ -58,43 +90,24 @@ def bht_run_file(orig_pdf_file, result_base_dir):
     @return: an HPEvents catalog
     """
 
-    _logger = init_logger()
+    # 0
+    dest_pdf_dir = run_step_mkdir(orig_pdf_file, result_base_dir)
 
-    # 0- Move original file to working directory
-    _logger.info("BHT 0: creating file directory")
-    pdf_filename = os.path.basename(orig_pdf_file)
-    paper_name = pdf_filename.replace(".pdf", "")
-    dest_pdf_dir = os.path.join(result_base_dir, paper_name)
-    dest_pdf_file = os.path.join(dest_pdf_dir, pdf_filename)
-    os.makedirs(dest_pdf_dir, exist_ok=True)
-    shutil.copy(orig_pdf_file, dest_pdf_file)
-
-    # 1- OCR the pdf file
-    _logger.info("BHT 1: ocerising pdf")
-    PDF_OCRiser(dest_pdf_dir, dest_pdf_file)
+    # 1
+    run_step_ocr(dest_pdf_dir)
 
     # 2- Generate the XML GROBID file
-    _logger.info("BHT 2: grobidding")
-    GROBID_generation(dest_pdf_dir)
+    run_step_grobid(dest_pdf_dir)
+
+    # 3- filter result of the OCR to deletes references, change HHmm4 to HH:mm, etc ...
+    run_step_filter(dest_pdf_dir)
 
     # 3- Sutime processing
-    _logger.info("BHT 3: Sutime")
-    from bht.SUTime_processing import SUTime, SUTime_treatement, SUTime_transform
-
-    sutime = SUTime(mark_time_ranges=True, include_range=True)  # load sutime wrapper
-    # filter result of the OCR to deletes references, change HHmm4 to HH:mm, etc ...
-    ocr_filter(dest_pdf_dir)
-    # SUTime read all the file and save its results in a file "res_sutime.json"
-    SUTime_treatement(dest_pdf_dir, sutime)
-    # transforms some results of sutime to complete missing, etc ... save results in "res_sutime_2.json"
-    SUTime_transform(dest_pdf_dir)
+    run_step_sutime(dest_pdf_dir)
 
     # 4- Entities recognition, association and writing of HPEvent
-    entities_finder(dest_pdf_dir)
-    search_pattern = os.path.join(dest_pdf_dir, '**', '*bibheliotech*.txt')
-    _logger.debug(f"searching {search_pattern}")
-    result_catalogs = glob.glob(search_pattern, recursive=True)
-    catalog_file = result_catalogs[0]
+    catalog_file = run_step_entities(dest_pdf_dir)
+
     if not os.path.isfile(catalog_file):
         raise BhtResultError(f"No such file {catalog_file}")
     return catalog_file
@@ -153,11 +166,11 @@ def run_pipeline(path, path_type="pdf", pipe_steps=[]):
     @param pipe_steps:
     @return:
     """
-    logger = init_logger()
     done_steps = []
     for s in pipe_steps:
         if not isinstance(s, PipeStep):
             raise (BhtPipelineError("So such step"))
+
     if PipeStep.MKDIR in pipe_steps:
         run_step_mkdir()
         done_steps.append(PipeStep.MKDIR)
@@ -174,13 +187,9 @@ def run_pipeline(path, path_type="pdf", pipe_steps=[]):
         run_step_filter()
         done_steps.append(PipeStep.FILTER)
 
-    if PipeStep.SUTIME_1 in pipe_steps:
-        run_step_sutime_1()
-        done_steps.append(PipeStep.SUTIME_1)
-
-    if PipeStep.SUTIME_2 in pipe_steps:
-        run_step_sutime_2()
-        done_steps.append(PipeStep.SUTIME_2)
+    if PipeStep.SUTIME in pipe_steps:
+        run_step_sutime()
+        done_steps.append(PipeStep.SUTIME)
 
     if PipeStep.ENTITIES in pipe_steps:
         run_step_entities()

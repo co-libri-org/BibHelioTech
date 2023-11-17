@@ -5,7 +5,7 @@ from bht_config import yml_settings
 
 
 def init_logger(logfile=yml_settings["BHT_LOGFILE_PATH"], clear=False):
-    logger = logging.getLogger('bht_logger')
+    logger = logging.getLogger('bht')
 
     # remove all handlers if any
     if clear and len(logger.handlers):
@@ -35,5 +35,4 @@ def init_logger(logfile=yml_settings["BHT_LOGFILE_PATH"], clear=False):
     console_handler.setFormatter(console_formatter)
     logger.addHandler(console_handler)
 
-    logger.info(f"NEW LOGGER : {logfile}")
     return logger
