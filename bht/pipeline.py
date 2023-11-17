@@ -82,7 +82,7 @@ def run_step_sutime(dest_pdf_dir):
 
 def run_step_entities(dest_pdf_dir):
     _logger.info("BHT PIPELINE STEP 5: Search Entities")
-    entities_finder(dest_pdf_dir)
+    entities_finder(dest_pdf_dir, '10.1051/0004-6361/201937378')
     search_pattern = os.path.join(dest_pdf_dir, '**', '*bibheliotech*.txt')
     _logger.debug(f"searching {search_pattern}")
     result_catalogs = glob.glob(search_pattern, recursive=True)
@@ -167,9 +167,10 @@ def bht_run_dir(_base_pdf_dir):
                     entities_finder(pdf_paths)  # entities recognition and association + writing of HPEvent
 
 
-def run_pipeline(path, path_type="pdf", pipe_steps=[]):
+def run_pipeline(path, doc_type, pipe_steps=[]):
     """
 
+    @param doc_type:
     @param path:
     @param path_type:
     @param pipe_steps:
@@ -181,7 +182,7 @@ def run_pipeline(path, path_type="pdf", pipe_steps=[]):
             raise (BhtPipelineError("So such step"))
 
     if PipeStep.MKDIR in pipe_steps:
-        run_step_mkdir()
+        dest_file_dir = run_step_mkdir(path, yml_settings["BHT_DATA_DIR"], doc_type=doc_type)
         done_steps.append(PipeStep.MKDIR)
 
     if PipeStep.OCR in pipe_steps:
@@ -193,15 +194,15 @@ def run_pipeline(path, path_type="pdf", pipe_steps=[]):
         done_steps.append(PipeStep.GROBID)
 
     if PipeStep.FILTER in pipe_steps:
-        run_step_filter()
+        run_step_filter(dest_file_dir)
         done_steps.append(PipeStep.FILTER)
 
     if PipeStep.SUTIME in pipe_steps:
-        run_step_sutime()
+        run_step_sutime(dest_file_dir)
         done_steps.append(PipeStep.SUTIME)
 
     if PipeStep.ENTITIES in pipe_steps:
-        run_step_entities()
+        run_step_entities(dest_file_dir)
         done_steps.append(PipeStep.ENTITIES)
 
     return done_steps
