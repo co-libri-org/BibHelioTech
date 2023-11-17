@@ -1,3 +1,5 @@
+from enum import IntEnum, auto
+
 import requests
 
 from web.errors import IstexParamError
@@ -5,11 +7,35 @@ from web.errors import IstexParamError
 ISTEX_BASE_URL = "https://api.istex.fr/document/"
 
 
-def istex_id_to_url(istex_id):
+class IstexDoctype(IntEnum):
+    PDF = auto()
+    ZIP = auto()
+    TXT = auto()
+    TEI = auto()
+    CLEAN = auto()
+
+
+def istex_id_to_url(istex_id, doc_type=IstexDoctype.PDF):
+    """
+    Build pdf url to request Istex.
+
+    @param doc_type:
+    @param istex_id:  the istex document id.
+    @return: a http url returning a pdf file
+    """
     req_url = ISTEX_BASE_URL + istex_id
     r = requests.get(url=req_url)
     document_json = r.json()
-    pdf_url = document_json["fulltext"][0]["uri"]
+    if doc_type == IstexDoctype.PDF:
+        pdf_url = document_json["fulltext"][0]["uri"]
+    elif doc_type == IstexDoctype.ZIP:
+        pdf_url = document_json["fulltext"][1]["uri"]
+    elif doc_type == IstexDoctype.TXT:
+        pdf_url = document_json["fulltext"][2]["uri"]
+    elif doc_type == IstexDoctype.TEI:
+        pdf_url = document_json["fulltext"][3]["uri"]
+    elif doc_type == IstexDoctype.CLEAN:
+        pdf_url = document_json["fulltext"][4]["uri"]
     return pdf_url
 
 
