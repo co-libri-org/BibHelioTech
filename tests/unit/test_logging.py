@@ -10,6 +10,11 @@ class TestLogging:
         _logger = init_logger()
         assert type(_logger) is logging.Logger
 
+    def test_init_logger_clear(self):
+        _logger = init_logger()
+        _logger = init_logger(clear=True)
+        assert len(_logger.handlers) == 2
+
     def test_logger_fixture(self, logger):
         assert type(logger) is logging.Logger
 

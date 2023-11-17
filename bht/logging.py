@@ -4,8 +4,13 @@ import logging
 from bht_config import yml_settings
 
 
-def init_logger(logfile=yml_settings["BHT_LOGFILE_PATH"]):
+def init_logger(logfile=yml_settings["BHT_LOGFILE_PATH"], clear=False):
     logger = logging.getLogger('bht_logger')
+
+    # remove all handlers if any
+    if clear and len(logger.handlers):
+        for h in list(logger.handlers):
+            logger.removeHandler(h)
 
     # singleton pattern, don't init twice
     if len(logger.handlers):
@@ -30,4 +35,5 @@ def init_logger(logfile=yml_settings["BHT_LOGFILE_PATH"]):
     console_handler.setFormatter(console_formatter)
     logger.addHandler(console_handler)
 
+    logger.info(f"NEW LOGGER : {logfile}")
     return logger

@@ -1,6 +1,12 @@
-# Root data dir , may be absolute path
-# or relative, which is to current project dir
+# Data dir may be
+# absolute path
+# or relative path, which is to current project dir
+#
 BHT_DATA_DIR: "DATA"
+BHT_LOGFILE_NAME: "bht2.log"
+BHT_LOGLEVEL_CONSOLE: DEBUG
+BHT_LOGLEVEL_LOGFILE: INFO
+
 WEB_UPLOAD_DIR: "DATA/web-upload"
 REDIS_URL: "redis://redis:6379/0"
 QUEUES: ["default"]
