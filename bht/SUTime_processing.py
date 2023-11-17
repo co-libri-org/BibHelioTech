@@ -3,7 +3,13 @@ import json
 from sutime import SUTime
 from datetime import date,datetime
 
-def SUTime_treatement(current_OCR_folder,sutime):
+from bht.bht_logging import init_logger
+
+_logger = init_logger()
+
+
+def SUTime_treatement(current_OCR_folder, sutime):
+    _logger.info("SUTime_treatement -> res_sutime.json")
     file = open(current_OCR_folder + "/" + 'out_filtered_text.txt', 'r')
     reading = file.read()
 

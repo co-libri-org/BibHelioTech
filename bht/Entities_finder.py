@@ -7,6 +7,7 @@ from copy import copy
 from datetime import *
 
 from bht.DOI_finder import *
+from bht.bht_logging import init_logger
 from bht.published_date_finder import *
 
 
@@ -134,6 +135,8 @@ def operating_span_checker(sat,durations,SAT_dict,SPAN_dict,published_date):
 
 def entities_finder(current_OCR_folder):
 
+    _logger = init_logger()
+    _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
     def find_path(dict_obj, key, i=None):
         for k, v in dict_obj.items():
             # add key to path

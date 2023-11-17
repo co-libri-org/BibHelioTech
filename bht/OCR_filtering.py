@@ -1,7 +1,12 @@
 import re
 
+from bht.bht_logging import init_logger
+
+
 def ocr_filter(current_OCR_folder):
-    in_file = open(current_OCR_folder+"/"+"out_text.txt", "r") # open the txt file resulting from OCR
+    _logger = init_logger()
+    _logger.info("OCR FILTERING -> out_filtered.txt")
+    in_file = open(current_OCR_folder + "/" + "out_text.txt", "r")  # open the txt file resulting from OCR
     content = in_file.read()
 
     # content = re.sub(r'References', 'References\n', content)
