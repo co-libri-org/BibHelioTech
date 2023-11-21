@@ -188,7 +188,7 @@ def papers(name=None):
 def upload_from_url():
     # TODO: refactor merge with istex_upload_id()
     pdf_url = request.form.get("pdf_url")
-    if pdf_url is None:
+    if not pdf_url:
         return Response(
             "No valid parameters for url",
             status=400,
@@ -202,7 +202,7 @@ def upload_from_url():
 @bp.route("/istex_upload_id", methods=["POST"])
 def istex_upload_id():
     istex_id = request.json.get("istex_id")
-    if istex_id is None:
+    if not istex_id:
         return Response(
             "No valid parameters for url",
             status=400,
