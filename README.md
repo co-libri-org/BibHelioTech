@@ -47,7 +47,9 @@ then run all
 
 access web interface through `http://localhost` , or any domainname reverse proxying to the host.
 
-If you'd better run on another port, edit the nginx service in the `docker-compose.yml` file.
+If you'd better run on another port, set the WEB_PORT environment variable:
+
+    WEB_PORT=8080 docker compose up -d
 
 ### Dev mode
 
