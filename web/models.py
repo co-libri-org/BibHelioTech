@@ -1,11 +1,18 @@
 import datetime
 import os.path
 import csv
+from enum import StrEnum, auto
 
 from bht_config import yml_settings
 from web import db
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
+
+
+class BhtFileType(StrEnum):
+    PDF = auto()
+    TXT = auto()
+    CAT = auto()
 
 
 def rows_to_catstring(events_list, catalog_name):
@@ -103,13 +110,13 @@ class HpEvent(db.Model):
     catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"))
 
     def __init__(
-        self,
-        start_date: str,
-        stop_date: str,
-        doi: str,
-        mission: str,
-        instrument: str,
-        region: str,
+            self,
+            start_date: str,
+            stop_date: str,
+            doi: str,
+            mission: str,
+            instrument: str,
+            region: str,
     ):
         self.start_date = datetime.datetime.strptime(start_date, DATE_FORMAT)
         self.stop_date = datetime.datetime.strptime(stop_date, DATE_FORMAT)
@@ -125,8 +132,8 @@ class HpEvent(db.Model):
     def get_dict(self):
         r_dict = {
             "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
-                0:-3
-            ],
+                          0:-3
+                          ],
             "stop_date": datetime.datetime.strftime(self.stop_date, DATE_FORMAT)[0:-3],
             "doi": self.doi.doi,
             "mission": self.mission.name,
@@ -189,8 +196,10 @@ class Region(db.Model):
 class Paper(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, unique=True, nullable=False)
-    pdf_path = db.Column(db.String, unique=True, nullable=False)
+    pdf_path = db.Column(db.String, unique=True)
+    txt_path = db.Column(db.String, unique=True)
     cat_path = db.Column(db.String, unique=True)
+    file_type = db.Column(db.String)
     cat_in_db = db.Column(db.Boolean, default=False)
     # TODO: move to Task model ( and relative setters )
     task_id = db.Column(db.String, unique=True)
@@ -199,7 +208,7 @@ class Paper(db.Model):
     task_stopped = db.Column(db.DateTime)
 
     def __repr__(self):
-        return f"<Paper {self.id} {self.title} {self.pdf_path} {self.cat_path} {self.task_id}>"
+        return f"<Paper {self.id} {self.title} {self.pdf_path} {self.txt_path} {self.cat_path} {self.task_id}>"
 
     def set_task_id(self, task_id):
         self.task_id = task_id
@@ -218,6 +227,14 @@ class Paper(db.Model):
 
     def set_task_stopped(self, task_stopped):
         self.task_stopped = task_stopped
+        db.session.add(self)
+        db.session.commit()
+
+    def set_file_path(self, file_path, file_type):
+        if file_type == BhtFileType.PDF:
+            self.pdf_path = file_path
+        elif file_type == BhtFileType.TXT:
+            self.txt_path = file_path
         db.session.add(self)
         db.session.commit()
 
@@ -250,3 +267,11 @@ class Paper(db.Model):
         except TypeError:
             has_pdf = False
         return has_pdf
+
+    @property
+    def has_txt(self):
+        try:
+            has_txt = os.path.isfile(self.txt_path)
+        except TypeError:
+            has_txt = False
+        return has_txt
