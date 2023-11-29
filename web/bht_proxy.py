@@ -1,7 +1,7 @@
 from bht.pipeline import bht_run_file
 from web import db
 from web.errors import PdfFileError
-from web.models import Paper
+from web.models import Paper, BhtFileType
 
 
 def get_pipe_callback(test=True):
@@ -29,7 +29,8 @@ def pipe_paper_mocked(p_id=None, b_dir=None, min_secs=5, max_secs=20):
     return num_secs
 
 
-def pipe_paper(paper_id, basedir):
+# TODO: should this go to a models.paper.method() ?
+def pipe_paper(paper_id, basedir, file_type):
     """From a paper id create the catalog
 
     - find the corresponding pdf file
@@ -39,8 +40,14 @@ def pipe_paper(paper_id, basedir):
 
     """
     _paper = db.session.get(Paper, paper_id)
-    if not _paper.has_pdf:
+    # TODO: better caul models.paper.get_file()
+    if file_type == BhtFileType.PDF and _paper.has_pdf:
+        file_path = _paper.pdf_path
+    elif file_type == BhtFileType.TXT and _paper.has_txt:
+        file_path = _paper.txt_path
+    else:
         raise PdfFileError(f"No such file for paper{paper_id}")
-    pdf_file = _paper.pdf_path
-    catalogfile = bht_run_file(pdf_file, basedir)
+    catalogfile = bht_run_file(file_path, basedir, file_type)
     _paper.set_cat_path(catalogfile)
+    # TODO: return real result
+    return "Paper Piped"
