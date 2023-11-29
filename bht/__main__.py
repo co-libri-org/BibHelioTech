@@ -1,11 +1,11 @@
 import argparse
-import glob
 import os
 from datetime import datetime
 
 from bht.pipeline import bht_run_file, bht_run_dir, run_pipeline, PipeStep
 from bht_config import yml_settings
-from web.istex_proxy import istex_id_to_url, IstexDoctype, get_file_from_id
+from web.istex_proxy import IstexDoctype, get_file_from_id
+from web.models import BhtFileType
 
 if __name__ == '__main__':
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
         sys.exit()
     if args.pdf_file:
-        bht_run_file(args.pdf_file, papers_dir)
+        bht_run_file(args.pdf_file, papers_dir, BhtFileType.PDF)
     elif args.pdf_dir:
         bht_run_dir(args.pdf_dir)
     elif args.istex_id:

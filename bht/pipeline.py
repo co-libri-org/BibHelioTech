@@ -11,6 +11,7 @@ from bht.bht_logging import init_logger
 from bht.errors import BhtResultError, BhtPipelineError
 from bht_config import yml_settings
 from web.istex_proxy import IstexDoctype
+from web.models import BhtFileType
 
 
 class PipeStep(IntEnum):
@@ -25,7 +26,8 @@ class PipeStep(IntEnum):
 _logger = init_logger()
 
 
-def run_step_mkdir(orig_file, result_base_dir, doc_type=IstexDoctype.PDF):
+# TODO: hey, doc_type looks like file_type: IstexDocType or BhtFileType ??
+def run_step_mkdir(orig_file, result_base_dir, doc_type):
     """
     Move a pdf file to same name directory
 
@@ -36,16 +38,15 @@ def run_step_mkdir(orig_file, result_base_dir, doc_type=IstexDoctype.PDF):
     """
     # 0- Move original file to working directory
     _logger.info("BHT PIPELINE STEP 0: creating file directory")
-    if doc_type == IstexDoctype.PDF:
-        filename = os.path.basename(orig_file)
-        paper_name = filename.replace(".pdf", "")
-    elif doc_type == IstexDoctype.TXT:
-        filename = "out_text.txt"
-        paper_name = orig_file.replace(".txt", "")
-    else:
+    if doc_type not in [IstexDoctype.PDF, IstexDoctype.TXT]:
         raise (BhtPipelineError(f"Such doctype not managed {doc_type}"))
-    dest_dir = os.path.join(result_base_dir, paper_name)
-    dest_file = os.path.join(dest_dir, filename)
+    filename = os.path.basename(orig_file)
+    split_filename = os.path.splitext(filename)
+    dest_dir = os.path.join(result_base_dir, split_filename[0])
+    if doc_type == IstexDoctype.PDF:
+        dest_file = os.path.join(dest_dir, filename)
+    elif doc_type == IstexDoctype.TXT:
+        dest_file = os.path.join(dest_dir, 'out_text.txt')
     os.makedirs(dest_dir, exist_ok=True)
     shutil.copy(orig_file, dest_file)
     return dest_dir
@@ -53,14 +54,14 @@ def run_step_mkdir(orig_file, result_base_dir, doc_type=IstexDoctype.PDF):
 
 def run_step_ocr(dest_pdf_dir):
     # 1- OCR the pdf file
-    _logger.info("BHT PIPELINE STEP 1: ocerising pdf")
+    _logger.info("BHT PIPELINE STEP 1: Ocerising pdf")
     search_pattern = os.path.join(dest_pdf_dir, '*.pdf')
     dest_pdf_file = glob.glob(search_pattern, recursive=True)[0]
     PDF_OCRiser(dest_pdf_dir, dest_pdf_file)
 
 
 def run_step_grobid(dest_pdf_dir):
-    _logger.info("BHT PIPELINE STEP 2: grobidding")
+    _logger.info("BHT PIPELINE STEP 2: Grobidding")
     GROBID_generation(dest_pdf_dir)
 
 
@@ -90,23 +91,26 @@ def run_step_entities(dest_pdf_dir):
     return catalog_file
 
 
-def bht_run_file(orig_pdf_file, result_base_dir):
+def bht_run_file(orig_pdf_file, result_base_dir, file_type):
     """
     Given a pdf file , go through the whole pipeline process and make a cataog
 
+    @param file_type:
     @param orig_pdf_file:  the sci article in pdf format
     @param result_base_dir: the root working directory
     @return: an HPEvents catalog
     """
 
     # 0
-    dest_pdf_dir = run_step_mkdir(orig_pdf_file, result_base_dir)
+    dest_pdf_dir = run_step_mkdir(orig_pdf_file, result_base_dir, file_type)
 
-    # 1
-    run_step_ocr(dest_pdf_dir)
+    # TODO: instead run a run_pipeline() with proper parameters
+    if file_type == BhtFileType.PDF:
+        # 1
+        run_step_ocr(dest_pdf_dir)
 
-    # 2- Generate the XML GROBID file
-    run_step_grobid(dest_pdf_dir)
+        # 2- Generate the XML GROBID file
+        run_step_grobid(dest_pdf_dir)
 
     # 3- filter result of the OCR to deletes references, change HHmm4 to HH:mm, etc ...
     run_step_filter(dest_pdf_dir)
@@ -167,12 +171,12 @@ def bht_run_dir(_base_pdf_dir):
                     entities_finder(pdf_paths)  # entities recognition and association + writing of HPEvent
 
 
-def run_pipeline(path, doc_type, pipe_steps=[]):
+def run_pipeline(path, doc_type, pipe_steps=(), dest_file_dir=None):
     """
 
+    @param dest_file_dir:
     @param doc_type:
     @param path:
-    @param path_type:
     @param pipe_steps:
     @return:
     """
@@ -186,11 +190,11 @@ def run_pipeline(path, doc_type, pipe_steps=[]):
         done_steps.append(PipeStep.MKDIR)
 
     if PipeStep.OCR in pipe_steps:
-        run_step_ocr()
+        run_step_ocr(dest_file_dir)
         done_steps.append(PipeStep.OCR)
 
     if PipeStep.GROBID in pipe_steps:
-        run_step_grobid()
+        run_step_grobid(dest_file_dir)
         done_steps.append(PipeStep.GROBID)
 
     if PipeStep.FILTER in pipe_steps:
