@@ -26,8 +26,10 @@
         <th scope="col" style="width: 680px;">Title</th>
         <th scope="col" style="width: 40px;">del</th>
         <th scope="col" style="width: 40px;">pdf</th>
+        <th scope="col" style="width: 40px;">txt</th>
         <th scope="col" style="width: 40px;">cat</th>
-        <th scope="col" style="width: 40px;">run</th>
+        <th scope="col" style="width: 40px;">run pdf</th>
+        <th scope="col" style="width: 40px;">run txt</th>
         <th scope="col" style="width: 150px;">status</th>
     </tr>
     </thead>
@@ -49,6 +51,11 @@
                title="Get pdf file" {{disabled(not paper.has_pdf)}}>pdf</a>
         </td>
         <td>
+            <a class="btn btn-warning"
+               href="{{url_for('main.txt', paper_id=paper.id)}}"
+               title="Get txt file" {{disabled(not paper.has_txt)}}>txt</a>
+        </td>
+        <td>
             <a class="btn btn-warning cat-link position-relative" id="cat-link-{{paper.id}}"
                href="{{url_for('main.cat', paper_id=paper.id)}}"
                title="Get catalog file{{' (not in db)' if not paper.cat_in_db}}" {{disabled(not paper.has_cat)}}>cat
@@ -63,8 +70,19 @@
         </td>
         <td>
             <button class='btn btn-warning run-bht'
-                    title="Run bht pipeline on this file" data-paper_id="{{paper.id}}"
+                    title="Run bht pipeline on PDF file"
+                    data-paper_id="{{paper.id}}"
+                    data-file_type="pdf"
                     {{disabled(not paper.has_pdf)}}>
+                run
+            </button>
+        </td>
+        <td>
+            <button class='btn btn-warning run-bht'
+                    title="Run bht pipeline on TXT file"
+                    data-paper_id="{{paper.id}}"
+                    data-file_type="txt"
+                    {{disabled(not paper.has_txt)}}>
                 run
             </button>
         </td>
@@ -87,7 +105,8 @@
 $('.run-bht').on('click', function() {
   $.ajax({
     url: '/bht_run',
-    data: { paper_id: $(this).data('paper_id') },
+    data: { paper_id: $(this).data('paper_id') ,
+            file_type: $(this).data('file_type')},
     method: 'POST'
   })
   .done((res) => {

@@ -40,8 +40,9 @@
         <th scope="col" class="col">Year</th>
         <th scope="col" class="col">First Author</th>
         <th scope="col" class="col">Journal</th>
-        <th scope="col" class="col">pdf</th>
-        <th scope="col" class="col">add</th>
+        <th scope="col" class="col">show pdf</th>
+        <th scope="col" class="col">add pdf</th>
+        <th scope="col" class="col">add txt</th>
     </tr>
     </thead>
     <tbody>
@@ -57,11 +58,17 @@
         <td class="istex-first_author">{{istex.first_author}}</td>
         <td>{{istex.journal}}</td>
         <td><a class="btn btn-warning" id="istex-link-{{istex.id}}" href="{{istex.pdf_url}}"
-               title="Get istex file">pdf</a></td>
+               title="Get istex pdf file">Show PDF</a></td>
         <td>
             <form method="post" action="{{url_for('main.upload_from_url')}}">
                 <input type="hidden" name="pdf_url" value="{{istex.pdf_url}}">
-                <input type=submit value="add" class="btn btn-warning" title="Add to local database">
+                <input type=submit value="Add PDF" class="btn btn-warning" title="Add Paper to local database as PDF">
+            </form>
+        </td>
+        <td>
+            <form method="post" action="{{url_for('main.upload_from_url')}}">
+                <input type="hidden" name="pdf_url" value="{{istex.pdf_url}}">
+                <input type=submit value="Add TXT" class="btn btn-warning" title="Add Paper to local database as TEXT">
             </form>
         </td>
     </tr>
@@ -70,7 +77,8 @@
 </table>
 
 <div class="content">
-    <button class="btn btn-warning" id="addAll" title="Add all checked papers">add all</button>
+    <button class="btn btn-warning" id="addAllPdf" title="Add all checked papers">Add all PDF</button>
+    <button class="btn btn-warning" id="addAllTxt" title="Add all checked papers">Add all TXT</button>
 </div>
 {% endif %}
 
@@ -120,7 +128,7 @@ $(document).ready(function() {
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
 
-    $("#addAll").click(function(){
+    $("#addAllPdf").click(function(){
         $("input:checked").not($('#checkAll')).each(function() {
             istex_id = $(this).val()
             $.post({
