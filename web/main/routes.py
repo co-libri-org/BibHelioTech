@@ -93,9 +93,10 @@ def get_paper_file(paper_id, file_type):
 
 
 def get_file_from_url(url):
-    r = requests.get(url)
-    if not r.headers["Content-Type"] == "application/pdf":
-        raise PdfFileError("No pdf in url")
+    # TODO: is if possible to check TXT ? with some FileType ?
+    # r = requests.get(url)
+    # if not r.headers["Content-Type"] == "application/pdf" :
+    #     raise PdfFileError("No pdf in url")
     try:
         with requests.get(url) as r:
             if "Content-Disposition" in r.headers.keys():
@@ -231,16 +232,16 @@ def papers(name=None):
 @bp.route("/upload_from_url", methods=["POST"])
 def upload_from_url():
     # TODO: refactor merge with istex_upload_id()
-    pdf_url = request.form.get("pdf_url")
-    if not pdf_url:
+    file_url = request.form.get("file_url")
+    if file_url:
+        fp, filename = get_file_from_url(file_url)
+        pdf_to_db(fp, filename)
+        return redirect(url_for("main.papers"))
+    else:
         return Response(
             "No valid parameters for url",
             status=400,
         )
-    else:
-        fp, filename = get_file_from_url(pdf_url)
-        pdf_to_db(fp, filename)
-        return redirect(url_for("main.papers"))
 
 
 @bp.route("/istex_upload_id", methods=["POST"])

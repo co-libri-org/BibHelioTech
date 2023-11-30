@@ -36,6 +36,7 @@ def istex_id_to_url(istex_id, doc_type=IstexDoctype.PDF):
         pdf_url = document_json["fulltext"][3]["uri"]
     elif doc_type == IstexDoctype.CLEAN:
         pdf_url = document_json["fulltext"][4]["uri"]
+    pdf_url = None
     return pdf_url
 
 
@@ -52,6 +53,7 @@ def istex_json_to_json(istex_json):
             "journal": hit["host"]["title"],
             "year": hit["publicationDate"],
             "pdf_url": hit["fulltext"][0]["uri"],
+            "txt_url": hit["fulltext"][3]["uri"],
         }
         our_json.append(our_hit)
     return our_json

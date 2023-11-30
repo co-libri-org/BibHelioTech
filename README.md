@@ -25,8 +25,12 @@ AMDA (http://amda.cdpp.eu/).
 
 Please, use a recent docker compose plugin version: https://docs.docker.com/compose/install/linux/
 
-After first install (git clone), `docker compose build` and `docker compose up -d`,
-make sure you have created the database:
+After first install (git clone), build and run:
+
+    docker compose build
+    docker compose up -d
+
+Then make sure you have created the database:
 
     docker compose run -it   web python manage.py create_db
 
