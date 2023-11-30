@@ -184,7 +184,7 @@ def txt(paper_id):
 
 @bp.route("/pdf/<paper_id>")
 def pdf(paper_id):
-    file_path = get_paper_file(paper_id, BhtFileType.CAT)
+    file_path = get_paper_file(paper_id, BhtFileType.PDF)
     if file_path is None:
         return redirect(url_for("main.papers"))
     else:
