@@ -199,10 +199,15 @@ class Region(db.Model):
 class Paper(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, unique=True, nullable=False)
+    doi = db.Column(db.String, unique=True)
+    ark = db.Column(db.String, unique=True)
+    istex_id = db.Column(db.String, unique=True)
     pdf_path = db.Column(db.String, unique=True)
     txt_path = db.Column(db.String, unique=True)
     cat_path = db.Column(db.String, unique=True)
-    file_type = db.Column(db.String)
+    # TODO: what is this for ?
+    # file_type = db.Column(db.String)
+    # TODO: change for method/property  ?
     cat_in_db = db.Column(db.Boolean, default=False)
     # TODO: MODEL move to Task model ( and relative setters )
     task_id = db.Column(db.String, unique=True)
