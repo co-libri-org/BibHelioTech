@@ -47,6 +47,8 @@ def run_step_mkdir(orig_file, result_base_dir, doc_type):
         dest_file = os.path.join(dest_dir, filename)
     elif doc_type == IstexDoctype.TXT:
         dest_file = os.path.join(dest_dir, 'out_text.txt')
+    else:
+        raise BhtPipelineError("Wrong IstexDoctype")
     os.makedirs(dest_dir, exist_ok=True)
     shutil.copy(orig_file, dest_file)
     return dest_dir
@@ -83,7 +85,7 @@ def run_step_sutime(dest_pdf_dir):
 
 def run_step_entities(dest_pdf_dir):
     _logger.info("BHT PIPELINE STEP 5: Search Entities")
-    entities_finder(dest_pdf_dir, '10.1051/0004-6361/201937378')
+    entities_finder(dest_pdf_dir, 'no doi')
     search_pattern = os.path.join(dest_pdf_dir, '**', '*bibheliotech*.txt')
     _logger.debug(f"searching {search_pattern}")
     result_catalogs = glob.glob(search_pattern, recursive=True)
