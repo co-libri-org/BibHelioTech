@@ -1,3 +1,4 @@
+# TODO: rewrite any WEB to BHT
 class WebError(Exception):
     """BHT pipeline base exception"""
 

@@ -9,7 +9,7 @@ class Config(object):
         os.environ.get("SECRET_KEY")
         or b"\x82\xde\x96\xc5L\xb4c\xd5\x17\x12*\x12\xd3\xd4\xb7\xf5"
     )
-    ALLOWED_EXTENSIONS = ["pdf"]
+    ALLOWED_EXTENSIONS = ["pdf", "txt"]
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
         yml_settings["WEB_DB_DIR"], "bht_web.db"

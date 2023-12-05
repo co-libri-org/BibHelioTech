@@ -28,33 +28,57 @@ from flask import (
 
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, rows_to_catstring
+from web.models import Paper, Mission, HpEvent, rows_to_catstring, BhtFileType
 from web.bht_proxy import get_pipe_callback
 from web.errors import PdfFileError
 from web.istex_proxy import istex_url_to_json, istex_id_to_url
 
 
 def allowed_file(filename):
+    # TODO: use models.FileType instead
     return (
-        "." in filename
-        and filename.rsplit(".", 1)[1].lower()
-        in current_app.config["ALLOWED_EXTENSIONS"]
+            "." in filename
+            and filename.rsplit(".", 1)[1].lower()
+            in current_app.config["ALLOWED_EXTENSIONS"]
     )
 
 
+# TODO: please send to models.paper.method
 def get_paper_file(paper_id, file_type):
-    file_path = None
+    """
+    Return the filepath for the given paper as id
+
+    @param paper_id:  id of the paper
+    @param file_type:  type of the wanted file (@see FileType)
+    @return:
+    """
+
     paper = db.session.get(Paper, paper_id)
     if paper is None:
         flash(f"No such paper {paper_id}")
         return None
 
-    if file_type == "pdf" and paper.has_pdf:
-        file_path = paper.pdf_path
-    elif file_type == "cat" and paper.has_cat:
-        file_path = paper.cat_path
+    # TODO: rewrite
+    # check filetype
+    if isinstance(file_type, str):
+        # convert to enum
+        try:
+            file_type = getattr(BhtFileType, file_type.upper())
+        except AttributeError:
+            flash(f"Wrong file type {file_type}")
+            return None
+    elif not isinstance(file_type, BhtFileType):
+        flash(f"Wrong file type {file_type}")
+        return None
 
-    if file_path is None:
+    # TODO: seriously ?
+    if file_type == BhtFileType.PDF and paper.has_pdf:
+        file_path = paper.pdf_path
+    elif file_type == BhtFileType.CAT and paper.has_cat:
+        file_path = paper.cat_path
+    elif file_type == BhtFileType.TXT and paper.has_txt:
+        file_path = paper.txt_path
+    else:
         flash(f"No {file_type} file for paper {paper_id}")
         return None
 
@@ -69,9 +93,10 @@ def get_paper_file(paper_id, file_type):
 
 
 def get_file_from_url(url):
-    r = requests.get(url)
-    if not r.headers["Content-Type"] == "application/pdf":
-        raise PdfFileError("No pdf in url")
+    # TODO: is if possible to check TXT ? with some FileType ?
+    # r = requests.get(url)
+    # if not r.headers["Content-Type"] == "application/pdf" :
+    #     raise PdfFileError("No pdf in url")
     try:
         with requests.get(url) as r:
             if "Content-Disposition" in r.headers.keys():
@@ -85,6 +110,8 @@ def get_file_from_url(url):
     return r.content, filename
 
 
+# TODO: rename to file_to_db
+# TODO: insert into models.Paper ?
 def pdf_to_db(file_stream, filename):
     """Push Paper to db from a pdf stream
 
@@ -103,16 +130,22 @@ def pdf_to_db(file_stream, filename):
         _fd.write(file_stream)
     if not os.path.isfile(_file_path):
         raise PdfFileError(f"no such file: {_file_path}")
-    if not filetype.guess(_file_path).mime == "application/pdf":
-        raise Exception(f"{_file_path} is not pdf ")
-    paper_title = filename.replace(".pdf", "")
-    paper = Paper.query.filter_by(title=paper_title).one_or_none()
-    if paper is None:
-        paper = Paper(title=paper_title, pdf_path=_file_path)
+    _guessed_filetype = filetype.guess(_file_path)
+    _split_filename = os.path.splitext(filename)
+    _file_type = None
+    if _guessed_filetype and _guessed_filetype.mime == "application/pdf":
+        _file_type = BhtFileType.PDF
+    elif _split_filename[1] == '.txt':
+        _file_type = BhtFileType.TXT
     else:
-        paper.pdf_path = _file_path
-    db.session.add(paper)
-    db.session.commit()
+        raise Exception(f"{_file_path} is not Allowed ")
+    _paper_title = _split_filename[0]
+    paper = Paper.query.filter_by(title=_paper_title).one_or_none()
+    if paper is None:
+        paper = Paper(title=_paper_title)
+
+    # set_file_path() will add and commit paper
+    paper.set_file_path(_file_path, _file_type)
     return paper.id
 
 
@@ -138,9 +171,21 @@ def configuration():
     return render_template("configuration.html", configuration=current_app.config)
 
 
+# TODO: merge following 3 routes/methods
+# and rewrite calls into papers.html
+# and tests
+@bp.route("/txt/<paper_id>")
+def txt(paper_id):
+    file_path = get_paper_file(paper_id, BhtFileType.TXT)
+    if file_path is None:
+        return redirect(url_for("main.papers"))
+    else:
+        return send_file(file_path)
+
+
 @bp.route("/pdf/<paper_id>")
 def pdf(paper_id):
-    file_path = get_paper_file(paper_id, "pdf")
+    file_path = get_paper_file(paper_id, BhtFileType.PDF)
     if file_path is None:
         return redirect(url_for("main.papers"))
     else:
@@ -149,7 +194,7 @@ def pdf(paper_id):
 
 @bp.route("/cat/<paper_id>", methods=["GET"])
 def cat(paper_id):
-    file_path = get_paper_file(paper_id, "cat")
+    file_path = get_paper_file(paper_id, BhtFileType.CAT)
     if file_path is None:
         return redirect(url_for("main.papers"))
     else:
@@ -187,22 +232,22 @@ def papers(name=None):
 @bp.route("/upload_from_url", methods=["POST"])
 def upload_from_url():
     # TODO: refactor merge with istex_upload_id()
-    pdf_url = request.form.get("pdf_url")
-    if pdf_url is None:
+    file_url = request.form.get("file_url")
+    if file_url:
+        fp, filename = get_file_from_url(file_url)
+        pdf_to_db(fp, filename)
+        return redirect(url_for("main.papers"))
+    else:
         return Response(
             "No valid parameters for url",
             status=400,
         )
-    else:
-        fp, filename = get_file_from_url(pdf_url)
-        pdf_to_db(fp, filename)
-        return redirect(url_for("main.papers"))
 
 
 @bp.route("/istex_upload_id", methods=["POST"])
 def istex_upload_id():
     istex_id = request.json.get("istex_id")
-    if istex_id is None:
+    if not istex_id:
         return Response(
             "No valid parameters for url",
             status=400,
@@ -216,6 +261,7 @@ def istex_upload_id():
 
 @bp.route("/upload", methods=["POST"])
 def upload():
+    # TODO: rename to upload_from_file()
     # check if the post request has the file part
     if "file" not in request.files:
         flash("No file part")
@@ -295,7 +341,8 @@ def bht_status(paper_id):
 @bp.route("/bht_run", methods=["POST"])
 def bht_run():
     paper_id = request.form["paper_id"]
-    found_pdf_file = get_paper_file(paper_id, "pdf")
+    file_type = request.form["file_type"]
+    found_pdf_file = get_paper_file(paper_id, file_type.upper())
     if found_pdf_file is None:
         flash("No file for that paper.")
         return redirect(url_for("main.papers"))
@@ -304,7 +351,7 @@ def bht_run():
     q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
     task = q.enqueue(
         get_pipe_callback(test=current_app.config["TESTING"]),
-        args=(paper_id, current_app.config["WEB_UPLOAD_DIR"]),
+        args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type),
         job_timeout=600,
     )
 
@@ -328,7 +375,7 @@ def istex_test():
     from web.istex_proxy import istex_json_to_json
 
     with open(
-        os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
+            os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
     ) as fp:
         istex_list = istex_json_to_json(json.load(fp))
     return render_template("istex.html", istex_list=istex_list)
@@ -344,7 +391,6 @@ def istex():
         return render_template(
             "istex.html", istex_list=istex_list, istex_req_url=istex_req_url
         )
-        # return render_template("istex.html", istex_list=istex_list)
 
 
 @bp.route("/istex_from_url", methods=["POST"])
@@ -352,7 +398,7 @@ def istex_from_url():
     """
     Given an istex api url (found in the form request)
     Parse the json response data
-    Redirect to istex main page to display papers list
+    Redirect to our "istex" page to display papers list
     """
     istex_req_url = request.form["istex_req_url"]
     istex_list = istex_url_to_json(istex_req_url)
@@ -456,8 +502,8 @@ def api_catalogs_txt():
     ]
     catalog_txt_stream = rows_to_catstring(events_list, mission.name)
     date_now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    bht_version = current_app.config["BHT_VERSION"]
-    file_name = f"{mission.name}_{date_now}_bibheliotech_V{bht_version}.txt"
+    bht_pipeline_version = current_app.config["BHT_PIPELINE_VERSION"]
+    file_name = f"{mission.name}_{date_now}_bibheliotech_V{bht_pipeline_version}.txt"
     upload_dir = current_app.config["WEB_UPLOAD_DIR"]
     if not os.path.exists(upload_dir):
         os.makedirs(upload_dir)

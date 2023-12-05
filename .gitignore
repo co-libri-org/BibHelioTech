@@ -11,3 +11,8 @@ docker-compose.override.yml
 grobid-client-config.json
 pytest.ini
 geckodriver.log
+.htpasswd
+dynamical-volume
+test-upload
+DATA
+bht2.log

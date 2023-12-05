@@ -3,6 +3,8 @@ from urllib.parse import urlencode
 import pytest
 from flask import current_app
 
+from bht.bht_logging import init_logger
+
 
 @pytest.fixture(scope="function")
 def hpevents_in_db(hpevents_list, db):
@@ -12,11 +14,24 @@ def hpevents_in_db(hpevents_list, db):
 
 
 @pytest.fixture(scope="module")
+def test_logfile(tmp_path_factory):
+    _logfile = tmp_path_factory.mktemp("test_temp") / "test.log"
+    yield _logfile
+    _logfile.unlink()
+
+
+@pytest.fixture(scope="module")
+def logger(tmp_path_factory, test_logfile):
+    _logger = init_logger(test_logfile, clear=True)
+    yield _logger
+
+
+@pytest.fixture(scope="module")
 def tei_for_test():
     import os
 
     test_tei_file = os.path.join(
-        current_app.config["BHT_PAPERS_DIR"], "2016GL069787.tei.xml"
+        current_app.config["BHT_PAPERS_DIR"], "2016GL069787.grobid.tei.xml"
     )
     yield test_tei_file
     if os.path.isfile(test_tei_file):

@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 class TestBasicAccess:
     def test_access(self):
         assert (
-            f'http://localhost:{str(current_app.config["LIVESERVER_PORT"])}/'
+            f'http://localhost.localdomain:{str(current_app.config["LIVESERVER_PORT"])}/'
             == request.url
         )
 
