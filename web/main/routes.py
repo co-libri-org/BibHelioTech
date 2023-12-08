@@ -148,6 +148,7 @@ def pdf_to_db(file_stream, filename):
 
     # set_file_path() will add and commit paper
     paper.set_file_path(_file_path, _file_type)
+    flash(f"{os.path.basename(_file_path)} added to paper {_paper_title}")
     return paper.id
 
 
@@ -236,8 +237,8 @@ def upload_from_url():
     # TODO: refactor merge with istex_upload_id()
     file_url = request.form.get("file_url")
     if file_url:
-        fp, filename = get_file_from_url(file_url)
-        pdf_to_db(fp, filename)
+        filestream, filename = get_file_from_url(file_url)
+        pdf_to_db(filestream, filename)
         return redirect(url_for("main.papers"))
     else:
         return Response(
