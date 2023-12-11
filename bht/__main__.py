@@ -7,8 +7,7 @@ from bht_config import yml_settings
 from web.istex_proxy import IstexDoctype, get_file_from_id
 from web.models import BhtFileType
 
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     start_time = datetime.now()
 
     papers_dir = yml_settings["BHT_PAPERS_DIR"]
@@ -16,22 +15,35 @@ if __name__ == '__main__':
     # main_logger = initLogger(os.path.join(BHT_ROOT, 'sw2_main.log'))
 
     # PARSE COMMAND LINE
-    parser = argparse.ArgumentParser(description="""
+    parser = argparse.ArgumentParser(
+        description="""
     Entrypoint to run the bibheliotech pdf papers parser
     """,
-                                     formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument('-i', '--istex-id', type=str,
-                        help='Run pipeline on document from ISTEX id. (dont grobid or ocr)')
-    parser.add_argument('-d', '--pdf-dir', type=str,
-                        help='One pdf dir to make catalog from')
-    parser.add_argument('-t', '--txt-file', type=str,
-                        help='One txt file to make catalog from')
-    parser.add_argument('--doi', type=str,
-                        help='Set DOI if txt')
-    parser.add_argument('-f', '--pdf-file', type=str,
-                        help='One pdf file to make catalog from')
-    parser.add_argument('-p', '--parse-dir', dest='parse_dir', action='store_true',
-                        help='Parse base dir and show content')
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+    parser.add_argument(
+        "-i",
+        "--istex-id",
+        type=str,
+        help="Run pipeline on document from ISTEX id. (dont grobid or ocr)",
+    )
+    parser.add_argument(
+        "-d", "--pdf-dir", type=str, help="One pdf dir to make catalog from"
+    )
+    parser.add_argument(
+        "-t", "--txt-file", type=str, help="One txt file to make catalog from"
+    )
+    parser.add_argument("--doi", type=str, help="Set DOI if txt")
+    parser.add_argument(
+        "-f", "--pdf-file", type=str, help="One pdf file to make catalog from"
+    )
+    parser.add_argument(
+        "-p",
+        "--parse-dir",
+        dest="parse_dir",
+        action="store_true",
+        help="Parse base dir and show content",
+    )
     args = parser.parse_args()
 
     if args.parse_dir:
@@ -67,9 +79,16 @@ if __name__ == '__main__':
             # Write bytes to file
             binary_file.write(content)
         print(f"Written to {filepath}")
-        done_steps = run_pipeline(filepath,
-                                  doc_type,
-                                  pipe_steps=[PipeStep.MKDIR, PipeStep.FILTER, PipeStep.SUTIME, PipeStep.ENTITIES])
+        done_steps = run_pipeline(
+            filepath,
+            doc_type,
+            pipe_steps=[
+                PipeStep.MKDIR,
+                PipeStep.FILTER,
+                PipeStep.SUTIME,
+                PipeStep.ENTITIES,
+            ],
+        )
         # print(f'Steps done {",".join(done_steps)}')
 
     end_time = datetime.now()
