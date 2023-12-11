@@ -27,22 +27,31 @@ def istex_id_to_url(istex_id, doc_type=IstexDoctype.PDF):
     r = requests.get(url=req_url)
     document_json = r.json()
     if doc_type == IstexDoctype.PDF:
-        pdf_url = document_json["fulltext"][0]["uri"]
+        _url = document_json["fulltext"][0]["uri"]
     elif doc_type == IstexDoctype.ZIP:
-        pdf_url = document_json["fulltext"][1]["uri"]
+        _url = document_json["fulltext"][1]["uri"]
     elif doc_type == IstexDoctype.TXT:
-        pdf_url = document_json["fulltext"][2]["uri"]
+        _url = document_json["fulltext"][2]["uri"]
     elif doc_type == IstexDoctype.TEI:
-        pdf_url = document_json["fulltext"][3]["uri"]
+        _url = document_json["fulltext"][3]["uri"]
     elif doc_type == IstexDoctype.CLEAN:
-        pdf_url = document_json["fulltext"][4]["uri"]
-    pdf_url = None
-    return pdf_url
+        _url = document_json["fulltext"][4]["uri"]
+    else:
+        _url = None
+    return _url
 
 
 def istex_json_to_json(istex_json):
     our_json = []
     for hit in istex_json["hits"]:
+        _pdf_url = None
+        for fulltext in hit["fulltext"]:
+            if fulltext["extension"] == "pdf":
+                _pdf_url = fulltext["uri"]
+        _txt_url = None
+        for fulltext in hit["fulltext"]:
+            if fulltext["extension"] == "txt":
+                _txt_url = fulltext["uri"]
         our_hit = {
             "small_title": hit["title"][0:61] + " ...",
             "title": hit["title"],
@@ -52,8 +61,8 @@ def istex_json_to_json(istex_json):
             "first_author": hit["author"][0]["name"],
             "journal": hit["host"]["title"],
             "year": hit["publicationDate"],
-            "pdf_url": hit["fulltext"][0]["uri"],
-            "txt_url": hit["fulltext"][3]["uri"],
+            "pdf_url": _pdf_url,
+            "txt_url": _txt_url
         }
         our_json.append(our_hit)
     return our_json

@@ -129,7 +129,8 @@ def pdf_to_db(file_stream, filename):
     with open(_file_path, "wb") as _fd:
         _fd.write(file_stream)
     if not os.path.isfile(_file_path):
-        raise PdfFileError(f"no such file: {_file_path}")
+        flash(f"no such file: {_file_path}", 'error')
+        return redirect(url_for("main.papers"))
     _guessed_filetype = filetype.guess(_file_path)
     _split_filename = os.path.splitext(filename)
     _file_type = None
@@ -138,7 +139,8 @@ def pdf_to_db(file_stream, filename):
     elif _split_filename[1] == '.txt':
         _file_type = BhtFileType.TXT
     else:
-        raise Exception(f"{_file_path} is not Allowed ")
+        flash(f"{_file_path} is not Allowed ", 'error')
+        return redirect(url_for("main.papers"))
     _paper_title = _split_filename[0]
     paper = Paper.query.filter_by(title=_paper_title).one_or_none()
     if paper is None:
@@ -146,6 +148,7 @@ def pdf_to_db(file_stream, filename):
 
     # set_file_path() will add and commit paper
     paper.set_file_path(_file_path, _file_type)
+    flash(f"{os.path.basename(_file_path)} added to paper {_paper_title}")
     return paper.id
 
 
@@ -234,8 +237,8 @@ def upload_from_url():
     # TODO: refactor merge with istex_upload_id()
     file_url = request.form.get("file_url")
     if file_url:
-        fp, filename = get_file_from_url(file_url)
-        pdf_to_db(fp, filename)
+        filestream, filename = get_file_from_url(file_url)
+        pdf_to_db(filestream, filename)
         return redirect(url_for("main.papers"))
     else:
         return Response(
