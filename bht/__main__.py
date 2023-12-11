@@ -26,6 +26,8 @@ if __name__ == '__main__':
                         help='One pdf dir to make catalog from')
     parser.add_argument('-t', '--txt-file', type=str,
                         help='One txt file to make catalog from')
+    parser.add_argument('--doi', type=str,
+                        help='Set DOI if txt')
     parser.add_argument('-f', '--pdf-file', type=str,
                         help='One pdf file to make catalog from')
     parser.add_argument('-p', '--parse-dir', dest='parse_dir', action='store_true',
@@ -49,7 +51,12 @@ if __name__ == '__main__':
     if args.pdf_file:
         bht_run_file(args.pdf_file, papers_dir, BhtFileType.PDF)
     elif args.txt_file:
-        bht_run_file(args.txt_file, papers_dir, BhtFileType.TXT)
+        if not args.doi:
+            import sys
+
+            print("Set DOI with --doit opt")
+            sys.exit()
+        bht_run_file(args.txt_file, papers_dir, BhtFileType.TXT, args.doi)
     elif args.pdf_dir:
         bht_run_dir(args.pdf_dir)
     elif args.istex_id:
