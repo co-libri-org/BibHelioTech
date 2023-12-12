@@ -173,22 +173,26 @@ def bht_run_dir(_base_pdf_dir):
                     entities_finder(pdf_paths)  # entities recognition and association + writing of HPEvent
 
 
-def run_pipeline(path, doc_type, pipe_steps=(), dest_file_dir=None):
+def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None):
     """
 
     @param dest_file_dir:
     @param doc_type:
-    @param path:
+    @param file_path:
     @param pipe_steps:
     @return:
     """
     done_steps = []
+    # Choose all steps if none or empty
+    if not pipe_steps:
+        pipe_steps = list(PipeStep)
+    # Check type
     for s in pipe_steps:
         if not isinstance(s, PipeStep):
-            raise (BhtPipelineError("So such step"))
+            raise (BhtPipelineError(f"No such step >>>> {s} <<<<<"))
 
     if PipeStep.MKDIR in pipe_steps:
-        dest_file_dir = run_step_mkdir(path, yml_settings["BHT_DATA_DIR"], doc_type=doc_type)
+        dest_file_dir = run_step_mkdir(file_path, yml_settings["BHT_DATA_DIR"], doc_type=doc_type)
         done_steps.append(PipeStep.MKDIR)
 
     if PipeStep.OCR in pipe_steps:
