@@ -92,9 +92,15 @@ if __name__ == "__main__":
             print("Set DOI with --doit opt")
             sys.exit()
         bht_run_file(args.txt_file, papers_dir, BhtFileType.TXT, args.doi)
-    elif args.pdf_dir:
-        bht_run_dir(args.pdf_dir)
+    elif args.pipe_dir:
+        done_steps = run_pipeline(
+            dest_file_dir=args.pipe_dir,
+            file_path=None,
+            doc_type=None,
+            pipe_steps=pipe_steps,
+        )
     elif args.istex_id:
+        # TODO: this could be a RETRIEVE step of the pipeline
         doc_type = IstexDoctype.TXT
         content, filename = get_file_from_id(args.istex_id, doc_type)
         filepath = os.path.join(yml_settings["BHT_DATA_DIR"], filename)
@@ -103,8 +109,8 @@ if __name__ == "__main__":
             binary_file.write(content)
         print(f"Written to {filepath}")
         done_steps = run_pipeline(
-            filepath,
-            doc_type,
+            file_path=filepath,
+            doc_type=doc_type,
             pipe_steps=[
                 PipeStep.MKDIR,
                 PipeStep.FILTER,
@@ -112,7 +118,6 @@ if __name__ == "__main__":
                 PipeStep.ENTITIES,
             ],
         )
-        # print(f'Steps done {",".join(done_steps)}')
 
     end_time = datetime.now()
     print("TOTAL ELAPSED TIME: ---" + str(end_time - start_time) + "---")
