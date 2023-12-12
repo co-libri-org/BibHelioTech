@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 from datetime import datetime
 
 from bht.pipeline import bht_run_file, bht_run_dir, run_pipeline, PipeStep
@@ -17,9 +18,17 @@ if __name__ == "__main__":
     # PARSE COMMAND LINE
     parser = argparse.ArgumentParser(
         description="""
-    Entrypoint to run the bibheliotech pdf papers parser
+    Entrypoint to run the bibheliotech papers parser
     """,
         formatter_class=argparse.RawTextHelpFormatter,
+    )
+    parser.add_argument(
+        "-s",
+        "--pipe-steps",
+        dest="pipe_steps",
+        help="Add pipeline steps to run in given directory.",
+        choices=[ps.name for ps in list(PipeStep)],
+        nargs='*'
     )
     parser.add_argument(
         "-i",
@@ -28,25 +37,37 @@ if __name__ == "__main__":
         help="Run pipeline on document from ISTEX id. (dont grobid or ocr)",
     )
     parser.add_argument(
-        "-d", "--pdf-dir", type=str, help="One pdf dir to make catalog from"
+        "-d",
+        "--pipe-dir",
+        type=str,
+        help="Run pipeline on directory.")
+    parser.add_argument(
+        "-t",
+        "--txt-file",
+        type=str,
+        help="Run pipeline on txt file (needs --doi to be set)",
     )
     parser.add_argument(
-        "-t", "--txt-file", type=str, help="One txt file to make catalog from"
-    )
-    parser.add_argument("--doi", type=str, help="Set DOI if txt")
+        "--doi",
+        type=str,
+        help="Set DOI if txt")
     parser.add_argument(
-        "-f", "--pdf-file", type=str, help="One pdf file to make catalog from"
+        "-f",
+        "--pdf-file",
+        type=str,
+        help="Run pipeline from pdf file."
     )
     parser.add_argument(
-        "-p",
-        "--parse-dir",
-        dest="parse_dir",
+        "-b",
+        "--base-dir",
+        dest="base_dir",
         action="store_true",
-        help="Parse base dir and show content",
+        help="Show base directory content",
     )
     args = parser.parse_args()
 
-    if args.parse_dir:
+    # Show the content of the base directory ( and exit)
+    if args.base_dir:
         for item in os.listdir(papers_dir):
             abs_path = os.path.join(papers_dir, item)
             if os.path.isfile(abs_path):
@@ -57,15 +78,17 @@ if __name__ == "__main__":
                 _f_type = "u"
 
             print(_f_type, item)
-        import sys
-
         sys.exit()
+
+    #  Get pipe steps if any
+    pipe_steps = []
+    if args.pipe_steps:
+        pipe_steps = [PipeStep[p] for p in args.pipe_steps ]
+
     if args.pdf_file:
         bht_run_file(args.pdf_file, papers_dir, BhtFileType.PDF)
     elif args.txt_file:
         if not args.doi:
-            import sys
-
             print("Set DOI with --doit opt")
             sys.exit()
         bht_run_file(args.txt_file, papers_dir, BhtFileType.TXT, args.doi)
