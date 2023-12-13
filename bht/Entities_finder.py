@@ -38,7 +38,7 @@ def keys_exists(element, *keys):
 def load_dataframes():
     entities_path = os.path.join(yml_settings["BHT_WORKSHEET_DIR"], "Entities_DataBank.xls")
 
-    df_Satellites = pd.read_excel(entities_path, sheet_name='Satellites')
+    df_Satellites = pd.read_excel(entities_path, sheet_name='satellites')
     SAT_dict = {}
     for compteur_ligne in range(len(df_Satellites)):
         SAT_dict[str(df_Satellites.iloc[compteur_ligne, 0])] = []
@@ -47,7 +47,7 @@ def load_dataframes():
                 SAT_dict[str(df_Satellites.iloc[compteur_ligne, 0])].append(
                     str(df_Satellites.iloc[compteur_ligne, compteur_colonne]))
 
-    df_Instruments = pd.read_excel(entities_path, sheet_name='Instruments')
+    df_Instruments = pd.read_excel(entities_path, sheet_name='instruments')
     INST_dict = {}
     for compteur_ligne in range(len(df_Instruments)):
         INST_dict[str(df_Instruments.iloc[compteur_ligne, 0])] = []
@@ -60,12 +60,12 @@ def load_dataframes():
                     INST_dict[str(df_Instruments.iloc[compteur_ligne, 0])].append(
                         str(df_Instruments.iloc[compteur_ligne, compteur_colonne]))
 
-    df_Regions_general = pd.read_excel(entities_path, sheet_name='Regions_General')
+    df_Regions_general = pd.read_excel(entities_path, sheet_name='regions_general')
     REG_general_list = []
     for compteur_ligne in range(len(df_Regions_general)):
         REG_general_list.append(str(df_Regions_general.iloc[compteur_ligne, 0]))
 
-    df_Regions = pd.read_excel(entities_path, sheet_name='Regions_Tree')
+    df_Regions = pd.read_excel(entities_path, sheet_name='regions_tree')
     REG_dict = {}
     for compteur_ligne in range(len(df_Regions)):
         REG_dict[str(df_Regions.iloc[compteur_ligne, 0])] = {}
@@ -74,17 +74,15 @@ def load_dataframes():
                 REG_dict[str(df_Regions.iloc[compteur_ligne, 0])].update(
                     eval(str(df_Regions.iloc[compteur_ligne, compteur_colonne])))
 
-    df_AMDA_SPASE = pd.read_excel(entities_path, sheet_name='Satellites\'s Regions')
+    df_AMDA_SPASE = pd.read_excel(entities_path, sheet_name='satellites_regions')
     AMDA_dict = {}
     for compteur_ligne in range(len(df_AMDA_SPASE)):
         for compteur_colonne in range(1, len(df_AMDA_SPASE.iloc[compteur_ligne])):
             AMDA_dict[str(df_AMDA_SPASE.iloc[compteur_ligne, 0])] = eval(
                 df_AMDA_SPASE.iloc[compteur_ligne, compteur_colonne])
 
-    df_distance_metrics = None  # pd.read_csv("../Classeurs/distance_metrics.csv")
-    num_colonne = 0  # len(df_distance_metrics)
 
-    df_operating_spans = pd.read_excel(entities_path, sheet_name='span')
+    df_operating_spans = pd.read_excel(entities_path, sheet_name='time_span')
     SPAN_dict = {}
     for compteur_ligne in range(len(df_operating_spans)):
         SPAN_dict[str(df_operating_spans.iloc[compteur_ligne, 0])] = []
@@ -99,7 +97,7 @@ def load_dataframes():
         if val[1] == 'nan':
             val[1] = str(datetime.date(datetime.now()))
 
-    return SAT_dict, INST_dict, REG_general_list, REG_dict, AMDA_dict, df_distance_metrics, SPAN_dict, num_colonne
+    return SAT_dict, INST_dict, REG_general_list, REG_dict, AMDA_dict, SPAN_dict
 
 
 def operating_span_checker(sat, durations, SAT_dict, SPAN_dict, published_date):
@@ -178,7 +176,7 @@ def entities_finder(current_OCR_folder, DOI=None):
             if path != []:
                 path.pop()
 
-    SAT_dict, INST_dict, REG_general_list, REG_dict, AMDA_dict, df_distance_metrics, SPAN_dict, num_colonne = load_dataframes()
+    SAT_dict, INST_dict, REG_general_list, REG_dict, AMDA_dict, SPAN_dict = load_dataframes()
 
     files_path = os.path.join(current_OCR_folder,
                               "out_filtered_text.txt")  # loading the text file (content of the article)
