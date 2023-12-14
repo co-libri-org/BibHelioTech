@@ -1,9 +1,17 @@
 #
 # Unit Tests for the big entities_finder file
 #
+import os.path
 
-from bht.Entities_finder import load_dataframes
+from bht.Entities_finder import entities_finder
 from bht.databank_reader import DataBank
+
+
+class TestEntitiesFinder:
+    def test_entities_finder_method(self, ocr_dir_test):
+        entities_finder(ocr_dir_test, DOI="10.1002/2015GL064052")
+        assert os.path.isfile(os.path.join(ocr_dir_test, "reg_recognition_res.txt"))
+        assert os.path.isfile(os.path.join(ocr_dir_test, "1010022015GL064052_bibheliotech_V1.txt"))
 
 
 class TestDatabankReader:
@@ -58,4 +66,3 @@ class TestDataframe:
         assert type(time_span) == dict
         for name, syn_list in time_span.items():
             assert type(syn_list) == list
-
