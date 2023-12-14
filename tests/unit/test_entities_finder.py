@@ -4,8 +4,8 @@
 import os.path
 from pprint import pprint
 
-from bht.Entities_finder import entities_finder, sat_recognition
-from bht.databank_reader import DataBank
+from bht.Entities_finder import entities_finder, sat_recognition, inst_recognition
+from bht.databank_reader import DataBank, DataBankSheet
 
 
 class TestEntitiesFinder:
@@ -17,7 +17,7 @@ class TestEntitiesFinder:
         )
 
     def test_sat_recognition(self, article_as_str, data_frames):
-        sat_dict = data_frames[0]
+        sat_dict = data_frames[DataBankSheet.SATS]
         sat_dict_list = sat_recognition(article_as_str, sat_dict)
         assert len(sat_dict_list) == 39
 
@@ -25,14 +25,14 @@ class TestEntitiesFinder:
 class TestDatabankReader:
     def test_databank_init(self):
         _dbk = DataBank()
-        assert len(_dbk.sheets) == 7
+        assert len(_dbk.dataframes) == 7
 
 
 class TestDataframe:
     def test_load_dataframe(self, data_frames):
         assert len(data_frames) == 6
-        _sats = data_frames[0]
-        _span = data_frames[5]
+        _sats = data_frames[DataBankSheet.SATS]
+        _span = data_frames[DataBankSheet.TIME_SPAN]
         assert len(_sats) == len(_span)
         # assert _sats.keys() == _span.keys()
         # for stk in _sats.keys():
@@ -40,7 +40,7 @@ class TestDataframe:
         #         print(stk)
 
     def test_satellites_frame(self, data_frames):
-        sat_frame = data_frames[0]
+        sat_frame = data_frames[DataBankSheet.SATS]
         assert len(sat_frame) == 245
         assert type(sat_frame) == dict
         for name, syn_list in sat_frame.items():
@@ -50,30 +50,30 @@ class TestDataframe:
         pprint(sat_frame)
 
     def test_instruments_frame(self, data_frames):
-        inst_frame = data_frames[1]
+        inst_frame = data_frames[DataBankSheet.INSTR]
         assert len(inst_frame) == 210
         for name, syn_list in inst_frame.items():
             assert type(syn_list) == list
 
     def test_region_gen_frame(self, data_frames):
-        region_general = data_frames[2]
+        region_general = data_frames[DataBankSheet.REG_GEN]
         assert len(region_general) == 73
         assert type(region_general) == list
 
     def test_region_tree_frame(self, data_frames):
-        region_tree = data_frames[3]
+        region_tree = data_frames[DataBankSheet.REG_TREE]
         assert len(region_tree) == 15
         assert type(region_tree) == dict
 
     def test_amda_sats_frame(self, data_frames):
-        amda_sats = data_frames[4]
+        amda_sats = data_frames[DataBankSheet.SATS_REG]
         assert len(amda_sats) == 261
         assert type(amda_sats) == dict
         for name, syn_list in amda_sats.items():
             assert type(syn_list) == list
 
     def test_time_span_frame(self, data_frames):
-        time_span = data_frames[5]
+        time_span = data_frames[DataBankSheet.TIME_SPAN]
         assert len(time_span) == 245
         assert type(time_span) == dict
         for name, syn_list in time_span.items():

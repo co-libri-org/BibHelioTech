@@ -1,4 +1,5 @@
 import os
+from enum import StrEnum
 
 import numpy as np
 
@@ -7,32 +8,34 @@ import pandas as pd
 from bht_config import yml_settings
 
 
+class DataBankSheet(StrEnum):
+    SATS = "satellites"
+    SATS_REG = "satellites_regions"
+    INSTR = "instruments"
+    REG_GEN = "regions_general"
+    REG_TREE = "regions_tree"
+    PROCESSES = "processes"
+    TIME_SPAN = "time_span"
+
+
 class DataBank:
-    sheets = [
-        "satellites",
-        "satellites_regions",
-        "instruments",
-        "regions_general",
-        "regions_tree",
-        "processes",
-        "time_span",
-    ]
     dataframes = {}
 
     def __init__(self):
         entities_path = os.path.join(
             yml_settings["BHT_WORKSHEET_DIR"], "Entities_DataBank.xls"
         )
-        self.dataframes = pd.read_excel(entities_path, sheet_name=self.sheets)
-        for sheet in self.sheets:
+        sheets = [s.value for s in DataBankSheet]
+        self.dataframes = pd.read_excel(entities_path, sheet_name=sheets)
+        for sheet in sheets:
             _df = self.dataframes[sheet]
             _df = _df.map(lambda x: x.strip() if isinstance(x, str) else x)
             self.dataframes[sheet] = _df
 
-    def get_sheet_as_df(self, sheet_name):
+    def get_sheet_as_df(self, dbk_sheet: DataBankSheet):
         df_sheet = None
         try:
-            df_sheet = self.dataframes[sheet_name]
+            df_sheet = self.dataframes[dbk_sheet]
         except KeyError:
             pass
         return df_sheet

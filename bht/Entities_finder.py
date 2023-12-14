@@ -1,17 +1,13 @@
-import re
-import os
 import string
 import collections
-import pandas as pd
 from copy import copy
 from datetime import *
 
 from bht.DOI_finder import *
 from bht.bht_logging import init_logger
-from bht.databank_reader import DataBank
+from bht.databank_reader import DataBank, DataBankSheet
 from bht.published_date_finder import *
 
-from bht_config import yml_settings
 
 v = sys.version
 token = "IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m"  # API Key
@@ -39,7 +35,7 @@ def keys_exists(element, *keys):
 def load_dataframes():
     _dbk = DataBank()
 
-    df_Satellites = _dbk.get_sheet_as_df(sheet_name="satellites")
+    df_Satellites = _dbk.get_sheet_as_df(dbk_sheet=DataBankSheet.SATS)
     SAT_dict = {}
     for compteur_ligne in range(len(df_Satellites)):
         SAT_dict[str(df_Satellites.iloc[compteur_ligne, 0])] = []
@@ -49,7 +45,7 @@ def load_dataframes():
                     str(df_Satellites.iloc[compteur_ligne, compteur_colonne])
                 )
 
-    df_Instruments = _dbk.get_sheet_as_df(sheet_name="instruments")
+    df_Instruments = _dbk.get_sheet_as_df(dbk_sheet=DataBankSheet.INSTR)
     INST_dict = {}
     for compteur_ligne in range(len(df_Instruments)):
         INST_dict[str(df_Instruments.iloc[compteur_ligne, 0])] = []
@@ -66,12 +62,12 @@ def load_dataframes():
                         str(df_Instruments.iloc[compteur_ligne, compteur_colonne])
                     )
 
-    df_Regions_general = _dbk.get_sheet_as_df(sheet_name="regions_general")
+    df_Regions_general = _dbk.get_sheet_as_df(dbk_sheet=DataBankSheet.REG_GEN)
     REG_general_list = []
     for compteur_ligne in range(len(df_Regions_general)):
         REG_general_list.append(str(df_Regions_general.iloc[compteur_ligne, 0]))
 
-    df_Regions = _dbk.get_sheet_as_df(sheet_name="regions_tree")
+    df_Regions = _dbk.get_sheet_as_df(dbk_sheet=DataBankSheet.REG_TREE)
     REG_dict = {}
     for compteur_ligne in range(len(df_Regions)):
         REG_dict[str(df_Regions.iloc[compteur_ligne, 0])] = {}
@@ -81,7 +77,7 @@ def load_dataframes():
                     eval(str(df_Regions.iloc[compteur_ligne, compteur_colonne]))
                 )
 
-    df_AMDA_SPASE = _dbk.get_sheet_as_df(sheet_name="satellites_regions")
+    df_AMDA_SPASE = _dbk.get_sheet_as_df(dbk_sheet=DataBankSheet.SATS_REG)
     AMDA_dict = {}
     for compteur_ligne in range(len(df_AMDA_SPASE)):
         for compteur_colonne in range(1, len(df_AMDA_SPASE.iloc[compteur_ligne])):
@@ -89,7 +85,7 @@ def load_dataframes():
                 df_AMDA_SPASE.iloc[compteur_ligne, compteur_colonne]
             )
 
-    df_operating_spans = _dbk.get_sheet_as_df(sheet_name="time_span")
+    df_operating_spans = _dbk.get_sheet_as_df(dbk_sheet=DataBankSheet.TIME_SPAN)
     SPAN_dict = {}
     for compteur_ligne in range(len(df_operating_spans)):
         SPAN_dict[str(df_operating_spans.iloc[compteur_ligne, 0])] = []
@@ -105,7 +101,15 @@ def load_dataframes():
         if val[1] == "nan":
             val[1] = str(datetime.date(datetime.now()))
 
-    return SAT_dict, INST_dict, REG_general_list, REG_dict, AMDA_dict, SPAN_dict
+    returned_dict = {
+        DataBankSheet.SATS: SAT_dict,
+        DataBankSheet.INSTR: INST_dict,
+        DataBankSheet.REG_GEN: REG_general_list,
+        DataBankSheet.REG_TREE: REG_dict,
+        DataBankSheet.SATS_REG: AMDA_dict,
+        DataBankSheet.TIME_SPAN: SPAN_dict,
+    }
+    return returned_dict
 
 
 def operating_span_checker(sat, durations, SAT_dict, SPAN_dict, published_date):
@@ -278,14 +282,13 @@ def entities_finder(current_OCR_folder, DOI=None):
             if path != []:
                 path.pop()
 
-    (
-        SAT_dict,
-        INST_dict,
-        REG_general_list,
-        REG_dict,
-        AMDA_dict,
-        SPAN_dict,
-    ) = load_dataframes()
+    data_frames = load_dataframes()
+    SAT_dict = data_frames[DataBankSheet.SATS]
+    INST_dict = data_frames[DataBankSheet.INSTR]
+    REG_general_list = data_frames[DataBankSheet.REG_GEN]
+    REG_dict = data_frames[DataBankSheet.REG_TREE]
+    AMDA_dict = data_frames[DataBankSheet.SATS_REG]
+    SPAN_dict = data_frames[DataBankSheet.TIME_SPAN]
 
     # loading the text file (content of the article)
     content_path = os.path.join(current_OCR_folder, "out_filtered_text.txt")
