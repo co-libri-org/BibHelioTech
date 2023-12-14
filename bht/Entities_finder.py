@@ -264,11 +264,10 @@ def entities_finder(current_OCR_folder, DOI=None):
     ) = load_dataframes()
 
     # loading the text file (content of the article)
-    files_path = os.path.join(current_OCR_folder, "out_filtered_text.txt")
+    content_path = os.path.join(current_OCR_folder, "out_filtered_text.txt")
 
-    file = open(files_path, "r")
-    content_upper = file.read()
-    file.close()
+    with open(content_path, "r") as file:
+        content_upper = file.read()
 
     # file_name = current_OCR_folder + "/" + os.path.basename(current_OCR_folder) + ".tei.xml"
     if DOI is None:
@@ -278,13 +277,11 @@ def entities_finder(current_OCR_folder, DOI=None):
         file_name = glob.glob(pattern)[0]
         DOI = find_DOI(file_name)  # retrieving the DOI of the article being processed.
 
-    files_path_json = os.path.join(
-        current_OCR_folder, "res_sutime_2.json"
-    )  # loading transformed SUTime results
-    JSON_file = open(files_path_json, "r")
-    JSON_content = JSON_file.read()
-    JSON_dict = eval(JSON_content)
-    JSON_file.close()
+    # loading transformed SUTime results
+    files_path_json = os.path.join(current_OCR_folder, "res_sutime_2.json")
+    with open(files_path_json, "r") as JSON_file:
+        JSON_content = JSON_file.read()
+        JSON_dict = eval(JSON_content)
 
     # SAT recognition
     sat_dict_list = []
@@ -906,11 +903,10 @@ def entities_finder(current_OCR_folder, DOI=None):
         temp = []
 
     # write in file
-    final_file = open(os.path.join(current_OCR_folder, "reg_recognition_res.txt"), "w")
-    for elems in final_amda_list:
-        final_file.write(str(elems))
-        final_file.write("\n")
-    final_file.close()
+    with open(os.path.join(current_OCR_folder, "reg_recognition_res.txt"), "w") as final_file:
+        for elems in final_amda_list:
+            final_file.write(str(elems))
+            final_file.write("\n")
 
     # =============================================================================================================================================================
     # For displaying results, comment for disable.
