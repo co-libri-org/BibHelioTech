@@ -663,7 +663,7 @@ def entities_finder(current_OCR_folder, DOI=None):
         temp = []
 
     # write in file
-    final_file = open(current_OCR_folder + "/" + "reg_recognition_res.txt", "w")
+    final_file = open(os.path.join(current_OCR_folder,  "reg_recognition_res.txt"), "w")
     for elems in final_amda_list:
         final_file.write(str(elems))
         final_file.write("\n")
@@ -686,8 +686,8 @@ def entities_finder(current_OCR_folder, DOI=None):
     print("\n")
     # =============================================================================================================================================================
 
-    with open(current_OCR_folder + "/" + DOI.translate(
-            str.maketrans('', '', string.punctuation)) + "_bibheliotech_V" + "1.txt", "w") as f:
+    with open(os.path.join(current_OCR_folder , DOI.translate(
+            str.maketrans('', '', string.punctuation)) + "_bibheliotech_V" + "1.txt"), "w") as f:
         f.write("# Name: " + DOI.translate(
             str.maketrans('', '', string.punctuation)) + "_bibheliotech_V" + "1" + ";" + "\n")
         f.write("# Creation Date: " + datetime.now().isoformat() + ";" + "\n")
