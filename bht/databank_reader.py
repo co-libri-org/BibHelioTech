@@ -1,4 +1,5 @@
 import os
+
 import numpy as np
 
 import pandas as pd
@@ -22,8 +23,9 @@ class DataBank:
         entities_path = os.path.join(
             yml_settings["BHT_WORKSHEET_DIR"], "Entities_DataBank.xls"
         )
+        self.dataframes = pd.read_excel(entities_path, sheet_name=self.sheets)
         for sheet in self.sheets:
-            _df = pd.read_excel(entities_path, sheet_name=sheet)
+            _df = self.dataframes[sheet]
             _df = _df.map(lambda x: x.strip() if isinstance(x, str) else x)
             self.dataframes[sheet] = _df
 
@@ -75,7 +77,12 @@ def locate_row_in_df(df, value):
 
 
 if __name__ == "__main__":
+    from datetime import datetime
+
+    before_date = datetime.now()
     databank = DataBank()
+    after_date = datetime.now()
     # databank.show_df()
     databank.satellites_intersect("time_span")
     # databank.rename_from_satellites("time_span")
+    print(f"Loaded in {after_date -before_date}")
