@@ -231,8 +231,73 @@ def operating_span_checker(sat, durations, SAT_dict, SPAN_dict, published_date):
 
 
 # SAT recognition
+def inst_recognition(content_as_str, inst_dict):
+    """
+    Find intruments in the Article's content
+
+    @param content_as_str:  article's content as string
+    @param inst_dict: dict of instruments
+    @return: dict of instruments found in the article
+    """
+
+    # INST recognition
+    inst_dict_list = []
+    for INSTs, Instrument in inst_dict.items():
+        for inst in Instrument:
+            if isinstance(inst, str):
+                test = re.finditer("" + inst + "(\.|,| |;)", content_as_str)
+                inst_dict_list += [
+                    {
+                        "end": matches.end(),
+                        "start": matches.start(),
+                        "text": matches.group()
+                        .strip()
+                        .translate(str.maketrans("", "", string.punctuation)),
+                    }
+                    for matches in test
+                ]
+            elif isinstance(inst, dict):
+                for key, value in inst.items():
+                    test = re.finditer("" + key + "(\.|,| |;)", content_as_str)
+                    inst_dict_list += [
+                        {
+                            "end": matches.end(),
+                            "start": matches.start(),
+                            "text": matches.group()
+                            .strip()
+                            .translate(str.maketrans("", "", string.punctuation)),
+                        }
+                        for matches in test
+                    ]
+                    if isinstance(value, str):
+                        test_2 = re.finditer("" + value + "(\.|,| |;)", content_as_str)
+                        for matches in test_2:
+                            inst_dict_list += [
+                                {
+                                    "end": matches.end(),
+                                    "start": matches.start(),
+                                    "text": key,
+                                }
+                            ]
+                    elif isinstance(value, list):
+                        for syns in value:
+                            test_2 = re.finditer(
+                                "" + syns + "(\.|,| |;)", content_as_str
+                            )
+                            for matches in test_2:
+                                inst_dict_list += [
+                                    {
+                                        "end": matches.end(),
+                                        "start": matches.start(),
+                                        "text": key,
+                                    }
+                                ]
+    return inst_dict_list
+
+
 def sat_recognition(content_as_str, sats_dict):
     """
+    Find satellites and their synonyms in the Article's content
 
     @param content_as_str:  article's content as string
     @param sats_dict:  dict of satellites synonymous
@@ -309,60 +374,11 @@ def entities_finder(current_OCR_folder, DOI=None):
     with open(files_path_json, "r") as sutime_file:
         sutime_json = json.load(sutime_file)
 
+    # satellites recognition
     sat_dict_list = sat_recognition(content_upper, SAT_dict)
 
-    # INST recognition
-    inst_dict_list = []
-    for INSTs, Instrument in INST_dict.items():
-        for inst in Instrument:
-            if isinstance(inst, str):
-                test = re.finditer("" + inst + "(\.|,| |;)", content_upper)
-                inst_dict_list += [
-                    {
-                        "end": matches.end(),
-                        "start": matches.start(),
-                        "text": matches.group()
-                        .strip()
-                        .translate(str.maketrans("", "", string.punctuation)),
-                    }
-                    for matches in test
-                ]
-            elif isinstance(inst, dict):
-                for key, value in inst.items():
-                    test = re.finditer("" + key + "(\.|,| |;)", content_upper)
-                    inst_dict_list += [
-                        {
-                            "end": matches.end(),
-                            "start": matches.start(),
-                            "text": matches.group()
-                            .strip()
-                            .translate(str.maketrans("", "", string.punctuation)),
-                        }
-                        for matches in test
-                    ]
-                    if isinstance(value, str):
-                        test_2 = re.finditer("" + value + "(\.|,| |;)", content_upper)
-                        for matches in test_2:
-                            inst_dict_list += [
-                                {
-                                    "end": matches.end(),
-                                    "start": matches.start(),
-                                    "text": key,
-                                }
-                            ]
-                    elif isinstance(value, list):
-                        for syns in value:
-                            test_2 = re.finditer(
-                                "" + syns + "(\.|,| |;)", content_upper
-                            )
-                            for matches in test_2:
-                                inst_dict_list += [
-                                    {
-                                        "end": matches.end(),
-                                        "start": matches.start(),
-                                        "text": key,
-                                    }
-                                ]
+    # instruments recognition
+    inst_dict_list = inst_recognition(content_upper, INST_dict)
 
     # remove matches include in spans of others matches
     temp = []
