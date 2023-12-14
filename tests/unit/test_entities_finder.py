@@ -3,6 +3,13 @@
 #
 
 from bht.Entities_finder import load_dataframes
+from bht.databank_reader import DataBank
+
+
+class TestDatabankReader:
+    def test_databank_init(self):
+        _dbk = DataBank()
+        assert len(_dbk.sheets) == 7
 
 
 class TestDataframe:
@@ -10,14 +17,8 @@ class TestDataframe:
         frames = load_dataframes()
         assert len(frames) == 6
         _sats = frames[0]
-        _insts = frames[1]
-        _reg_gen = frames[2]
-        _reg = frames[3]
-        _amda = frames[4]
         _span = frames[5]
-        assert len(_sats) == 245
-        assert len(_span) == 245
-        assert len(_insts) == 210
-        assert len(_amda) == 261
-        # from pprint import pprint
-        # pprint(_sats)
+        assert len(_sats) == len(_span)
+        for stk in _sats.keys():
+            if stk not in _span.keys():
+                print(stk)

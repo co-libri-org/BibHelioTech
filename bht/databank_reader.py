@@ -27,6 +27,14 @@ class DataBank:
             _df = _df.map(lambda x: x.strip() if isinstance(x, str) else x)
             self.dataframes[sheet] = _df
 
+    def get_sheet_as_df(self, sheet):
+        df_sheet = None
+        try:
+            df_sheet = self.dataframes[sheet]
+        except KeyError:
+            pass
+        return df_sheet
+
     def show_df(self, sheet="satellites"):
         print(self.dataframes[sheet].head())
 
