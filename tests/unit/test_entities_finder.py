@@ -4,7 +4,12 @@
 import os.path
 from pprint import pprint
 
-from bht.Entities_finder import entities_finder, sat_recognition, inst_recognition
+from bht.Entities_finder import (
+    entities_finder,
+    sat_recognition,
+    inst_recognition,
+    clean_sats_inside_insts,
+)
 from bht.databank_reader import DataBank, DataBankSheet
 
 
@@ -25,6 +30,16 @@ class TestEntitiesFinder:
         inst_dict = data_frames[DataBankSheet.INSTR]
         inst_dict_list = inst_recognition(article_as_str, inst_dict)
         assert len(inst_dict_list) == 56
+
+    def test_clean_sats(self, article_as_str, data_frames):
+        sat_dict = data_frames[DataBankSheet.SATS]
+        sat_dict_list = sat_recognition(article_as_str, sat_dict)
+        inst_dict = data_frames[DataBankSheet.INSTR]
+        inst_dict_list = inst_recognition(article_as_str, inst_dict)
+        assert len(sat_dict_list) == 39
+        cleaned_sat_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
+        # assert len(sat_dict_list) == 113
+        assert len(cleaned_sat_list) == 39
 
 
 class TestDatabankReader:

@@ -319,6 +319,30 @@ def sat_recognition(content_as_str, sats_dict):
     return sat_dict_list
 
 
+def clean_sats_inside_insts(sats_list, insts_list):
+    """
+    Remove from list any satellites which time span is included in any instrument's time span.
+
+    @param sats_list:  the satellites time span list
+    @param insts_list:  the instruments time span list
+    @return:  the cleaned satellites list
+    """
+    # remove satellites matches included in spans of instrument matches
+    temp = []
+    for sat_1 in sats_list:
+        for inst_2 in insts_list:
+            if sat_1 != {}:
+                if (inst_2["start"] - 1 <= sat_1["start"]) and (
+                    inst_2["end"] + 1 >= sat_1["end"]
+                ):  # is include
+                    print(f"Removing {sat_1['text']}")
+                    sat_1.clear()
+                    # break
+        temp.append(sat_1)
+    res_sats = [i for i in temp if i != {}]
+    return res_sats
+
+
 def entities_finder(current_OCR_folder, DOI=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
@@ -380,23 +404,12 @@ def entities_finder(current_OCR_folder, DOI=None):
     # instruments recognition
     inst_dict_list = inst_recognition(content_upper, INST_dict)
 
-    # remove matches include in spans of others matches
-    temp = []
-    for sat_1 in sat_dict_list:
-        for inst_2 in inst_dict_list:
-            if sat_1 != {}:
-                if (inst_2["start"] - 1 <= sat_1["start"]) and (
-                    inst_2["end"] + 1 >= sat_1["end"]
-                ):  # is include
-                    sat_1.clear()
-                    # break
-        temp.append(sat_1)
-    sat_dict_list = [i for i in temp if i != {}]
+    new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
 
     inst_list = list(set([inst["text"] for inst in inst_dict_list]))
 
     final_links = []
-    for sats in sat_dict_list:
+    for sats in new_sat_dict_list:
         final_links.append(
             [
                 sats,
@@ -528,7 +541,7 @@ def entities_finder(current_OCR_folder, DOI=None):
             continue
         dicts_index += 1
 
-    TSO = {"occur_sat": len(sat_dict_list), "nb_durations": len(sutime_json)}
+    TSO = {"occur_sat": len(new_sat_dict_list), "nb_durations": len(sutime_json)}
     for elements in final_links:
         if ("D" not in elements[0]) and ("R" in elements[0]):
             elements[0]["D"] = 1
@@ -1046,3 +1059,7 @@ def entities_finder(current_OCR_folder, DOI=None):
                 + "\n"
             )
             compteur += 1
+
+
+if __name__ == "__main__":
+    sat_dict_list
