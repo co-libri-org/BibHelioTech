@@ -272,7 +272,6 @@ def entities_finder(current_OCR_folder, DOI=None):
     # file_name = current_OCR_folder + "/" + os.path.basename(current_OCR_folder) + ".tei.xml"
     if DOI is None:
         import glob
-
         pattern = os.path.join(current_OCR_folder, "*.tei.xml")
         file_name = glob.glob(pattern)[0]
         DOI = find_DOI(file_name)  # retrieving the DOI of the article being processed.
@@ -280,8 +279,7 @@ def entities_finder(current_OCR_folder, DOI=None):
     # loading transformed SUTime results
     files_path_json = os.path.join(current_OCR_folder, "res_sutime_2.json")
     with open(files_path_json, "r") as JSON_file:
-        JSON_content = JSON_file.read()
-        JSON_dict = eval(JSON_content)
+        JSON_dict = json.load(JSON_file)
 
     # SAT recognition
     sat_dict_list = []
