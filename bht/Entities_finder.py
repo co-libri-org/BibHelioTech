@@ -8,6 +8,7 @@ from datetime import *
 
 from bht.DOI_finder import *
 from bht.bht_logging import init_logger
+from bht.databank_reader import DataBank
 from bht.published_date_finder import *
 
 from bht_config import yml_settings
@@ -36,9 +37,9 @@ def keys_exists(element, *keys):
 
 # =====================================================================================================================
 def load_dataframes():
-    entities_path = os.path.join(yml_settings["BHT_WORKSHEET_DIR"], "Entities_DataBank.xls")
+    _dbk = DataBank()
 
-    df_Satellites = pd.read_excel(entities_path, sheet_name='satellites')
+    df_Satellites = _dbk.get_sheet_as_df( sheet_name='satellites')
     SAT_dict = {}
     for compteur_ligne in range(len(df_Satellites)):
         SAT_dict[str(df_Satellites.iloc[compteur_ligne, 0])] = []
@@ -47,7 +48,7 @@ def load_dataframes():
                 SAT_dict[str(df_Satellites.iloc[compteur_ligne, 0])].append(
                     str(df_Satellites.iloc[compteur_ligne, compteur_colonne]))
 
-    df_Instruments = pd.read_excel(entities_path, sheet_name='instruments')
+    df_Instruments = _dbk.get_sheet_as_df(sheet_name='instruments')
     INST_dict = {}
     for compteur_ligne in range(len(df_Instruments)):
         INST_dict[str(df_Instruments.iloc[compteur_ligne, 0])] = []
@@ -60,12 +61,12 @@ def load_dataframes():
                     INST_dict[str(df_Instruments.iloc[compteur_ligne, 0])].append(
                         str(df_Instruments.iloc[compteur_ligne, compteur_colonne]))
 
-    df_Regions_general = pd.read_excel(entities_path, sheet_name='regions_general')
+    df_Regions_general = _dbk.get_sheet_as_df(sheet_name='regions_general')
     REG_general_list = []
     for compteur_ligne in range(len(df_Regions_general)):
         REG_general_list.append(str(df_Regions_general.iloc[compteur_ligne, 0]))
 
-    df_Regions = pd.read_excel(entities_path, sheet_name='regions_tree')
+    df_Regions = _dbk.get_sheet_as_df(sheet_name='regions_tree')
     REG_dict = {}
     for compteur_ligne in range(len(df_Regions)):
         REG_dict[str(df_Regions.iloc[compteur_ligne, 0])] = {}
@@ -74,7 +75,7 @@ def load_dataframes():
                 REG_dict[str(df_Regions.iloc[compteur_ligne, 0])].update(
                     eval(str(df_Regions.iloc[compteur_ligne, compteur_colonne])))
 
-    df_AMDA_SPASE = pd.read_excel(entities_path, sheet_name='satellites_regions')
+    df_AMDA_SPASE = _dbk.get_sheet_as_df(sheet_name='satellites_regions')
     AMDA_dict = {}
     for compteur_ligne in range(len(df_AMDA_SPASE)):
         for compteur_colonne in range(1, len(df_AMDA_SPASE.iloc[compteur_ligne])):
@@ -82,7 +83,7 @@ def load_dataframes():
                 df_AMDA_SPASE.iloc[compteur_ligne, compteur_colonne])
 
 
-    df_operating_spans = pd.read_excel(entities_path, sheet_name='time_span')
+    df_operating_spans = _dbk.get_sheet_as_df(sheet_name='time_span')
     SPAN_dict = {}
     for compteur_ligne in range(len(df_operating_spans)):
         SPAN_dict[str(df_operating_spans.iloc[compteur_ligne, 0])] = []

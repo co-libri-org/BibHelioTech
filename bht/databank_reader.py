@@ -27,10 +27,10 @@ class DataBank:
             _df = _df.map(lambda x: x.strip() if isinstance(x, str) else x)
             self.dataframes[sheet] = _df
 
-    def get_sheet_as_df(self, sheet):
+    def get_sheet_as_df(self, sheet_name):
         df_sheet = None
         try:
-            df_sheet = self.dataframes[sheet]
+            df_sheet = self.dataframes[sheet_name]
         except KeyError:
             pass
         return df_sheet

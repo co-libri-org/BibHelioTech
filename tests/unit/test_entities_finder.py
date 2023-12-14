@@ -19,6 +19,7 @@ class TestDataframe:
         _sats = frames[0]
         _span = frames[5]
         assert len(_sats) == len(_span)
-        for stk in _sats.keys():
-            if stk not in _span.keys():
-                print(stk)
+        # assert _sats.keys() == _span.keys()
+        # for stk in _sats.keys():
+        #     if stk not in _span.keys():
+        #         print(stk)
