@@ -1,4 +1,5 @@
 import os.path
+import shutil
 from urllib.parse import urlencode
 
 import pytest
@@ -19,6 +20,15 @@ def hpevents_in_db(hpevents_list, db):
     for event in hpevents_list:
         db.session.add(event)
         db.session.commit()
+
+
+@pytest.fixture(scope="module")
+def ocr_dir_test(tmp_path_factory):
+    data_dir = "ark_67375_WNG-HPV609C7-D"
+    ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)
+    ocr_dir_dest = tmp_path_factory.mktemp("test_dir")/data_dir
+    ocr_dir_test_done = shutil.copytree(ocr_dir_orig, ocr_dir_dest)
+    yield ocr_dir_test_done
 
 
 @pytest.fixture(scope="module")
