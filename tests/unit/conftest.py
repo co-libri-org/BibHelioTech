@@ -23,10 +23,20 @@ def hpevents_in_db(hpevents_list, db):
 
 
 @pytest.fixture(scope="module")
+def article_as_str():
+    data_dir = "ark_67375_WNG-HPV609C7-D"
+    ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)
+    article_as_txt_path = os.path.join(ocr_dir_orig, "out_filtered_text.txt")
+    with open(article_as_txt_path, "r") as file:
+        _article_as_str = file.read()
+    yield _article_as_str
+
+
+@pytest.fixture(scope="module")
 def ocr_dir_test(tmp_path_factory):
     data_dir = "ark_67375_WNG-HPV609C7-D"
     ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)
-    ocr_dir_dest = tmp_path_factory.mktemp("test_dir")/data_dir
+    ocr_dir_dest = tmp_path_factory.mktemp("test_dir") / data_dir
     ocr_dir_test_done = shutil.copytree(ocr_dir_orig, ocr_dir_dest)
     yield ocr_dir_test_done
 

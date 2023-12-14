@@ -226,6 +226,30 @@ def operating_span_checker(sat, durations, SAT_dict, SPAN_dict, published_date):
 # =================================================
 
 
+# SAT recognition
+def sat_recognition(content_as_str, sats_dict):
+    """
+
+    @param content_as_str:  article's content as string
+    @param sats_dict:  dict of satellites synonymous
+    @return: dict of satellites found in the article
+    """
+    sat_dict_list = []
+    for SATs, Synonymes in sats_dict.items():
+        for syns in Synonymes:
+            test = re.finditer("( |\n)" + syns + "(\.|,| )", content_as_str)
+            sat_dict_list += [
+                {
+                    "end": matches.end(),
+                    "start": matches.start(),
+                    "text": re.sub("(\n|\.|,)", "", matches.group()).strip(),
+                    "type": "sat",
+                }
+                for matches in test
+            ]
+    return sat_dict_list
+
+
 def entities_finder(current_OCR_folder, DOI=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
@@ -272,29 +296,17 @@ def entities_finder(current_OCR_folder, DOI=None):
     # file_name = current_OCR_folder + "/" + os.path.basename(current_OCR_folder) + ".tei.xml"
     if DOI is None:
         import glob
+
         pattern = os.path.join(current_OCR_folder, "*.tei.xml")
         file_name = glob.glob(pattern)[0]
         DOI = find_DOI(file_name)  # retrieving the DOI of the article being processed.
 
     # loading transformed SUTime results
     files_path_json = os.path.join(current_OCR_folder, "res_sutime_2.json")
-    with open(files_path_json, "r") as JSON_file:
-        JSON_dict = json.load(JSON_file)
+    with open(files_path_json, "r") as sutime_file:
+        sutime_json = json.load(sutime_file)
 
-    # SAT recognition
-    sat_dict_list = []
-    for SATs, Synonymes in SAT_dict.items():
-        for syns in Synonymes:
-            test = re.finditer("( |\n)" + syns + "(\.|,| )", content_upper)
-            sat_dict_list += [
-                {
-                    "end": matches.end(),
-                    "start": matches.start(),
-                    "text": re.sub("(\n|\.|,)", "", matches.group()).strip(),
-                    "type": "sat",
-                }
-                for matches in test
-            ]
+    sat_dict_list = sat_recognition(content_upper, SAT_dict)
 
     # INST recognition
     inst_dict_list = []
@@ -415,7 +427,7 @@ def entities_finder(current_OCR_folder, DOI=None):
         elems[0]["SO"] = list_occur[elems[0]["text"]]
 
     temp = [elem[0] for elem in final_links]
-    temp += JSON_dict
+    temp += sutime_json
     temp = sorted(temp, key=lambda d: d["start"])
 
     # Association of the closest duration of a sattelite. If it is not included in the sattelite's operating span, search for the Nth closest duration.
@@ -497,7 +509,7 @@ def entities_finder(current_OCR_folder, DOI=None):
             continue
         dicts_index += 1
 
-    TSO = {"occur_sat": len(sat_dict_list), "nb_durations": len(JSON_dict)}
+    TSO = {"occur_sat": len(sat_dict_list), "nb_durations": len(sutime_json)}
     for elements in final_links:
         if ("D" not in elements[0]) and ("R" in elements[0]):
             elements[0]["D"] = 1
@@ -901,7 +913,9 @@ def entities_finder(current_OCR_folder, DOI=None):
         temp = []
 
     # write in file
-    with open(os.path.join(current_OCR_folder, "reg_recognition_res.txt"), "w") as final_file:
+    with open(
+        os.path.join(current_OCR_folder, "reg_recognition_res.txt"), "w"
+    ) as final_file:
         for elems in final_amda_list:
             final_file.write(str(elems))
             final_file.write("\n")

@@ -2,8 +2,9 @@
 # Unit Tests for the big entities_finder file
 #
 import os.path
+from pprint import pprint
 
-from bht.Entities_finder import entities_finder
+from bht.Entities_finder import entities_finder, sat_recognition
 from bht.databank_reader import DataBank
 
 
@@ -11,7 +12,14 @@ class TestEntitiesFinder:
     def test_entities_finder_method(self, ocr_dir_test):
         entities_finder(ocr_dir_test, DOI="10.1002/2015GL064052")
         assert os.path.isfile(os.path.join(ocr_dir_test, "reg_recognition_res.txt"))
-        assert os.path.isfile(os.path.join(ocr_dir_test, "1010022015GL064052_bibheliotech_V1.txt"))
+        assert os.path.isfile(
+            os.path.join(ocr_dir_test, "1010022015GL064052_bibheliotech_V1.txt")
+        )
+
+    def test_sat_recognition(self, article_as_str, data_frames):
+        sat_dict = data_frames[0]
+        sat_dict_list = sat_recognition(article_as_str, sat_dict)
+        assert len(sat_dict_list) == 39
 
 
 class TestDatabankReader:
@@ -34,8 +42,12 @@ class TestDataframe:
     def test_satellites_frame(self, data_frames):
         sat_frame = data_frames[0]
         assert len(sat_frame) == 245
+        assert type(sat_frame) == dict
         for name, syn_list in sat_frame.items():
             assert type(syn_list) == list
+        from pprint import pprint
+
+        pprint(sat_frame)
 
     def test_instruments_frame(self, data_frames):
         inst_frame = data_frames[1]
