@@ -5,6 +5,13 @@ import pytest
 from flask import current_app
 
 from bht.bht_logging import init_logger
+from bht.Entities_finder import load_dataframes
+
+
+@pytest.fixture(scope="module")
+def data_frames():
+    data_frames = load_dataframes()
+    yield data_frames
 
 
 @pytest.fixture(scope="function")
