@@ -113,9 +113,9 @@ def load_dataframes():
 
 
 def operating_span_checker(sat, durations, SAT_dict, SPAN_dict, published_date):
-    # Checks that an interval linked to a sattelite is included in the operating span of that sattelite.
+    # Checks that an interval linked to a satellite is included in the operating span of that satellite.
     try:
-        # retrieves the primary (first) name of a sattelite.
+        # retrieves the primary (first) name of a satellite.
         sat_name = sat["text"]
         for syns in SAT_dict.values():
             if sat_name in syns:
@@ -452,6 +452,95 @@ def add_sat_occurrence(_final_links, _sutime_json):
     return _temp, _fl_to_return
 
 
+def closest_duration(_temp, _final_links, data_frames, published_date):
+    _fl_to_return = copy.deepcopy(_final_links)
+    _temp_to_return = copy.deepcopy(_temp)
+    sat_dict = data_frames[DataBankSheet.SATS]
+    span_dict = data_frames[DataBankSheet.TIME_SPAN]
+    dicts_index = 0
+    for dicts in _temp_to_return:
+        dist_list = []
+
+        compteur_rang_aller = 0
+        compteur_rang_retour = 0
+
+        if dicts["type"] == "sat":
+            sens_aller = dicts_index
+            sens_retour = dicts_index
+
+            # direction -->
+            while sens_aller < len(_temp_to_return):
+                if _temp_to_return[sens_aller]["type"] != "sat":
+                    compteur_rang_aller += 1
+                    if (
+                        operating_span_checker(
+                            dicts,
+                            _temp_to_return[sens_aller],
+                            sat_dict,
+                            span_dict,
+                            published_date,
+                        )
+                        == True
+                    ):
+                        dicts["R"] = compteur_rang_aller
+                        dist_list.append(_temp_to_return[sens_aller])
+                        sens_aller = len(_temp_to_return)
+                sens_aller += 1
+
+            # direction <--
+            while sens_retour >= 0:
+                if _temp_to_return[sens_retour]["type"] != "sat":
+                    compteur_rang_retour += 1
+                    if (
+                        operating_span_checker(
+                            dicts,
+                            _temp_to_return[sens_retour],
+                            sat_dict,
+                            span_dict,
+                            published_date,
+                        )
+                        == True
+                    ):
+                        dicts["R"] = compteur_rang_retour
+                        dist_list.append(_temp_to_return[sens_retour])
+                        sens_retour = -1
+                sens_retour -= 1
+
+            # check of the closest between outward and backward.
+            if len(dist_list) == 2:
+                if (abs(dicts["start"] - dist_list[0]["start"])) < (
+                    abs(dicts["start"] - dist_list[1]["start"])
+                ):
+                    min_dist = abs(dicts["start"] - dist_list[0]["start"])
+                    compteur = 0
+                    for elems in _fl_to_return:
+                        if elems[0] == dicts:
+                            _fl_to_return[compteur].append(dist_list[0])
+                            _fl_to_return[compteur][0]["D"] = min_dist
+                        compteur += 1
+                else:
+                    min_dist = abs(dicts["start"] - dist_list[1]["start"])
+                    compteur = 0
+                    for elems in _fl_to_return:
+                        if elems[0] == dicts:
+                            _fl_to_return[compteur].append(dist_list[1])
+                            _fl_to_return[compteur][0]["D"] = min_dist
+                        compteur += 1
+            elif len(dist_list) == 1:
+                min_dist = abs(dicts["start"] - dist_list[0]["start"])
+                compteur = 0
+                for elems in _fl_to_return:
+                    if elems[0] == dicts:
+                        _fl_to_return[compteur].append(dist_list[0])
+                        _fl_to_return[compteur][0]["D"] = min_dist
+                    compteur += 1
+        else:
+            continue
+        dicts_index += 1
+
+    return _temp_to_return, _fl_to_return
+
+
 def entities_finder(current_OCR_folder, DOI=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
@@ -531,86 +620,11 @@ def entities_finder(current_OCR_folder, DOI=None):
     # 7- Add satellites occurrences to the list
     temp, final_links = add_sat_occurrence(final_links, sutime_json)
 
-    # Association of the closest duration of a satellite.
-    #
-    # If it is not included in the satellite's operating span, search for the Nth closest duration.
+    # TODO: get the published date elsewhere, at the beginning
     published_date = published_date_finder(token, v, DOI)
-    dicts_index = 0
-    for dicts in temp:
-        dist_list = []
 
-        compteur_rang_aller = 0
-        compteur_rang_retour = 0
-
-        if dicts["type"] == "sat":
-            sens_aller = dicts_index
-            sens_retour = dicts_index
-
-            # direction -->
-            while sens_aller < len(temp):
-                if temp[sens_aller]["type"] != "sat":
-                    compteur_rang_aller += 1
-                    if (
-                        operating_span_checker(
-                            dicts, temp[sens_aller], SAT_dict, SPAN_dict, published_date
-                        )
-                        == True
-                    ):
-                        dicts["R"] = compteur_rang_aller
-                        dist_list.append(temp[sens_aller])
-                        sens_aller = len(temp)
-                sens_aller += 1
-
-            # direction <--
-            while sens_retour >= 0:
-                if temp[sens_retour]["type"] != "sat":
-                    compteur_rang_retour += 1
-                    if (
-                        operating_span_checker(
-                            dicts,
-                            temp[sens_retour],
-                            SAT_dict,
-                            SPAN_dict,
-                            published_date,
-                        )
-                        == True
-                    ):
-                        dicts["R"] = compteur_rang_retour
-                        dist_list.append(temp[sens_retour])
-                        sens_retour = -1
-                sens_retour -= 1
-
-            # check of the closest between outward and backward.
-            if len(dist_list) == 2:
-                if (abs(dicts["start"] - dist_list[0]["start"])) < (
-                    abs(dicts["start"] - dist_list[1]["start"])
-                ):
-                    min_dist = abs(dicts["start"] - dist_list[0]["start"])
-                    compteur = 0
-                    for elems in final_links:
-                        if elems[0] == dicts:
-                            final_links[compteur].append(dist_list[0])
-                            final_links[compteur][0]["D"] = min_dist
-                        compteur += 1
-                else:
-                    min_dist = abs(dicts["start"] - dist_list[1]["start"])
-                    compteur = 0
-                    for elems in final_links:
-                        if elems[0] == dicts:
-                            final_links[compteur].append(dist_list[1])
-                            final_links[compteur][0]["D"] = min_dist
-                        compteur += 1
-            elif len(dist_list) == 1:
-                min_dist = abs(dicts["start"] - dist_list[0]["start"])
-                compteur = 0
-                for elems in final_links:
-                    if elems[0] == dicts:
-                        final_links[compteur].append(dist_list[0])
-                        final_links[compteur][0]["D"] = min_dist
-                    compteur += 1
-        else:
-            continue
-        dicts_index += 1
+    # 8- Association of the closest duration of a satellite.
+    temp, final_links = closest_duration(temp, final_links, data_frames, published_date)
 
     TSO = {"occur_sat": len(new_sat_dict_list), "nb_durations": len(sutime_json)}
     for elements in final_links:
@@ -765,7 +779,7 @@ def entities_finder(current_OCR_folder, DOI=None):
         elements for elements in founded_regions_list if elements != []
     ]
 
-    # case sattelite mentioned in the article but no region concerning it:
+    # case satellite mentioned in the article but no region concerning it:
     #   default association with the first item in its region list.
     if len(founded_regions_list) == 0:
         for elements in final_links:

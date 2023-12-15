@@ -13,6 +13,7 @@ from bht.Entities_finder import (
     update_final_instruments,
     update_final_synonyms,
     add_sat_occurrence,
+    closest_duration,
 )
 from bht.databank_reader import DataBank, DataBankSheet
 
@@ -79,6 +80,15 @@ class TestEntitiesFinder:
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
         assert len(tmp) == 45
         assert len(sat_occ) == 39
+
+    def test_closest_duration(self, sutime_json, final_links, data_frames):
+        final_links = update_final_instruments(final_links, data_frames)
+        final_with_syns = update_final_synonyms(final_links, data_frames)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
+        published_date = "2015-12-01T00:00:00Z"
+        tmp, sat_closest = closest_duration(tmp, sat_occ, data_frames, published_date)
+        assert len(sat_closest) == 39
+        assert len(tmp) == 45
 
 
 class TestDatabankReader:
