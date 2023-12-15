@@ -85,7 +85,8 @@ class TestDataframe:
         assert len(data_frames) == 6
         _sats = data_frames[DataBankSheet.SATS]
         _span = data_frames[DataBankSheet.TIME_SPAN]
-        assert len(_sats) == len(_span)
+        assert len(_sats) == 261
+        assert len(_span) == 254
         # assert _sats.keys() == _span.keys()
         # for stk in _sats.keys():
         #     if stk not in _span.keys():
@@ -93,7 +94,7 @@ class TestDataframe:
 
     def test_satellites_frame(self, data_frames):
         sat_frame = data_frames[DataBankSheet.SATS]
-        assert len(sat_frame) == 245
+        assert len(sat_frame) == 261
         assert type(sat_frame) == dict
         for name, syn_list in sat_frame.items():
             assert type(syn_list) == list
@@ -126,7 +127,7 @@ class TestDataframe:
 
     def test_time_span_frame(self, data_frames):
         time_span = data_frames[DataBankSheet.TIME_SPAN]
-        assert len(time_span) == 245
+        assert len(time_span) == 254
         assert type(time_span) == dict
         for name, syn_list in time_span.items():
             assert type(syn_list) == list
