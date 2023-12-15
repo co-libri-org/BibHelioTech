@@ -343,6 +343,33 @@ def clean_sats_inside_insts(sats_list, insts_list):
     return res_sats
 
 
+def make_final_links(sats: list, insts: list, content: str):
+    """
+    Build a list of couples containing
+        - the cleaned sats
+        - a list of instruments with middle of content as end/start
+
+
+    @param sats: cleaned sats list
+    @param insts: uniq sorted list of found instruments
+    @param content:  articles content as string
+    @return: the list of final links
+    """
+    _final_links = []
+    for _s in sats:
+        _final_links.append(
+            [
+                _s,
+                {
+                    "end": (len(content) / 2) + 1,
+                    "start": (len(content) / 2),
+                    "text": insts,
+                },
+            ]
+        )
+    return _final_links
+
+
 def entities_finder(current_OCR_folder, DOI=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
@@ -398,28 +425,19 @@ def entities_finder(current_OCR_folder, DOI=None):
     with open(files_path_json, "r") as sutime_file:
         sutime_json = json.load(sutime_file)
 
-    # satellites recognition
+    # 1- satellites recognition
     sat_dict_list = sat_recognition(content_upper, SAT_dict)
 
-    # instruments recognition
+    # 2- instruments recognition
     inst_dict_list = inst_recognition(content_upper, INST_dict)
 
+    # 3- clean sats list when timespan included in instruments
     new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
 
+    # 3- get the uniq instruments list ordered
     inst_list = list(set([inst["text"] for inst in inst_dict_list]))
 
-    final_links = []
-    for sats in new_sat_dict_list:
-        final_links.append(
-            [
-                sats,
-                {
-                    "end": (len(content_upper) / 2) + 1,
-                    "start": (len(content_upper) / 2),
-                    "text": inst_list,
-                },
-            ]
-        )
+    final_links = make_final_links(new_sat_dict_list, inst_list, content_upper)
 
     # Check for each sattelite found the instruments that belong to them respectively.
     for elements in final_links:
