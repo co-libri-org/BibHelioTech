@@ -6,7 +6,26 @@ import pytest
 from flask import current_app
 
 from bht.bht_logging import init_logger
-from bht.Entities_finder import load_dataframes
+from bht.Entities_finder import (
+    load_dataframes,
+    sat_recognition,
+    inst_recognition,
+    clean_sats_inside_insts,
+    make_final_links,
+)
+from bht.databank_reader import DataBankSheet
+
+
+@pytest.fixture(scope="module")
+def final_links(data_frames, article_as_str):
+    sat_dict = data_frames[DataBankSheet.SATS]
+    sat_dict_list = sat_recognition(article_as_str, sat_dict)
+    inst_dict = data_frames[DataBankSheet.INSTR]
+    inst_dict_list = inst_recognition(article_as_str, inst_dict)
+    inst_list = list(set([inst["text"] for inst in inst_dict_list]))
+    new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
+    final_links = make_final_links(new_sat_dict_list, inst_list, article_as_str)
+    yield final_links
 
 
 @pytest.fixture(scope="module")

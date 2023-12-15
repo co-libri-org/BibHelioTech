@@ -10,6 +10,7 @@ from bht.Entities_finder import (
     inst_recognition,
     clean_sats_inside_insts,
     make_final_links,
+    update_final_instruments,
 )
 from bht.databank_reader import DataBank, DataBankSheet
 
@@ -49,11 +50,21 @@ class TestEntitiesFinder:
         inst_dict_list = inst_recognition(article_as_str, inst_dict)
         inst_list = list(set([inst["text"] for inst in inst_dict_list]))
         new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
-        final_links = make_final_links(new_sat_dict_list, inst_list, article_as_str)
-        assert len(final_links) == 39
-        assert final_links[0][0].keys() == {'end': 938, 'start': 929, 'text': 'Beijing', 'type': 'sat'}.keys()
-        for fl in final_links:
-            assert len( fl ) == 2
+        _final_links = make_final_links(new_sat_dict_list, inst_list, article_as_str)
+        assert len(_final_links) == 39
+        assert (
+            list(_final_links[0][0].keys()) == ["end", "start", "text", "type"] )
+        for fl in _final_links:
+            assert len(fl) == 2
+
+    def test_update_final_instr(self, final_links, data_frames):
+        inst_dict = data_frames[DataBankSheet.INSTR]
+        new_final_links = update_final_instruments(final_links, inst_dict)
+        pprint(new_final_links)
+        assert len(new_final_links) == 39
+        for fl in new_final_links:
+            assert len(fl[1]["text"]) < 2
+        # assert False
 
 
 class TestDatabankReader:

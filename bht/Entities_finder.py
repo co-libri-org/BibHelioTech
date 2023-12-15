@@ -1,6 +1,6 @@
 import string
 import collections
-from copy import copy
+import copy
 from datetime import *
 
 from bht.DOI_finder import *
@@ -370,6 +370,28 @@ def make_final_links(sats: list, insts: list, content: str):
     return _final_links
 
 
+def update_final_instruments(_final_links, inst_dict):
+    _fl = copy.deepcopy(_final_links)
+    # For each found satellite check the instruments that belong to them respectively.
+    for elements in _fl:
+        temp = []
+        try:
+            for inst in elements[1]["text"]:
+                INST_temp = []
+                for elems in inst_dict[elements[0]["text"]]:
+                    if isinstance(elems, str):
+                        INST_temp.append(elems)
+                    elif isinstance(elems, dict):
+                        for key in elems.keys():
+                            INST_temp.append(key)
+                if inst in INST_temp:
+                    temp.append(inst)
+        except:
+            elements[1]["text"] = []
+        elements[1]["text"] = temp
+    return _fl
+
+
 def entities_finder(current_OCR_folder, DOI=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
@@ -393,7 +415,7 @@ def entities_finder(current_OCR_folder, DOI=None):
                     path.pop()
             if k == key:
                 # add path to our result
-                result.append(copy(path))
+                result.append(copy.copy(path))
             # remove the key added in the first line
             if path != []:
                 path.pop()
@@ -437,25 +459,11 @@ def entities_finder(current_OCR_folder, DOI=None):
     # 3- get the uniq instruments list ordered
     inst_list = list(set([inst["text"] for inst in inst_dict_list]))
 
+    # 4- Make a list of lists ... see make_final_links() for more details.
     final_links = make_final_links(new_sat_dict_list, inst_list, content_upper)
 
-    # Check for each sattelite found the instruments that belong to them respectively.
-    for elements in final_links:
-        temp = []
-        try:
-            for inst in elements[1]["text"]:
-                INST_temp = []
-                for elems in INST_dict[elements[0]["text"]]:
-                    if isinstance(elems, str):
-                        INST_temp.append(elems)
-                    elif isinstance(elems, dict):
-                        for key in elems.keys():
-                            INST_temp.append(key)
-                if inst in INST_temp:
-                    temp.append(inst)
-        except:
-            elements[1]["text"] = []
-        elements[1]["text"] = temp
+    # 5- update instruments list for each satellite in links list
+    final_links = update_final_instruments(final_links, INST_dict)
 
     # Change the names of all found sattelites by their main name (AMDA name when existing OR first name in SAT_dict)
     for elements in final_links:
