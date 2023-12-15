@@ -11,6 +11,7 @@ from bht.Entities_finder import (
     clean_sats_inside_insts,
     make_final_links,
     update_final_instruments,
+    update_final_synonyms,
 )
 from bht.databank_reader import DataBank, DataBankSheet
 
@@ -52,18 +53,24 @@ class TestEntitiesFinder:
         new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
         _final_links = make_final_links(new_sat_dict_list, inst_list, article_as_str)
         assert len(_final_links) == 39
-        assert (
-            list(_final_links[0][0].keys()) == ["end", "start", "text", "type"] )
+        assert list(_final_links[0][0].keys()) == ["end", "start", "text", "type"]
         for fl in _final_links:
             assert len(fl) == 2
 
     def test_update_final_instr(self, final_links, data_frames):
-        inst_dict = data_frames[DataBankSheet.INSTR]
-        new_final_links = update_final_instruments(final_links, inst_dict)
-        pprint(new_final_links)
+        new_final_links = update_final_instruments(final_links, data_frames)
         assert len(new_final_links) == 39
         for fl in new_final_links:
             assert len(fl[1]["text"]) < 2
+
+    def test_update_final_syns(self, final_links, data_frames):
+        final_links = update_final_instruments(final_links, data_frames)
+        final_with_syns = update_final_synonyms(final_links, data_frames)
+        assert len(final_with_syns) == len(final_links)
+        # sats_list = [_l[0]["text"] for _l in final_links]
+        # syns_list = [_l[0]["text"] for _l in final_with_syns]
+        # for i, j in zip(sats_list, syns_list):
+        #     print(f"{i:>20}, {j}")
         # assert False
 
 

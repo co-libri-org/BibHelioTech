@@ -370,15 +370,22 @@ def make_final_links(sats: list, insts: list, content: str):
     return _final_links
 
 
-def update_final_instruments(_final_links, inst_dict):
+def update_final_instruments(_final_links, data_frames):
+    """
+    For each found satellite check the instruments that belong to them respectively.
+
+    @param _final_links:
+    @param data_frames:
+    @return:
+    """
     _fl = copy.deepcopy(_final_links)
-    # For each found satellite check the instruments that belong to them respectively.
+    insts_dict = data_frames[DataBankSheet.INSTR]
     for elements in _fl:
         temp = []
         try:
             for inst in elements[1]["text"]:
                 INST_temp = []
-                for elems in inst_dict[elements[0]["text"]]:
+                for elems in insts_dict[elements[0]["text"]]:
                     if isinstance(elems, str):
                         INST_temp.append(elems)
                     elif isinstance(elems, dict):
@@ -389,6 +396,34 @@ def update_final_instruments(_final_links, inst_dict):
         except:
             elements[1]["text"] = []
         elements[1]["text"] = temp
+    return _fl
+
+
+def update_final_synonyms(_final_links, data_frames):
+    """
+    Change the names of all found satellites by their main name
+    (AMDA name when existing OR first name in sat_dict)
+
+    @param _final_links:  list to deal with
+    @param sat_dict:  satellites names orig dictionnary
+    @param amda_dict:  amda names orig dictionnary
+    @return: changed final_links list
+    """
+    _fl = copy.deepcopy(_final_links)
+    sat_dict = data_frames[DataBankSheet.SATS]
+    amda_dict = data_frames[DataBankSheet.SATS_REG]
+    for elements in _fl:
+        for key, val in sat_dict.items():
+            if elements[0]["text"] in val:
+                in_amda = False
+                for elems in val:
+                    if elems in amda_dict.keys():  # amda name
+                        elements[0]["text"] = elems
+                        in_amda = True
+                if in_amda == False:
+                    for key, val in sat_dict.items():  # first name in SAT_dict
+                        if elements[0]["text"] in val:
+                            elements[0]["text"] = val[0]
     return _fl
 
 
@@ -450,36 +485,25 @@ def entities_finder(current_OCR_folder, DOI=None):
     # 1- satellites recognition
     sat_dict_list = sat_recognition(content_upper, SAT_dict)
 
-    # 2- instruments recognition
+    # 2- Instruments recognition
     inst_dict_list = inst_recognition(content_upper, INST_dict)
 
     # 3- clean sats list when timespan included in instruments
     new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
 
-    # 3- get the uniq instruments list ordered
+    # 3- Get the uniq instruments list ordered
     inst_list = list(set([inst["text"] for inst in inst_dict_list]))
 
     # 4- Make a list of lists ... see make_final_links() for more details.
     final_links = make_final_links(new_sat_dict_list, inst_list, content_upper)
 
-    # 5- update instruments list for each satellite in links list
-    final_links = update_final_instruments(final_links, INST_dict)
+    # 5- Update instruments list for each satellite in links list
+    final_links = update_final_instruments(final_links, data_frames)
 
-    # Change the names of all found sattelites by their main name (AMDA name when existing OR first name in SAT_dict)
-    for elements in final_links:
-        for key, val in SAT_dict.items():
-            if elements[0]["text"] in val:
-                in_amda = False
-                for elems in val:
-                    if elems in AMDA_dict.keys():  # amda name
-                        elements[0]["text"] = elems
-                        in_amda = True
-                if in_amda == False:
-                    for key, val in SAT_dict.items():  # first name in SAT_dict
-                        if elements[0]["text"] in val:
-                            elements[0]["text"] = val[0]
+    # 6- Change the names of all found satellites by their main name
+    final_links = update_final_synonyms(final_links, data_frames)
 
-    # satellite occurance counting and integrations
+    # satellite occurrence counting and integrations
     list_occur = dict(collections.Counter([dicts[0]["text"] for dicts in final_links]))
     for elems in final_links:
         elems[0]["SO"] = list_occur[elems[0]["text"]]
@@ -488,7 +512,9 @@ def entities_finder(current_OCR_folder, DOI=None):
     temp += sutime_json
     temp = sorted(temp, key=lambda d: d["start"])
 
-    # Association of the closest duration of a sattelite. If it is not included in the sattelite's operating span, search for the Nth closest duration.
+    # Association of the closest duration of a sattelite.
+    #
+    # If it is not included in the sattelite's operating span, search for the Nth closest duration.
     published_date = published_date_finder(token, v, DOI)
     dicts_index = 0
     for dicts in temp:
