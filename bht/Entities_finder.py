@@ -427,6 +427,31 @@ def update_final_synonyms(_final_links, data_frames):
     return _fl
 
 
+def add_sat_occurrence(_final_links, _sutime_json):
+    """
+    Count number of times each satellite appears.
+    Add this value to the final_links list.
+
+    @param _final_links: final_links orig list
+    @param _sutime_json: the json to concatenate
+    @return: final_links enhanced, temp strange concatenation for later use
+    """
+    _fl_to_return = copy.deepcopy(_final_links)
+
+    # satellite occurrence counting and integrations
+    list_occur = dict(
+        collections.Counter([dicts[0]["text"] for dicts in _fl_to_return])
+    )
+    for elems in _fl_to_return:
+        elems[0]["SO"] = list_occur[elems[0]["text"]]
+
+    _temp = [elem[0] for elem in _fl_to_return]
+    _temp += _sutime_json
+    _temp = sorted(_temp, key=lambda d: d["start"])
+
+    return _temp, _fl_to_return
+
+
 def entities_finder(current_OCR_folder, DOI=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
@@ -503,18 +528,12 @@ def entities_finder(current_OCR_folder, DOI=None):
     # 6- Change the names of all found satellites by their main name
     final_links = update_final_synonyms(final_links, data_frames)
 
-    # satellite occurrence counting and integrations
-    list_occur = dict(collections.Counter([dicts[0]["text"] for dicts in final_links]))
-    for elems in final_links:
-        elems[0]["SO"] = list_occur[elems[0]["text"]]
+    # 7- Add satellites occurrences to the list
+    temp, final_links = add_sat_occurrence(final_links, sutime_json)
 
-    temp = [elem[0] for elem in final_links]
-    temp += sutime_json
-    temp = sorted(temp, key=lambda d: d["start"])
-
-    # Association of the closest duration of a sattelite.
+    # Association of the closest duration of a satellite.
     #
-    # If it is not included in the sattelite's operating span, search for the Nth closest duration.
+    # If it is not included in the satellite's operating span, search for the Nth closest duration.
     published_date = published_date_finder(token, v, DOI)
     dicts_index = 0
     for dicts in temp:
@@ -1114,4 +1133,4 @@ def entities_finder(current_OCR_folder, DOI=None):
 
 
 if __name__ == "__main__":
-    sat_dict_list
+    pass

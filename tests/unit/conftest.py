@@ -1,3 +1,4 @@
+import json
 import os.path
 import shutil
 from urllib.parse import urlencode
@@ -39,6 +40,16 @@ def hpevents_in_db(hpevents_list, db):
     for event in hpevents_list:
         db.session.add(event)
         db.session.commit()
+
+
+@pytest.fixture(scope="module")
+def sutime_json():
+    data_dir = "ark_67375_WNG-HPV609C7-D"
+    ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)
+    sutime_json_path = os.path.join(ocr_dir_orig, "res_sutime_2.json")
+    with open(sutime_json_path, "r") as sutime_file:
+        _sutime_json_as_str = json.load(sutime_file)
+    yield _sutime_json_as_str
 
 
 @pytest.fixture(scope="module")

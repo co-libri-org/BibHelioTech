@@ -12,6 +12,7 @@ from bht.Entities_finder import (
     make_final_links,
     update_final_instruments,
     update_final_synonyms,
+    add_sat_occurrence,
 )
 from bht.databank_reader import DataBank, DataBankSheet
 
@@ -41,7 +42,6 @@ class TestEntitiesFinder:
         inst_dict_list = inst_recognition(article_as_str, inst_dict)
         assert len(sat_dict_list) == 39
         cleaned_sat_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
-        # assert len(sat_dict_list) == 113
         assert len(cleaned_sat_list) == 39
 
     def test_mk_final_links(self, article_as_str, data_frames):
@@ -73,6 +73,13 @@ class TestEntitiesFinder:
         #     print(f"{i:>20}, {j}")
         # assert False
 
+    def test_satellite_occurrence(self, sutime_json, final_links, data_frames):
+        final_links = update_final_instruments(final_links, data_frames)
+        final_with_syns = update_final_synonyms(final_links, data_frames)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
+        assert len(tmp) == 45
+        assert len(sat_occ) == 39
+
 
 class TestDatabankReader:
     def test_databank_init(self):
@@ -98,9 +105,6 @@ class TestDataframe:
         assert type(sat_frame) == dict
         for name, syn_list in sat_frame.items():
             assert type(syn_list) == list
-        from pprint import pprint
-
-        pprint(sat_frame)
 
     def test_instruments_frame(self, data_frames):
         inst_frame = data_frames[DataBankSheet.INSTR]
