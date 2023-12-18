@@ -27,9 +27,15 @@ class TestEntitiesFinder:
         )
         assert os.path.isfile(recognition_file)
         assert os.path.isfile(catalog_file)
-        with open(recognition_file) as _r_fp:
+
+    def test_catalog_not_empty(self, ocr_dir_test):
+        entities_finder(ocr_dir_test, DOI="10.1002/2015GL064052")
+        catalog_file = os.path.join(
+            ocr_dir_test, "1010022015GL064052_bibheliotech_V1.txt"
+        )
+        with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
-            assert len(_r_content) == 39
+            assert len(_r_content) == 52
 
     def test_sat_recognition(self, article_as_str, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
@@ -94,6 +100,7 @@ class TestEntitiesFinder:
         tmp, sat_closest = closest_duration(tmp, sat_occ, data_frames, published_date)
         assert len(sat_closest) == 39
         assert len(tmp) == 45
+
 
 
 class TestDatabankReader:
