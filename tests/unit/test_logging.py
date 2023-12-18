@@ -19,8 +19,10 @@ class TestLogging:
         assert type(logger) is logging.Logger
 
     def test_logfile_created(self, test_logfile):
+        if os.path.isfile(test_logfile):
+            os.remove(test_logfile)
         assert not os.path.isfile(test_logfile)
-        _logger = init_logger(test_logfile)
+        _logger = init_logger(test_logfile, clear=True)
         _logger.debug("Test debug message")
         _logger.info("Test info message")
         assert os.path.isfile(test_logfile)

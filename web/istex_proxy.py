@@ -41,30 +41,38 @@ def istex_id_to_url(istex_id, doc_type=IstexDoctype.PDF):
     return _url
 
 
+def istex_hit_extract(hit):
+    _pdf_url = None
+    for fulltext in hit["fulltext"]:
+        if fulltext["extension"] == "pdf":
+            _pdf_url = fulltext["uri"]
+    _txt_url = None
+    for fulltext in hit["fulltext"]:
+        if fulltext["extension"] == "txt":
+            _txt_url = fulltext["uri"]
+    hit_extraction = {
+        "small_title": hit["title"][0:61] + " ...",
+        "title": hit["title"],
+        "id": hit["id"],
+        "ark": hit["arkIstex"],
+        "abstract": hit["abstract"],
+        "first_author": hit["author"][0]["name"],
+        "journal": hit["host"]["title"],
+        "year": hit["publicationDate"],
+        "pdf_url": _pdf_url,
+        "txt_url": _txt_url
+    }
+    return hit_extraction
+
+
 def istex_json_to_json(istex_json):
     our_json = []
     for hit in istex_json["hits"]:
-        _pdf_url = None
-        for fulltext in hit["fulltext"]:
-            if fulltext["extension"] == "pdf":
-                _pdf_url = fulltext["uri"]
-        _txt_url = None
-        for fulltext in hit["fulltext"]:
-            if fulltext["extension"] == "txt":
-                _txt_url = fulltext["uri"]
-        our_hit = {
-            "small_title": hit["title"][0:61] + " ...",
-            "title": hit["title"],
-            "id": hit["id"],
-            "ark": hit["arkIstex"],
-            "abstract": hit["abstract"],
-            "first_author": hit["author"][0]["name"],
-            "journal": hit["host"]["title"],
-            "year": hit["publicationDate"],
-            "pdf_url": _pdf_url,
-            "txt_url": _txt_url
-        }
-        our_json.append(our_hit)
+        try:
+            our_hit = istex_hit_extract(hit)
+            our_json.append(our_hit)
+        except IndexError:
+            continue
     return our_json
 
 

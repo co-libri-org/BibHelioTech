@@ -5,8 +5,10 @@ from bht.bht_logging import init_logger
 
 def ocr_filter(current_OCR_folder):
     _logger = init_logger()
-    _logger.info("OCR FILTERING -> out_filtered.txt")
     in_file = open(current_OCR_folder + "/" + "out_text.txt", "r")  # open the txt file resulting from OCR
+    open(current_OCR_folder + "/" + "out_filtered_text.txt", 'w').close()  # erase previous file
+    out_file = open(current_OCR_folder + "/" + "out_filtered_text.txt", "a+")
+    _logger.info(f"OCR FILTERING in -> {out_file.name}")
     content = in_file.read()
 
     # content = re.sub(r'References', 'References\n', content)
@@ -55,8 +57,6 @@ def ocr_filter(current_OCR_folder):
 
     content = content.split('. ')
 
-    open(current_OCR_folder + "/" + "out_filtered_text.txt", 'w').close()  # erase previous file
-    out_file = open(current_OCR_folder + "/" + "out_filtered_text.txt", "a+")
     for lines in content:
         lines = re.sub(
             "((THE ASTROPHYSICAL JOURNAL(?: LETTER)?)(.*)(([0-9]{1,2}) ((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?)) ([0-9]{4})))",

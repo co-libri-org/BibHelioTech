@@ -1,3 +1,4 @@
+import os.path
 from urllib.parse import urlencode
 
 import pytest
@@ -10,7 +11,7 @@ from bht.bht_logging import init_logger
 def hpevents_in_db(hpevents_list, db):
     for event in hpevents_list:
         db.session.add(event)
-        db.session.commit
+        db.session.commit()
 
 
 @pytest.fixture(scope="module")
