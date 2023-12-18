@@ -1,0 +1,189 @@
+Geophysical Research Letters RESEARCH LETTER 10.1002/2015GL064052 Key Points: • The ﬁrst observation of magnetospheric substorm at Mercury • The substorm growth and expansion phases are observed to be ∼1 min • The dissipated energy and value of FACs during substorm are estimated Correspondence to: W.-J.
+Sun, weijiesun@pku.edu.cn Citation: Sun, W.-J., et al.
+(2015), MESSENGER observations of magnetospheric substorm activity in Mercury’s near magnetotail, Geophys.
+Res.
+Lett., 42, 36:92 - 36:99, doi:10.1002/2015GL064052.
+ MESSENGER observations of magnetospheric substorm activity in Mercury’s near magnetotail Wei-Jie Sun1,2 , James A.
+Slavin2 , Suiyan Fu1 , Jim M.
+Raines2 , Qiu-Gang Zong1 , Suzanne M.
+Imber3 , Quanqi Shi4 , Zhonghua Yao5 , Gangkai Poh2 , Daniel J.
+Gershman6 , Zuyin Pu1 , Torbjörn Sundberg7 , Brian J.
+Anderson8 , Haje Korth8 , and Daniel N.
+Baker9 1 School of Earth and Space Sciences, Peking University, Beijing, China, 2 Department of Atmospheric, Oceanic and Space Sciences, University of Michigan, Ann Arbor, Michigan, USA, 3 Department of Physics and Astronomy, University of Leicester, Leicester, UK, 4 Shandong Provincial Key Laboratory of Optical Astronomy and Solar-Terrestrial Environment, School of Space Science and Physics, Shandong University, Weihai, China, 5 Mullard Space Science Laboratory, University College London, Dorking, UK, 6 Geospace Physics Laboratory, NASA Goddard Space Flight Center, Greenbelt, Maryland, USA, 7 School of Physics and Astronomy, Queen Mary University of London, London, UK, 8 Johns Hopkins University Applied Physics Laboratory, Laurel, Maryland, USA, 9 Laboratory for Atmospheric and Space Physics, University of Colorado Boulder, Boulder, Colorado, USA Abstract MErcury Surface, Space ENviroment, GEochemistry, and Ranging (MESSENGER) magnetic ﬁeld and plasma measurements taken during crossings of Mercury’s magnetotail from 20:11 - 20:14 have been examined for evidence of substorms.
+A total of 26 events were found during which an Earth-like growth phase was followed by clear near-tail expansion phase signatures.
+During the growth phase, just as at Earth, the thinning of the plasma sheet and the increase of the magnetic ﬁeld intensity in the lobe are observed, but the fractional increase in ﬁeld intensity could be ∼3 to 5 times that at Earth.
+The average timescale of the growth phase is ∼1 min.
+The dipolarization that marks the initiation of the substorm expansion phase is only a few seconds in duration.
+During the expansion phase, lasting ∼1 min, the plasma sheet is observed to thicken and engulf the spacecraft.
+The duration of the substorm observed in this paper is consistent with previous observations of Mercury’s Dungey cycle.
+The reconﬁguration of the magnetotail during Mercury’s substorm is very similar to that at Earth despite its very compressed timescale.
+1.
+Introduction The observations from Mariner 10 in 1974 revealed that Mercury has an intrinsic magnetic ﬁeld and a dynamic interaction with the solar wind [Ness et al., 1974; Russell et al., 1988; Slavin et al., 2007].
+Recent observations from MErcury Surface, Space ENviroment, GEochemistry, and Ranging (MESSENGER) [Solomon et al., 2007] have conﬁrmed the previous results and broadened our understandings of the Mercury’s magnetosphere [e.g., Anderson et al., 2008; Slavin et al., 2009; Benna et al., 2010].
+The planet’s internal magnetic ﬁeld has the which is ∼1% of the terressame polarity as Earth’s ﬁeld, but with a dipole moment of 195 to 215 nT ⋅ R−3 M trial, where RM ≈ 2440 km is Mercury’s radius.
+The dipole is aligned to within 5∘ of the spin axis of the planet, but it is oﬀset to the north by ∼0.2 RM [Alexeev et al., 2008; Anderson et al., 2010].
+At Mercury, the magnetosheath often develops a thick plasma depletion layer with low plasma 𝛽 (the ratio of plasma pressure to magnetic pressure) adjacent to the dayside magnetopause [Gershman et al., 2013].
+As a result, reconnection at the Mercury’s magnetopause occurs even for small shear angles (the rotation of magnetic ﬁeld from the magnetosheath into the magnetosphere) [DiBraccio et al., 2013; Slavin et al., 2014], while more than 90∘ of shear is usually required at Earth [e.g., Sonnerup, 1974; Pu et al., 2005].
+Overall, the dimensionless reconnection rate at Mercury is estimated to be ∼3 times larger than that at Earth [Slavin et al., 2009; DiBraccio et al., 2013].
+©2015.
+American Geophysical Union.
+All Rights Reserved.
+SUN ET AL.
+Reconnection at the dayside magnetopause transports plasma, magnetic ﬂux, and energy to the nightside magnetotail.
+Reconnection occurring in the magnetotail then drives the convection of plasma, magnetic ﬂux, and energy back to the dayside magnetosphere.
+This circulation is called the “Dungey cycle” [Dungey, 1961].
+The duration of substorms at Earth has been shown to be of the order of the Dungey cycle time.
+At Earth, it is SUN ET AL: SUBSTORM AT MERCURY 3692 Geophysical Research Letters 10.1002/2015GL064052 ∼1 to 3 h [e.g., Akasofu, 1964; Baker et al., 1996; Huang, 2002] and ∼2 to 3 min at Mercury [Siscoe et al., 1975; Slavin et al., 2010].
+Figure 1.
+The black line is the mean magnetopause location according to Winslow et al.
+[2013], and the circle represents the Mercury’s surface.
+The trajectory of MESSENGER during three orbits is plotted in the solar wind aberrated Mercury solar magnetospheric (MSM’) X ′ -Z ′ plane, which is aberrated by Mercury’s orbital velocity so that the solar wind would radially outward from the Sun.
+The trajectories are given by the colored lines, red for 1 July 2011, green for 18 June 2012, and blue for 9 December 2012.
+The thick parts in each orbit represent the MESSENGER’s locations during expansion phase.
+Possible dipolarizations accompanied by energetic electrons (>35 keV) were observed from the ﬂyby of Mariner 10 [Baker et al., 1986; Eraker and Simpson, 1986; Christon, 1987].
+Recently, MESSENGER has identiﬁed dipolarization fronts in the Mercury’s plasma sheet and provided strong evidence of spatially constrained ﬂow channels [Sundberg et al., 2012].
+In this work, we report the ﬁrst observations of Earth-like magnetospheric substorm activity including magnetic ﬂux loading-unloading, plasma sheet thinning-thickening, and near-tail dipolarization events.
+We also estimate the magnetic energy dissipated during substorms at Mercury.
+The results show that the reconﬁguration of the magnetotail during the substorms at Mercury is remarkably similar to what is seen at Earth, albeit they occur on a timescale at a few minutes as opposed to ∼1–2 h.
+2.
+Observations 2.1.
+Overview of MESSENGER Observations The magnetic ﬁeld data (20 samples per second) from the MESSENGER magnetometer [Anderson et al., 2007] and plasma data (<13 keV/q) from the Fast Imaging Plasma Spectrometer (FIPS) sensor (8 s energy scan) [Andrews et al., 2007] are used for this investigation.
+The magnetic ﬁeld is given in Mercury solar magnetospheric (MSM) coordinates.
+In this system, XMSM and YMSM are in Mercury’s magnetic equatorial plane with XMSM directed sunward.
+ZMSM is normal to the magnetic equatorial plane and points toward the north celestial pole.
+YMSM completes the right-handed coordinate system.
+The magnetic equatorial plane is shifted ∼ 0.2RM northward from the equatorial plane.
+MESSENGER inserted into orbit about Mercury on 18 March 2011 and entered a highly inclined (∼82.5∘ ) and eccentric (∼ 200 × 15 000 km) orbit.
+On 16 April 2012, the apoapsis of the spacecraft was decreased and the orbital period reduced from ∼12 to ∼8 h.
+We describe the MESSENGER orbits as taking place during “hot seasons” or “warm seasons” according to whether periapsis was on the dayside or nightside of the planet.
+During the warm seasons, MESSENGER moves southward and tailward after its periapsis on the nightside at ∼ 60∘ north magnetic latitude, and it crosses the plasma sheet closer to Mercury than during the hot seasons.
+MESSENGER passes through the plasma sheet at a distance of ∼2 to 3RM during the hot seasons, which is near the location where reconnection X-line forms.
+Many researches have identiﬁed the ﬂux ropes or plasmoids during the hot season crossings [Slavin et al., 2009, 2010, 2012; DiBraccio et al., 2015].
+Therefore, we have examined the plasma sheet passes during warm seasons to identify the magnetospheric substorm activity in the near-tail region.
+Three MESSENGER warm season plasma sheet passes on 1 July 2011, 18 June 2012, and 9 December 2012 with clear substorm growth and expansion phase signatures are presented in the next section.
+The locations where these near-tail passes took place are displayed in Figure 1.
+The pass on 1 July 2011 (in red) is the nearest to the surface of Mercury, and we call this event as “Event I.” The pass on 9 December 2012 (in blue, called “Event III”) is the farthest from the planet, and the one on 18 June 2012 (in green, called “Event II”) was intermediate in SUN ET AL.
+SUN ET AL: SUBSTORM AT MERCURY 3693 Geophysical Research Letters 10.1002/2015GL064052 Figure 2.
+Overview of plasma and magnetic ﬁeld measurements for (left column) Event I (1 July 2011), (middle column) Event II (18 June 2012), and (right column) Event III (9 December 2012).
+(ﬁrst row) The energy spectrum (color bar is in log10 [cm3 s str keV]−1 ), (second row) proton density, (third row) Bx , (fourth row) By , (ﬁfth row) Bz , (sixth row) Bt , and √ ′ ′ − YMSM (seventh row) the magnetic elevation angle (𝜃 ).
+Bt = B2x + B2y + B2z ).
+𝜃 is deﬁned to be 0∘ when it is in the XMSM plane and 90∘ when directed northward.
+Red dashed lines in the magnetic ﬁeld panels represent the measurements of the nearest nonsubstorm plasma sheet crossings for each event.
+The ﬁrst, second, and third vertical dashed lines indicate the start times of loading phase, expansion phase, and recovery phase, respectively.
+altitude.
+The magnetic local time of the events are ∼00:08, ∼23:37, and ∼00:02, respectively, indicating that all events were located very close to midnight.
+2.2.
+Case Studies The plasma and magnetic ﬁeld measurements from the three events are displayed in Figure 2.
+The ﬁrst and second rows are the proton E∕q spectra and the observed proton densities from FIPS [Raines et al., 2013].
+Magnetic ﬁeld observations for each case are shown as black lines from the third to seventh rows.
+And ﬁeld observations from the nearest nonsubstorm plasma sheet passes (i.e., with unperturbed magnetic ﬁeld observation) are shown by the red dashed lines for comparison.
+Vertical dashed lines mark the onset of the substorm growth phase, expansion phase, and recovery phase, respectively, from the left to right for each event.
+Before the ﬁrst vertical dashed line the magnetic ﬁeld Bx is nearly the same as the nonsubstorm pass in each case.
+The diﬀerences in Bz indicate the diﬀerent conditions of the plasma sheet between the passes.
+The presence of high-energy (>1 keV) protons (ﬁrst row) indicate that MESSENGER had entered the plasma sheet before the start of the growth phase for Event I and Event II.
+The magnetic latitudes were high (>13.40∘ for Event I and >17.50∘ for Event II) and altitudes were low (< 460 km for Event I and < 684 km for Event II) for the two events; therefore, MESSENGER was expected to be in the high-latitude plasma sheet at that time.
+No plasma was observed during Event III implying that MESSENGER was in the lobe region when the growth phase began.
+A clear Bx discrepancy between the black and red dashed lines emerges beginning at the ﬁrst vertical dashed lines for all the events.
+After periapsis, MESSENGER moves toward the equatorial plane, and the Bx measurements are expected to decrease as the red dashed lines (nonsubstorm plasma sheet passes), due to the decrease in Bdipole with decreasing magnetic latitude and the diamagnetic eﬀect of the plasma sheet.
+But instead of decreasing, Bx is almost constant or slightly increases and Bz decreases for these events until the SUN ET AL.
+SUN ET AL: SUBSTORM AT MERCURY 3694 Geophysical Research Letters 10.1002/2015GL064052 time marked by the second set of vertical lines.
+The magnetic elevation angles (𝜃 ), shown in the seventh row, are decreasing during this interval for all events, which imply that the magnetic ﬁeld lines are stretched down the tail.
+Plasma observations for Event I show that MESSENGER is still in the plasma sheet during this time.
+But in Event II, the plasma spectrum implies that MESSENGER entered the lobe region at ∼15:35:45 in the growth phase.
+Together with previous conclusion that ﬁeld lines are stretched and higher altitude of MESSENGER in Event II than Event I, this location change of spacecraft from plasma sheet to lobe indicates a thinning process of the plasma sheet (recession of the outer edge of high-latitude plasma sheet).
+The almost constant Bt , which is expected to decrease due to the motion of MESSENGER, during the growth phase indicates the increase of magnetic ﬂux in the magnetotail.
+Therefore, we conclude that this interval (between the ﬁrst two vertical dashed lines) is the ﬂux loading process of the tail (i.e., the substorm growth phase) [e.g., Baker et al., 1996].
+The plasma spectrum in Event III indicates that MESSENGER was still in the lobe during the growth phase and small increase of By implying the ﬂare of magnetotail in the XY plane is also consistent with ﬂux loading conclusion.
+The growth phase lasted ∼58 s, ∼1 min 2 s, and ∼1 min 35 s for Event I, Event II, and Event III, respectively, which are consistent with previous results [Slavin et al., 2010].
+Bx at the end of growth phase for the three events are ∼ 80%, ∼ 50%, and ∼ 30% larger than that of nonsubstorm observations, while previous observations showed that the increase of magnetic ﬁeld is only ∼ 20 − 30% at Earth [Huang, 2002; Milan et al., 2004].This indicates that tail magnetic ﬂux loaded during substorm growth phase at Mercury could be several times larger than that at Earth [see also Slavin et al., 2010].
+The growth phase ended with a clear dipolarization event (the second vertical line) indicated by a sharp increase of Bz , a decrease of Bx , and ﬂuctuations in By .
+Bz increased by ∼28 nT in ∼6 s for Event I, ∼10 nT in ∼8 s for Event II, and ∼8 nT in ∼5 s for Event III, individually.
+Bx for all events sharply decreased to below the red dashed lines in ∼40 s, which is the signature of rapid plasma sheet thickening.
+It is worth to note that other possible dipolarizations are observed in Event II and Event III, which should be the signatures for multiplanetward plasma ﬂows.
+The end of the plasma sheet thickening is approximately identiﬁed as the intersection point between the observed Bx and nonsubstorm Bx , which is marked by the third vertical dashed lines.
+These regions coincide with high Bz and also ﬂuctuations of By (the signature of ﬁeld-aligned currents (FACs)) which are also consistent with the signatures of substorm expansion phase at Earth [e.g., Rostoker et al., 1980].
+In the plasma observation of Event I, we ﬁnd that the plasma has higher energy after dipolarization than the plasma before dipolarization implying an acceleration process during dipolarization.
+Especially immediately after the dipolarization, only a few proton (∼0.03 cm−3 ) with energy higher than ∼ 8 keV was detected indicating that the amount of proton was accelerated to higher-energy range out of the scope of FIPS.
+The emergence of >1 keV protons in Event II and Event III suggests that MESSENGER entered the plasma sheet in both cases during the expansion phase, which might further conﬁrm the abruptly thickening of Mercury’s plasma sheet after dipolarization because MESSENGER moved only tens of kilometers in this time.
+This is similar to the Earth’s plasma sheet evolution during substorm.
+2.3.
+Statistical Results The three cases presented in the previous section reveal that a clear substorm at Mercury includes plasma sheet thinning (growth phase), dipolarization, and plasma sheet thickening (expansion phase).
+According to the changes of MESSENGER’s location, we can categorize the events into three types based on the plasma measurements.
+Type I is represented by Event I that spacecraft was always located in the plasma sheet during the substorm.
+Type II is deﬁned as spacecraft moved from plasma sheet into the lobe region during the growth phase and reentered the plasma sheet after dipolarization due to the thickening of plasma sheet as observed in Event II.
+Spacecraft in Type III was located in the lobe region before and during the growth phase and entered the plasma sheet after dipolarization as Event III.
+A statistical study is performed to investigate the three types of events.
+As mentioned above, we have surveyed all the warm season orbits of MESSENGER from 20:11 - 20:14 to look for the events related with magnetospheric substorm activity; i.e., spacecraft observed an almost constant Bt and Bx at ﬁrst which is ended with a dipolarization event and followed by sharp decrease in Bx , high Bz , and ﬂuctuation in By .
+The selection resulted in 26 events.
+The time duration of growth phase and expansion phase is determined from the comparison with the nonsubstorm plasma sheet observations.
+The position distributions of the 26 events are displayed in MSM’ X ′ -Z ′ (Figure 3a) and X ′ -Y ′ (Figure 3b) planes.
+Type I, II, and III events are denoted by the red, green, and blue dots, respectively.
+We can see that Type I events are in lower altitude and lower latitude regions than the other two types of events.
+Type III events are located further tailward and northward, and Type II events are generally distributed between these two groups.
+This distribution of the three types of events is consistent with the evolution of shape of the plasma SUN ET AL.
+SUN ET AL: SUBSTORM AT MERCURY 3695 Geophysical Research Letters 10.1002/2015GL064052 Figure 3.
+Event locations of the 26 events in MSM’ (a) X ′ Z ′ and (b) X ′ Y ′ planes.
+Red, green, and blue dots represent Type I, Type II, and Type III events, respectively.
+Histograms for the duration of (c) growth phase and (d) expansion phase.
+The average durations with their standard deviations are shown in the middle of each panel.
+sheet during the substorm.
+The plasma sheet thinning during growth phase would let the events near plasma sheet boundary (Type II) move into the lobe and reenter the plasma sheet in expansion phase.
+Figures 3c and 3d show the histograms of growth phase and expansion phase durations for all the events.
+The average duration for the growth phase is ∼ 65 s and is ∼ 60 s for the expansion phase.
+The results are consistent with previously found loading-unloading time (∼ 2–3 min) [Slavin et al., 2010].
+2.4.
+Estimation of Dissipated Energy In this section, we take the three cases in section 2.2 to estimate the total dissipated magnetic energy during Mercury’s substorm, which is assumed to be the diﬀerence between the magnetic energy at the end of growth phase and expansion phase.
+We take Event I as an example.
+Bt was ∼122 nT at the end of growth phase for this case.
+This is consistent with the predicted value (∼120 nT) from power law equation determined from MESSENGER’s third ﬂyby of Mercury when a series of loading-unloading events were observed: ′ Bt (X) = 122.9|XMSM |−1.6 + 28.9, ′ where XMSM is in RM and Bt is in nT [Slavin et al., 2012].
+From this equation, Bt was estimated to be ∼70 nT at ∼ 2RM , which is the assumed location for near-Mercury neutral line (NMNL) [Slavin et al., 2012; DiBraccio et al., 2015].
+The cross-tail radius of Mercury’s magnetosphere between the planet and the NMNL is estimated from the Shue magnetopause model: ( )𝛼 2 R = Rss , 1 + cos 𝜃 where 𝜃 is the angle between R and the Mercury’s dipole-Sun line, Rss is the subsolar standoﬀ distance, and 𝛼 is the ﬂaring parameter [Shue et al., 1998; Winslow et al., 2013].
+The best ﬁtting parameters for this case are Rss = 1.25RM and 𝛼 = 0.65 based on the pressure balance between the solar wind and magnetosphere in the magnetopause.
+Solar wind condition is assumed to be the averaged values: PSW ∼15 nPa [Winslow SUN ET AL.
+SUN ET AL: SUBSTORM AT MERCURY 3696 Geophysical Research Letters 10.1002/2015GL064052 Figure 4.
+The evolution of Mercury’s magnetosphere during the substorm.
+The shape of the plasma sheet and relative locations of the three events at the start of substorm (a) growth phase, (b) expansion phase, and (c) recovery phase.
+Red, green, and blue dots represent the Event I, Event II, and Event III in Figure 2.
+et al., 2013].
+Therefore, the magnetic energy stored in the magnetotail between the NMNL and the planet can be estimated from −1RM EB = ∫−2RM 𝜋r2 (X)B2t (X)∕2𝜇0 dX, ′ .
+The estimated total magnetic energy stored r(X) is the radius for the circular of magnetopause at speciﬁc XMSM in the Mercury’s magnetotail at the end of growth phase is ∼1.67 × 1012 J.
+At the end of expansion phase, Bt is ∼55 nT and the total energy is ∼ 7.6 × 1011 J.
+Therefore, the magnetic energy dissipated during the expansion phase is ∼ 9.1×1011 J for Event I.
+Employing the similar processes as above, our estimate of the total dissipated magnetic energy in Event II is ∼ 6.7 × 1011 J and ∼ 8.1 × 1011 J for Event III.
+Previous studies have shown that the typical energy loaded during a substorm at Earth is ∼ 2.1 × 1015 J [e.g., Akasofu, 1981; Tanskanen et al., 2002], which is ∼ 3000 times larger than that at Mercury.
+Tanskanen et al.
+[2002] showed that ∼ 30% of the magnetic energy loaded into the Earth’s tail was dissipated in the Northern Hemisphere via Joule heating.
+Let us assume that the same amount of magnetic energy was dissipated in each hemisphere during Mercury’s substorm.
+Then the dissipated magnetic energy (Ed ) in each hemisphere would be ∼2.7 × 1011 J, ∼2 × 1011 J, and ∼2.4 × 1011 J for Event I, Event II, and Event III, respectively.
+Recent study revealed that the net electrical conductance (𝜍 ) for the closure of steady state FACs is ∼ 1 S [Anderson et al., 2014].
+And our result shows that the time duration (TEX ) of substorm expansion phase is ∼ 60 s.
+The magnitude of FACs during Mercury’s substorm expansion phase could be simply deduced from 2 TEX ∕𝜍 = Ed .
+We get IFAC ∼ 67, ∼ 58, and ∼ 63 kA for the three events, respectively.
+These values durthe IFAC ing substorms are consistent with the conclusion of Anderson et al.
+[2014]; i.e., the magnitude of steady state FACs in the northern hemisphere of Mercury is commonly ∼ 20–40 kA and could exceed 200 kA during disturbed condition.
+We want to note that Event I was observed in the plasma sheet so that the lobe magnetic ﬁeld should be larger than the values.
+And therefore, the real energy dissipation during the expansion phase in this event was underestimated in some extent.
+3.
+Summary In this paper, we have investigated substorm processes in Mercury’s magnetotail using magnetic ﬁeld and plasma observations from MESSENGER.
+We, for the ﬁrst time, have reported observations of substorm growth and expansion phases in such a detail, measured their properties, and estimated the total magnetic energy dissipated during substorms at Mercury.
+Case studies and statistical analyses have revealed that the global reconﬁguration of the magnetotail during Mercury’s substorms is similar to that at Earth [e.g., McPherron et al., 1973; Baker et al., 1996].
+The evolution of Mercury’s near-tail magnetic ﬁeld during a substorm is shown schematically in Figure 4 relative to the positions of the three events analyzed in section 2.2.
+MESSENGER was inside the plasma sheet for Event I (red dot) and Event II (green dot) at the beginning of the growth SUN ET AL.
+SUN ET AL: SUBSTORM AT MERCURY 3697 Geophysical Research Letters 10.1002/2015GL064052 phase (Figure 4a).
+After the growth phase, MESSENGER in Event II was moved from plasma sheet into the lobe due to the thinning of plasma sheet (Figure 4b).
+During the growth phase, dayside magnetopause would be moved planetward due to the erosion caused by magnetic reconnection [e.g., Slavin and Holzer, 1979].
+The magnetic ﬁeld lines in the magnetotail were compressed, and magnetic reconnection at the near-Mercury ′ reconnection site (XMSM ∼ −2.2RM ) then drives plasma ﬂow planetward.
+After plasma ﬂow encounters the strong magnetic ﬁeld, a few second duration dipolarization leading the thickening of plasma sheet could be triggered.
+And MESSENGER during Events II and III would enter the plasma sheet during the expansion phase as shown in Figure 4c.
+The reconﬁguration of the magnetotail during a substorm at Mercury is similar to what happens at Earth.
+The durations of the growth and expansion phases at Mercury are ∼65 s and ∼60 s, while the duration of the growth phase is ∼1 h and the expansion phase is ∼30 min for Earth’s substorm [e.g., Akasofu, 1964; Huang, 2002].
+Our estimation of dissipated magnetic energy during Mercury’s substorm is 3 orders smaller than at Earth.
+And the total FACs during substorm is ∼60 kA which is 2 orders of magnitude lower than at Earth.
+Acknowledgments The data used in this study were available from the Planetary Data System (PDS): http://pds.jpl.nasa.gov.
+The MESSENGER project is supported by the NASA Discovery Program under contracts NASW-00002 to the Carnegie Institution of Washington and NAS5-97271 to the Johns Hopkins University Applied Physics Laboratory.
+Wei-Jie Sun is supported by the State Scholarship Fund of Chinese Scholarship Council.
+This work is supported by the National Nature Science Foundation of China (grants 41474139, 41322031, and 41421003) and Major Project of Chinese National Programs for Fundamental Research and Development (2012CB825603).
+This work is also supported by the NASA Heliophysics Supporting Research Program under grant NNX15AJ68G.
+The Editor thanks Jiang Liu and an anonymous reviewer for their assistance in evaluating this paper.
+SUN ET AL.
+.
