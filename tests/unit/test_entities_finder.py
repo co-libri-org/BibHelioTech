@@ -79,11 +79,10 @@ class TestEntitiesFinder:
         final_links = update_final_instruments(final_links, data_frames)
         final_with_syns = update_final_synonyms(final_links, data_frames)
         assert len(final_with_syns) == len(final_links)
-        # sats_list = [_l[0]["text"] for _l in final_links]
-        # syns_list = [_l[0]["text"] for _l in final_with_syns]
-        # for i, j in zip(sats_list, syns_list):
-        #     print(f"{i:>20}, {j}")
-        # assert False
+        sat_names = [_l[0]['text'] for _l in final_links]
+        assert "Beijing" in sat_names and "Ground" not in sat_names
+        syn_names = [_s[0]['text'] for _s in final_with_syns]
+        assert "Beijing" not in syn_names
 
     def test_satellite_occurrence(self, sutime_json, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)
