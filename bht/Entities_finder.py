@@ -453,8 +453,11 @@ def add_sat_occurrence(_final_links, _sutime_json):
 
 
 def closest_duration(_temp, _final_links, data_frames, published_date):
-    _fl_to_return = copy.deepcopy(_final_links)
-    _temp_to_return = copy.deepcopy(_temp)
+    # FIXME: deepcopy should work. Look at temp generation to understand
+    # _fl_to_return = copy.deepcopy(_final_links)
+    # _temp_to_return = copy.deepcopy(_temp)
+    _fl_to_return = _final_links
+    _temp_to_return = _temp
     sat_dict = data_frames[DataBankSheet.SATS]
     span_dict = data_frames[DataBankSheet.TIME_SPAN]
     dicts_index = 0

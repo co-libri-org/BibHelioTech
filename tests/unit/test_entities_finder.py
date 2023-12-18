@@ -29,7 +29,7 @@ class TestEntitiesFinder:
         assert os.path.isfile(catalog_file)
         with open(recognition_file) as _r_fp:
             _r_content = _r_fp.readlines()
-            assert len(_r_content) == 38
+            assert len(_r_content) == 39
 
     def test_sat_recognition(self, article_as_str, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
