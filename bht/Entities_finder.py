@@ -229,10 +229,37 @@ def operating_span_checker(sat, durations, SAT_dict, SPAN_dict, published_date):
 
 # =================================================
 
+def sat_recognition(content_as_str, sats_dict):
+    """
+    1st Entities Finder step:
+
+    Find satellites and their synonyms in the Article's content
+
+    @param content_as_str:  article's content as string
+    @param sats_dict:  dict of satellites synonymous
+    @return: dict of satellites found in the article
+    """
+    sat_dict_list = []
+    for SATs, Synonymes in sats_dict.items():
+        for syns in Synonymes:
+            test = re.finditer("( |\n)" + syns + "(\.|,| )", content_as_str)
+            sat_dict_list += [
+                {
+                    "end": matches.end(),
+                    "start": matches.start(),
+                    "text": re.sub("(\n|\.|,)", "", matches.group()).strip(),
+                    "type": "sat",
+                }
+                for matches in test
+            ]
+    return sat_dict_list
+
 
 # SAT recognition
 def inst_recognition(content_as_str, inst_dict):
     """
+    2nd Entities Finder step:
+
     Find intruments in the Article's content
 
     @param content_as_str:  article's content as string
@@ -295,32 +322,10 @@ def inst_recognition(content_as_str, inst_dict):
     return inst_dict_list
 
 
-def sat_recognition(content_as_str, sats_dict):
-    """
-    Find satellites and their synonyms in the Article's content
-
-    @param content_as_str:  article's content as string
-    @param sats_dict:  dict of satellites synonymous
-    @return: dict of satellites found in the article
-    """
-    sat_dict_list = []
-    for SATs, Synonymes in sats_dict.items():
-        for syns in Synonymes:
-            test = re.finditer("( |\n)" + syns + "(\.|,| )", content_as_str)
-            sat_dict_list += [
-                {
-                    "end": matches.end(),
-                    "start": matches.start(),
-                    "text": re.sub("(\n|\.|,)", "", matches.group()).strip(),
-                    "type": "sat",
-                }
-                for matches in test
-            ]
-    return sat_dict_list
-
-
 def clean_sats_inside_insts(sats_list, insts_list):
     """
+    3rd Entities Finder step:
+
     Remove from list any satellites which time span is included in any instrument's time span.
 
     @param sats_list:  the satellites time span list
@@ -345,6 +350,8 @@ def clean_sats_inside_insts(sats_list, insts_list):
 
 def make_final_links(sats: list, insts: list, content: str):
     """
+    4th Entities Finder step:
+
     Build a list of couples containing
         - the cleaned sats
         - a list of instruments with middle of content as end/start
@@ -372,6 +379,8 @@ def make_final_links(sats: list, insts: list, content: str):
 
 def update_final_instruments(_final_links, data_frames):
     """
+    5th Entities Finder step:
+
     For each found satellite check the instruments that belong to them respectively.
 
     @param _final_links:
@@ -399,19 +408,20 @@ def update_final_instruments(_final_links, data_frames):
     return _fl
 
 
-def update_final_synonyms(_final_links, data_frames):
+def update_final_synonyms(_final_links, _data_frames):
     """
+    6th Entities Finder step:
+
     Change the names of all found satellites by their main name
     (AMDA name when existing OR first name in sat_dict)
 
+    @param _data_frames:  give access to sat_dict and amda_dict
     @param _final_links:  list to deal with
-    @param sat_dict:  satellites names orig dictionnary
-    @param amda_dict:  amda names orig dictionnary
     @return: changed final_links list
     """
     _fl = copy.deepcopy(_final_links)
-    sat_dict = data_frames[DataBankSheet.SATS]
-    amda_dict = data_frames[DataBankSheet.SATS_REG]
+    sat_dict = _data_frames[DataBankSheet.SATS]
+    amda_dict = _data_frames[DataBankSheet.SATS_REG]
     for elements in _fl:
         for key, val in sat_dict.items():
             if elements[0]["text"] in val:
@@ -429,6 +439,8 @@ def update_final_synonyms(_final_links, data_frames):
 
 def add_sat_occurrence(_final_links, _sutime_json):
     """
+    7th Entities Finder step:
+
     Count number of times each satellite appears.
     Add this value to the final_links list.
 
@@ -453,6 +465,15 @@ def add_sat_occurrence(_final_links, _sutime_json):
 
 
 def closest_duration(_temp, _final_links, data_frames, published_date):
+    """
+    8th Entities Finder step:
+
+    @param _temp:
+    @param _final_links:
+    @param data_frames:
+    @param published_date:
+    @return:
+    """
     # FIXME: deepcopy should work. Look at temp generation to understand
     # _fl_to_return = copy.deepcopy(_final_links)
     # _temp_to_return = copy.deepcopy(_temp)
@@ -608,7 +629,7 @@ def entities_finder(current_OCR_folder, DOI=None):
     # 3- clean sats list when timespan included in instruments
     new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
 
-    # 3- Get the uniq instruments list ordered
+    # - Get the uniq instruments list ordered
     inst_list = list(set([inst["text"] for inst in inst_dict_list]))
 
     # 4- Make a list of lists ... see make_final_links() for more details.
