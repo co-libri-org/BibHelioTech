@@ -14,6 +14,7 @@ from bht.Entities_finder import (
     update_final_synonyms,
     add_sat_occurrence,
     closest_duration,
+    get_sat_syn,
 )
 from bht.databank_reader import DataBank, DataBankSheet
 
@@ -75,13 +76,17 @@ class TestEntitiesFinder:
         for fl in new_final_links:
             assert len(fl[1]["text"]) < 2
 
+    def test_get_sat_syn(self, data_frames):
+        beijing_syn_is_ground = get_sat_syn("Beijing", data_frames)
+        assert beijing_syn_is_ground == "Ground"
+
     def test_update_final_syns(self, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)
         final_with_syns = update_final_synonyms(final_links, data_frames)
         assert len(final_with_syns) == len(final_links)
-        sat_names = [_l[0]['text'] for _l in final_links]
+        sat_names = [_l[0]["text"] for _l in final_links]
         assert "Beijing" in sat_names and "Ground" not in sat_names
-        syn_names = [_s[0]['text'] for _s in final_with_syns]
+        syn_names = [_s[0]["text"] for _s in final_with_syns]
         assert "Beijing" not in syn_names
 
     def test_satellite_occurrence(self, sutime_json, final_links, data_frames):
@@ -99,7 +104,6 @@ class TestEntitiesFinder:
         tmp, sat_closest = closest_duration(tmp, sat_occ, data_frames, published_date)
         assert len(sat_closest) == 39
         assert len(tmp) == 45
-
 
 
 class TestDatabankReader:
