@@ -38,6 +38,15 @@ class TestEntitiesFinder:
             _r_content = _r_fp.readlines()
             assert len(_r_content) == 52
 
+    def test_no_image_as_syn(self, ocr_dir_test):
+        entities_finder(ocr_dir_test, DOI="10.1002/2015GL064052")
+        catalog_file = os.path.join(
+            ocr_dir_test, "1010022015GL064052_bibheliotech_V1.txt"
+        )
+        with open(catalog_file) as _cat_f:
+            for l in _cat_f:
+                assert "IMAGE" not in l
+
     def test_sat_recognition(self, article_as_str, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
         sat_dict_list = sat_recognition(article_as_str, sat_dict)
@@ -87,7 +96,7 @@ class TestEntitiesFinder:
         sat_names = [_l[0]["text"] for _l in final_links]
         assert "Beijing" in sat_names and "Ground" not in sat_names
         syn_names = [_s[0]["text"] for _s in final_with_syns]
-        assert "Beijing" not in syn_names
+        assert "Beijing" not in syn_names and "Ground" in syn_names
 
     def test_satellite_occurrence(self, sutime_json, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)

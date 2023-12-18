@@ -229,6 +229,34 @@ def operating_span_checker(sat, durations, SAT_dict, SPAN_dict, published_date):
 
 # =================================================
 
+
+def get_sat_syn(sat_name: str, _data_frames: dict):
+    """
+    From string, look for main misison synonymous
+
+    @param sat_name:  sat name to search for
+    @param _data_frames:  give access to sat_dict and amda_dict
+    @return: main synonymous
+    """
+    sat_dict = _data_frames[DataBankSheet.SATS]
+    amda_dict = _data_frames[DataBankSheet.SATS_REG]
+
+    # for k, v in sat_dict.items():
+    #     print(k, v)
+
+    # join both dict keys in one list, and see if the searched name is in
+    main_names = list(sat_dict.keys()) + list(amda_dict.keys())
+    if sat_name in main_names:
+        return sat_name
+
+    # Now look for mais synonymous in the sat_dict
+    for main_syn, syns_list in sat_dict.items():
+        if sat_name in syns_list:
+            return main_syn
+
+    return None
+
+
 def sat_recognition(content_as_str, sats_dict):
     """
     1st Entities Finder step:
@@ -420,20 +448,11 @@ def update_final_synonyms(_final_links, _data_frames):
     @return: changed final_links list
     """
     _fl = copy.deepcopy(_final_links)
-    sat_dict = _data_frames[DataBankSheet.SATS]
-    amda_dict = _data_frames[DataBankSheet.SATS_REG]
-    for elements in _fl:
-        for key, val in sat_dict.items():
-            if elements[0]["text"] in val:
-                in_amda = False
-                for elems in val:
-                    if elems in amda_dict.keys():  # amda name
-                        elements[0]["text"] = elems
-                        in_amda = True
-                if in_amda == False:
-                    for key, val in sat_dict.items():  # first name in SAT_dict
-                        if elements[0]["text"] in val:
-                            elements[0]["text"] = val[0]
+    for _link in _fl:
+        sat_name = _link[0]["text"]
+        sat_syn = get_sat_syn(sat_name, _data_frames)
+        _name = _link[0]["text"] = sat_syn
+
     return _fl
 
 
