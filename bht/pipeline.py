@@ -95,9 +95,10 @@ def run_step_entities(dest_pdf_dir, doi=None):
 
 def bht_run_file(orig_pdf_file, result_base_dir, file_type, doi=None):
     """
-    Given a pdf file , go through the whole pipeline process and make a cataog
+    Given a pdf file , go through the whole pipeline process and make a catalog
 
-    @param file_type:
+    @param doi:
+    @param file_type: either pdf or txt or any of BhtFileType
     @param orig_pdf_file:  the sci article in pdf format
     @param result_base_dir: the root working directory
     @return: an HPEvents catalog

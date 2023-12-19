@@ -3,7 +3,7 @@ import pytest
 
 from bht.GROBID_generator import GROBID_generation
 from bht.errors import BhtPipelineError
-from bht.pipeline import run_pipeline, PipeStep
+from bht.pipeline import run_pipeline, run_step_entities, PipeStep
 from bht.published_date_finder import published_date_finder
 from bht_config import yml_settings
 from tests.conftest import skip_bht, skip_slow_test
@@ -13,17 +13,32 @@ from web.bht_proxy import pipe_paper
 @skip_bht
 class TestBhtPipeline:
     def test_pipeline(self):
+        # TODO: fix run_pipeline call
         pipe_steps = [PipeStep.OCR, PipeStep.GROBID]
         res_steps = run_pipeline("path", pipe_steps=pipe_steps)
         assert res_steps == pipe_steps
 
     def test_pipeline_wrong_step(self):
+        # TODO: fix run_pipeline call
         with pytest.raises(BhtPipelineError):
             run_pipeline("path", pipe_steps=[PipeStep.OCR, PipeStep.GROBID, 1000])
 
 
-@skip_bht
 class TestBhtPipelineSteps:
+    def test_run_step_entities(self, ocr_dir_test):
+        doi = "10.1002/2015GL064052"
+        catalog_file = run_step_entities(ocr_dir_test, doi)
+        with open(catalog_file) as _r_fp:
+            _r_content = _r_fp.readlines()
+            assert len(_r_content) == 52
+
+    def test_run_step_entities_with_no_doi(self, ocr_dir_test):
+        with pytest.raises(IndexError):
+            run_step_entities(ocr_dir_test, None)
+
+
+@skip_bht
+class TestBhtPipelineTools:
     @skip_slow_test
     def test_pipepaper(self, paper_for_test):
         """
