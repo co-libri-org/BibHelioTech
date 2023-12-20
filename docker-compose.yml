@@ -2,7 +2,7 @@ name: "bht"
 services:
 
     web:
-        image: web
+        image: bht/web:${WEB_TAG:-latest}
         build:
             context: .
             target: bht-prod
@@ -32,7 +32,7 @@ services:
         retries: 5
 
     worker:
-      image: web
+      image: bht/web:${WEB_TAG:-latest}
       command: python manage.py run_worker
       volumes:
         - bht_data:/home/bibheliotech/BibHelioTech/DATA:rw
