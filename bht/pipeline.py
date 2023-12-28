@@ -27,7 +27,7 @@ _logger = init_logger()
 
 
 # TODO: hey, doc_type looks like file_type: IstexDocType or BhtFileType ??
-def run_step_mkdir(orig_file, result_base_dir, doc_type):
+def run_step_mkdir(orig_file: str, result_base_dir: str, doc_type: IstexDoctype) -> str:
     """
     Move a pdf file to same name directory
 
@@ -140,7 +140,7 @@ def bht_run_dir(_base_pdf_dir):
         folders_or_pdf_path = os.path.join(_base_pdf_dir, folders_or_pdf)
         if folders_or_pdf.endswith(
                 ".pdf"):  # If '.pdf' on "Papers" folder --> paper not treated --> processing paper treatment.
-            # create the directory under the same name than the paper.
+            # create the directory under the same name as the paper.
             os.makedirs(os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", "")))
             # move '.pdf' to his directory.
             shutil.move(folders_or_pdf_path, os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", "")))
