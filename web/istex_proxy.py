@@ -1,3 +1,4 @@
+# TODO: maybe this whole file should move to bht. module
 from enum import StrEnum, auto
 
 import requests
@@ -7,6 +8,7 @@ from web.errors import IstexParamError
 ISTEX_BASE_URL = "https://api.istex.fr/document/"
 
 
+# TODO: choose between IstexDocType or  web.models.BhtFileType
 class IstexDoctype(StrEnum):
     PDF = auto()
     ZIP = auto()

@@ -5,6 +5,7 @@ from datetime import datetime
 
 from bht.pipeline import bht_run_file, bht_run_dir, run_pipeline, PipeStep
 from bht_config import yml_settings
+# TODO: dont import anything from web. to bht !!!!
 from web.istex_proxy import IstexDoctype, get_file_from_id
 from web.models import BhtFileType
 
@@ -34,7 +35,7 @@ if __name__ == "__main__":
         "-i",
         "--istex-id",
         type=str,
-        help="Run pipeline on document from ISTEX id. (dont grobid or ocr)",
+        help="Run pipeline on txt document from ISTEX id. (dont grobid or ocr)",
     )
     parser.add_argument(
         "-d",

@@ -9,6 +9,7 @@ from web import db
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
 
+# TODO: choose between BhtFileType or  web.istex_proxy.IstexDocType
 class BhtFileType(StrEnum):
     PDF = auto()
     TXT = auto()
