@@ -112,6 +112,7 @@ def get_file_from_url(url):
 
 # TODO: REWRITE rename to file_to_db
 # TODO: REFACTOR insert into models.Paper ?
+# TODO: REWRITE raise exception or send message to calling route to be flashed
 def pdf_to_db(file_stream, filename):
     """Push Paper to db from a pdf stream
 
@@ -129,7 +130,7 @@ def pdf_to_db(file_stream, filename):
     with open(_file_path, "wb") as _fd:
         _fd.write(file_stream)
     if not os.path.isfile(_file_path):
-        flash(f"no such file: {_file_path}", 'error')
+        # flash(f"no such file: {_file_path}", 'error')
         return redirect(url_for("main.papers"))
     _guessed_filetype = filetype.guess(_file_path)
     _split_filename = os.path.splitext(filename)
@@ -139,7 +140,7 @@ def pdf_to_db(file_stream, filename):
     elif _split_filename[1] == '.txt':
         _file_type = BhtFileType.TXT
     else:
-        flash(f"{_file_path} is not Allowed ", 'error')
+        # flash(f"{_file_path} is not Allowed ", 'error')
         return redirect(url_for("main.papers"))
     _paper_title = _split_filename[0]
     paper = Paper.query.filter_by(title=_paper_title).one_or_none()
@@ -148,7 +149,7 @@ def pdf_to_db(file_stream, filename):
 
     # set_file_path() will add and commit paper
     paper.set_file_path(_file_path, _file_type)
-    flash(f"{os.path.basename(_file_path)} added to paper {_paper_title}")
+    # flash(f"{os.path.basename(_file_path)} added to paper {_paper_title}")
     return paper.id
 
 
