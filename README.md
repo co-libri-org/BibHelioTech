@@ -181,10 +181,13 @@ https://pypi.org/project/flake8-for-pycharm/
 
 ### tests
 
-either run on your workdir, but launch grobid and redis first:
+To be run from your workdir with venv activated, assuming requirements have been installed.
+
+Make sure to launch grobid and redis through docker first:
 
     docker compose -f docker-compose.tests.yml up -d
     cp resources/bht-config.yml-dist ./bht-config.yml
+    . venv/bin/activate
     python -m pytest tests
 
 see tests/README.md for more info on tests
