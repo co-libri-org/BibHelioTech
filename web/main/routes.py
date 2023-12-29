@@ -35,7 +35,7 @@ from web.istex_proxy import istex_url_to_json, istex_id_to_url
 
 
 def allowed_file(filename):
-    # TODO: use models.FileType instead
+    # TODO: REFACTOR use models.FileType instead
     return (
             "." in filename
             and filename.rsplit(".", 1)[1].lower()
@@ -43,7 +43,7 @@ def allowed_file(filename):
     )
 
 
-# TODO: please send to models.paper.method
+# TODO: REFACTOR please send to models.paper.method
 def get_paper_file(paper_id, file_type):
     """
     Return the filepath for the given paper as id
@@ -58,7 +58,7 @@ def get_paper_file(paper_id, file_type):
         flash(f"No such paper {paper_id}")
         return None
 
-    # TODO: rewrite
+    # TODO: REWRITE
     # check filetype
     if isinstance(file_type, str):
         # convert to enum
@@ -71,7 +71,7 @@ def get_paper_file(paper_id, file_type):
         flash(f"Wrong file type {file_type}")
         return None
 
-    # TODO: seriously ?
+    # TODO: REWRITE
     if file_type == BhtFileType.PDF and paper.has_pdf:
         file_path = paper.pdf_path
     elif file_type == BhtFileType.CAT and paper.has_cat:
@@ -93,7 +93,7 @@ def get_paper_file(paper_id, file_type):
 
 
 def get_file_from_url(url):
-    # TODO: is if possible to check TXT ? with some FileType ?
+    # TODO: QUESTION is if possible to check TXT ? with some FileType ?
     # r = requests.get(url)
     # if not r.headers["Content-Type"] == "application/pdf" :
     #     raise PdfFileError("No pdf in url")
@@ -110,8 +110,8 @@ def get_file_from_url(url):
     return r.content, filename
 
 
-# TODO: rename to file_to_db
-# TODO: insert into models.Paper ?
+# TODO: REWRITE rename to file_to_db
+# TODO: REFACTOR insert into models.Paper ?
 def pdf_to_db(file_stream, filename):
     """Push Paper to db from a pdf stream
 
@@ -174,7 +174,7 @@ def configuration():
     return render_template("configuration.html", configuration=current_app.config)
 
 
-# TODO: merge following 3 routes/methods
+# TODO: REFACTOR merge following 3 routes/methods
 # and rewrite calls into papers.html
 # and tests
 @bp.route("/txt/<paper_id>")
@@ -234,7 +234,7 @@ def papers(name=None):
 
 @bp.route("/upload_from_url", methods=["POST"])
 def upload_from_url():
-    # TODO: refactor merge with istex_upload_id()
+    # TODO: REFACTOR merge with istex_upload_id()
     file_url = request.form.get("file_url")
     if file_url:
         filestream, filename = get_file_from_url(file_url)
@@ -264,7 +264,7 @@ def istex_upload_id():
 
 @bp.route("/upload", methods=["POST"])
 def upload():
-    # TODO: rename to upload_from_file()
+    # TODO: REWRITE to upload_from_file()
     # check if the post request has the file part
     if "file" not in request.files:
         flash("No file part")
@@ -288,7 +288,7 @@ def bht_status(paper_id):
         flash(f"No such paper {paper_id}")
         return redirect(url_for("main.papers"))  #
 
-    # TODO: CUT and delegate to Paper and Task models
+    # TODO: REFACTOR cut and delegate to Paper and Task models
     # Get tasks info from db if task has finished
     if paper.task_status == "finished" or paper.task_status == "failed":
         try:
@@ -334,7 +334,7 @@ def bht_status(paper_id):
             "paper_id": paper.id,
         }
         # TODO: END CUTTING
-    # TODO: set data = {} in one place only (here for ex)
+    # TODO: REFACTOR set data = {} in one place only (here for ex)
     if data["task_started"] is not None:
         data["task_started"] = data["task_started"].strftime("%a, %b %d, %Y - %H:%M:%S")
     response_object = {"status": "success", "data": data}
@@ -350,7 +350,7 @@ def bht_run():
         flash("No file for that paper.")
         return redirect(url_for("main.papers"))
 
-    # TODO: CUT START and delegate to Paper and Task models
+    # TODO: REFACTOR CUT START and delegate to Paper and Task models
     q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
     task = q.enqueue(
         get_pipe_callback(test=current_app.config["TESTING"]),
@@ -374,7 +374,7 @@ def bht_run():
 
 @bp.route("/istex_test", methods=["GET"])
 def istex_test():
-    # TODO: merge with istex/ route, and apply same thing as with get_pipe_callback()
+    # TODO: REFACTOR merge with istex/ route, and apply same thing as with get_pipe_callback()
     from web.istex_proxy import istex_json_to_json
 
     with open(
@@ -461,7 +461,7 @@ def api_catalogs():
     """
     mission_id = request.args.get("mission_id")
     mission = Mission.query.get(mission_id)
-    # TODO: extract to method and merge common code
+    # TODO: REFACTOR extract to method and merge common code
     events_list = [
         event.get_dict()
         for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
@@ -496,7 +496,7 @@ def api_catalogs_txt():
             f"No valid parameters for url: {mission_id} {mission}",
             status=400,
         )
-    # TODO: extract to method and merge common code
+    # TODO: REFACTOR extract to method and merge common code
     events_list = [
         event.get_dict()
         for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(

@@ -26,9 +26,9 @@ class TestFrontUtils:
         )
         assert filetype.guess(content).mime == "application/pdf"
 
-    # TODO: test  getfilefromurl with bad url
-    # TODO: test  getfilefromurl with no file
-    # TODO: test  getfilefromurl with wrong file  format
+    # TODO: TEST  getfilefromurl with bad url
+    # TODO: TEST  getfilefromurl with no file
+    # TODO: TEST  getfilefromurl with wrong file  format
 
     def test_save_to_db(self, pdf_for_test):
         """

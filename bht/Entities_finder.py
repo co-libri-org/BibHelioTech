@@ -493,7 +493,7 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
     @param published_date:
     @return:
     """
-    # FIXME: deepcopy should work. Look at temp generation to understand
+    # FIXME: CRITICAL deepcopy should work. Look at temp generation to understand
     # _fl_to_return = copy.deepcopy(_final_links)
     # _temp_to_return = copy.deepcopy(_temp)
     _fl_to_return = _final_links
@@ -663,7 +663,7 @@ def entities_finder(current_OCR_folder, DOI=None):
     # 7- Add satellites occurrences to the list
     temp, final_links = add_sat_occurrence(final_links, sutime_json)
 
-    # TODO: get the published date elsewhere, at the beginning
+    # TODO: REFACTOR get the published date elsewhere, at the beginning
     published_date = published_date_finder(token, v, DOI)
 
     # 8- Association of the closest duration of a satellite.

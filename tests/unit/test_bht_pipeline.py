@@ -13,13 +13,13 @@ from web.bht_proxy import pipe_paper
 @skip_bht
 class TestBhtPipeline:
     def test_pipeline(self):
-        # TODO: fix run_pipeline call
+        # FIXME: run_pipeline call
         pipe_steps = [PipeStep.OCR, PipeStep.GROBID]
         res_steps = run_pipeline("path", pipe_steps=pipe_steps)
         assert res_steps == pipe_steps
 
     def test_pipeline_wrong_step(self):
-        # TODO: fix run_pipeline call
+        # FIXME: run_pipeline call
         with pytest.raises(BhtPipelineError):
             run_pipeline("path", pipe_steps=[PipeStep.OCR, PipeStep.GROBID, 1000])
 

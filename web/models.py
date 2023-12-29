@@ -9,7 +9,7 @@ from web import db
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
 
-# TODO: choose between BhtFileType or  web.istex_proxy.IstexDocType
+# TODO: REFACTOR choose between BhtFileType or  web.istex_proxy.IstexDocType
 class BhtFileType(StrEnum):
     PDF = auto()
     TXT = auto()
@@ -51,7 +51,7 @@ def rows_to_catstring(events_list, catalog_name):
 def catfile_to_rows(catfile):
     """Get all rows of a catalog file as  dict
 
-      TODO: should move to Paper or Catalog method
+      TODO: MODEL should move to Paper or Catalog method
 
        -  read each line, rid of comments
        -  create a hp_event_dict
@@ -79,7 +79,7 @@ def catfile_to_rows(catfile):
 def catfile_to_db(catfile):
     """Save a catalog file's content to db as hpevents
 
-    TODO: should move to Paper or Catalog method
+    TODO: MODEL should move to Paper or Catalog method
 
     :return: nothing
     """
@@ -202,7 +202,7 @@ class Paper(db.Model):
     cat_path = db.Column(db.String, unique=True)
     file_type = db.Column(db.String)
     cat_in_db = db.Column(db.Boolean, default=False)
-    # TODO: move to Task model ( and relative setters )
+    # TODO: MODEL move to Task model ( and relative setters )
     task_id = db.Column(db.String, unique=True)
     task_status = db.Column(db.String)
     task_started = db.Column(db.DateTime)

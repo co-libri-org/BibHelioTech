@@ -5,7 +5,7 @@ from datetime import datetime
 
 from bht.pipeline import bht_run_file, bht_run_dir, run_pipeline, PipeStep
 from bht_config import yml_settings
-# TODO: dont import anything from web. to bht !!!!
+# TODO: REFACTOR dont import anything from web. to bht !!!!
 from web.istex_proxy import IstexDoctype, get_file_from_id
 from web.models import BhtFileType
 
@@ -101,7 +101,7 @@ if __name__ == "__main__":
             pipe_steps=pipe_steps,
         )
     elif args.istex_id:
-        # TODO: this could be a RETRIEVE step of the pipeline
+        # TODO: REFACTOR this could be a "retrieve" step of the pipeline
         doc_type = IstexDoctype.TXT
         content, filename = get_file_from_id(args.istex_id, doc_type)
         filepath = os.path.join(yml_settings["BHT_DATA_DIR"], filename)

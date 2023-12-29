@@ -26,7 +26,7 @@ class PipeStep(IntEnum):
 _logger = init_logger()
 
 
-# TODO: hey, doc_type looks like file_type: IstexDocType or BhtFileType ??
+# TODO: REWRITE IstexDocType or BhtFileType ??
 def run_step_mkdir(orig_file: str, result_base_dir: str, doc_type: IstexDoctype) -> str:
     """
     Move a pdf file to same name directory
@@ -107,7 +107,7 @@ def bht_run_file(orig_pdf_file, result_base_dir, file_type, doi=None):
     # 0
     dest_pdf_dir = run_step_mkdir(orig_pdf_file, result_base_dir, file_type)
 
-    # TODO: instead run a run_pipeline() with proper parameters
+    # TODO: REWRITE instead run a run_pipeline() with proper parameters
     if file_type == BhtFileType.PDF:
         # 1
         run_step_ocr(dest_pdf_dir)
