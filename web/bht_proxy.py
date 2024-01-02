@@ -16,7 +16,7 @@ def get_pipe_callback(test=True):
         return pipe_paper
 
 
-def pipe_paper_mocked(p_id=None, b_dir=None, min_secs=5, max_secs=20):
+def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_secs=20):
     """Spend time
 
     @return: num seconds spent
