@@ -1,31 +1,33 @@
 version: '3.7'
 services:
-    rq-dashboard:
-      image: jaredv/rq-docker:0.0.2
-      command: rq-dashboard -H rq-server
-      ports:
-        - 9181:9181
+  worker:
+    build:
+      context: .
+      target: bht-test
+      args:
+        - USER_UID=1000
+        - USER_GID=1000
+    command: python manage.py run_worker
+    volumes:
+      - ./DATA:/home/bibheliotech/BibHelioTech/DATA:rw
+    depends_on:
+      redis:
+        condition: service_started
 
-    rq-worker:
-      image: jaredv/rq-docker:0.0.2
-      command: rq worker -u redis://redis:6379 high normal low
-      deploy:
-        replicas: 3
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - "6379:6379"
+    depends_on:
+      grobid:
+        condition: service_healthy
 
-    redis:
-      image: redis:6.2-alpine
-      ports:
-        - "6379:6379"
-      depends_on:
-        grobid:
-          condition: service_healthy
-
-    grobid:
-      image: lfoppiano/grobid:0.7.2
-      ports:
-        - "8070:8070"
-      healthcheck:
-        test: [
-          "CMD", "bash", "-c",
-          "while ! timeout 1 bash -c 'echo > /dev/tcp/localhost/8070'; do sleep 10; done"
-        ]
+  grobid:
+    image: lfoppiano/grobid:0.7.2
+    ports:
+      - "8070:8070"
+    healthcheck:
+      test: [
+        "CMD", "bash", "-c",
+        "while ! timeout 1 bash -c 'echo > /dev/tcp/localhost/8070'; do sleep 10; done"
+      ]
