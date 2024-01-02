@@ -24,7 +24,10 @@ class TestRunPapers:
     def test_have_run_btn(self, firefox_driver, paperslist_for_tests):
         papers_url = request.url + url_for("main.papers")
         firefox_driver.get(papers_url)
-        elems = firefox_driver.find_elements(By.CLASS_NAME, "run-bht")
+        # select all buttons of class run-bht with title containing "TXT" string
+        elems = firefox_driver.find_elements(
+            By.XPATH, "//button[contains(@class,'run-bht') and contains(@title, 'TXT')]"
+        )
         assert len(elems) == 6
 
     def test_click_run_btn(self, firefox_driver, paperslist_for_tests):
