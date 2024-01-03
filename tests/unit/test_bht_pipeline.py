@@ -39,7 +39,7 @@ class TestBhtPipelineSteps:
             assert len(_r_content) == 52
 
     def test_run_step_entities_with_no_doi(self, ocr_dir_test):
-        with pytest.raises(IndexError):
+        with pytest.raises(BhtPipelineError):
             run_step_entities(ocr_dir_test, None)
 
 

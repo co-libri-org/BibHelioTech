@@ -6,6 +6,7 @@ from datetime import *
 from bht.DOI_finder import *
 from bht.bht_logging import init_logger
 from bht.databank_reader import DataBank, DataBankSheet
+from bht.errors import BhtPipelineError
 from bht.published_date_finder import *
 
 
@@ -626,16 +627,15 @@ def entities_finder(current_OCR_folder, DOI=None):
     with open(content_path, "r") as file:
         content_upper = file.read()
 
-    # file_name = current_OCR_folder + "/" + os.path.basename(current_OCR_folder) + ".tei.xml"
     if DOI is None:
+        # try to find in tei file
         import glob
         pattern = os.path.join(current_OCR_folder, "*.tei.xml")
         found = glob.glob(pattern)
-        if len(found ) == 0:
-            DOI = "10.1002/2015GL064052"
-        else:
-            file_name = glob.glob(pattern)[0]
-            DOI = find_DOI(file_name)  # retrieving the DOI of the article being processed.
+        if len(found) == 0:
+            raise BhtPipelineError("Couldn't find any tei.xml file")
+        file_name = found[0]
+        DOI = find_DOI(file_name)  # retrieving the DOI of the article being processed.
 
     # loading transformed SUTime results
     files_path_json = os.path.join(current_OCR_folder, "res_sutime_2.json")
