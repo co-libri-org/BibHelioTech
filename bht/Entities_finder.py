@@ -621,12 +621,6 @@ def entities_finder(current_OCR_folder, DOI=None):
     AMDA_dict = data_frames[DataBankSheet.SATS_REG]
     SPAN_dict = data_frames[DataBankSheet.TIME_SPAN]
 
-    # loading the text file (content of the article)
-    content_path = os.path.join(current_OCR_folder, "out_filtered_text.txt")
-
-    with open(content_path, "r") as file:
-        content_upper = file.read()
-
     if DOI is None:
         # try to find in tei file
         import glob
@@ -636,6 +630,13 @@ def entities_finder(current_OCR_folder, DOI=None):
             raise BhtPipelineError("Couldn't find any tei.xml file")
         file_name = found[0]
         DOI = find_DOI(file_name)  # retrieving the DOI of the article being processed.
+
+    # loading the text file (content of the article)
+    content_path = os.path.join(current_OCR_folder, "out_filtered_text.txt")
+
+    with open(content_path, "r") as file:
+        content_upper = file.read()
+
 
     # loading transformed SUTime results
     files_path_json = os.path.join(current_OCR_folder, "res_sutime_2.json")

@@ -38,9 +38,9 @@ class TestBhtPipelineSteps:
             _r_content = _r_fp.readlines()
             assert len(_r_content) == 52
 
-    def test_run_step_entities_with_no_doi(self, ocr_dir_test):
+    def test_run_step_entities_with_no_doi(self, tmp_path):
         with pytest.raises(BhtPipelineError):
-            run_step_entities(ocr_dir_test, None)
+            run_step_entities(tmp_path, None)
 
 
 @skip_bht
