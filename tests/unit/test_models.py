@@ -15,28 +15,28 @@ from web.models import (
 
 
 class TestTask:
-    def test_paper_set_taskid(self, paper_for_test):
+    def test_paper_set_taskid(self, paper_for_test, db):
         task_id = "this_is_a_task_id"
         paper_for_test.set_task_id(task_id)
-        p = Paper.query.get(paper_for_test.id)
+        p = db.session.get(Paper, paper_for_test.id)
         assert p.task_id == task_id
 
-    def test_paper_set_taskstatus(self, paper_for_test):
+    def test_paper_set_taskstatus(self, paper_for_test, db):
         task_status = "this_is_a_task_status"
         paper_for_test.set_task_status(task_status)
-        p = Paper.query.get(paper_for_test.id)
+        p = db.session.get(Paper, paper_for_test.id)
         assert p.task_status == task_status
 
-    def test_paper_set_taskstarted(self, paper_for_test):
+    def test_paper_set_taskstarted(self, paper_for_test, db):
         task_started = datetime.now()
         paper_for_test.set_task_started(task_started)
-        p = Paper.query.get(paper_for_test.id)
+        p = db.session.get(Paper, paper_for_test.id)
         assert p.task_started == task_started
 
-    def test_paper_set_taskstopped(self, paper_for_test):
+    def test_paper_set_taskstopped(self, paper_for_test, db):
         task_stopped = datetime.now()
         paper_for_test.set_task_stopped(task_stopped)
-        p = Paper.query.get(paper_for_test.id)
+        p = db.session.get(Paper, paper_for_test.id)
         assert p.task_stopped == task_stopped
 
 

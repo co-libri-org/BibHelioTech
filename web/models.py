@@ -76,6 +76,7 @@ def catfile_to_rows(catfile):
     return hpeventdict_list
 
 
+# TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
 def catfile_to_db(catfile):
     """Save a catalog file's content to db as hpevents
 
@@ -110,14 +111,15 @@ class HpEvent(db.Model):
     catalog = db.relationship("Catalog", back_populates="hp_events")
     catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"))
 
+    # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
     def __init__(
-            self,
-            start_date: str,
-            stop_date: str,
-            doi: str,
-            mission: str,
-            instrument: str,
-            region: str,
+        self,
+        start_date: str,
+        stop_date: str,
+        doi: str,
+        mission: str,
+        instrument: str,
+        region: str,
     ):
         self.start_date = datetime.datetime.strptime(start_date, DATE_FORMAT)
         self.stop_date = datetime.datetime.strptime(stop_date, DATE_FORMAT)
@@ -133,8 +135,8 @@ class HpEvent(db.Model):
     def get_dict(self):
         r_dict = {
             "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
-                          0:-3
-                          ],
+                0:-3
+            ],
             "stop_date": datetime.datetime.strftime(self.stop_date, DATE_FORMAT)[0:-3],
             "doi": self.doi.doi,
             "mission": self.mission.name,
