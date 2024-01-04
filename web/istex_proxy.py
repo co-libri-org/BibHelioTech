@@ -14,32 +14,28 @@ class IstexDoctype(StrEnum):
     ZIP = auto()
     TXT = auto()
     TEI = auto()
-    CLEAN = auto()
+    CLEANED = auto()
 
 
 def istex_id_to_url(istex_id, doc_type=IstexDoctype.PDF):
     """
-    Build pdf url to request Istex.
+    Build url to request Istex for pdf, txt, or any supported doctype.
 
     @param doc_type:
     @param istex_id:  the istex document id.
     @return: a http url returning a pdf file
     """
-    req_url = ISTEX_BASE_URL + istex_id
-    r = requests.get(url=req_url)
+    doc_url = ISTEX_BASE_URL + istex_id
+    print(doc_url)
+    r = requests.get(url=doc_url)
     document_json = r.json()
-    if doc_type == IstexDoctype.PDF:
-        _url = document_json["fulltext"][0]["uri"]
-    elif doc_type == IstexDoctype.ZIP:
-        _url = document_json["fulltext"][1]["uri"]
-    elif doc_type == IstexDoctype.TXT:
-        _url = document_json["fulltext"][2]["uri"]
-    elif doc_type == IstexDoctype.TEI:
-        _url = document_json["fulltext"][3]["uri"]
-    elif doc_type == IstexDoctype.CLEAN:
-        _url = document_json["fulltext"][4]["uri"]
-    else:
-        _url = None
+    # Default url value
+    _url = None
+    # Iterate all fulltext elements till we found what we want
+    for _elmnt in document_json["fulltext"]:
+        if _elmnt["extension"] == doc_type.value:
+            _url = _elmnt["uri"]
+            break
     return _url
 
 
@@ -62,12 +58,19 @@ def istex_hit_extract(hit):
         "journal": hit["host"]["title"],
         "year": hit["publicationDate"],
         "pdf_url": _pdf_url,
-        "txt_url": _txt_url
+        "txt_url": _txt_url,
     }
     return hit_extraction
 
 
 def istex_json_to_json(istex_json):
+    """
+    Translate an istex request json response
+    into a list of hits as dict
+
+    @param istex_json:
+    @return: list of dicts
+    """
     our_json = []
     for hit in istex_json["hits"]:
         try:
@@ -94,6 +97,7 @@ def istex_params_to_json(istex_params):
 
 def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
     from requests import RequestException
+
     istex_url = istex_id_to_url(istex_id, doc_type)
     filename = f"{istex_id}.{doc_type}"
     try:
