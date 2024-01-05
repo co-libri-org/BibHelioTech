@@ -1,7 +1,9 @@
 # TODO: REFACTOR maybe this whole file should move to bht. module
 from enum import StrEnum, auto
+import re
 
 import requests
+from requests import RequestException
 
 from web.errors import IstexParamError
 
@@ -105,3 +107,21 @@ def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
             return r.content, filename
     except RequestException as e:
         raise e
+
+
+def get_file_from_url(url):
+    # TODO: QUESTION is if possible to check TXT ? with some FileType ?
+    # r = requests.get(url)
+    # if not r.headers["Content-Type"] == "application/pdf" :
+    #     raise PdfFileError("No pdf in url")
+    try:
+        with requests.get(url) as r:
+            if "Content-Disposition" in r.headers.keys():
+                filename = re.findall(
+                    "filename=(.+)", r.headers["Content-Disposition"]
+                )[0]
+            else:
+                filename = url.split("/")[-1]
+    except RequestException as e:
+        raise e
+    return r.content, filename

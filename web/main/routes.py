@@ -1,13 +1,10 @@
 import datetime
 import json
 import os
-import re
 
 import redis
-import requests
 import filetype
 
-from requests import RequestException
 from rq import Queue
 from rq.exceptions import NoSuchJobError
 from rq.job import Job
@@ -30,16 +27,15 @@ from . import bp
 from web import db
 from web.models import Paper, Mission, HpEvent, rows_to_catstring, BhtFileType
 from web.bht_proxy import get_pipe_callback
-from web.errors import PdfFileError
-from web.istex_proxy import istex_url_to_json, istex_get_doc_url
+from web.istex_proxy import istex_url_to_json, istex_get_doc_url, get_file_from_url
 
 
 def allowed_file(filename):
     # TODO: REFACTOR use models.FileType instead
     return (
-            "." in filename
-            and filename.rsplit(".", 1)[1].lower()
-            in current_app.config["ALLOWED_EXTENSIONS"]
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower()
+        in current_app.config["ALLOWED_EXTENSIONS"]
     )
 
 
@@ -92,24 +88,6 @@ def get_paper_file(paper_id, file_type):
     return file_path
 
 
-def get_file_from_url(url):
-    # TODO: QUESTION is if possible to check TXT ? with some FileType ?
-    # r = requests.get(url)
-    # if not r.headers["Content-Type"] == "application/pdf" :
-    #     raise PdfFileError("No pdf in url")
-    try:
-        with requests.get(url) as r:
-            if "Content-Disposition" in r.headers.keys():
-                filename = re.findall(
-                    "filename=(.+)", r.headers["Content-Disposition"]
-                )[0]
-            else:
-                filename = url.split("/")[-1]
-    except RequestException as e:
-        raise e
-    return r.content, filename
-
-
 # TODO: REWRITE rename to file_to_db
 # TODO: REFACTOR insert into models.Paper ?
 # TODO: REWRITE raise exception or send message to calling route to be flashed
@@ -137,7 +115,7 @@ def pdf_to_db(file_stream, filename):
     _file_type = None
     if _guessed_filetype and _guessed_filetype.mime == "application/pdf":
         _file_type = BhtFileType.PDF
-    elif _split_filename[1] == '.txt':
+    elif _split_filename[1] == ".txt":
         _file_type = BhtFileType.TXT
     else:
         # flash(f"{_file_path} is not Allowed ", 'error')
@@ -379,7 +357,7 @@ def istex_test():
     from web.istex_proxy import istex_json_to_json
 
     with open(
-            os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
+        os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
     ) as fp:
         istex_list = istex_json_to_json(json.load(fp))
     return render_template("istex.html", istex_list=istex_list)
