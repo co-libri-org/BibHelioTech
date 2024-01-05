@@ -57,17 +57,17 @@
         <td class="istex-year">{{istex.year}}</td>
         <td class="istex-first_author">{{istex.first_author}}</td>
         <td>{{istex.journal}}</td>
-        <td><a class="btn btn-warning" id="istex-link-{{istex.id}}" href="{{istex.pdf_url}}"
+        <td><a class="btn btn-warning" id="istex-link-{{istex.id}}" href="{{istex.doc_urls.pdf}}"
                title="Get istex pdf file">Show PDF</a></td>
         <td>
             <form method="post" action="{{url_for('main.upload_from_url')}}">
-                <input type="hidden" name="file_url" value="{{istex.pdf_url}}">
+                <input type="hidden" name="file_url" value="{{istex.doc_urls.pdf}}">
                 <input type=submit value="Add PDF" class="btn btn-warning" title="Add Paper to local database as PDF">
             </form>
         </td>
         <td>
             <form method="post" action="{{url_for('main.upload_from_url')}}">
-                <input type="hidden" name="file_url" value="{{istex.txt_url}}">
+                <input type="hidden" name="file_url" value="{{istex.doc_urls.txt}}">
                 <input type=submit value="Add TXT" class="btn btn-warning" title="Add Paper to local database as TEXT">
             </form>
         </td>
