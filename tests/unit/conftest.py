@@ -111,17 +111,8 @@ def istex_params():
 
 
 @pytest.fixture(scope="module")
-def istex_url():
-    _publication_date = "[2020 *]"
-    _abstract = "solar AND wind"
-    _params = {
-        "q": f"(publicationDate:{_publication_date} AND abstract:({_abstract}))",
-        "facet": "corpusName[*]",
-        "size": 150,
-        "output": "*",
-        "stats": "",
-    }
-    yield "https://api.istex.fr/document/?" + urlencode(_params)
+def istex_url(istex_params):
+    yield "https://api.istex.fr/document/?" + urlencode(istex_params)
 
 
 @pytest.fixture(scope="module")
