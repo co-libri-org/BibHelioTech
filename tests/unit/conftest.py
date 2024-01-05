@@ -4,6 +4,7 @@ import shutil
 from urllib.parse import urlencode
 
 import pytest
+import requests
 from flask import current_app
 
 from bht.bht_logging import init_logger
@@ -113,6 +114,12 @@ def istex_params():
 @pytest.fixture(scope="module")
 def istex_url(istex_params):
     yield "https://api.istex.fr/document/?" + urlencode(istex_params)
+
+
+@pytest.fixture(scope="module")
+def istex_search_json(istex_url):
+    r = requests.get(url=istex_url)
+    return r.json()
 
 
 @pytest.fixture(scope="module")

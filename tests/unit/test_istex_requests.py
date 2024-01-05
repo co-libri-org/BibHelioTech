@@ -7,6 +7,7 @@ from web.errors import IstexParamError
 from web.istex_proxy import (
     istex_get_doc_url,
     IstexDoctype,
+    istex_hit_extract,
 )
 
 
@@ -30,3 +31,10 @@ class TestIstex:
         _istex_url = istex_get_doc_url(istex_id, IstexDoctype.TXT)
         _parts = _istex_url.split("/")
         assert _parts[-1] == "txt"
+
+    def test_extract_hit(self, istex_search_json):
+        json_hit = istex_search_json["hits"][0]
+        bht_hit = istex_hit_extract(json_hit)
+        assert "title" in bht_hit
+        assert "pdf" in bht_hit["doc_urls"]
+        assert "txt" in bht_hit["doc_urls"]
