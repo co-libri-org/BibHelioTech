@@ -19,55 +19,6 @@ class IstexDoctype(StrEnum):
     CLEANED = auto()
 
 
-def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
-    """
-    Build url to request Istex for pdf, txt, or any supported doctype.
-
-    @param doc_type: the type of document to fetch
-    @param istex_id:  the istex document id.
-    @return: a http url returning a pdf file
-    """
-    doc_url = ISTEX_BASE_URL + istex_id
-    print(doc_url)
-    r = requests.get(url=doc_url)
-    document_json = r.json()
-    # Default url value
-    _url = None
-    # Iterate all fulltext elements till we found what we want
-    for _elmnt in document_json["fulltext"]:
-        if _elmnt["extension"] == doc_type.value:
-            _url = _elmnt["uri"]
-            break
-    return _url
-
-
-def hit_extract(hit):
-    """
-    From an istex search response's hit, extract info to dict
-
-    @param hit:  the istex hit
-    @return:  bht dict
-    """
-    # build dictionnary with all docs urls
-    _doc_urls = {}
-    for fulltext in hit["fulltext"]:
-        for _doc_type in IstexDoctype:
-            if fulltext["extension"] == _doc_type:
-                _doc_urls[_doc_type] = fulltext["uri"]
-    hit_extraction = {
-        "small_title": hit["title"][0:61] + " ...",
-        "title": hit["title"],
-        "id": hit["id"],
-        "ark": hit["arkIstex"],
-        "abstract": hit["abstract"],
-        "first_author": hit["author"][0]["name"],
-        "journal": hit["host"]["title"],
-        "year": hit["publicationDate"],
-        "doc_urls": _doc_urls,
-    }
-    return hit_extraction
-
-
 def istex_json_to_json(istex_json):
     """
     Translate an istex request json response
@@ -125,3 +76,52 @@ def get_file_from_url(url):
         raise e
     filename = re.sub(r"[^a-zA-Z0-9-]", "_", filename)
     return content, filename
+
+
+def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
+    """
+    Build url to request Istex for pdf, txt, or any supported doctype.
+
+    @param doc_type: the type of document to fetch
+    @param istex_id:  the istex document id.
+    @return: a http url returning a pdf file
+    """
+    doc_url = ISTEX_BASE_URL + istex_id
+    print(doc_url)
+    r = requests.get(url=doc_url)
+    document_json = r.json()
+    # Default url value
+    _url = None
+    # Iterate all fulltext elements till we found what we want
+    for _elmnt in document_json["fulltext"]:
+        if _elmnt["extension"] == doc_type.value:
+            _url = _elmnt["uri"]
+            break
+    return _url
+
+
+def hit_extract(hit):
+    """
+    From an istex search response's hit, extract info to dict
+
+    @param hit:  the istex hit
+    @return:  bht dict
+    """
+    # build dictionnary with all docs urls
+    _doc_urls = {}
+    for fulltext in hit["fulltext"]:
+        for _doc_type in IstexDoctype:
+            if fulltext["extension"] == _doc_type:
+                _doc_urls[_doc_type] = fulltext["uri"]
+    hit_extraction = {
+        "small_title": hit["title"][0:61] + " ...",
+        "title": hit["title"],
+        "id": hit["id"],
+        "ark": hit["arkIstex"],
+        "abstract": hit["abstract"],
+        "first_author": hit["author"][0]["name"],
+        "journal": hit["host"]["title"],
+        "year": hit["publicationDate"],
+        "doc_urls": _doc_urls,
+    }
+    return hit_extraction
