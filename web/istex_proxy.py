@@ -42,6 +42,13 @@ def istex_get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
 
 
 def istex_hit_extract(hit):
+    """
+    From an istex search response's hit, extract info to dict
+
+    @param hit:  the istex hit
+    @return:  bht dict
+    """
+    # build dictionnary with all docs urls
     _doc_urls = {}
     for fulltext in hit["fulltext"]:
         for _doc_type in IstexDoctype:
@@ -56,7 +63,7 @@ def istex_hit_extract(hit):
         "first_author": hit["author"][0]["name"],
         "journal": hit["host"]["title"],
         "year": hit["publicationDate"],
-        "doc_urls": _doc_urls
+        "doc_urls": _doc_urls,
     }
     return hit_extraction
 
@@ -81,15 +88,6 @@ def istex_json_to_json(istex_json):
 
 def istex_url_to_json(istex_url):
     r = requests.get(url=istex_url)
-    return istex_json_to_json(r.json())
-
-
-def istex_params_to_json(istex_params):
-    mandatory_keys = ["q", "facet", "size", "output", "stats"]
-    for k in mandatory_keys:
-        if k not in istex_params:
-            raise IstexParamError("HEY ! Should set all keys")
-    r = requests.get(url=ISTEX_BASE_URL, params=istex_params)
     return istex_json_to_json(r.json())
 
 
@@ -125,5 +123,5 @@ def get_file_from_url(url):
                 filename = url.split("/")[-1]
     except RequestException as e:
         raise e
-    filename = re.sub(r"[^a-zA-Z0-9-]","_",filename)
+    filename = re.sub(r"[^a-zA-Z0-9-]", "_", filename)
     return content, filename
