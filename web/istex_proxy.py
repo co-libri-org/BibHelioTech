@@ -19,7 +19,7 @@ class IstexDoctype(StrEnum):
     CLEANED = auto()
 
 
-def istex_get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
+def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
     """
     Build url to request Istex for pdf, txt, or any supported doctype.
 
@@ -99,7 +99,7 @@ def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
     @param doc_type: doc type (PDF, TXT, TEI ,....)
     @return: (file_stream, file_name)
     """
-    istex_url = istex_get_doc_url(istex_id, doc_type)
+    istex_url = get_doc_url(istex_id, doc_type)
     content, filename = get_file_from_url(istex_url)
     filename = f"{istex_id}.{doc_type}"
     return content, filename
