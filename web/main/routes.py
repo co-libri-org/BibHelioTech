@@ -113,7 +113,6 @@ def pdf_to_db(file_stream, filename):
     with open(_file_path, "wb") as _fd:
         _fd.write(file_stream)
     if not os.path.isfile(_file_path):
-        # flash(f"no such file: {_file_path}", 'error')
         return redirect(url_for("main.papers"))
     _guessed_filetype = filetype.guess(_file_path)
     _split_filename = os.path.splitext(filename)
@@ -123,7 +122,6 @@ def pdf_to_db(file_stream, filename):
     elif _split_filename[1] == ".txt":
         _file_type = BhtFileType.TXT
     else:
-        # flash(f"{_file_path} is not Allowed ", 'error')
         return redirect(url_for("main.papers"))
     _paper_title = _split_filename[0]
     paper = Paper.query.filter_by(title=_paper_title).one_or_none()
@@ -222,7 +220,8 @@ def upload_from_url():
     file_url = request.form.get("file_url")
     if file_url:
         filestream, filename = get_file_from_url(file_url)
-        pdf_to_db(filestream, filename)
+        paper_id = pdf_to_db(filestream, filename)
+        flash(f"Uploaded {filename} to paper {paper_id}")
         return redirect(url_for("main.papers"))
     else:
         return Response(
