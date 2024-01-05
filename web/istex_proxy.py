@@ -17,11 +17,11 @@ class IstexDoctype(StrEnum):
     CLEANED = auto()
 
 
-def istex_id_to_url(istex_id, doc_type=IstexDoctype.PDF):
+def istex_get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
     """
     Build url to request Istex for pdf, txt, or any supported doctype.
 
-    @param doc_type:
+    @param doc_type: the type of document to fetch
     @param istex_id:  the istex document id.
     @return: a http url returning a pdf file
     """
@@ -98,7 +98,7 @@ def istex_params_to_json(istex_params):
 def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
     from requests import RequestException
 
-    istex_url = istex_id_to_url(istex_id, doc_type)
+    istex_url = istex_get_doc_url(istex_id, doc_type)
     filename = f"{istex_id}.{doc_type}"
     try:
         with requests.get(istex_url) as r:

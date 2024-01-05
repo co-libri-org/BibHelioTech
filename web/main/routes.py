@@ -31,7 +31,7 @@ from web import db
 from web.models import Paper, Mission, HpEvent, rows_to_catstring, BhtFileType
 from web.bht_proxy import get_pipe_callback
 from web.errors import PdfFileError
-from web.istex_proxy import istex_url_to_json, istex_id_to_url
+from web.istex_proxy import istex_url_to_json, istex_get_doc_url
 
 
 def allowed_file(filename):
@@ -257,9 +257,9 @@ def istex_upload_id():
             status=400,
         )
     else:
-        fp, filename = get_file_from_url(istex_id_to_url(istex_id))
+        fs, filename = get_file_from_url(istex_get_doc_url(istex_id))
         filename = istex_id + ".pdf"
-        paper_id = pdf_to_db(fp, filename)
+        paper_id = pdf_to_db(fs, filename)
         return jsonify({"success": "true", "paper_id": paper_id}), 201
 
 
