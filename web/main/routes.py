@@ -32,6 +32,7 @@ from web.istex_proxy import (
     get_file_from_url,
     get_file_from_id,
     json_to_hits,
+    IstexDoctype,
 )
 
 
@@ -233,13 +234,17 @@ def upload_from_url():
 @bp.route("/istex_upload_id", methods=["POST"])
 def istex_upload_id():
     istex_id = request.json.get("istex_id")
+    try:
+        doc_type = IstexDoctype(request.json.get("doc_type"))
+    except ValueError:
+        doc_type = IstexDoctype.PDF
     if not istex_id:
         return Response(
             "No valid parameters for url",
             status=400,
         )
     else:
-        fs, filename = get_file_from_id(istex_id)
+        fs, filename = get_file_from_id(istex_id, doc_type)
         paper_id = pdf_to_db(fs, filename)
         return jsonify({"success": "true", "paper_id": paper_id}), 201
 

@@ -133,11 +133,25 @@ $(document).ready(function() {
             istex_id = $(this).val()
             $.post({
                 url: "{{url_for('main.istex_upload_id')}}",
-                data: JSON.stringify({ istex_id: istex_id}),
+                data: JSON.stringify({ istex_id: istex_id, doc_type: "pdf"}),
                 contentType: 'application/json; charset=utf-8'
             })
               .done(function( data ) {
-                alert("Done with: "+istex_id);
+                alert("Added pdf for : "+istex_id);
+              });
+          });
+    });
+
+    $("#addAllTxt").click(function(){
+        $("input:checked").not($('#checkAll')).each(function() {
+            istex_id = $(this).val()
+            $.post({
+                url: "{{url_for('main.istex_upload_id')}}",
+                data: JSON.stringify({ istex_id: istex_id, doc_type: "txt"}),
+                contentType: 'application/json; charset=utf-8'
+            })
+              .done(function( data ) {
+                alert("Added txt for : "+istex_id);
               });
           });
     });
