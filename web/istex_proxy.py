@@ -94,15 +94,17 @@ def istex_params_to_json(istex_params):
 
 
 def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
-    from requests import RequestException
+    """
+    Get file content from istex by id and doctype
 
+    @param istex_id:  istex id
+    @param doc_type: doc type (PDF, TXT, TEI ,....)
+    @return: (file_stream, file_name)
+    """
     istex_url = istex_get_doc_url(istex_id, doc_type)
+    content, filename = get_file_from_url(istex_url)
     filename = f"{istex_id}.{doc_type}"
-    try:
-        with requests.get(istex_url) as r:
-            return r.content, filename
-    except RequestException as e:
-        raise e
+    return content, filename
 
 
 def get_file_from_url(url):
@@ -110,10 +112,11 @@ def get_file_from_url(url):
     Download a file from a given url
 
     @param url:  the file url
-    @return: file_stream, file_name
+    @return: (file_stream, file_name)
     """
     try:
         with requests.get(url) as r:
+            content = r.content
             if "Content-Disposition" in r.headers.keys():
                 filename = re.findall(
                     "filename=(.+)", r.headers["Content-Disposition"]
@@ -122,4 +125,5 @@ def get_file_from_url(url):
                 filename = url.split("/")[-1]
     except RequestException as e:
         raise e
-    return r.content, filename
+    filename = re.sub(r"[^a-zA-Z0-9-]","_",filename)
+    return content, filename
