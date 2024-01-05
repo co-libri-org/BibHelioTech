@@ -41,7 +41,7 @@ def istex_get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
     return _url
 
 
-def istex_hit_extract(hit):
+def hit_extract(hit):
     """
     From an istex search response's hit, extract info to dict
 
@@ -79,7 +79,7 @@ def istex_json_to_json(istex_json):
     our_json = []
     for hit in istex_json["hits"]:
         try:
-            our_hit = istex_hit_extract(hit)
+            our_hit = hit_extract(hit)
             our_json.append(our_hit)
         except IndexError:
             continue
