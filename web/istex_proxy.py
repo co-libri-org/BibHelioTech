@@ -69,7 +69,7 @@ def get_file_from_url(url):
                 filename = url.split("/")[-1]
     except RequestException as e:
         raise e
-    filename = re.sub(r"[^a-zA-Z0-9-]", "_", filename)
+    filename = re.sub(r"[^a-zA-Z0-9-.]", "_", filename)
     return content, filename
 
 
