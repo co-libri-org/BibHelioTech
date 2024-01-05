@@ -104,5 +104,3 @@ class TestIstexPage:
         response = client.get("/istex")
         assert response.status_code == 200
         assert b"Get papers from Istex api" in response.data
-
-    pass

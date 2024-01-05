@@ -137,7 +137,7 @@ $(document).ready(function() {
                 contentType: 'application/json; charset=utf-8'
             })
               .done(function( data ) {
-                alert("Added pdf for : "+istex_id);
+                console.log("Added file " + data.filename + " for istex_id: " +data.istex_id + " as paper : "+data.paper_id);
               });
           });
     });
@@ -151,7 +151,7 @@ $(document).ready(function() {
                 contentType: 'application/json; charset=utf-8'
             })
               .done(function( data ) {
-                alert("Added txt for : "+istex_id);
+                console.log("Added file " + data.filename + " for istex_id: " +data.istex_id + " as paper : "+data.paper_id);
               });
           });
     });
