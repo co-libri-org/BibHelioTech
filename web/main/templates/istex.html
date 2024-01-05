@@ -60,14 +60,16 @@
         <td><a class="btn btn-warning" id="istex-link-{{istex.id}}" href="{{istex.doc_urls.pdf}}"
                title="Get istex pdf file">Show PDF</a></td>
         <td>
-            <form method="post" action="{{url_for('main.upload_from_url')}}">
-                <input type="hidden" name="file_url" value="{{istex.doc_urls.pdf}}">
+            <form class="form_single" method="post" action="{{url_for('main.istex_upload_id')}}">
+                <input type="hidden" name="istex_id" value="{{istex.id}}">
+                <input type="hidden" name="doc_type" value="pdf">
                 <input type=submit value="Add PDF" class="btn btn-warning" title="Add Paper to local database as PDF">
             </form>
         </td>
         <td>
-            <form method="post" action="{{url_for('main.upload_from_url')}}">
-                <input type="hidden" name="file_url" value="{{istex.doc_urls.txt}}">
+            <form class="form_single" method="post" action="{{url_for('main.istex_upload_id')}}">
+                <input type="hidden" name="istex_id" value="{{istex.id}}">
+                <input type="hidden" name="doc_type" value="txt">
                 <input type=submit value="Add TXT" class="btn btn-warning" title="Add Paper to local database as TEXT">
             </form>
         </td>
@@ -128,6 +130,26 @@ $(document).ready(function() {
         $('input:checkbox').not(this).prop('checked', this.checked);
     });
 
+    $("form.form_single").each(function() {
+        var the_form = $(this)
+        the_form.submit(function(e) {
+            submit_btn = $(this).children('input[type=submit]');
+            submit_btn.fadeOut();
+            e.preventDefault();
+            const data = Object.fromEntries([...new FormData(this)]);
+            $.post({
+                url: "{{url_for('main.istex_upload_id')}}",
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8'
+            })
+              .done(function( data ) {
+                submit_btn.fadeIn();
+                console.log("Added file " + data.filename + " for istex_id: " +data.istex_id + " as paper : "+data.paper_id);
+              });
+          });
+    });
+
+    // When Add all PDF clicked, parse any checked box and call the api url with this istex id as parameter
     $("#addAllPdf").click(function(){
         $("input:checked").not($('#checkAll')).each(function() {
             istex_id = $(this).val()
@@ -142,6 +164,7 @@ $(document).ready(function() {
           });
     });
 
+    // When Add all TXT clicked, parse any checked box and call the api url with this istex id as parameter
     $("#addAllTxt").click(function(){
         $("input:checked").not($('#checkAll')).each(function() {
             istex_id = $(this).val()
