@@ -19,7 +19,7 @@ class IstexDoctype(StrEnum):
     CLEANED = auto()
 
 
-def istex_json_to_json(istex_json):
+def json_to_hits(istex_json):
     """
     Translate an istex request json response
     into a list of hits as dict
@@ -39,7 +39,7 @@ def istex_json_to_json(istex_json):
 
 def istex_url_to_json(istex_url):
     r = requests.get(url=istex_url)
-    return istex_json_to_json(r.json())
+    return json_to_hits(r.json())
 
 
 def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):

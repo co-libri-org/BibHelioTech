@@ -8,6 +8,7 @@ from web.istex_proxy import (
     get_doc_url,
     IstexDoctype,
     hit_extract,
+    json_to_hits,
 )
 
 
@@ -38,3 +39,11 @@ class TestIstex:
         assert "title" in bht_hit
         assert "pdf" in bht_hit["doc_urls"]
         assert "txt" in bht_hit["doc_urls"]
+
+    def test_json_to_hits(self, istex_search_json):
+        hits = json_to_hits(istex_search_json)
+        assert len(hits) == 150
+        for bht_hit in hits:
+            assert "title" in bht_hit
+            assert "pdf" in bht_hit["doc_urls"]
+            assert "txt" in bht_hit["doc_urls"]

@@ -357,12 +357,12 @@ def bht_run():
 @bp.route("/istex_test", methods=["GET"])
 def istex_test():
     # TODO: REFACTOR merge with istex/ route, and apply same thing as with get_pipe_callback()
-    from web.istex_proxy import istex_json_to_json
+    from web.istex_proxy import json_to_hits
 
     with open(
         os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
     ) as fp:
-        istex_list = istex_json_to_json(json.load(fp))
+        istex_list = json_to_hits(json.load(fp))
     return render_template("istex.html", istex_list=istex_list)
 
 
