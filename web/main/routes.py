@@ -4,6 +4,7 @@ import os
 
 import redis
 import filetype
+import requests
 
 from rq import Queue
 from rq.exceptions import NoSuchJobError
@@ -28,9 +29,9 @@ from web import db
 from web.models import Paper, Mission, HpEvent, rows_to_catstring, BhtFileType
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
-    istex_url_to_json,
     get_file_from_url,
     get_file_from_id,
+    json_to_hits,
 )
 
 
@@ -377,7 +378,8 @@ def istex():
         return render_template("istex.html", istex_list=[])
     elif request.method == "POST":
         istex_req_url = request.form["istex_req_url"]
-        istex_list = istex_url_to_json(istex_req_url)
+        r = requests.get(url=istex_req_url)
+        istex_list = json_to_hits(r.json())
         return render_template(
             "istex.html", istex_list=istex_list, istex_req_url=istex_req_url
         )
