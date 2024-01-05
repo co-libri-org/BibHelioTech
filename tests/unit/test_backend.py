@@ -10,12 +10,12 @@ class TestBhtIstex:
         pprint(istex_list)
         assert len(istex_list) == 150
         assert "title" in istex_list[0]
-        assert "pdf_url" in istex_list[0]
+        assert "pdf" in istex_list[0]["doc_urls"]
         assert "abstract" in istex_list[0]
 
     def test_txt_in_json(self, istex_url):
         istex_list = istex_url_to_json(istex_url)
-        assert "txt_url" in istex_list[0]
+        assert "txt" in istex_list[0]["doc_urls"]
 
 
 class TestBhtProxy:

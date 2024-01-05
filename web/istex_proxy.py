@@ -42,14 +42,11 @@ def istex_get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
 
 
 def istex_hit_extract(hit):
-    _pdf_url = None
+    _doc_urls = {}
     for fulltext in hit["fulltext"]:
-        if fulltext["extension"] == "pdf":
-            _pdf_url = fulltext["uri"]
-    _txt_url = None
-    for fulltext in hit["fulltext"]:
-        if fulltext["extension"] == "txt":
-            _txt_url = fulltext["uri"]
+        for _doc_type in IstexDoctype:
+            if fulltext["extension"] == _doc_type:
+                _doc_urls[_doc_type] = fulltext["uri"]
     hit_extraction = {
         "small_title": hit["title"][0:61] + " ...",
         "title": hit["title"],
@@ -59,8 +56,7 @@ def istex_hit_extract(hit):
         "first_author": hit["author"][0]["name"],
         "journal": hit["host"]["title"],
         "year": hit["publicationDate"],
-        "pdf_url": _pdf_url,
-        "txt_url": _txt_url,
+        "doc_urls": _doc_urls
     }
     return hit_extraction
 
@@ -110,10 +106,12 @@ def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
 
 
 def get_file_from_url(url):
-    # TODO: QUESTION is if possible to check TXT ? with some FileType ?
-    # r = requests.get(url)
-    # if not r.headers["Content-Type"] == "application/pdf" :
-    #     raise PdfFileError("No pdf in url")
+    """
+    Download a file from a given url
+
+    @param url:  the file url
+    @return: file_stream, file_name
+    """
     try:
         with requests.get(url) as r:
             if "Content-Disposition" in r.headers.keys():

@@ -27,7 +27,7 @@ class TestIstex:
         assert "journal" in istex_list[0]
         assert "year" in istex_list[0]
         assert "abstract" in istex_list[0]
-        assert "pdf_url" in istex_list[0]
+        assert "pdf" in istex_list[0]["doc_urls"]
 
     def test_id_to_url(self, istex_id):
         """
