@@ -1,0 +1,130 @@
+JOURNAL OF GEOPHYSICAL RESEARCH: SPACE PHYSICS, VOL. 118, 6558–6587, doi:10.1002/jgra.50537, 2013
+
+Mars ionospheric response to solar wind variability
+H. J. Opgenoorth,1,2,3 D. J. Andrews,1 M. Fränz,3 M. Lester,4 N. J. T. Edberg,1
+D. Morgan,5 F. Duru,5 O. Witasse,6 and A. O. Williams 4
+Received 20 March 2013; revised 19 August 2013; accepted 23 August 2013; published 3 October 2013.
+
+[1] At planets with induced magnetospheres, the coupling between the ionosphere, the
+
+weak draped magnetosphere, and the solar wind is very direct in comparison to Earth. The
+weak induced magnetosphere itself is created by the prevailing Solar wind conditions and
+therefore in its shape and strength dynamically depending on it. In early 2010, Mars was
+located behind Earth in the Solar wind; thus, we can use coordinated data from multiple
+near-Earth spacecraft (Stereo, Wind) to evaluate what kind of Solar wind disturbances have
+passed by Earth and might consecutively hit Mars, and when. We employ plasma data from
+the ESA Mars-Express mission, the ASPERA-3 particle instrument, and the MARSIS
+Active Ionospheric Sounder (AIS) to investigate, for a number of isolated events in March
+and April 2010, how the ionosphere and the induced magnetosphere at Mars develop and
+decay in response to Solar wind variability in the magnetic ﬁeld, density, and velocity. In a
+dedicated campaign mode, we use frequent long-duration MARSIS AIS operations for
+several consecutive orbits, to monitor for the ﬁrst time the long-term development of the
+Martian plasma environment during solar wind disturbances. We ﬁnd that the
+magnetosphere and ionosphere of Mars can become considerably compressed by solar wind
+dynamic pressure variations, which usually are also associated with changes in the magnetic
+draping of the interplanetary magnetic ﬁeld around the planet. These are typically associated
+with corotating interaction regions and coronal mass ejections, and can last for several days.
+During such episodes of compression, we see signatures of increased plasma transport over
+the terminator and enhanced ion outﬂow from the upper atmosphere.
+Citation: Opgenoorth, H. J., D. J. Andrews, M. Fränz, M. Lester, N. J. T. Edberg, D. Morgan, F. Duru, O. Witasse, and
+A. O. Williams (2013), Mars ionospheric response to solar wind variability, J. Geophys. Res. Space Physics, 118, 6558–6587,
+doi:10.1002/jgra.50537.
+
+1.
+
+Introduction
+
+[2] Planets or planet-like bodies without intrinsic magnetic
+ﬁelds are considered to lose considerable fractions of their
+atmosphere in a more or less permanent dynamic process of
+erosion occurring in the interaction between the ionized
+upper atmosphere and the ﬂowing solar wind plasma (or in
+the case of moons, the plasma ﬂow in the host planet’s magnetosphere). In the case of Mars, this atmospheric ion loss
+has been estimated to be of the order of 0.05–0.5 kg s1 or
+1023–1024 ions s1 [see, e.g., Barabash et al., 2007; Lundin
+et al., 2008a; Edberg et al., 2010; Nilsson et al., 2010, and
+
+1
+
+Swedish Institute of Space Physics, Uppsala, Sweden.
+International Space Science Institute, ISSI, Bern, Switzerland.
+3
+Max-Planck-Inst. f. Sonnensystemforschung, Katlenburg-Lindau,
+Germany.
+4
+Department of Physics and Astronomy, University of Leicester,
+Leicester, UK.
+5
+Department of Physics, University of Iowa, Iowa, USA.
+6
+ESA/STEC, Noordwijk, Netherlands.
+2
+
+Corresponding author: H. J. Opgenoorth, Swedish Institute of Space
+Physics, Box 537, SE 751 21 Uppsala, Sweden. (opg@irfu.se)
+©2013. American Geophysical Union. All Rights Reserved.
+2169-9380/13/10.1002/jgra.50537
+
+references therein]. Several potential loss processes such as
+bulk ion loss, ionospheric ion outﬂow, and solar wind pickup
+have been advocated, which all are associated with direct
+solar wind forcing. Thermal processes have played a dominant role in the early life of the planet Mars. They are probably now much less dominant, except in the case of hydrogen
+escape, but still comparable to present day nonthermal loss
+processes [Lammer et al., 2013].
+[3] However, a few studies concerning the inﬂuence of solar wind variability, in particular solar wind dynamic pressure changes caused by changes either in plasma density,
+velocity, or both, have shown that the intensity of the outﬂow
+is strongly dependent on such solar wind parameters. Lundin
+et al. [2008b] have shown that the outﬂow rate is dependent
+on both solar wind dynamic pressure and the EUV/XEUV
+ﬂux. Futaana et al. [2008] showed that a burst of Solar
+Energetic Particles (SEP) associated with a coronal mass
+ejection (CME) caused a short-lived rise of the atmospheric
+escape rate at Mars by a factor of 10. Results of these studies
+have been reviewed by Dubinin et al. [2011].
+[4] However, such studies of direct solar wind trigger of
+outﬂow events at Mars are rare, as there is no readily
+available upstream solar wind monitor at Mars, which could
+provide information on the state of the solar wind, while lowaltitude Mars orbiting satellites measure these substantial
+
+6558
+
+OPGENOORTH ET AL.: MARS IONOSPHERIC RESPONSE
+
+Figure 1. The trajectories of Earth (E, green), Mars (M, red),
+and Stereo (blue, A-ahead and B-behind Earth) as colored
+dashed lines in “Heliocentric inertial” coordinates from 1
+March 2010 to 1 May 2010. Colored solid circles indicate the
+position of the respective planet or spacecraft at the start of this
+interval, while the solid circular segments indicate their motion
+to the end of the interval. Black dotted and dashed lines show
+sets of nominal Parker spirals corresponding to fast (600 km s1)
+and slow (300 km s1) solar wind streams, respectively. The
+orange-shaded region indicates the area swept out by Parker
+spirals which intersect the orbit of Earth, corresponding to
+the average solar wind speed measured by Wind during the
+whole interval, ~ 420 km s1. Furthermore, the blue-shaded
+areas in this ﬁgure demark the STEREO-A Secchi HI ﬁelds
+of view from Sun to Earth (and Mars) at the beginning and
+the end of the campaign period, as used in Figure 2.
+changes in the energies of the relevant plasma populations
+inside the bow shock (BS) (i.e., within the heated
+magnetosheath plasma of the induced magnetosphere) and
+within the magnetic pileup boundary (MPB) (i.e., within
+the colder and typically less dense planetary ionosphere).
+To overcome the absence of a dedicated upstream solar wind
+monitor at Mars, Nilsson et al. [2010] used the combined data
+set of ESA’s Mars Express (MEX) and NASA’s Mars Global
+Surveyor (MGS) in a statistical study, conﬁrming the dependence of observed ionospheric outﬂow rates, observed by the
+former, to solar wind variations of dynamic pressure, observed by the latter. In a ﬁrst detailed event study, Dubinin
+et al. [2009] investigated the effects on the Martian ionosphere for one clear corotating interaction region (CIR)
+event, which resulted in a major scavenging of the Martian
+ionosphere and an increase in the ion outﬂow by a factor of
+10. In this special case occurring in February 2008, Mars
+was located just behind Earth along the solar wind Parker spiral, and thus solar wind data at Earth (from the ACE spacecraft) could be used to predict the impact of a CIR at Mars
+(see our own campaign description below). They interpreted
+detailed observations of ionospheric plasma heating by the
+ASPERA-3 and MARSIS instruments on MEX (see
+
+more detailed instrument description and references below)
+as a consequence of plasma penetration from the hot
+magnetosheath plasma to inside the MPB, leading to signiﬁcant particle acceleration and bulk ion outﬂow for only a few

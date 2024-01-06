@@ -71,6 +71,7 @@ def db(app):
 def paper_with_txt(paper_for_test, txt_for_test):
     """Add a paper's with catalog to db"""
     paper_for_test.set_file_path(txt_for_test, BhtFileType.TXT)
+    paper_for_test.set_doi( "10.1002/jgra.50537")
     _db.session.add(paper_for_test)
     _db.session.commit()
     #
