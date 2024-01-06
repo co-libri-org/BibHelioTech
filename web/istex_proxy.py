@@ -88,6 +88,7 @@ def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
     # Default url value
     _url = None
     # Iterate all fulltext elements till we found what we want
+    # TODO: see something similar in hit_extract
     for _elmnt in document_json["fulltext"]:
         if _elmnt["extension"] == doc_type.value:
             _url = _elmnt["uri"]
@@ -104,6 +105,7 @@ def hit_extract(hit):
     """
     # build dictionnary with all docs urls
     _doc_urls = {}
+    # TODO: see something similar in get_doc_url
     for fulltext in hit["fulltext"]:
         for _doc_type in IstexDoctype:
             if fulltext["extension"] == _doc_type:

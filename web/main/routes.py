@@ -98,7 +98,8 @@ def get_paper_file(paper_id, file_type):
 # TODO: REFACTOR insert into models.Paper ?
 # TODO: REWRITE raise exception or send message to calling route to be flashed
 def pdf_to_db(file_stream, filename):
-    """Push Paper to db from a pdf stream
+    """
+    Push Paper to db from a pdf stream
 
     Update Paper's pdf content if exists
 
