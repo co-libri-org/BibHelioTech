@@ -45,7 +45,7 @@ def allowed_file(filename):
     )
 
 
-# TODO: REFACTOR please send to models.paper.method
+# TODO: REFACTOR please move function to models.paper.method
 def get_paper_file(paper_id, file_type):
     """
     Return the filepath for the given paper as id
@@ -97,7 +97,7 @@ def get_paper_file(paper_id, file_type):
 # TODO: REWRITE rename to file_to_db
 # TODO: REFACTOR insert into models.Paper ?
 # TODO: REWRITE raise exception or send message to calling route to be flashed
-def pdf_to_db(file_stream, filename):
+def pdf_to_db(file_stream, filename, doi=None):
     """
     Push Paper to db from a pdf stream
 
@@ -105,7 +105,7 @@ def pdf_to_db(file_stream, filename):
 
     :parameter: file_stream the file content
     :parameter: filename
-    :return: the paper's id
+    :return: the paper's id, None if couldnt do it
     """
     filename = secure_filename(filename)
     upload_dir = current_app.config["WEB_UPLOAD_DIR"]
@@ -124,7 +124,7 @@ def pdf_to_db(file_stream, filename):
     elif _split_filename[1] == ".txt":
         _file_type = BhtFileType.TXT
     else:
-        return redirect(url_for("main.papers"))
+        return None
     _paper_title = _split_filename[0]
     paper = Paper.query.filter_by(title=_paper_title).one_or_none()
     if paper is None:
@@ -132,7 +132,8 @@ def pdf_to_db(file_stream, filename):
 
     # set_file_path() will add and commit paper
     paper.set_file_path(_file_path, _file_type)
-    # flash(f"{os.path.basename(_file_path)} added to paper {_paper_title}")
+    if doi is not None:
+        paper.set_doi(doi)
     return paper.id
 
 
@@ -246,7 +247,7 @@ def istex_upload_id():
         )
     else:
         fs, filename, doi = get_file_from_id(istex_id, doc_type)
-        paper_id = pdf_to_db(fs, filename)
+        paper_id = pdf_to_db(fs, filename, doi)
         return jsonify({"success": "true", "istex_id": istex_id, "paper_id": paper_id, "filename": filename}), 201
 
 

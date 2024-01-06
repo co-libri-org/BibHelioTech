@@ -205,8 +205,6 @@ class Paper(db.Model):
     pdf_path = db.Column(db.String, unique=True)
     txt_path = db.Column(db.String, unique=True)
     cat_path = db.Column(db.String, unique=True)
-    # TODO: what is this for ?
-    # file_type = db.Column(db.String)
     # TODO: change for method/property  ?
     cat_in_db = db.Column(db.Boolean, default=False)
     # TODO: MODEL move to Task model ( and relative setters )
@@ -248,6 +246,11 @@ class Paper(db.Model):
 
     def set_cat_path(self, cat_path):
         self.cat_path = cat_path
+        db.session.add(self)
+        db.session.commit()
+
+    def set_doi(self, doi):
+        self.doi = doi
         db.session.add(self)
         db.session.commit()
 
