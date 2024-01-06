@@ -14,22 +14,23 @@ from web.istex_proxy import (
 
 @skip_istex
 class TestIstex:
-    def test_id_to_url(self, istex_id):
+    def test_get_doc_url(self, istex_id):
         """
         GIVEN an istex_id
         WHEN the id_to_url  is called
         THEN check istex_id is contained in url
         """
-        _istex_url = get_doc_url(istex_id)
+        _istex_url, _doi = get_doc_url(istex_id)
         assert istex_id in _istex_url
+        assert _doi == '10.1051/0004-6361/201937378'
 
-    def test_id_to_url_txt(self, istex_id):
+    def test_get_doc_url_txt(self, istex_id):
         """
         GIVEN an istex_id
         WHEN the id_to_url  is called for txt url
         THEN check 'txt' is contained in url
         """
-        _istex_url = get_doc_url(istex_id, IstexDoctype.TXT)
+        _istex_url, _doi = get_doc_url(istex_id, IstexDoctype.TXT)
         _parts = _istex_url.split("/")
         assert _parts[-1] == "txt"
 

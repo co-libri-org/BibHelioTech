@@ -174,9 +174,10 @@ def bht_run_dir(_base_pdf_dir):
                     entities_finder(pdf_paths)  # entities recognition and association + writing of HPEvent
 
 
-def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None):
+def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None, doi=None):
     """
 
+    @param doi:
     @param dest_file_dir:
     @param doc_type:
     @param file_path:
@@ -213,7 +214,7 @@ def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None):
         done_steps.append(PipeStep.SUTIME)
 
     if PipeStep.ENTITIES in pipe_steps:
-        run_step_entities(dest_file_dir)
+        run_step_entities(dest_file_dir, doi)
         done_steps.append(PipeStep.ENTITIES)
 
     return done_steps

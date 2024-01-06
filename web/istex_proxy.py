@@ -45,10 +45,10 @@ def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
     @param doc_type: doc type (PDF, TXT, TEI ,....)
     @return: (file_stream, file_name)
     """
-    istex_url = get_doc_url(istex_id, doc_type)
+    istex_url, doi = get_doc_url(istex_id, doc_type)
     content, filename = get_file_from_url(istex_url)
     filename = f"{istex_id}.{doc_type}"
-    return content, filename
+    return content, filename, doi
 
 
 def get_file_from_url(url):
@@ -79,7 +79,7 @@ def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
 
     @param doc_type: the type of document to fetch
     @param istex_id:  the istex document id.
-    @return: a http url returning a pdf file
+    @return: a http url returning a file, and its doi
     """
     doc_url = ISTEX_BASE_URL + istex_id
     print(doc_url)
@@ -93,7 +93,8 @@ def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
         if _elmnt["extension"] == doc_type.value:
             _url = _elmnt["uri"]
             break
-    return _url
+    _doi = document_json["doi"][0]
+    return _url, _doi
 
 
 def hit_extract(hit):
