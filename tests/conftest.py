@@ -95,6 +95,23 @@ def paper_for_test(pdf_for_test):
 
 
 @pytest.fixture(scope="module")
+def txt_for_test():
+
+    test_txt_file_orig = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "ark_67375_WNG-SKGBGQ0H-V.txt"
+    )
+    test_txt_file_dest = os.path.join(
+        current_app.config["BHT_PAPERS_DIR"], "ark_67375_WNG-SKGBGQ0H-V.txt"
+    )
+    shutil.copy(test_txt_file_orig, test_txt_file_dest)
+    #
+    yield test_txt_file_dest
+    #
+    if os.path.isfile(test_txt_file_dest):
+        os.remove(test_txt_file_dest)
+
+
+@pytest.fixture(scope="module")
 def pdf_for_test():
     test_pdf_file_orig = os.path.join(
         current_app.config["BHT_RESOURCES_DIR"], "2016GL069787-test.pdf"

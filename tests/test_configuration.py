@@ -1,6 +1,8 @@
 #
 # Various tests to check configuration and pytest fixtures
 #
+import os.path
+
 from bht_config import yml_settings
 from web.models import Paper
 
@@ -12,6 +14,17 @@ def test_configuration(app):
     THEN check configuration
     """
     assert "resources-tests" in app.config["BHT_RESOURCES_DIR"]
+
+
+def test_txt_for_test(txt_for_test):
+    """
+    GIVEN the txt fixture
+    WHEN used
+    THEN make sure it exists
+    @param txt_for_test:
+    @return:
+    """
+    assert os.path.isfile(txt_for_test)
 
 
 def test_paper_with_cat(paper_with_cat):
