@@ -38,6 +38,17 @@ def test_paper_with_cat(paper_with_cat):
     assert "105194angeo282332010_bibheliotech_V1.txt" in paper_with_cat.cat_path
 
 
+def test_paper_with_txt(paper_with_txt):
+    """
+    GIVEN the paper_with_cat fixture
+    WHEN used
+    THEN check attributes
+    """
+    assert type(paper_with_txt) is Paper
+    assert paper_with_txt.has_txt
+    assert "ark_67375_WNG-SKGBGQ0H-V.txt" in paper_with_txt.txt_path
+
+
 def test_paper_for_test(paper_for_test):
     """
     GIVEN the paper_for_test fixture
