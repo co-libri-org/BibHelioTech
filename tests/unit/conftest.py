@@ -4,6 +4,7 @@ import shutil
 from urllib.parse import urlencode
 
 import pytest
+import requests
 from flask import current_app
 
 from bht.bht_logging import init_logger
@@ -111,17 +112,14 @@ def istex_params():
 
 
 @pytest.fixture(scope="module")
-def istex_url():
-    _publication_date = "[2020 *]"
-    _abstract = "solar AND wind"
-    _params = {
-        "q": f"(publicationDate:{_publication_date} AND abstract:({_abstract}))",
-        "facet": "corpusName[*]",
-        "size": 150,
-        "output": "*",
-        "stats": "",
-    }
-    yield "https://api.istex.fr/document/?" + urlencode(_params)
+def istex_url(istex_params):
+    yield "https://api.istex.fr/document/?" + urlencode(istex_params)
+
+
+@pytest.fixture(scope="module")
+def istex_search_json(istex_url):
+    r = requests.get(url=istex_url)
+    return r.json()
 
 
 @pytest.fixture(scope="module")

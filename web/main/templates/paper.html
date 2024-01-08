@@ -1,0 +1,34 @@
+{% extends "base_page.html" %}
+{%  block more_head %}
+{%  endblock %}
+{% block content %}
+
+<h1>{{paper.title}}</h1>
+<table>
+    <tr>
+        <td>pdf_path</td>
+        <td>{{paper.pdf_path}}</td>
+    </tr>
+    <tr>
+        <td>has_pdf</td>
+        <td>{{paper.has_pdf}}</td>
+    </tr>
+    <tr>
+        <td>cat_path</td>
+        <td>{{paper.cat_path}}</td>
+    </tr>
+    <tr>
+        <td>has_cat</td>
+        <td>{{paper.has_cat}}</td>
+    </tr>
+    <tr>
+        <td>txt_path</td>
+        <td>{{paper.txt_path}}</td>
+    </tr>
+    <tr>
+        <td>has_txt</td>
+        <td>{{paper.has_txt}}</td>
+    </tr>
+</table>
+
+{% endblock %}

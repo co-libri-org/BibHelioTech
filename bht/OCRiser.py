@@ -25,7 +25,7 @@ def PDF_OCRiser(current_OCR_folder, PDF_file):
         # PDF page 3 -> page_3.jpg
         # ....
         # PDF page n -> page_n.jpg
-        filename = current_OCR_folder+"/"+"page_" + str(image_counter) + ".jpg"
+        filename = os.path.join(current_OCR_folder, "page_" + str(image_counter) + ".jpg")
 
         # Save the image of the page in system
         page.save(filename, 'JPEG')
@@ -41,7 +41,7 @@ def PDF_OCRiser(current_OCR_folder, PDF_file):
     filelimit = image_counter - 1
 
     # Creating a text file to write the output
-    outfile = current_OCR_folder+"/"+"out_text.txt"
+    outfile = os.path.join(current_OCR_folder, "out_text.txt")
 
     # Open the file in append mode so that
     # All contents of all images are added to the same file
@@ -55,7 +55,7 @@ def PDF_OCRiser(current_OCR_folder, PDF_file):
         # page_2.jpg
         # ....
         # page_n.jpg
-        filename = current_OCR_folder+"/"+"page_" + str(i) + ".jpg"
+        filename = os.path.join(current_OCR_folder, "page_" + str(i) + ".jpg")
 
         # Recognize the text as string in image using pytesserct
         text = str(((pytesseract.image_to_string(Image.open(filename)))))

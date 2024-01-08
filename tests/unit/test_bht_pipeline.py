@@ -8,20 +8,26 @@ from bht.published_date_finder import published_date_finder
 from bht_config import yml_settings
 from tests.conftest import skip_bht, skip_slow_test
 from web.bht_proxy import pipe_paper
+from web.istex_proxy import IstexDoctype
+from web.models import BhtFileType
 
 
 @skip_bht
 class TestBhtPipeline:
-    def test_pipeline(self):
-        # TODO: fix run_pipeline call
+    def test_pipeline(self, ocr_dir_test):
         pipe_steps = [PipeStep.OCR, PipeStep.GROBID]
-        res_steps = run_pipeline("path", pipe_steps=pipe_steps)
+        res_steps = run_pipeline(
+            "path", doc_type=IstexDoctype.TXT, pipe_steps=pipe_steps, dest_file_dir=ocr_dir_test
+        )
         assert res_steps == pipe_steps
 
     def test_pipeline_wrong_step(self):
-        # TODO: fix run_pipeline call
         with pytest.raises(BhtPipelineError):
-            run_pipeline("path", pipe_steps=[PipeStep.OCR, PipeStep.GROBID, 1000])
+            run_pipeline(
+                "path",
+                doc_type=IstexDoctype.TXT,
+                pipe_steps=[PipeStep.OCR, PipeStep.GROBID, 1000],
+            )
 
 
 class TestBhtPipelineSteps:
@@ -32,9 +38,9 @@ class TestBhtPipelineSteps:
             _r_content = _r_fp.readlines()
             assert len(_r_content) == 52
 
-    def test_run_step_entities_with_no_doi(self, ocr_dir_test):
-        with pytest.raises(IndexError):
-            run_step_entities(ocr_dir_test, None)
+    def test_run_step_entities_with_no_doi(self, tmp_path):
+        with pytest.raises(BhtPipelineError):
+            run_step_entities(tmp_path, None)
 
 
 @skip_bht
@@ -47,7 +53,7 @@ class TestBhtPipelineTools:
         THEN check paper model changed
         """
         assert not paper_for_test.has_cat
-        pipe_paper(paper_for_test.id, yml_settings["BHT_PAPERS_DIR"])
+        pipe_paper(paper_for_test.id, yml_settings["BHT_PAPERS_DIR"], BhtFileType.PDF)
         assert paper_for_test.has_cat
 
     def test_published_date(self):

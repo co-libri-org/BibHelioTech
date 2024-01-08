@@ -9,6 +9,7 @@ from web import db
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
 
+# TODO: REFACTOR choose between BhtFileType or  web.istex_proxy.IstexDocType
 class BhtFileType(StrEnum):
     PDF = auto()
     TXT = auto()
@@ -50,7 +51,7 @@ def rows_to_catstring(events_list, catalog_name):
 def catfile_to_rows(catfile):
     """Get all rows of a catalog file as  dict
 
-      TODO: should move to Paper or Catalog method
+      TODO: MODEL should move to Paper or Catalog method
 
        -  read each line, rid of comments
        -  create a hp_event_dict
@@ -75,10 +76,11 @@ def catfile_to_rows(catfile):
     return hpeventdict_list
 
 
+# TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
 def catfile_to_db(catfile):
     """Save a catalog file's content to db as hpevents
 
-    TODO: should move to Paper or Catalog method
+    TODO: MODEL should move to Paper or Catalog method
 
     :return: nothing
     """
@@ -109,14 +111,15 @@ class HpEvent(db.Model):
     catalog = db.relationship("Catalog", back_populates="hp_events")
     catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"))
 
+    # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
     def __init__(
-            self,
-            start_date: str,
-            stop_date: str,
-            doi: str,
-            mission: str,
-            instrument: str,
-            region: str,
+        self,
+        start_date: str,
+        stop_date: str,
+        doi: str,
+        mission: str,
+        instrument: str,
+        region: str,
     ):
         self.start_date = datetime.datetime.strptime(start_date, DATE_FORMAT)
         self.stop_date = datetime.datetime.strptime(stop_date, DATE_FORMAT)
@@ -132,8 +135,8 @@ class HpEvent(db.Model):
     def get_dict(self):
         r_dict = {
             "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
-                          0:-3
-                          ],
+                0:-3
+            ],
             "stop_date": datetime.datetime.strftime(self.stop_date, DATE_FORMAT)[0:-3],
             "doi": self.doi.doi,
             "mission": self.mission.name,
@@ -196,12 +199,15 @@ class Region(db.Model):
 class Paper(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, unique=True, nullable=False)
+    doi = db.Column(db.String, unique=True)
+    ark = db.Column(db.String, unique=True)
+    istex_id = db.Column(db.String, unique=True)
     pdf_path = db.Column(db.String, unique=True)
     txt_path = db.Column(db.String, unique=True)
     cat_path = db.Column(db.String, unique=True)
-    file_type = db.Column(db.String)
+    # TODO: change for method/property  ?
     cat_in_db = db.Column(db.Boolean, default=False)
-    # TODO: move to Task model ( and relative setters )
+    # TODO: MODEL move to Task model ( and relative setters )
     task_id = db.Column(db.String, unique=True)
     task_status = db.Column(db.String)
     task_started = db.Column(db.DateTime)
@@ -240,6 +246,11 @@ class Paper(db.Model):
 
     def set_cat_path(self, cat_path):
         self.cat_path = cat_path
+        db.session.add(self)
+        db.session.commit()
+
+    def set_doi(self, doi):
+        self.doi = doi
         db.session.add(self)
         db.session.commit()
 

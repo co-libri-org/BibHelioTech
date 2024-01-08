@@ -8,7 +8,7 @@ from flask import current_app
 from web import create_app
 from web import db as _db
 from web.main.routes import pdf_to_db
-from web.models import Paper, HpEvent
+from web.models import Paper, HpEvent, BhtFileType
 
 skip_bht = pytest.mark.skipif(
     os.environ.get("BHT_DONTSKIPBHT") is None or not os.environ.get("BHT_DONTSKIPBHT"),
@@ -68,6 +68,17 @@ def db(app):
 
 
 @pytest.fixture(scope="function")
+def paper_with_txt(paper_for_test, txt_for_test):
+    """Add a paper's with catalog to db"""
+    paper_for_test.set_file_path(txt_for_test, BhtFileType.TXT)
+    paper_for_test.set_doi( "10.1002/jgra.50537")
+    _db.session.add(paper_for_test)
+    _db.session.commit()
+    #
+    yield paper_for_test
+
+
+@pytest.fixture(scope="function")
 def paper_with_cat(paper_for_test, cat_for_test):
     """Add a paper's with catalog to db"""
     paper_for_test.set_cat_path(cat_for_test)
@@ -92,6 +103,22 @@ def paper_for_test(pdf_for_test):
     if paper is not None:
         _db.session.delete(paper)
         _db.session.commit()
+
+
+@pytest.fixture(scope="module")
+def txt_for_test():
+    test_txt_file_orig = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "ark_67375_WNG-SKGBGQ0H-V.txt"
+    )
+    test_txt_file_dest = os.path.join(
+        current_app.config["BHT_PAPERS_DIR"], "ark_67375_WNG-SKGBGQ0H-V.txt"
+    )
+    shutil.copy(test_txt_file_orig, test_txt_file_dest)
+    #
+    yield test_txt_file_dest
+    #
+    if os.path.isfile(test_txt_file_dest):
+        os.remove(test_txt_file_dest)
 
 
 @pytest.fixture(scope="module")

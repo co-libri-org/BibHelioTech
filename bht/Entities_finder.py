@@ -6,6 +6,7 @@ from datetime import *
 from bht.DOI_finder import *
 from bht.bht_logging import init_logger
 from bht.databank_reader import DataBank, DataBankSheet
+from bht.errors import BhtPipelineError
 from bht.published_date_finder import *
 
 
@@ -493,7 +494,7 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
     @param published_date:
     @return:
     """
-    # FIXME: deepcopy should work. Look at temp generation to understand
+    # FIXME: CRITICAL deepcopy should work. Look at temp generation to understand
     # _fl_to_return = copy.deepcopy(_final_links)
     # _temp_to_return = copy.deepcopy(_temp)
     _fl_to_return = _final_links
@@ -620,19 +621,22 @@ def entities_finder(current_OCR_folder, DOI=None):
     AMDA_dict = data_frames[DataBankSheet.SATS_REG]
     SPAN_dict = data_frames[DataBankSheet.TIME_SPAN]
 
+    if DOI is None:
+        # try to find in tei file
+        import glob
+        pattern = os.path.join(current_OCR_folder, "*.tei.xml")
+        found = glob.glob(pattern)
+        if len(found) == 0:
+            raise BhtPipelineError("Couldn't find any tei.xml file")
+        file_name = found[0]
+        DOI = find_DOI(file_name)  # retrieving the DOI of the article being processed.
+
     # loading the text file (content of the article)
     content_path = os.path.join(current_OCR_folder, "out_filtered_text.txt")
 
     with open(content_path, "r") as file:
         content_upper = file.read()
 
-    # file_name = current_OCR_folder + "/" + os.path.basename(current_OCR_folder) + ".tei.xml"
-    if DOI is None:
-        import glob
-
-        pattern = os.path.join(current_OCR_folder, "*.tei.xml")
-        file_name = glob.glob(pattern)[0]
-        DOI = find_DOI(file_name)  # retrieving the DOI of the article being processed.
 
     # loading transformed SUTime results
     files_path_json = os.path.join(current_OCR_folder, "res_sutime_2.json")
@@ -663,7 +667,7 @@ def entities_finder(current_OCR_folder, DOI=None):
     # 7- Add satellites occurrences to the list
     temp, final_links = add_sat_occurrence(final_links, sutime_json)
 
-    # TODO: get the published date elsewhere, at the beginning
+    # TODO: REFACTOR get the published date elsewhere, at the beginning
     published_date = published_date_finder(token, v, DOI)
 
     # 8- Association of the closest duration of a satellite.

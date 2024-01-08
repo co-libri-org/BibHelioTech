@@ -1,6 +1,8 @@
 #
 # Various tests to check configuration and pytest fixtures
 #
+import os.path
+
 from bht_config import yml_settings
 from web.models import Paper
 
@@ -14,6 +16,17 @@ def test_configuration(app):
     assert "resources-tests" in app.config["BHT_RESOURCES_DIR"]
 
 
+def test_txt_for_test(txt_for_test):
+    """
+    GIVEN the txt fixture
+    WHEN used
+    THEN make sure it exists
+    @param txt_for_test:
+    @return:
+    """
+    assert os.path.isfile(txt_for_test)
+
+
 def test_paper_with_cat(paper_with_cat):
     """
     GIVEN the paper_with_cat fixture
@@ -23,6 +36,17 @@ def test_paper_with_cat(paper_with_cat):
     assert type(paper_with_cat) is Paper
     assert paper_with_cat.has_cat
     assert "105194angeo282332010_bibheliotech_V1.txt" in paper_with_cat.cat_path
+
+
+def test_paper_with_txt(paper_with_txt):
+    """
+    GIVEN the paper_with_cat fixture
+    WHEN used
+    THEN check attributes
+    """
+    assert type(paper_with_txt) is Paper
+    assert paper_with_txt.has_txt
+    assert "ark_67375_WNG-SKGBGQ0H-V.txt" in paper_with_txt.txt_path
 
 
 def test_paper_for_test(paper_for_test):

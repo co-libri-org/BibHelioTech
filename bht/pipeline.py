@@ -26,8 +26,8 @@ class PipeStep(IntEnum):
 _logger = init_logger()
 
 
-# TODO: hey, doc_type looks like file_type: IstexDocType or BhtFileType ??
-def run_step_mkdir(orig_file, result_base_dir, doc_type):
+# TODO: REWRITE IstexDocType or BhtFileType ??
+def run_step_mkdir(orig_file: str, result_base_dir: str, doc_type: IstexDoctype) -> str:
     """
     Move a pdf file to same name directory
 
@@ -107,7 +107,7 @@ def bht_run_file(orig_pdf_file, result_base_dir, file_type, doi=None):
     # 0
     dest_pdf_dir = run_step_mkdir(orig_pdf_file, result_base_dir, file_type)
 
-    # TODO: instead run a run_pipeline() with proper parameters
+    # TODO: REWRITE instead run a run_pipeline() with proper parameters
     if file_type == BhtFileType.PDF:
         # 1
         run_step_ocr(dest_pdf_dir)
@@ -140,7 +140,7 @@ def bht_run_dir(_base_pdf_dir):
         folders_or_pdf_path = os.path.join(_base_pdf_dir, folders_or_pdf)
         if folders_or_pdf.endswith(
                 ".pdf"):  # If '.pdf' on "Papers" folder --> paper not treated --> processing paper treatment.
-            # create the directory under the same name than the paper.
+            # create the directory under the same name as the paper.
             os.makedirs(os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", "")))
             # move '.pdf' to his directory.
             shutil.move(folders_or_pdf_path, os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", "")))
@@ -174,9 +174,10 @@ def bht_run_dir(_base_pdf_dir):
                     entities_finder(pdf_paths)  # entities recognition and association + writing of HPEvent
 
 
-def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None):
+def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None, doi=None):
     """
 
+    @param doi:
     @param dest_file_dir:
     @param doc_type:
     @param file_path:
@@ -213,7 +214,7 @@ def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None):
         done_steps.append(PipeStep.SUTIME)
 
     if PipeStep.ENTITIES in pipe_steps:
-        run_step_entities(dest_file_dir)
+        run_step_entities(dest_file_dir, doi)
         done_steps.append(PipeStep.ENTITIES)
 
     return done_steps

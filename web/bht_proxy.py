@@ -16,7 +16,7 @@ def get_pipe_callback(test=True):
         return pipe_paper
 
 
-def pipe_paper_mocked(p_id=None, b_dir=None, min_secs=5, max_secs=20):
+def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_secs=20):
     """Spend time
 
     @return: num seconds spent
@@ -29,7 +29,7 @@ def pipe_paper_mocked(p_id=None, b_dir=None, min_secs=5, max_secs=20):
     return num_secs
 
 
-# TODO: should this go to a models.paper.method() ?
+# TODO: REFACTOR should this go to a models.paper.method() ?
 def pipe_paper(paper_id, basedir, file_type):
     """From a paper id create the catalog
 
@@ -40,14 +40,17 @@ def pipe_paper(paper_id, basedir, file_type):
 
     """
     _paper = db.session.get(Paper, paper_id)
-    # TODO: better caul models.paper.get_file()
+    # TODO: REFACTOR better call models.paper.get_file()
     if file_type == BhtFileType.PDF and _paper.has_pdf:
         file_path = _paper.pdf_path
     elif file_type == BhtFileType.TXT and _paper.has_txt:
         file_path = _paper.txt_path
     else:
-        raise PdfFileError(f"No such file for paper{paper_id}")
-    catalogfile = bht_run_file(file_path, basedir, file_type)
+        raise PdfFileError(f"No such file for paper {paper_id} \n"
+                           f"pdf: {_paper.pdf_path}"
+                           f"txt: {_paper.txt_path}"
+                           f"and type {file_type}: hastxt={_paper.has_txt} haspdf={_paper.has_pdf}")
+    catalogfile = bht_run_file(file_path, basedir, file_type, _paper.doi)
     _paper.set_cat_path(catalogfile)
-    # TODO: return real result
-    return "Paper Piped"
+    # FIXME: return real result
+    return _paper.id

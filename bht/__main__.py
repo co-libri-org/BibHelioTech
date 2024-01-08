@@ -5,6 +5,7 @@ from datetime import datetime
 
 from bht.pipeline import bht_run_file, bht_run_dir, run_pipeline, PipeStep
 from bht_config import yml_settings
+# TODO: REFACTOR dont import anything from web. to bht !!!!
 from web.istex_proxy import IstexDoctype, get_file_from_id
 from web.models import BhtFileType
 
@@ -34,7 +35,7 @@ if __name__ == "__main__":
         "-i",
         "--istex-id",
         type=str,
-        help="Run pipeline on document from ISTEX id. (dont grobid or ocr)",
+        help="Run pipeline on txt document from ISTEX id. (dont grobid or ocr)",
     )
     parser.add_argument(
         "-d",
@@ -100,15 +101,19 @@ if __name__ == "__main__":
             pipe_steps=pipe_steps,
         )
     elif args.istex_id:
-        # TODO: this could be a RETRIEVE step of the pipeline
+        # TODO: REFACTOR this could be a "retrieve" step of the pipeline
+        # if not args.doi:
+        #     print("Set DOI with --doit opt")
+        #     sys.exit()
         doc_type = IstexDoctype.TXT
-        content, filename = get_file_from_id(args.istex_id, doc_type)
+        content, filename, doi = get_file_from_id(args.istex_id, doc_type)
         filepath = os.path.join(yml_settings["BHT_DATA_DIR"], filename)
         with open(filepath, "wb") as binary_file:
             # Write bytes to file
             binary_file.write(content)
         print(f"Written to {filepath}")
         done_steps = run_pipeline(
+            doi=doi,
             file_path=filepath,
             doc_type=doc_type,
             pipe_steps=[
