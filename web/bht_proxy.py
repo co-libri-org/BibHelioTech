@@ -46,8 +46,11 @@ def pipe_paper(paper_id, basedir, file_type):
     elif file_type == BhtFileType.TXT and _paper.has_txt:
         file_path = _paper.txt_path
     else:
-        raise PdfFileError(f"No such file for paper{paper_id}")
-    catalogfile = bht_run_file(file_path, basedir, file_type)
+        raise PdfFileError(f"No such file for paper {paper_id} \n"
+                           f"pdf: {_paper.pdf_path}"
+                           f"txt: {_paper.txt_path}"
+                           f"and type {file_type}: hastxt={_paper.has_txt} haspdf={_paper.has_pdf}")
+    catalogfile = bht_run_file(file_path, basedir, file_type, _paper.doi)
     _paper.set_cat_path(catalogfile)
     # FIXME: return real result
-    return "Paper Piped"
+    return _paper.id
