@@ -28,6 +28,13 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.4.3] - 2024-01-08 - Bypass Grobid
+### Changed
+- Speed up TXT pipeline
+- Enhance CLI
+- Split Entities Pipeline
+- Get Doi from Istex Api
+
 ## [0.4.1] - 2023-03-17 - Fix red circle
 ### Fixed
 - remove red circle when catalogue added
