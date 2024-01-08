@@ -205,6 +205,15 @@ def paper_del(paper_id):
     return redirect(url_for("main.papers"))
 
 
+@bp.route("/paper/show/<paper_id>", methods=["GET"])
+def paper_show(paper_id):
+    paper = db.session.get(Paper, paper_id)
+    if paper is None:
+        flash(f"No such paper {paper_id}")
+        return redirect(url_for("main.papers"))
+    return render_template("paper.html", paper=paper)
+
+
 @bp.route("/papers/<name>")
 @bp.route("/papers")
 def papers(name=None):
