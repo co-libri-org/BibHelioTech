@@ -4,19 +4,19 @@ LABEL maintainer="Benjamin Renard <benjamin.renard@irap.omp.eu>,\
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    curl \
-    git \
+#    curl \
+#    git \
     maven \
     openjdk-8-jdk \
     openjdk-8-jre \
     poppler-utils \
-    python3 \
-    python3-pip \
+#    python3 \
+#    python3-pip \
     python3-venv \
     software-properties-common \
     unzip \
-    vim \
-    wget \
+#    vim \
+#    wget \
     zip && \
     rm -rf /var/lib/apt/lists/*
 
