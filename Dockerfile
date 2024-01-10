@@ -30,9 +30,9 @@ RUN update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/jav
 ARG USER_UID
 ARG USER_GID
 
-RUN userdel -r ubuntu
-RUN groupadd --gid $USER_GID bibheliotech && \
-    useradd --uid $USER_UID --gid $USER_GID -ms /bin/bash bibheliotech
+#RUN userdel -r ubuntu
+#RUN groupadd --gid $USER_GID bibheliotech && \
+#    useradd --uid $USER_UID --gid $USER_GID -ms /bin/bash bibheliotech
 
 WORKDIR /home/bibheliotech
 
@@ -45,7 +45,6 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 RUN pip install -U pip sutime && \
     mvn dependency:copy-dependencies -DoutputDirectory=./jars -f $(python -c 'import importlib; import importlib.util; import pathlib; print(pathlib.Path(importlib.util.find_spec("sutime").origin).parent / "pom.xml")')
 
-# RUN git clone https://github.com/ADablanc/BibHelioTech.git
 WORKDIR /home/bibheliotech/BibHelioTech
 COPY ./requirements.txt ./requirements.txt
 RUN pip install wheel && pip install -r requirements.txt
@@ -60,8 +59,11 @@ COPY . .
 RUN cp ./resources/grobid-client-config.json-dist ./grobid-client-config.json &&\
     cp ./resources/bht-config.yml-dist ./bht-config.yml
 
-RUN chown -R bibheliotech:bibheliotech /home/bibheliotech/
-USER bibheliotech
+#
+#RUN chown -R bibheliotech:bibheliotech /home/bibheliotech/
+#USER bibheliotech
+#
+
 
 FROM bht-prod AS bht-test
 ENV PYTHONPATH="/home/bibheliotech/BibHelioTech:$PYTHONPATH"
