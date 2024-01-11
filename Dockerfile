@@ -43,7 +43,7 @@ RUN python3 -m venv $VIRTUAL_ENV &&\
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN pip install -U pip sutime && \
-    mvn dependency:copy-dependencies -DoutputDirectory=./jars -f $(python -c 'import importlib; import importlib.util; import pathlib; print(pathlib.Path(importlib.util.find_spec("sutime").origin).parent / "pom.xml")')
+    mvn dependency:copy-dependencies -DoutputDirectory=./jars -f $(python -c 'import importlib.util; import pathlib; print(pathlib.Path(importlib.util.find_spec("sutime").origin).parent / "pom.xml")')
 
 WORKDIR /home/bibheliotech/BibHelioTech
 COPY ./requirements.txt ./requirements.txt
