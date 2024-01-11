@@ -74,7 +74,8 @@ def run_step_filter(dest_pdf_dir):
 
 def run_step_sutime(dest_pdf_dir):
     _logger.info("BHT PIPELINE STEP 4: Sutime")
-    from bht.SUTime_processing import SUTime, SUTime_treatement, SUTime_transform
+    from sutime import SUTime
+    from bht.SUTime_processing import SUTime_treatement, SUTime_transform
 
     sutime = SUTime(mark_time_ranges=True, include_range=True)  # load sutime wrapper
     # SUTime read all the file and save its results in a file "res_sutime.json"
@@ -149,7 +150,8 @@ def bht_run_dir(_base_pdf_dir):
                 os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", "")),
             )
         pdf_paths = os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", ""))
-        from bht.SUTime_processing import SUTime, SUTime_treatement, SUTime_transform
+        from sutime import SUTime
+        from bht.SUTime_processing import SUTime_treatement, SUTime_transform
 
         sutime = SUTime(
             mark_time_ranges=True, include_range=True
