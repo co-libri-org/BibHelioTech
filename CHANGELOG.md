@@ -28,7 +28,12 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
-## [0.4.4] - 2024-xx-xx - Enhance Docker
+## [0.4.5-dev] - 2024-xx-xx - Split Entities #2
+### Fixed
+### Changed
+### New
+
+## [0.4.4] - 2024-01-15 - Enhance Docker
 ### Changed
 - Simplified Docker container build
 ### New
