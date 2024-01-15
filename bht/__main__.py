@@ -94,7 +94,11 @@ if __name__ == "__main__":
             sys.exit()
         bht_run_file(args.txt_file, papers_dir, BhtFileType.TXT, args.doi)
     elif args.pipe_dir:
+        if PipeStep.GROBID in pipe_steps and not args.doi:
+            print("Include GROBID pipe-stop, or use --doi ")
+            sys.exit()
         done_steps = run_pipeline(
+            doi=args.doi,
             dest_file_dir=args.pipe_dir,
             file_path=None,
             doc_type=None,

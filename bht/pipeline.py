@@ -46,7 +46,7 @@ def run_step_mkdir(orig_file: str, result_base_dir: str, doc_type: IstexDoctype)
     if doc_type == IstexDoctype.PDF:
         dest_file = os.path.join(dest_dir, filename)
     elif doc_type == IstexDoctype.TXT:
-        dest_file = os.path.join(dest_dir, 'out_text.txt')
+        dest_file = os.path.join(dest_dir, "out_text.txt")
     else:
         raise BhtPipelineError("Wrong IstexDoctype")
     os.makedirs(dest_dir, exist_ok=True)
@@ -57,7 +57,7 @@ def run_step_mkdir(orig_file: str, result_base_dir: str, doc_type: IstexDoctype)
 def run_step_ocr(dest_pdf_dir):
     # 1- OCR the pdf file
     _logger.info("BHT PIPELINE STEP 1: Ocerising pdf")
-    search_pattern = os.path.join(dest_pdf_dir, '*.pdf')
+    search_pattern = os.path.join(dest_pdf_dir, "*.pdf")
     dest_pdf_file = glob.glob(search_pattern, recursive=True)[0]
     PDF_OCRiser(dest_pdf_dir, dest_pdf_file)
 
@@ -74,7 +74,8 @@ def run_step_filter(dest_pdf_dir):
 
 def run_step_sutime(dest_pdf_dir):
     _logger.info("BHT PIPELINE STEP 4: Sutime")
-    from bht.SUTime_processing import SUTime, SUTime_treatement, SUTime_transform
+    from sutime import SUTime
+    from bht.SUTime_processing import SUTime_treatement, SUTime_transform
 
     sutime = SUTime(mark_time_ranges=True, include_range=True)  # load sutime wrapper
     # SUTime read all the file and save its results in a file "res_sutime.json"
@@ -86,7 +87,7 @@ def run_step_sutime(dest_pdf_dir):
 def run_step_entities(dest_pdf_dir, doi=None):
     _logger.info("BHT PIPELINE STEP 5: Search Entities")
     entities_finder(dest_pdf_dir, doi)
-    search_pattern = os.path.join(dest_pdf_dir, '**', '*bibheliotech*.txt')
+    search_pattern = os.path.join(dest_pdf_dir, "**", "*bibheliotech*.txt")
     _logger.debug(f"searching {search_pattern}")
     result_catalogs = glob.glob(search_pattern, recursive=True)
     catalog_file = result_catalogs[0]
@@ -139,14 +140,22 @@ def bht_run_dir(_base_pdf_dir):
     for folders_or_pdf in os.listdir(_base_pdf_dir):
         folders_or_pdf_path = os.path.join(_base_pdf_dir, folders_or_pdf)
         if folders_or_pdf.endswith(
-                ".pdf"):  # If '.pdf' on "Papers" folder --> paper not treated --> processing paper treatment.
+            ".pdf"
+        ):  # If '.pdf' on "Papers" folder --> paper not treated --> processing paper treatment.
             # create the directory under the same name as the paper.
             os.makedirs(os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", "")))
             # move '.pdf' to his directory.
-            shutil.move(folders_or_pdf_path, os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", "")))
+            shutil.move(
+                folders_or_pdf_path,
+                os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", "")),
+            )
         pdf_paths = os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", ""))
-        from bht.SUTime_processing import SUTime, SUTime_treatement, SUTime_transform
-        sutime = SUTime(mark_time_ranges=True, include_range=True)  # load sutime wrapper
+        from sutime import SUTime
+        from bht.SUTime_processing import SUTime_treatement, SUTime_transform
+
+        sutime = SUTime(
+            mark_time_ranges=True, include_range=True
+        )  # load sutime wrapper
         for pdf_files in os.listdir(pdf_paths):  # processing treatment.
             if pdf_files.endswith(".pdf"):
                 print(pdf_paths)
@@ -171,7 +180,9 @@ def bht_run_dir(_base_pdf_dir):
                     SUTime_treatement(pdf_paths, sutime)
                     # transforms some results of sutime to complete missing, etc ... save results in "res_sutime_2.json"
                     SUTime_transform(pdf_paths)
-                    entities_finder(pdf_paths)  # entities recognition and association + writing of HPEvent
+                    entities_finder(
+                        pdf_paths
+                    )  # entities recognition and association + writing of HPEvent
 
 
 def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None, doi=None):
@@ -194,7 +205,9 @@ def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None, doi=Non
             raise (BhtPipelineError(f"No such step >>>> {s} <<<<<"))
 
     if PipeStep.MKDIR in pipe_steps:
-        dest_file_dir = run_step_mkdir(file_path, yml_settings["BHT_DATA_DIR"], doc_type=doc_type)
+        dest_file_dir = run_step_mkdir(
+            file_path, yml_settings["BHT_DATA_DIR"], doc_type=doc_type
+        )
         done_steps.append(PipeStep.MKDIR)
 
     if PipeStep.OCR in pipe_steps:
