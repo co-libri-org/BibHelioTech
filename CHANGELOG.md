@@ -28,6 +28,11 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.4.4] - 2024-xx-xx - Enhance Docker 
+### Fixed
+### Changed
+### New
+
 ## [0.4.3] - 2024-01-08 - Bypass Grobid
 ### Changed
 - Speed up TXT pipeline
