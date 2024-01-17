@@ -38,14 +38,14 @@ def run_step_mkdir(orig_file: str, result_base_dir: str, doc_type: IstexDoctype)
     """
     # 0- Move original file to working directory
     _logger.info("BHT PIPELINE STEP 0: creating file directory")
-    if doc_type not in [IstexDoctype.PDF, IstexDoctype.TXT]:
+    if doc_type not in [IstexDoctype.PDF, IstexDoctype.TXT, IstexDoctype.CLEANED]:
         raise (BhtPipelineError(f"Such doctype not managed {doc_type}"))
     filename = os.path.basename(orig_file)
     split_filename = os.path.splitext(filename)
     dest_dir = os.path.join(result_base_dir, split_filename[0])
     if doc_type == IstexDoctype.PDF:
         dest_file = os.path.join(dest_dir, filename)
-    elif doc_type == IstexDoctype.TXT:
+    elif doc_type in [IstexDoctype.TXT, IstexDoctype.CLEANED]:
         dest_file = os.path.join(dest_dir, "out_text.txt")
     else:
         raise BhtPipelineError("Wrong IstexDoctype")
