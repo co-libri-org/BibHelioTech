@@ -1,3 +1,4 @@
+import copy
 import re
 import json
 from datetime import date, datetime
@@ -5,6 +6,16 @@ from datetime import date, datetime
 from bht.bht_logging import init_logger
 
 _logger = init_logger()
+
+dump_step = 0
+def dump_to_raw(struct_to_dump, message, folder):
+    # append message to struct for later reading
+    entitled_struct = copy.deepcopy(struct_to_dump)
+    entitled_struct.append(message)
+    global dump_step
+    with open(folder + "/" + f"raw{dump_step}_sutime.json", "w") as raw_file:
+        raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
+    dump_step = dump_step + 1
 
 
 def SUTime_treatement(current_OCR_folder, sutime):
@@ -105,6 +116,8 @@ def SUTime_treatement(current_OCR_folder, sutime):
         compteur += 1
 
     test_list = [i for i in test_list if i != {}]  # remove empty dictionaries
+
+    dump_to_raw(test_list, "Filtering sutime by values", current_OCR_folder)
 
     res_file = open(current_OCR_folder + "/" + "res_sutime.json", "w")
     res_file.write(
@@ -417,17 +430,14 @@ def nearest_year(JSON_list, compteur_dicts):
 
 def SUTime_transform(current_OCR_folder):
     _logger.info("SUTime_transform -> res_sutime2.json")
-    file = open(current_OCR_folder + "/" + "res_sutime.json", "r")
-    reading = file.read()
-    JSON_list = eval(reading)
-    file.close()
+    with open(current_OCR_folder + "/" + "res_sutime.json", "r") as file:
+        reading = file.read()
+        JSON_list = eval(reading)
 
-    today = datetime.today().strftime(
-        "%Y-%m-%d"
-    )  # stockage dans la date d'aujourd'hui au format YYYY-MM-DD
-    current_year = re.match("(((^[0-9]{4})|(XXXX))-[0-9]{2}-[0-9]{2}$)", today).group(
-        2
-    )  # stockage de l'année actuelle
+    # stockage dans la date d'aujourd'hui au format YYYY-MM-DD
+    today = datetime.today().strftime("%Y-%m-%d")
+    # stockage de l'année actuelle
+    current_year = re.match("(((^[0-9]{4})|(XXXX))-[0-9]{2}-[0-9]{2}$)", today).group(2)
 
     for dicts in JSON_list:
         if dicts["type"] == "DATE":
@@ -597,6 +607,8 @@ def SUTime_transform(current_OCR_folder):
         except:
             continue
 
+    dump_to_raw(JSON_list, "Deal type TIME", current_OCR_folder)
+
     # resolution of all XXXX
     compteur_dicts = 0
     for dicts in JSON_list:
@@ -627,6 +639,8 @@ def SUTime_transform(current_OCR_folder):
                 )
         compteur_dicts += 1
 
+    dump_to_raw(JSON_list, "Remove current Year", current_OCR_folder)
+
     # date correction when in short format (YYYY-MM (no DD))
     compteur_dicts = 0
     for dicts in JSON_list:
@@ -644,6 +658,8 @@ def SUTime_transform(current_OCR_folder):
             if re.search("^(([0-9]{4})(-)([0-9]{2}))$", dicts["value"]):
                 dicts["value"] += "-15"
         compteur_dicts += 1
+
+    dump_to_raw(JSON_list, "begin -01, end-28, DATE-15, TIME-15", current_OCR_folder)
 
     compteur = 0
     for dicts in JSON_list:
@@ -699,6 +715,8 @@ def SUTime_transform(current_OCR_folder):
             continue
         compteur += 1
 
+    dump_to_raw(JSON_list, "DURATION gets Nearest date", current_OCR_folder)
+
     # CLEAR EMPTY
     # At the end of the treatment, deletion of all SUTime results which is not a DURATION
     for dicts in JSON_list:
@@ -711,6 +729,8 @@ def SUTime_transform(current_OCR_folder):
                 dicts["value"]["begin"] += "T00:00:00.000"
                 dicts["value"]["end"] += "T23:59:59.000"
     JSON_list = [i for i in JSON_list if i != {}]
+
+    dump_to_raw(JSON_list, "Remove all but DURATION , add midnight", current_OCR_folder)
 
     # harmonise the formats, bring them all down to the millisecond
     for dicts in JSON_list:
@@ -740,6 +760,8 @@ def SUTime_transform(current_OCR_folder):
         except:
             continue
 
+    dump_to_raw(JSON_list, "Do some :59:59.999 magic ", current_OCR_folder)
+
     for dicts in JSON_list:
         if not re.search(
             "^([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})(T)([0-9]{2})(:)([0-9]{2})(:)([0-9]{2})(.)([0-9]{3})$",
@@ -750,6 +772,8 @@ def SUTime_transform(current_OCR_folder):
         ):
             dicts.clear()
     JSON_list = [i for i in JSON_list if i != {}]
+
+    dump_to_raw(JSON_list, "Remove wrong date format ", current_OCR_folder)
 
     # CLEAR EMPTY
     for dicts in JSON_list:
