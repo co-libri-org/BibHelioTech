@@ -10,11 +10,10 @@ _logger = init_logger()
 def SUTime_treatement(current_OCR_folder, sutime):
     _logger.info("SUTime_treatement -> res_sutime.json")
     file = open(current_OCR_folder + "/" + "out_filtered_text.txt", "r")
-    reading = file.read()
+    input_content = file.read()
 
-    test_case = reading
+    test_list = sutime.parse(input_content)  # Analysis of the whole text by SUTime
 
-    test_list = sutime.parse(test_case)  # Analysis of the whole text by SUTime
 
     compteur = 0
     for dicts in test_list:
