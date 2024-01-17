@@ -1,22 +1,13 @@
-import copy
 import re
 import json
 from datetime import date, datetime
 
 from bht.bht_logging import init_logger
+from tools import RawDumper
 
 _logger = init_logger()
 
-dump_step = 0
-def dump_to_raw(struct_to_dump, message, folder):
-    # append message to struct for later reading
-    entitled_struct = copy.deepcopy(struct_to_dump)
-    entitled_struct.append(message)
-    global dump_step
-    with open(folder + "/" + f"raw{dump_step}_sutime.json", "w") as raw_file:
-        raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
-    dump_step = dump_step + 1
-
+raw_dumper = RawDumper("sutime")
 
 def SUTime_treatement(current_OCR_folder, sutime):
     _logger.info("SUTime_treatement -> res_sutime.json")
@@ -117,7 +108,7 @@ def SUTime_treatement(current_OCR_folder, sutime):
 
     test_list = [i for i in test_list if i != {}]  # remove empty dictionaries
 
-    dump_to_raw(test_list, "Filtering sutime by values", current_OCR_folder)
+    raw_dumper.dump_to_raw(test_list, "Filtering sutime by values", current_OCR_folder)
 
     res_file = open(current_OCR_folder + "/" + "res_sutime.json", "w")
     res_file.write(
@@ -607,7 +598,7 @@ def SUTime_transform(current_OCR_folder):
         except:
             continue
 
-    dump_to_raw(JSON_list, "Deal type TIME", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "Deal type TIME", current_OCR_folder)
 
     # resolution of all XXXX
     compteur_dicts = 0
@@ -639,7 +630,7 @@ def SUTime_transform(current_OCR_folder):
                 )
         compteur_dicts += 1
 
-    dump_to_raw(JSON_list, "Remove current Year", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "Remove current Year", current_OCR_folder)
 
     # date correction when in short format (YYYY-MM (no DD))
     compteur_dicts = 0
@@ -659,7 +650,7 @@ def SUTime_transform(current_OCR_folder):
                 dicts["value"] += "-15"
         compteur_dicts += 1
 
-    dump_to_raw(JSON_list, "begin -01, end-28, DATE-15, TIME-15", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "begin -01, end-28, DATE-15, TIME-15", current_OCR_folder)
 
     compteur = 0
     for dicts in JSON_list:
@@ -715,7 +706,7 @@ def SUTime_transform(current_OCR_folder):
             continue
         compteur += 1
 
-    dump_to_raw(JSON_list, "DURATION gets Nearest date", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "DURATION gets Nearest date", current_OCR_folder)
 
     # CLEAR EMPTY
     # At the end of the treatment, deletion of all SUTime results which is not a DURATION
@@ -730,7 +721,7 @@ def SUTime_transform(current_OCR_folder):
                 dicts["value"]["end"] += "T23:59:59.000"
     JSON_list = [i for i in JSON_list if i != {}]
 
-    dump_to_raw(JSON_list, "Remove all but DURATION , add midnight", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "Remove all but DURATION , add midnight", current_OCR_folder)
 
     # harmonise the formats, bring them all down to the millisecond
     for dicts in JSON_list:
@@ -760,7 +751,7 @@ def SUTime_transform(current_OCR_folder):
         except:
             continue
 
-    dump_to_raw(JSON_list, "Do some :59:59.999 magic ", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "Do some :59:59.999 magic ", current_OCR_folder)
 
     for dicts in JSON_list:
         if not re.search(
@@ -773,7 +764,7 @@ def SUTime_transform(current_OCR_folder):
             dicts.clear()
     JSON_list = [i for i in JSON_list if i != {}]
 
-    dump_to_raw(JSON_list, "Remove wrong date format ", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "Remove wrong date format ", current_OCR_folder)
 
     # CLEAR EMPTY
     for dicts in JSON_list:

@@ -1,0 +1,42 @@
+body{margin:10 auto;}
+a {
+    padding: 0 1em;
+    border: solid 2pt white;
+    background: lightgrey;
+    text-decoration: none;
+}
+a.a_selected {
+    background: white;
+    border: solid 2pt black;
+}
+
+.highlight {
+    border: solid 2pt #424242;
+    color: red;
+}
+.highlight:hover {
+    cursor: pointer;
+    border: solid 2pt #181818;
+    background: white;
+}
+
+.DATE {
+    background: lightgreen;
+}
+.DURATION {
+    background: lightyellow;
+}
+.TIME {
+    background: lightblue;
+}
+
+#legend {
+    margin: 10pt;
+}
+
+#article {
+    width: 80%;
+    font-size: 10px;
+    padding: 5em;
+}
+
