@@ -9,13 +9,13 @@ _logger = init_logger()
 
 raw_dumper = RawDumper("sutime")
 
+
 def SUTime_treatement(current_OCR_folder, sutime):
     _logger.info("SUTime_treatement -> res_sutime.json")
     file = open(current_OCR_folder + "/" + "out_filtered_text.txt", "r")
     input_content = file.read()
 
     test_list = sutime.parse(input_content)  # Analysis of the whole text by SUTime
-
 
     compteur = 0
     for dicts in test_list:
@@ -650,7 +650,9 @@ def SUTime_transform(current_OCR_folder):
                 dicts["value"] += "-15"
         compteur_dicts += 1
 
-    raw_dumper.dump_to_raw(JSON_list, "begin -01, end-28, DATE-15, TIME-15", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        JSON_list, "begin -01, end-28, DATE-15, TIME-15", current_OCR_folder
+    )
 
     compteur = 0
     for dicts in JSON_list:
@@ -721,7 +723,9 @@ def SUTime_transform(current_OCR_folder):
                 dicts["value"]["end"] += "T23:59:59.000"
     JSON_list = [i for i in JSON_list if i != {}]
 
-    raw_dumper.dump_to_raw(JSON_list, "Remove all but DURATION , add midnight", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        JSON_list, "Remove all but DURATION , add midnight", current_OCR_folder
+    )
 
     # harmonise the formats, bring them all down to the millisecond
     for dicts in JSON_list:
