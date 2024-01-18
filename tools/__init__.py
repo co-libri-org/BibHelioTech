@@ -6,17 +6,18 @@ import sys
 
 
 class RawDumper:
-
     dump_step = 0
 
     def __init__(self, name):
-        self.name =  name
+        self.name = name
 
     def dump_to_raw(self, struct_to_dump, message, folder):
         # append message to struct for later reading
         entitled_struct = copy.deepcopy(struct_to_dump)
         entitled_struct.append(message)
-        with open(folder + "/" + f"raw{self.dump_step}_{self.name}.json", "w") as raw_file:
+        with open(
+            folder + "/" + f"raw{self.dump_step}_{self.name}.json", "w"
+        ) as raw_file:
             raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
         self.dump_step = self.dump_step + 1
 
@@ -31,13 +32,20 @@ def enlight_txt(txt_content, json_content):
     res_txt = txt_content[:]
     running_offset = 0
     for i, sutime_struct in enumerate(json_content):
-        opening_tag = f'<span class="highlight {sutime_struct["type"]}" title="{sutime_struct["value"]}">'
+        if type(sutime_struct) == dict and "type" not in sutime_struct.keys():
+            sutime_struct["type"] = "notype"
+
+        opening_tag = f'<span class="highlight {sutime_struct["type"]}" title="{sutime_struct["text"]}">'
         # opening_tag = f'<span class="highlight {sutime_struct["type"]}" title="{sutime_struct["text"]}">'
         closing_tag = "</span>"
         start = sutime_struct["start"] + running_offset
         end = sutime_struct["end"] + running_offset
-        if not res_txt[start:end] == sutime_struct["text"]:
-            print(f"{i} : <{res_txt[start:end]}> !=  <{sutime_struct['text']}>")
+        # try:
+        #     if type(sutime_struct["text"]) == "tring" and not res_txt[start:end] == sutime_struct["text"]:
+        #         print(f"{i} : <{res_txt[start:end]}> !=  <{sutime_struct['text']}>")
+        # except TypeError:
+        #     print()
+        #     raise TypeError
         opener = res_txt[0:start]
         inner = opening_tag[:] + res_txt[start:end] + closing_tag[:]
         closer = res_txt[end:-1]
@@ -61,7 +69,7 @@ def build_highlight(txt_filepath, json_filepath, dest_dir):
     if not os.path.isdir(dest_dir):
         raise FileExistsError(f"{dest_dir} is not a directory. Please fix that")
     json_filename = os.path.basename(json_filepath)
-    html_filename = os.path.splitext(json_filename)[0]+".html"
+    html_filename = os.path.splitext(json_filename)[0] + ".html"
     html_filepath = os.path.join(dest_dir, html_filename)
 
     with open(json_filepath) as fj:
@@ -70,16 +78,26 @@ def build_highlight(txt_filepath, json_filepath, dest_dir):
     with open(txt_filepath, encoding="utf-8") as ft:
         txt_content = ft.read()
 
+    # wrangling json structure
+    # remove message at the end
     message = json_content.pop()
+    # flatten dict list
+    flattened_dicts = []
+    for i in json_content:
+        if type(i) == list:
+            for j in i:
+                flattened_dicts.append(j)
+        elif type(i) == dict:
+            flattened_dicts.append(i)
 
-    res_txt = enlight_txt(txt_content, json_content)
+    res_txt = enlight_txt(txt_content, flattened_dicts)
 
     with open("header.html") as header_f:
         header_txt = header_f.read()
 
-    step=filename_to_step(json_filename)
+    step = filename_to_step(json_filename)
     header_txt = header_txt.replace(f"a_selected_{step}", "a_selected")
-    header_txt = header_txt.replace("XXSUTIMES_OCCXX", f"{len(json_content)}")
+    header_txt = header_txt.replace("XXSUTIMES_OCCXX", f"{len(flattened_dicts)}")
     header_txt = header_txt.replace("XXMESSAGEXX", f"{message}")
     with open("footer.html") as footer_f:
         footer_txt = footer_f.read()
@@ -92,4 +110,4 @@ def build_highlight(txt_filepath, json_filepath, dest_dir):
 
 def filename_to_step(filepath):
     filename = os.path.basename(filepath)
-    return re.findall(r'\d+', filename)[0]
+    return re.findall(r"\d+", filename)[0]
