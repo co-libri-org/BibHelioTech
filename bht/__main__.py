@@ -109,23 +109,25 @@ if __name__ == "__main__":
         # if not args.doi:
         #     print("Set DOI with --doit opt")
         #     sys.exit()
-        doc_type = IstexDoctype.CLEANED
+        doc_type = IstexDoctype.TXT
         content, filename, doi = get_file_from_id(args.istex_id, doc_type)
         filepath = os.path.join(yml_settings["BHT_DATA_DIR"], filename)
         with open(filepath, "wb") as binary_file:
             # Write bytes to file
             binary_file.write(content)
         print(f"Written to {filepath}")
-        done_steps = run_pipeline(
-            doi=doi,
-            file_path=filepath,
-            doc_type=doc_type,
-            pipe_steps=[
+        if not pipe_steps:
+            pipe_steps =[
                 PipeStep.MKDIR,
                 PipeStep.FILTER,
                 PipeStep.SUTIME,
                 PipeStep.ENTITIES,
-            ],
+            ]
+        done_steps = run_pipeline(
+            doi=doi,
+            file_path=filepath,
+            doc_type=doc_type,
+            pipe_steps=pipe_steps,
         )
 
     end_time = datetime.now()
