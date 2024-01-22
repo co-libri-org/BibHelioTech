@@ -1,8 +1,10 @@
+import glob
 import json
 import copy
 import os
 import re
 import sys
+
 
 class ToolsError(Exception):
     """Tools exception"""
@@ -29,8 +31,31 @@ class RawDumper:
         self.dump_step = self.dump_step + 1
 
 
+def enlight_step(dir_name, step, enlight_mode="sutime"):
+    """
+    Given a directory, and a step, build the enlighted text for the given mode
+
+    @param step: the integer for the pipeline step
+    @param dir_name: an ocr directory
+    @param enlight_mode: sutime or entities
+    @return: the out_filtered_txt with <div> colored from json
+    """
+    jsonfile_pattern = os.path.join(dir_name, f"raw{step}_{enlight_mode}.json")
+    jsonfilename = glob.glob(jsonfile_pattern, recursive=True)[0]
+    with open(jsonfilename) as json_fd:
+        json_content = json.load(json_fd)
+    json_content.pop()
+    txtfile_pattern = os.path.join(dir_name, "out_filtered_text.txt")
+    txtfilename = glob.glob(txtfile_pattern, recursive=True)[0]
+    with open(txtfilename) as txt_fd:
+        txt_content = txt_fd.read()
+
+    return enlight_txt(txt_content, json_content)
+
+
 def enlight_txt(txt_content, json_content):
-    """Given a txt file and a json dict list witk keys begin, end, type
+    """
+    Given a txt file and a json dict list with keys begin, end, type
     enlight given [begin, end]  with <div>
 
     @return enlighten txt
