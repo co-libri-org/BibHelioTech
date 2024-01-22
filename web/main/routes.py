@@ -24,7 +24,7 @@ from flask import (
     Response,
 )
 
-from tools import enlight_step
+from tools import enlight_step, get_steps
 from . import bp
 from web import db
 from web.models import Paper, Mission, HpEvent, rows_to_catstring, BhtFileType
@@ -215,10 +215,11 @@ def paper_show(paper_id):
     return render_template("paper.html", paper=paper)
 
 
-@bp.route("/paper/sutime/<paper_id>/<step_num>", methods=["GET"])
-@bp.route("/paper/entities/<paper_id>/<step_num>", methods=["GET"])
-def paper_pipeline(paper_id, step_num):
-    pipeline_mode = request.path.split("/")[-3]
+@bp.route("/paper/<pipeline_mode>/<paper_id>/<step_num>", methods=["GET"])
+def paper_pipeline(pipeline_mode, paper_id, step_num):
+    if pipeline_mode not in ["sutime", "entities"]:
+        flash(f"No such pipeline mode {pipeline_mode} for paper {paper_id} ")
+        return redirect(url_for("main.papers"))
     # get the papers directory path
     paper = db.session.get(Paper, paper_id)
     if not paper:
@@ -228,9 +229,18 @@ def paper_pipeline(paper_id, step_num):
         flash(f"Paper {paper_id} was not already processed.")
         return redirect(url_for("main.paper_show", paper_id=paper_id))
     ocr_dir = os.path.dirname(paper.cat_path)
-    enlighted_txt = enlight_step(ocr_dir, step_num, pipeline_mode)
+    step_caption, enlighted_txt = enlight_step(ocr_dir, step_num, pipeline_mode)
+    all_steps = get_steps(ocr_dir, pipeline_mode)
 
-    return enlighted_txt
+    return render_template(
+        "colored_steps.html",
+        colored_content=enlighted_txt,
+        all_steps=int(all_steps),
+        curr_step=int(step_num),
+        paper_id=paper_id,
+        step_caption=step_caption,
+        pipeline_mode=pipeline_mode,
+    )
 
 
 @bp.route("/papers/<name>")
