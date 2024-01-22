@@ -24,6 +24,7 @@ from flask import (
     Response,
 )
 
+from tools import enlight_step
 from . import bp
 from web import db
 from web.models import Paper, Mission, HpEvent, rows_to_catstring, BhtFileType
@@ -212,6 +213,24 @@ def paper_show(paper_id):
         flash(f"No such paper {paper_id}")
         return redirect(url_for("main.papers"))
     return render_template("paper.html", paper=paper)
+
+
+@bp.route("/paper/sutime/<paper_id>/<step_num>", methods=["GET"])
+@bp.route("/paper/entities/<paper_id>/<step_num>", methods=["GET"])
+def paper_pipeline(paper_id, step_num):
+    pipeline_mode = request.path.split("/")[-3]
+    # get the papers directory path
+    paper = db.session.get(Paper, paper_id)
+    if not paper:
+        flash(f"No such paper {paper_id}")
+        return redirect(url_for("main.papers"))
+    if not paper.has_cat:
+        flash(f"Paper {paper_id} was not already processed.")
+        return redirect(url_for("main.paper_show", paper_id=paper_id))
+    ocr_dir = os.path.dirname(paper.cat_path)
+    enlighted_txt = enlight_step(ocr_dir, step_num, pipeline_mode)
+
+    return enlighted_txt
 
 
 @bp.route("/papers/<name>")
