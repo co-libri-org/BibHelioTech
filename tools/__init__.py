@@ -31,6 +31,19 @@ class RawDumper:
         self.dump_step = self.dump_step + 1
 
 
+def get_steps(dir_name, enlight_mode="sutime"):
+    """
+    Given a directory, and a mode, return the number of raw steps found
+
+    @param dir_name:
+    @param enlight_mode:
+    @return:
+    """
+    jsonfiles_pattern = os.path.join(dir_name, f"raw*_{enlight_mode}.json")
+    all_files = glob.glob(jsonfiles_pattern, recursive=True)
+    return len(all_files)
+
+
 def enlight_step(dir_name, step, enlight_mode="sutime"):
     """
     Given a directory, and a step, build the enlighted text for the given mode
@@ -44,13 +57,13 @@ def enlight_step(dir_name, step, enlight_mode="sutime"):
     jsonfilename = glob.glob(jsonfile_pattern, recursive=True)[0]
     with open(jsonfilename) as json_fd:
         json_content = json.load(json_fd)
-    json_content.pop()
+    step_caption = json_content.pop()
     txtfile_pattern = os.path.join(dir_name, "out_filtered_text.txt")
     txtfilename = glob.glob(txtfile_pattern, recursive=True)[0]
     with open(txtfilename) as txt_fd:
         txt_content = txt_fd.read()
 
-    return enlight_txt(txt_content, json_content)
+    return step_caption, enlight_txt(txt_content, json_content)
 
 
 def enlight_txt(txt_content, json_content):
