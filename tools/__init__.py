@@ -4,6 +4,13 @@ import os
 import re
 import sys
 
+class ToolsError(Exception):
+    """Tools exception"""
+
+    def __init__(self, message="Tools Error"):
+        self.message = message
+        super().__init__(self.message)
+
 
 class RawDumper:
     dump_step = 0
@@ -38,8 +45,8 @@ def enlight_txt(txt_content, json_content):
         opening_tag = f'<span class="highlight {sutime_struct["type"]}" title="{sutime_struct["text"]}">'
         # opening_tag = f'<span class="highlight {sutime_struct["type"]}" title="{sutime_struct["text"]}">'
         closing_tag = "</span>"
-        start = sutime_struct["start"] + running_offset
-        end = sutime_struct["end"] + running_offset
+        start = int(sutime_struct["start"] + running_offset)
+        end = int(sutime_struct["end"] + running_offset)
         # try:
         #     if type(sutime_struct["text"]) == "tring" and not res_txt[start:end] == sutime_struct["text"]:
         #         print(f"{i} : <{res_txt[start:end]}> !=  <{sutime_struct['text']}>")
@@ -95,7 +102,7 @@ def build_highlight(txt_filepath, json_filepath, dest_dir):
     with open("header.html") as header_f:
         header_txt = header_f.read()
 
-    step = filename_to_step(json_filename)
+    step = filename_to_stepnum(json_filename)
     header_txt = header_txt.replace(f"a_selected_{step}", "a_selected")
     header_txt = header_txt.replace("XXSUTIMES_OCCXX", f"{len(flattened_dicts)}")
     header_txt = header_txt.replace("XXMESSAGEXX", f"{message}")
@@ -108,6 +115,6 @@ def build_highlight(txt_filepath, json_filepath, dest_dir):
         show_f.write(footer_txt)
 
 
-def filename_to_step(filepath):
+def filename_to_stepnum(filepath):
     filename = os.path.basename(filepath)
     return re.findall(r"\d+", filename)[0]
