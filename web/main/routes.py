@@ -240,6 +240,26 @@ def paper_pipeline(pipeline_mode, paper_id, step_num):
     )
 
 
+@bp.route("/enlighted_json", methods=["GET"])
+def enlighted_json():
+    pipeline_mode = request.args.get("pipeline_mode")
+    paper_id = request.args.get("paper_id")
+    step_num = request.args.get("step_num")
+    paper = db.session.get(Paper, paper_id)
+    if not paper:
+        flash(f"No such paper {paper_id}")
+        return redirect(url_for("main.papers"))
+    if not paper.has_cat:
+        flash(f"Paper {paper_id} was not already processed.")
+        return redirect(url_for("main.paper_show", paper_id=paper_id))
+    ocr_dir = os.path.dirname(paper.cat_path)
+    step_lighter = StepLighter(ocr_dir, step_num, pipeline_mode)
+    return send_file(
+        step_lighter.json_filepath,
+        mimetype="application/json",
+    )
+
+
 @bp.route("/papers/<name>")
 @bp.route("/papers")
 def papers(name=None):

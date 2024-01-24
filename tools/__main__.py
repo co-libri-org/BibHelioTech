@@ -4,7 +4,6 @@ import json
 import os
 import re
 import shutil
-import sys
 
 from tools import ToolsError, enlight_txt
 
