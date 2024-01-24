@@ -236,9 +236,7 @@ def paper_pipeline(pipeline_mode, paper_id, step_num):
         curr_step=int(step_num),
         paper_id=paper_id,
         pipeline_mode=pipeline_mode,
-        colored_content=step_lighter.enlighted_txt,
-        all_steps=int(step_lighter.all_steps),
-        step_caption=step_lighter.caption,
+        step_lighter=step_lighter,
     )
 
 
