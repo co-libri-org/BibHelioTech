@@ -24,7 +24,7 @@ from flask import (
     Response,
 )
 
-from tools import enlight_step, get_steps
+from tools import StepLighter
 from . import bp
 from web import db
 from web.models import Paper, Mission, HpEvent, rows_to_catstring, BhtFileType
@@ -229,17 +229,16 @@ def paper_pipeline(pipeline_mode, paper_id, step_num):
         flash(f"Paper {paper_id} was not already processed.")
         return redirect(url_for("main.paper_show", paper_id=paper_id))
     ocr_dir = os.path.dirname(paper.cat_path)
-    step_caption, enlighted_txt = enlight_step(ocr_dir, step_num, pipeline_mode)
-    all_steps = get_steps(ocr_dir, pipeline_mode)
+    step_lighter = StepLighter(ocr_dir, step_num, pipeline_mode)
 
     return render_template(
         "colored_steps.html",
-        colored_content=enlighted_txt,
-        all_steps=int(all_steps),
         curr_step=int(step_num),
         paper_id=paper_id,
-        step_caption=step_caption,
         pipeline_mode=pipeline_mode,
+        colored_content=step_lighter.enlighted_txt,
+        all_steps=int(step_lighter.all_steps),
+        step_caption=step_lighter.caption,
     )
 
 

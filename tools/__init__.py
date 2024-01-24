@@ -13,6 +13,10 @@ class ToolsError(Exception):
 
 
 class RawDumper:
+    """
+    Write a python structure to a json file with message for later use by StepLighter
+    """
+
     dump_step = 0
 
     def __init__(self, name):
@@ -29,39 +33,57 @@ class RawDumper:
         self.dump_step = self.dump_step + 1
 
 
-def get_steps(dir_name, enlight_mode="sutime"):
-    """
-    Given a directory, and a mode, return the number of raw steps found
+class StepLighter:
+    def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
+        self.step = step_num
+        self.ocr_dir = ocr_dir
+        self.enlight_mode = enlight_mode
+        self.enlighted_txt_content = ''
+        self.caption_content = ''
 
-    @param dir_name:
-    @param enlight_mode:
-    @return:
-    """
-    jsonfiles_pattern = os.path.join(dir_name, f"raw*_{enlight_mode}.json")
-    all_files = glob.glob(jsonfiles_pattern, recursive=True)
-    return len(all_files)
+    @property
+    def caption(self):
+        if not self.caption_content:
+            self.enlight_step()
+        return self.caption_content
 
+    @property
+    def enlighted_txt(self):
+        if not self.enlighted_txt_content:
+            self.enlight_step()
+        return self.enlighted_txt_content
 
-def enlight_step(dir_name, step, enlight_mode="sutime"):
-    """
-    Given a directory, and a step, build the enlighted text for the given mode
+    @property
+    def all_steps(self):
+        """
+        Given a directory, and a mode, get the number of raw steps found
 
-    @param step: the integer for the pipeline step
-    @param dir_name: an ocr directory
-    @param enlight_mode: sutime or entities
-    @return: the out_filtered_txt with <div> colored from json
-    """
-    jsonfile_pattern = os.path.join(dir_name, f"raw{step}_{enlight_mode}.json")
-    jsonfilename = glob.glob(jsonfile_pattern, recursive=True)[0]
-    with open(jsonfilename) as json_fd:
-        json_content = json.load(json_fd)
-    step_caption = json_content.pop()
-    txtfile_pattern = os.path.join(dir_name, "out_filtered_text.txt")
-    txtfilename = glob.glob(txtfile_pattern, recursive=True)[0]
-    with open(txtfilename) as txt_fd:
-        txt_content = txt_fd.read()
+        @return: number of steps in the directory
+        """
+        jsonfiles_pattern = os.path.join(self.ocr_dir, f"raw*_{self.enlight_mode}.json")
+        all_files = glob.glob(jsonfiles_pattern, recursive=True)
+        return len(all_files)
 
-    return step_caption, enlight_txt(txt_content, json_content)
+    def enlight_step(self):
+        """
+        Given a directory, and a step, build the enlighted text for the given mode
+
+        @return: the out_filtered_txt with <div> colored from json
+        """
+        jsonfile_pattern = os.path.join(
+            self.ocr_dir, f"raw{self.step}_{self.enlight_mode}.json"
+        )
+        jsonfilename = glob.glob(jsonfile_pattern, recursive=True)[0]
+        with open(jsonfilename) as json_fd:
+            json_content = json.load(json_fd)
+        step_caption = json_content.pop()
+        txtfile_pattern = os.path.join(self.ocr_dir, "out_filtered_text.txt")
+        txtfilename = glob.glob(txtfile_pattern, recursive=True)[0]
+        with open(txtfilename) as txt_fd:
+            txt_content = txt_fd.read()
+
+        self.caption_content = step_caption
+        self.enlighted_txt_content = enlight_txt(txt_content, json_content)
 
 
 def enlight_txt(txt_content, json_content):
@@ -97,5 +119,3 @@ def enlight_txt(txt_content, json_content):
 
     res_txt = res_txt.replace("\n", "")
     return res_txt
-
-
