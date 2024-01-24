@@ -1,10 +1,70 @@
 import argparse
 import glob
+import json
 import os
+import re
 import shutil
 import sys
 
-from tools import build_highlight, filename_to_stepnum, ToolsError
+from tools import ToolsError, enlight_txt
+
+
+def build_highlight(txt_filepath, json_filepath, dest_dir):
+    """
+    Given an entities directory, and a step, enlight the filtered txt file,
+    and make an html file with it.
+
+    @param txt_filepath:
+    @param json_filepath:
+    @param dest_dir:
+    @return:
+    """
+    if not os.path.isdir(dest_dir):
+        raise FileExistsError(f"{dest_dir} is not a directory. Please fix that")
+    json_filename = os.path.basename(json_filepath)
+    html_filename = os.path.splitext(json_filename)[0] + ".html"
+    html_filepath = os.path.join(dest_dir, html_filename)
+
+    with open(json_filepath) as fj:
+        json_content = json.load(fj)
+
+    with open(txt_filepath, encoding="utf-8") as ft:
+        txt_content = ft.read()
+
+    # wrangling json structure
+    # remove message at the end
+    message = json_content.pop()
+    # flatten dict list
+    flattened_dicts = []
+    for i in json_content:
+        if type(i) == list:
+            for j in i:
+                flattened_dicts.append(j)
+        elif type(i) == dict:
+            flattened_dicts.append(i)
+
+    res_txt = enlight_txt(txt_content, flattened_dicts)
+
+    with open("header.html") as header_f:
+        header_txt = header_f.read()
+
+    step = filename_to_stepnum(json_filename)
+    header_txt = header_txt.replace(f"a_selected_{step}", "a_selected")
+    header_txt = header_txt.replace("XXSUTIMES_OCCXX", f"{len(flattened_dicts)}")
+    header_txt = header_txt.replace("XXMESSAGEXX", f"{message}")
+    with open("footer.html") as footer_f:
+        footer_txt = footer_f.read()
+
+    with open(html_filepath, "w") as show_f:
+        show_f.write(header_txt)
+        show_f.write(res_txt)
+        show_f.write(footer_txt)
+
+
+def filename_to_stepnum(filepath):
+    filename = os.path.basename(filepath)
+    return re.findall(r"\d+", filename)[0]
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
