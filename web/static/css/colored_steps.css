@@ -1,4 +1,4 @@
-#step_menu a {
+#step_menu a , #step_navigator a{
     padding: 0 1em;
     border: solid 2pt grey;
     background: lightgrey;

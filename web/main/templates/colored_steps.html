@@ -5,7 +5,7 @@
 {% block content %}
 
 <a class="btn btn-warning" href="{{url_for('main.paper_show', paper_id=paper_id)}}"> Back to paper</a>
-<a class="btn btn-warning" href="{{url_for('main.enlighted_json', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step)}}"> Show Json</a>
+<a class="btn btn-warning" href="{{url_for('main.enlighted_json', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step)}}"> Show Json {{curr_step}}</a>
 <br>
 <br>
 
@@ -19,6 +19,10 @@
 {% endfor %}
 </div>
 <h3>{{step_lighter.caption}}</h3>
+<div id="step_navigator">
+    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">Prev {{pipeline_mode}}</a>
+    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} Next</a>
+</div>
 <div id="colored_content">
     {{step_lighter.enlighted_txt|safe}}
 </div>
