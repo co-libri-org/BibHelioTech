@@ -122,7 +122,7 @@ def pdf_to_db(file_stream, filename, doi=None):
     _file_type = None
     if _guessed_filetype and _guessed_filetype.mime == "application/pdf":
         _file_type = BhtFileType.PDF
-    elif _split_filename[1] == ".txt":
+    elif _split_filename[1] in [".cleaned", ".txt"]:
         _file_type = BhtFileType.TXT
     else:
         return None
