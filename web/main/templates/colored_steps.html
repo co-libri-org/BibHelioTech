@@ -19,9 +19,19 @@
 {% endfor %}
 </div>
 <h3>{{step_lighter.caption}}</h3>
+{% if curr_step == 0 %}
+    {% set prev_step = 0 %}
+{% else %}
+    {% set prev_step = curr_step -1 %}
+{% endif %}
+{% if curr_step == step_lighter.all_steps -1 %}
+    {% set next_step = step_lighter.all_steps -1 %}
+{% else %}
+    {% set next_step = curr_step + 1 %}
+{% endif %}
 <div id="step_navigator">
-    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">Prev {{pipeline_mode}}</a>
-    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} Next</a>
+    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=prev_step)}}">Prev {{pipeline_mode}}</a>
+    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=next_step)}}">{{pipeline_mode}} Next</a>
 </div>
 <div id="colored_content">
     {{step_lighter.enlighted_txt|safe}}
