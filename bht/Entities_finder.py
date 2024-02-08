@@ -278,13 +278,14 @@ def sat_recognition(content_as_str, sats_dict):
             test = re.finditer("( |\n)" + syns + "(\.|,| )", content_as_str)
             sat_dict_list += [
                 {
-                    "end": matches.end(),
                     "start": matches.start(),
+                    "end": matches.end(),
                     "text": re.sub("(\n|\.|,)", "", matches.group()).strip(),
                     "type": "sat",
                 }
                 for matches in test
             ]
+    sat_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
     return sat_dict_list
 
 
@@ -352,6 +353,7 @@ def inst_recognition(content_as_str, inst_dict):
                                         "text": key,
                                     }
                                 ]
+    inst_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
     return inst_dict_list
 
 
@@ -659,7 +661,8 @@ def entities_finder(current_OCR_folder, DOI=None):
 
     # 3- clean sats list when timespan included in instruments
     new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
-    raw_dumper.dump_to_raw(new_sat_dict_list, "Satellites Clean in Instruments", current_OCR_folder)
+    step_message = "Remove from list any satellites which time span is included in any instrument's time span."
+    raw_dumper.dump_to_raw(new_sat_dict_list, step_message, current_OCR_folder)
 
     # - Get the uniq instruments list ordered
     inst_list = list(set([inst["text"] for inst in inst_dict_list]))
