@@ -33,23 +33,15 @@ def build_highlight(txt_filepath, json_filepath, dest_dir):
     # wrangling json structure
     # remove message at the end
     message = json_content.pop()
-    # flatten dict list
-    flattened_dicts = []
-    for i in json_content:
-        if type(i) == list:
-            for j in i:
-                flattened_dicts.append(j)
-        elif type(i) == dict:
-            flattened_dicts.append(i)
 
-    res_txt = enlight_txt(txt_content, flattened_dicts)
+    res_txt = enlight_txt(txt_content, json_content)
 
     with open("header.html") as header_f:
         header_txt = header_f.read()
 
     step = filename_to_stepnum(json_filename)
     header_txt = header_txt.replace(f"a_selected_{step}", "a_selected")
-    header_txt = header_txt.replace("XXSUTIMES_OCCXX", f"{len(flattened_dicts)}")
+    header_txt = header_txt.replace("XXSUTIMES_OCCXX", f"{len(json_content)}")
     header_txt = header_txt.replace("XXMESSAGEXX", f"{message}")
     with open("footer.html") as footer_f:
         footer_txt = footer_f.read()
@@ -84,25 +76,33 @@ if __name__ == "__main__":
     ocr_base_dir = os.path.abspath(args.base_dir)
     name = args.pipeline_name
 
+    # Sanity checks
+    # -------------
+    #
+    # 1- on the base directory
     if ocr_base_dir:
         if not os.path.isdir(ocr_base_dir):
             raise ToolsError(f"No such dir {ocr_base_dir}")
     else:
         raise ToolsError(f"Please set base dir (see --help)")
-
+    # 2- on the pipeline name
     if not name:
         raise ToolsError(f"Please set pipeline name (see --help)")
     elif name not in ["sutime", "entities"]:
         raise ToolsError(f"Pipeline name Should be 'sutime' or 'entities' ")
 
+
+    # get file names
+    #
     raw_pattern = os.path.join(ocr_base_dir, f"raw*{name}.json")
     rawfile_list = glob.glob(raw_pattern)
 
     txt_filepath = os.path.join(ocr_base_dir, "out_filtered_text.txt")
 
-    # - - - - - - - - - - - - - - - - - - - -
-    # Now We Work in this tools directory
-    # - - - - - - - - - - - - - - - - - - - -
+    # - - - - - - - - - - - - - - - - - - - - - -
+    # Now We Work in the current tools/ directory
+    # - - - - - - - - - - - - - - - - - - - - - -
+
     script_path = os.path.dirname(os.path.realpath(__file__))
     os.chdir(script_path)
     dest_dir = f"static_{name}"

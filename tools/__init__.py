@@ -39,8 +39,8 @@ class StepLighter:
         self.step = int(step_num)
         self.ocr_dir = ocr_dir
         self.enlight_mode = enlight_mode
-        self.enlighted_txt_content = ''
-        self.caption_content = ''
+        self.enlighted_txt_content = ""
+        self.caption_content = ""
 
     @property
     def caption(self):
@@ -67,8 +67,7 @@ class StepLighter:
 
     @property
     def json_filepath(self):
-        """Given a pipeline mode and a step num, return the json filepath
-        """
+        """Given a pipeline mode and a step num, return the json filepath"""
         jsonfile_pattern = os.path.join(
             self.ocr_dir, f"raw{self.step}_{self.enlight_mode}.json"
         )
@@ -93,16 +92,30 @@ class StepLighter:
             txt_content = txt_fd.read()
 
         self.caption_content = step_caption
+
+        for i, elemnt in enumerate(json_content):
+            if type(elemnt) == list:
+                json_content[i] = elemnt[0]
+
         self.enlighted_txt_content = enlight_txt(txt_content, json_content)
 
 
 def enlight_txt(txt_content, json_content):
     """
-    Given a txt file and a json dict list with keys begin, end, type
-    enlight given [begin, end]  with <div>
+    Given a txt file and a json dicts list with keys 'begin', 'end' and 'type'
+    enlight given [begin, end]  with <div style="type">
 
     @return enlighten txt
     """
+
+    # json content should be a list of dicts.
+    # if not, it is a list of lists of dicts.
+    # in this second case, create a list of the first occurrence of second level
+
+    # flatten dict list
+    for i, elemnt in enumerate(json_content):
+        if type(elemnt) == list:
+            json_content[i] = elemnt[0]
 
     res_txt = txt_content[:]
     running_offset = 0
@@ -111,16 +124,9 @@ def enlight_txt(txt_content, json_content):
             sutime_struct["type"] = "notype"
 
         opening_tag = f'<span class="highlight {sutime_struct["type"]}" title="{sutime_struct["text"]}">'
-        # opening_tag = f'<span class="highlight {sutime_struct["type"]}" title="{sutime_struct["text"]}">'
         closing_tag = "</span>"
         start = int(sutime_struct["start"] + running_offset)
         end = int(sutime_struct["end"] + running_offset)
-        # try:
-        #     if type(sutime_struct["text"]) == "tring" and not res_txt[start:end] == sutime_struct["text"]:
-        #         print(f"{i} : <{res_txt[start:end]}> !=  <{sutime_struct['text']}>")
-        # except TypeError:
-        #     print()
-        #     raise TypeError
         opener = res_txt[0:start]
         inner = opening_tag[:] + res_txt[start:end] + closing_tag[:]
         closer = res_txt[end:-1]
