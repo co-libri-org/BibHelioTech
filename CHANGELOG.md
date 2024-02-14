@@ -28,10 +28,10 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
-## [0.4.5-dev] - 2024-xx-xx - Split Entities #2
-### Fixed
-### Changed
+## [0.4.5] - 2024-02-14 - Show Sutime Pipeline
 ### New
+- Produce json extraction at pipeline steps
+- Display text/html with highlight from json
 
 ## [0.4.4] - 2024-01-15 - Enhance Docker
 ### Changed
