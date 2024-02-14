@@ -8,10 +8,14 @@ from bht.bht_logging import init_logger
 from bht.databank_reader import DataBank, DataBankSheet
 from bht.errors import BhtPipelineError
 from bht.published_date_finder import *
-
+from tools import RawDumper
 
 v = sys.version
 token = "IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m"  # API Key
+
+dump_step = 0
+
+raw_dumper = RawDumper("entities")
 
 
 def keys_exists(element, *keys):
@@ -274,13 +278,14 @@ def sat_recognition(content_as_str, sats_dict):
             test = re.finditer("( |\n)" + syns + "(\.|,| )", content_as_str)
             sat_dict_list += [
                 {
-                    "end": matches.end(),
                     "start": matches.start(),
+                    "end": matches.end(),
                     "text": re.sub("(\n|\.|,)", "", matches.group()).strip(),
                     "type": "sat",
                 }
                 for matches in test
             ]
+    sat_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
     return sat_dict_list
 
 
@@ -348,6 +353,7 @@ def inst_recognition(content_as_str, inst_dict):
                                         "text": key,
                                     }
                                 ]
+    inst_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
     return inst_dict_list
 
 
@@ -624,6 +630,7 @@ def entities_finder(current_OCR_folder, DOI=None):
     if DOI is None:
         # try to find in tei file
         import glob
+
         pattern = os.path.join(current_OCR_folder, "*.tei.xml")
         found = glob.glob(pattern)
         if len(found) == 0:
@@ -637,7 +644,6 @@ def entities_finder(current_OCR_folder, DOI=None):
     with open(content_path, "r") as file:
         content_upper = file.read()
 
-
     # loading transformed SUTime results
     files_path_json = os.path.join(current_OCR_folder, "res_sutime_2.json")
     with open(files_path_json, "r") as sutime_file:
@@ -645,33 +651,44 @@ def entities_finder(current_OCR_folder, DOI=None):
 
     # 1- satellites recognition
     sat_dict_list = sat_recognition(content_upper, SAT_dict)
+    raw_dumper.dump_to_raw(sat_dict_list, "Satellites Recognition", current_OCR_folder)
 
     # 2- Instruments recognition
     inst_dict_list = inst_recognition(content_upper, INST_dict)
+    raw_dumper.dump_to_raw(
+        inst_dict_list, "Instruments Recognition", current_OCR_folder
+    )
 
     # 3- clean sats list when timespan included in instruments
     new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
+    step_message = "Remove from list any satellites which time span is included in any instrument's time span."
+    raw_dumper.dump_to_raw(new_sat_dict_list, step_message, current_OCR_folder)
 
     # - Get the uniq instruments list ordered
     inst_list = list(set([inst["text"] for inst in inst_dict_list]))
 
     # 4- Make a list of lists ... see make_final_links() for more details.
     final_links = make_final_links(new_sat_dict_list, inst_list, content_upper)
+    raw_dumper.dump_to_raw(final_links, "Final Links", current_OCR_folder)
 
     # 5- Update instruments list for each satellite in links list
     final_links = update_final_instruments(final_links, data_frames)
+    raw_dumper.dump_to_raw(final_links, "Final Links with instruments", current_OCR_folder)
 
     # 6- Change the names of all found satellites by their main name
     final_links = update_final_synonyms(final_links, data_frames)
+    raw_dumper.dump_to_raw(final_links, "Final Links with synonyms", current_OCR_folder)
 
     # 7- Add satellites occurrences to the list
     temp, final_links = add_sat_occurrence(final_links, sutime_json)
+    raw_dumper.dump_to_raw(final_links, "Final Links with sats occ", current_OCR_folder)
 
     # TODO: REFACTOR get the published date elsewhere, at the beginning
     published_date = published_date_finder(token, v, DOI)
 
     # 8- Association of the closest duration of a satellite.
     temp, final_links = closest_duration(temp, final_links, data_frames, published_date)
+    raw_dumper.dump_to_raw(final_links, "Final Links with closest duration", current_OCR_folder)
 
     TSO = {"occur_sat": len(new_sat_dict_list), "nb_durations": len(sutime_json)}
     for elements in final_links:

@@ -24,6 +24,7 @@ from flask import (
     Response,
 )
 
+from tools import StepLighter
 from . import bp
 from web import db
 from web.models import Paper, Mission, HpEvent, rows_to_catstring, BhtFileType
@@ -121,7 +122,7 @@ def pdf_to_db(file_stream, filename, doi=None):
     _file_type = None
     if _guessed_filetype and _guessed_filetype.mime == "application/pdf":
         _file_type = BhtFileType.PDF
-    elif _split_filename[1] == ".txt":
+    elif _split_filename[1] in [".cleaned", ".txt"]:
         _file_type = BhtFileType.TXT
     else:
         return None
@@ -212,6 +213,51 @@ def paper_show(paper_id):
         flash(f"No such paper {paper_id}")
         return redirect(url_for("main.papers"))
     return render_template("paper.html", paper=paper)
+
+
+@bp.route("/paper/<pipeline_mode>/<paper_id>/<step_num>", methods=["GET"])
+def paper_pipeline(pipeline_mode, paper_id, step_num):
+    if pipeline_mode not in ["sutime", "entities"]:
+        flash(f"No such pipeline mode {pipeline_mode} for paper {paper_id} ")
+        return redirect(url_for("main.papers"))
+    # get the papers directory path
+    paper = db.session.get(Paper, paper_id)
+    if not paper:
+        flash(f"No such paper {paper_id}")
+        return redirect(url_for("main.papers"))
+    if not paper.has_cat:
+        flash(f"Paper {paper_id} was not already processed.")
+        return redirect(url_for("main.paper_show", paper_id=paper_id))
+    ocr_dir = os.path.dirname(paper.cat_path)
+    step_lighter = StepLighter(ocr_dir, step_num, pipeline_mode)
+
+    return render_template(
+        "colored_steps.html",
+        curr_step=int(step_num),
+        paper_id=paper_id,
+        pipeline_mode=pipeline_mode,
+        step_lighter=step_lighter,
+    )
+
+
+@bp.route("/enlighted_json", methods=["GET"])
+def enlighted_json():
+    pipeline_mode = request.args.get("pipeline_mode")
+    paper_id = request.args.get("paper_id")
+    step_num = request.args.get("step_num")
+    paper = db.session.get(Paper, paper_id)
+    if not paper:
+        flash(f"No such paper {paper_id}")
+        return redirect(url_for("main.papers"))
+    if not paper.has_cat:
+        flash(f"Paper {paper_id} was not already processed.")
+        return redirect(url_for("main.paper_show", paper_id=paper_id))
+    ocr_dir = os.path.dirname(paper.cat_path)
+    step_lighter = StepLighter(ocr_dir, step_num, pipeline_mode)
+    return send_file(
+        step_lighter.json_filepath,
+        mimetype="application/json",
+    )
 
 
 @bp.route("/papers/<name>")

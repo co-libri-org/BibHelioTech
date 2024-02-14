@@ -1,3 +1,7 @@
+tr {
+vertical-align: baseline;
+}
+
 ul.flashes {
    list-style-position: inside;
    padding-left: 0;
