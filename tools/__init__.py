@@ -25,7 +25,7 @@ class RawDumper:
     def dump_to_raw(self, struct_to_dump, message, folder):
         # append message to struct for later reading
         entitled_struct = copy.deepcopy(struct_to_dump)
-        entitled_struct.append(message)
+        entitled_struct.append(f"{self.dump_step}- {message}")
         with open(
             folder + "/" + f"raw{self.dump_step}_{self.name}.json", "w"
         ) as raw_file:

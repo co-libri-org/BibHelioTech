@@ -776,6 +776,8 @@ def SUTime_transform(current_OCR_folder):
             dicts.clear()
     JSON_list = [i for i in JSON_list if i != {}]
 
+    raw_dumper.dump_to_raw(JSON_list, "Remove not DURATION", current_OCR_folder)
+
     file = open(
         current_OCR_folder + "/" + "res_sutime_2.json", "w"
     )  # save the transformed results in a separate file. This is the file that will be read for later linking of intervals/sat/inst/etc.
