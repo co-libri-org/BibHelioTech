@@ -354,6 +354,7 @@ def inst_recognition(content_as_str, inst_dict):
                                     }
                                 ]
     inst_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
+    inst_dict_list = list(map(lambda _d: _d | {"type": "instr"}, inst_dict_list))
     return inst_dict_list
 
 
@@ -498,7 +499,7 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
     @param _final_links:
     @param data_frames:
     @param published_date:
-    @return:
+    @return: temp, final_links
     """
     # FIXME: CRITICAL deepcopy should work. Look at temp generation to understand
     # _fl_to_return = copy.deepcopy(_final_links)
@@ -669,26 +670,36 @@ def entities_finder(current_OCR_folder, DOI=None):
 
     # 4- Make a list of lists ... see make_final_links() for more details.
     final_links = make_final_links(new_sat_dict_list, inst_list, content_upper)
-    raw_dumper.dump_to_raw(final_links, "Final Links", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        final_links, "Cleaned sats with instr list", current_OCR_folder
+    )
 
     # 5- Update instruments list for each satellite in links list
     final_links = update_final_instruments(final_links, data_frames)
-    raw_dumper.dump_to_raw(final_links, "Final Links with instruments", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        final_links, "Remove instruments not in stats", current_OCR_folder
+    )
 
     # 6- Change the names of all found satellites by their main name
     final_links = update_final_synonyms(final_links, data_frames)
-    raw_dumper.dump_to_raw(final_links, "Final Links with synonyms", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        final_links, "Change sat name with base synonym", current_OCR_folder
+    )
 
     # 7- Add satellites occurrences to the list
     temp, final_links = add_sat_occurrence(final_links, sutime_json)
-    raw_dumper.dump_to_raw(final_links, "Final Links with sats occ", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        final_links, 'Add sats\' occurences: "SO"', current_OCR_folder
+    )
 
     # TODO: REFACTOR get the published date elsewhere, at the beginning
     published_date = published_date_finder(token, v, DOI)
 
     # 8- Association of the closest duration of a satellite.
     temp, final_links = closest_duration(temp, final_links, data_frames, published_date)
-    raw_dumper.dump_to_raw(final_links, "Final Links with closest duration", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        final_links, "Add closest duration from sutime files", current_OCR_folder
+    )
 
     TSO = {"occur_sat": len(new_sat_dict_list), "nb_durations": len(sutime_json)}
     for elements in final_links:
