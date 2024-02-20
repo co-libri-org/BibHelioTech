@@ -20,13 +20,15 @@ a.a_selected {
     background: white;
 }
 
-.DATE {
+.highlight.DATE {
     background: lightgreen;
 }
-.DURATION {
+
+.highlight.DURATION {
     background: lightyellow;
 }
-.TIME {
+
+.highlight.TIME {
     background: lightblue;
 }
 

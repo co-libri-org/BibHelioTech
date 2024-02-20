@@ -19,14 +19,22 @@
     background: white;
 }
 
-.DATE {
+.highlight.DATE {
     background: lightgreen;
 }
-.DURATION {
+.highlight.DURATION {
     background: lightyellow;
 }
-.TIME {
+.highlight.TIME {
     background: lightblue;
+}
+.highlight.sat {
+    color: black;
+    background: tomato;
+}
+.highlight.instr {
+    color: black;
+    background: aqua;
 }
 
 #legend {
