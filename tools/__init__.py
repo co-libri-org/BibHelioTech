@@ -132,20 +132,22 @@ def enlight_txt(txt_content, json_content):
     running_offset = 0
     for i, content_struct in enumerate(uniq_content):
         content_type = content_struct["type"]
-        content_title = f'Text: {content_struct["text"]}&#10;'
+        content_title = f'Text: {content_struct["text"]}'
         if content_type == "DURATION":
             if "value" in content_struct.keys():
                 if "begin" in content_struct["value"]:
-                    content_title += f'Begin: {content_struct["value"]["begin"]}&#10;'
+                    content_title += f'&#10;Begin: {content_struct["value"]["begin"]}'
                 if "end" in content_struct["value"]:
-                    content_title += f'End: {content_struct["value"]["end"]}'
+                    content_title += f'&#10;End: {content_struct["value"]["end"]}'
         elif content_type == "sat":
             if "D" in content_struct.keys():
-                content_title += f'D: {content_struct["D"]}&#10;'
+                content_title += f'&#10;D: {content_struct["D"]}'
             if "R" in content_struct.keys():
-                content_title += f'R: {content_struct["R"]}&#10;'
+                content_title += f'&#10;R: {content_struct["R"]}'
             if "SO" in content_struct.keys():
-                content_title += f'SO: {content_struct["SO"]}'
+                content_title += f'&#10;SO: {content_struct["SO"]}'
+            if "conf" in content_struct.keys():
+                content_title += f'&#10;conf: {content_struct["conf"]}'
             # pass
 
         opening_tag = f'<span class="highlight {content_type}" title="{content_title}">'

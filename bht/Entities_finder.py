@@ -592,6 +592,28 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
     return _temp_to_return, _fl_to_return
 
 
+def normalize_links(_final_links, TSO):
+    for elements in _final_links:
+        if ("D" not in elements[0]) and ("R" in elements[0]):
+            elements[0]["D"] = 1
+        elif ("D" in elements[0]) and ("R" not in elements[0]):
+            elements[0]["R"] = 1
+        elif ("D" not in elements[0]) and ("R" not in elements[0]):
+            elements[0]["D"] = 1
+            elements[0]["R"] = 1
+
+        elements[0]["conf"] = (elements[0]["D"] * elements[0]["R"]) / (
+            elements[0]["SO"] / TSO["occur_sat"]
+        )  # à normalizé par max de conf
+
+    maxi = max([elements[0]["conf"] for elements in _final_links])
+    for elements in _final_links:
+        elements[0]["conf"] = (
+            elements[0]["conf"] / maxi
+        )  # normalisation by the maximum confidence index
+    return _final_links
+
+
 def entities_finder(current_OCR_folder, DOI=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
@@ -702,24 +724,10 @@ def entities_finder(current_OCR_folder, DOI=None):
     )
 
     TSO = {"occur_sat": len(new_sat_dict_list), "nb_durations": len(sutime_json)}
-    for elements in final_links:
-        if ("D" not in elements[0]) and ("R" in elements[0]):
-            elements[0]["D"] = 1
-        elif ("D" in elements[0]) and ("R" not in elements[0]):
-            elements[0]["R"] = 1
-        elif ("D" not in elements[0]) and ("R" not in elements[0]):
-            elements[0]["D"] = 1
-            elements[0]["R"] = 1
-
-        elements[0]["conf"] = (elements[0]["D"] * elements[0]["R"]) / (
-            elements[0]["SO"] / TSO["occur_sat"]
-        )  # à normalizé par max de conf
-
-    maxi = max([elements[0]["conf"] for elements in final_links])
-    for elements in final_links:
-        elements[0]["conf"] = (
-            elements[0]["conf"] / maxi
-        )  # normalisation by the maximum confidence index
+    final_links = normalize_links(final_links, TSO)
+    raw_dumper.dump_to_raw(
+        final_links, "Normalize links attributes", current_OCR_folder
+    )
 
     # REG recognition
     planete_list = [
