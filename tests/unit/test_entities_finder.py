@@ -2,7 +2,6 @@
 # Unit Tests for the big entities_finder file
 #
 import os.path
-from pprint import pprint
 
 from bht.Entities_finder import (
     entities_finder,
@@ -111,6 +110,9 @@ class TestEntitiesFinder:
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
         published_date = "2015-12-01T00:00:00Z"
         tmp, sat_closest = closest_duration(tmp, sat_occ, data_frames, published_date)
+        for _dict in sat_closest:
+            assert _dict[0]["type"] == "sat"
+            assert _dict[2]["type"] == "DURATION"
         assert len(sat_closest) == 39
         assert len(tmp) == 45
 
