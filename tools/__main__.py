@@ -91,7 +91,6 @@ if __name__ == "__main__":
     elif name not in ["sutime", "entities"]:
         raise ToolsError(f"Pipeline name Should be 'sutime' or 'entities' ")
 
-
     # get file names
     #
     raw_pattern = os.path.join(ocr_base_dir, f"raw*{name}.json")

@@ -3,6 +3,8 @@ import json
 import copy
 import os
 
+from tools.tools_errors import ToolsValueError
+
 
 class ToolsError(Exception):
     """Tools exception"""
@@ -93,10 +95,6 @@ class StepLighter:
 
         self.caption_content = step_caption
 
-        for i, elemnt in enumerate(json_content):
-            if type(elemnt) == list:
-                json_content[i] = elemnt[0]
-
         self.enlighted_txt_content = enlight_txt(txt_content, json_content)
 
 
@@ -110,23 +108,38 @@ def enlight_txt(txt_content, json_content):
 
     # json content should be a list of dicts.
     # if not, it is a list of lists of dicts.
-    # in this second case, create a list of the first occurrence of second level
+    # in any case, create a list of any dict containing the 'type' key
 
     # flatten dict list
-    for i, elemnt in enumerate(json_content):
-        if type(elemnt) == list:
-            json_content[i] = elemnt[0]
+    flattened_content = []
+    for elemnt in json_content:
+        if type(elemnt) is dict:
+            flattened_content.append(elemnt)
+        elif type(elemnt) is list:
+            for nested_elmnt in elemnt:
+                flattened_content.append(nested_elmnt)
+        else:
+            raise ToolsValueError(
+                f"No such type allowed in json struct: {type(elemnt)}"
+            )
+    flattened_content.sort(key=lambda x: x["start"])
 
+    # filter only dict with type key
+    filtered_content = [elmnt for elmnt in flattened_content if type(elmnt) is dict and 'type' in elmnt.keys()]
+
+
+    # remove duplicates
+    uniq_content=[]
+    for elmnt in filtered_content:
+        if elmnt not in uniq_content:
+            uniq_content.append(elmnt)
     res_txt = txt_content[:]
     running_offset = 0
-    for i, sutime_struct in enumerate(json_content):
-        if type(sutime_struct) == dict and "type" not in sutime_struct.keys():
-            sutime_struct["type"] = "notype"
-
+    for i, sutime_struct in enumerate(uniq_content):
         opening_tag = f'<span class="highlight {sutime_struct["type"]}" title="{sutime_struct["text"]}">'
         closing_tag = "</span>"
-        start = int(sutime_struct["start"] + running_offset)
-        end = int(sutime_struct["end"] + running_offset)
+        start = int(sutime_struct["start"]) + running_offset
+        end = int(sutime_struct["end"]) + running_offset
         opener = res_txt[0:start]
         inner = opening_tag[:] + res_txt[start:end] + closing_tag[:]
         closer = res_txt[end:-1]
