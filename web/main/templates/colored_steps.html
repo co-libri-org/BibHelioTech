@@ -8,8 +8,6 @@
 <a class="btn btn-warning" href="{{url_for('main.enlighted_json', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step)}}"> Show Json {{curr_step}}</a>
 <br>
 <br>
-<h3>{{step_lighter.caption}}</h3>
-
 {% if curr_step == 0 %}
     {% set prev_step = 0 %}
 {% else %}
@@ -33,7 +31,8 @@
     {% endif %}
     {% endfor %}
 </div>
-<div id="colored_content">
+<h3>{{step_lighter.caption}}</h3>
+
     <div id="highlight_legend">
         <span class="highlight DATE">DATE</span>
         <span class="highlight DURATION">DURATION</span>
@@ -41,6 +40,7 @@
         <span class="highlight sat">SAT</span>
         <span class="highlight instr">INSTR</span>
     </div>
+<div id="colored_content">
     {{step_lighter.enlighted_txt|safe}}
 </div>
 
