@@ -41,6 +41,10 @@
     color: black;
     background: aqua;
 }
+.highlight.region {
+    color: black;
+    background: khaki;
+}
 
 #highlight_legend, #colored_content {
     width: 80%;

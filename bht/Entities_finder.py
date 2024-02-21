@@ -723,14 +723,36 @@ def entities_finder(current_OCR_folder, DOI=None):
         final_links, "Add closest duration from sutime files", current_OCR_folder
     )
 
+    # 9- Normalisation
     TSO = {"occur_sat": len(new_sat_dict_list), "nb_durations": len(sutime_json)}
     final_links = normalize_links(final_links, TSO)
     raw_dumper.dump_to_raw(
         final_links, "Normalize links attributes", current_OCR_folder
     )
 
-    # REG recognition
-    planete_list = [
+    # 10- REG recognition
+    regs_dict_list = []
+
+    for regs in REG_general_list:
+        test = re.finditer(
+            "( |\n)" + "(" + regs + "|" + regs.lower() + ")" + "(\.|,| )", content_upper
+        )
+        regs_dict_list += [
+            {
+                "type": "region",
+                "end": matches.end(),
+                "start": matches.start(),
+                "text": matches.group()
+                .strip()
+                .translate(str.maketrans("", "", string.punctuation)),
+            }
+            for matches in test
+        ]
+    raw_dumper.dump_to_raw(
+        regs_dict_list, "Find Region", current_OCR_folder
+    )
+
+    planet_list = [
         "earth",
         "jupiter",
         "mars",
@@ -746,35 +768,18 @@ def entities_finder(current_OCR_folder, DOI=None):
         "comet",
         "interstellar",
     ]
-    regs_dict_list = []
-
-    for regs in REG_general_list:
-        test = re.finditer(
-            "( |\n)" + "(" + regs + "|" + regs.lower() + ")" + "(\.|,| )", content_upper
-        )
-        regs_dict_list += [
-            {
-                "end": matches.end(),
-                "start": matches.start(),
-                "text": matches.group()
-                .strip()
-                .translate(str.maketrans("", "", string.punctuation)),
-            }
-            for matches in test
-        ]
-
     # Association of the low-level region name (e.g. magnetosphere) with the nearest high-level name (planet name).
     dicts_index = 0
     founded_regions_list = []
     temp = []
     for dicts in regs_dict_list:
-        if dicts["text"].lower() in planete_list:
+        if dicts["text"].lower() in planet_list:
             temp = []
             sens_aller = dicts_index + 1
             sens_retour = dicts_index - 1
             # direction -->
             while sens_aller < len(regs_dict_list):
-                if regs_dict_list[sens_aller]["text"] not in planete_list:
+                if regs_dict_list[sens_aller]["text"] not in planet_list:
                     temp.append(regs_dict_list[sens_aller])
                     temp.append(dicts)
                     founded_regions_list.append(temp)
@@ -782,7 +787,7 @@ def entities_finder(current_OCR_folder, DOI=None):
                 sens_aller += 1
             # direction <--
             while sens_retour >= 0:
-                if regs_dict_list[sens_retour]["text"] not in planete_list:
+                if regs_dict_list[sens_retour]["text"] not in planet_list:
                     temp.append(dicts)
                     temp.append(regs_dict_list[sens_retour])
                     founded_regions_list.append(temp)
@@ -793,15 +798,15 @@ def entities_finder(current_OCR_folder, DOI=None):
     compteur = 0
     for elements in founded_regions_list:
         if (
-            elements[0]["text"].lower() in planete_list
-            and elements[1]["text"].lower() in planete_list
+            elements[0]["text"].lower() in planet_list
+            and elements[1]["text"].lower() in planet_list
         ):
             if (
                 elements[0]["text"].lower() != elements[1]["text"].lower()
             ):  # deletion of planet/planet pairs when these are different.
                 founded_regions_list[compteur].clear()
-        elif (elements[0]["text"].lower() not in planete_list) and (
-            elements[1]["text"].lower() not in planete_list
+        elif (elements[0]["text"].lower() not in planet_list) and (
+            elements[1]["text"].lower() not in planet_list
         ):  # removal of low-level/low-level pairs.
             founded_regions_list[compteur].clear()
         compteur += 1
@@ -814,8 +819,8 @@ def entities_finder(current_OCR_folder, DOI=None):
     #   low level in index 1
     compteur = 0
     for list_of_dicts in founded_regions_list:
-        if (list_of_dicts[0]["text"].lower() not in planete_list) and (
-            list_of_dicts[1]["text"].lower() in planete_list
+        if (list_of_dicts[0]["text"].lower() not in planet_list) and (
+            list_of_dicts[1]["text"].lower() in planet_list
         ):
             temp_0 = founded_regions_list[compteur][0]
             temp_1 = founded_regions_list[compteur][1]
