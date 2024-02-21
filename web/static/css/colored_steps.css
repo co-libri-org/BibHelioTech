@@ -37,8 +37,8 @@
     background: aqua;
 }
 
-#legend {
-    margin: 10pt;
+#highlight_legend {
+    margin: 0 0 30pt 0;
 }
 
 #colored_content {

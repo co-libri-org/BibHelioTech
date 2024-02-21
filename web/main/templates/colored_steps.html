@@ -8,17 +8,8 @@
 <a class="btn btn-warning" href="{{url_for('main.enlighted_json', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step)}}"> Show Json {{curr_step}}</a>
 <br>
 <br>
-
-<div id="step_menu">
-{% for step in range(step_lighter.all_steps) %}
-    {% if step - curr_step == 0 %}
-    <a class="a_selected" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} {{step}}</a>
-    {% else %}
-    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} {{step}}</a>
-    {% endif %}
-{% endfor %}
-</div>
 <h3>{{step_lighter.caption}}</h3>
+
 {% if curr_step == 0 %}
     {% set prev_step = 0 %}
 {% else %}
@@ -33,7 +24,23 @@
     <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=prev_step)}}">Prev {{pipeline_mode}}</a>
     <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=next_step)}}">{{pipeline_mode}} Next</a>
 </div>
+<div id="step_menu">
+    {% for step in range(step_lighter.all_steps) %}
+    {% if step - curr_step == 0 %}
+    <a class="a_selected" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} {{step}}</a>
+    {% else %}
+    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} {{step}}</a>
+    {% endif %}
+    {% endfor %}
+</div>
 <div id="colored_content">
+    <div id="highlight_legend">
+        <span class="highlight DATE">DATE</span>
+        <span class="highlight DURATION">DURATION</span>
+        <span class="highlight TIME">TIME</span>
+        <span class="highlight sat">SAT</span>
+        <span class="highlight instr">INSTR</span>
+    </div>
     {{step_lighter.enlighted_txt|safe}}
 </div>
 
