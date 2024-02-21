@@ -130,11 +130,28 @@ def enlight_txt(txt_content, json_content):
             uniq_content.append(elmnt)
     res_txt = txt_content[:]
     running_offset = 0
-    for i, sutime_struct in enumerate(uniq_content):
-        opening_tag = f'<span class="highlight {sutime_struct["type"]}" title="{sutime_struct["text"]}">'
+    for i, content_struct in enumerate(uniq_content):
+        content_type = content_struct["type"]
+        content_title = f'Text: {content_struct["text"]}&#10;'
+        if content_type == "DURATION":
+            if "value" in content_struct.keys():
+                if "begin" in content_struct["value"]:
+                    content_title += f'Begin: {content_struct["value"]["begin"]}&#10;'
+                if "end" in content_struct["value"]:
+                    content_title += f'End: {content_struct["value"]["end"]}'
+        elif content_type == "sat":
+            if "D" in content_struct.keys():
+                content_title += f'D: {content_struct["D"]}&#10;'
+            if "R" in content_struct.keys():
+                content_title += f'R: {content_struct["R"]}&#10;'
+            if "SO" in content_struct.keys():
+                content_title += f'SO: {content_struct["SO"]}'
+            # pass
+
+        opening_tag = f'<span class="highlight {content_type}" title="{content_title}">'
         closing_tag = "</span>"
-        start = int(sutime_struct["start"]) + running_offset
-        end = int(sutime_struct["end"]) + running_offset
+        start = int(content_struct["start"]) + running_offset
+        end = int(content_struct["end"]) + running_offset
         opener = res_txt[0:start]
         inner = opening_tag[:] + res_txt[start:end] + closing_tag[:]
         closer = res_txt[end:-1]
