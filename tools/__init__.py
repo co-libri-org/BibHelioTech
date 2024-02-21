@@ -3,15 +3,7 @@ import json
 import copy
 import os
 
-from tools.tools_errors import ToolsValueError
-
-
-class ToolsError(Exception):
-    """Tools exception"""
-
-    def __init__(self, message="Tools Error"):
-        self.message = message
-        super().__init__(self.message)
+from tools.tools_errors import ToolsValueError, ToolsFileError
 
 
 class RawDumper:
@@ -76,7 +68,7 @@ class StepLighter:
         print(jsonfile_pattern)
         _json_filepath = glob.glob(jsonfile_pattern, recursive=True)[0]
         if not os.path.isfile(_json_filepath):
-            raise ToolsError(f"No such file {_json_filepath}")
+            raise ToolsFileError(f"No such file {_json_filepath}")
         return _json_filepath
 
     def enlight_step(self):
@@ -125,11 +117,14 @@ def enlight_txt(txt_content, json_content):
     flattened_content.sort(key=lambda x: x["start"])
 
     # filter only dict with type key
-    filtered_content = [elmnt for elmnt in flattened_content if type(elmnt) is dict and 'type' in elmnt.keys()]
-
+    filtered_content = [
+        elmnt
+        for elmnt in flattened_content
+        if type(elmnt) is dict and "type" in elmnt.keys()
+    ]
 
     # remove duplicates
-    uniq_content=[]
+    uniq_content = []
     for elmnt in filtered_content:
         if elmnt not in uniq_content:
             uniq_content.append(elmnt)
