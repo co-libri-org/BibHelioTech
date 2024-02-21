@@ -768,10 +768,10 @@ def entities_finder(current_OCR_folder, DOI=None):
         "comet",
         "interstellar",
     ]
+
     # Association of the low-level region name (e.g. magnetosphere) with the nearest high-level name (planet name).
     dicts_index = 0
     founded_regions_list = []
-    temp = []
     for dicts in regs_dict_list:
         if dicts["text"].lower() in planet_list:
             temp = []
@@ -795,6 +795,10 @@ def entities_finder(current_OCR_folder, DOI=None):
                 sens_retour -= 1
         dicts_index += 1
 
+    raw_dumper.dump_to_raw(
+        founded_regions_list, "Association of the low-level region name", current_OCR_folder
+    )
+
     compteur = 0
     for elements in founded_regions_list:
         if (
@@ -814,6 +818,10 @@ def entities_finder(current_OCR_folder, DOI=None):
         elements for elements in founded_regions_list if elements != []
     ]
 
+    raw_dumper.dump_to_raw(
+        founded_regions_list, "Filter founded regions list", current_OCR_folder
+    )
+
     # Re-organisation of the dictionary list:
     #   planets in index 0
     #   low level in index 1
@@ -827,6 +835,9 @@ def entities_finder(current_OCR_folder, DOI=None):
             founded_regions_list[compteur][0] = temp_1
             founded_regions_list[compteur][1] = temp_0
         compteur += 1
+    raw_dumper.dump_to_raw(
+        founded_regions_list, "Reorganisation of founded regions list", current_OCR_folder
+    )
 
     # Checking and deleting planet/low level pairs is not possible (e.g. Mercury/Atmosphere)
     path = []
@@ -854,6 +865,10 @@ def entities_finder(current_OCR_folder, DOI=None):
                 elements[1] = elements[0]
         compteur += 1
 
+    raw_dumper.dump_to_raw(
+        founded_regions_list, "Delete planets from regions list", current_OCR_folder
+    )
+
     # removal of duplicate pairs
     compteur = 0
     for i in founded_regions_list:
@@ -866,6 +881,10 @@ def entities_finder(current_OCR_folder, DOI=None):
     founded_regions_list = [
         elements for elements in founded_regions_list if elements != []
     ]
+
+    raw_dumper.dump_to_raw(
+        founded_regions_list, "Remove duplicated from regions list", current_OCR_folder
+    )
 
     # case satellite mentioned in the article but no region concerning it:
     #   default association with the first item in its region list.
@@ -893,6 +912,11 @@ def entities_finder(current_OCR_folder, DOI=None):
         founded_regions_list = [
             elements for elements in founded_regions_list if elements != []
         ]
+
+
+    raw_dumper.dump_to_raw(
+        founded_regions_list, "case satellite mentioned in the article but no region", current_OCR_folder
+    )
 
     # SAT and REG linker
     # result and path should be outside of the scope of find_path to persist values during recursive calls to the function
@@ -1031,6 +1055,10 @@ def entities_finder(current_OCR_folder, DOI=None):
                     ]
 
         compteur_sat += 1
+
+    raw_dumper.dump_to_raw(
+        final_links, "Sat and Reg linker", current_OCR_folder
+    )
 
     # Re-written according to the formatting below
     final_amda_dict = {
