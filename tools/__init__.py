@@ -114,14 +114,15 @@ def enlight_txt(txt_content, json_content):
             raise ToolsValueError(
                 f"No such type allowed in json struct: {type(elemnt)}"
             )
-    flattened_content.sort(key=lambda x: x["start"])
-
     # filter only dict with type key
     filtered_content = [
         elmnt
         for elmnt in flattened_content
         if type(elmnt) is dict and "type" in elmnt.keys()
     ]
+
+    filtered_content.sort(key=lambda x: x["start"])
+
 
     # remove duplicates
     uniq_content = []
