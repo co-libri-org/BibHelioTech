@@ -748,9 +748,7 @@ def entities_finder(current_OCR_folder, DOI=None):
             }
             for matches in test
         ]
-    raw_dumper.dump_to_raw(
-        regs_dict_list, "Find Region", current_OCR_folder
-    )
+    raw_dumper.dump_to_raw(regs_dict_list, "Find Region", current_OCR_folder)
 
     planet_list = [
         "earth",
@@ -796,7 +794,9 @@ def entities_finder(current_OCR_folder, DOI=None):
         dicts_index += 1
 
     raw_dumper.dump_to_raw(
-        founded_regions_list, "Association of the low-level region name", current_OCR_folder
+        founded_regions_list,
+        "Association of the low-level region name",
+        current_OCR_folder,
     )
 
     compteur = 0
@@ -836,7 +836,9 @@ def entities_finder(current_OCR_folder, DOI=None):
             founded_regions_list[compteur][1] = temp_0
         compteur += 1
     raw_dumper.dump_to_raw(
-        founded_regions_list, "Reorganisation of founded regions list", current_OCR_folder
+        founded_regions_list,
+        "Reorganisation of founded regions list",
+        current_OCR_folder,
     )
 
     # Checking and deleting planet/low level pairs is not possible (e.g. Mercury/Atmosphere)
@@ -913,9 +915,10 @@ def entities_finder(current_OCR_folder, DOI=None):
             elements for elements in founded_regions_list if elements != []
         ]
 
-
     raw_dumper.dump_to_raw(
-        founded_regions_list, "case satellite mentioned in the article but no region", current_OCR_folder
+        founded_regions_list,
+        "case satellite mentioned in the article but no region",
+        current_OCR_folder,
     )
 
     # SAT and REG linker
@@ -1056,9 +1059,7 @@ def entities_finder(current_OCR_folder, DOI=None):
 
         compteur_sat += 1
 
-    raw_dumper.dump_to_raw(
-        final_links, "Sat and Reg linker", current_OCR_folder
-    )
+    raw_dumper.dump_to_raw(final_links, "Sat and Reg linker", current_OCR_folder)
 
     # Re-written according to the formatting below
     final_amda_dict = {
