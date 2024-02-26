@@ -45,10 +45,10 @@ def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
     @param doc_type: doc type (PDF, TXT, TEI ,....)
     @return: (file_stream, file_name, doi, ark)
     """
-    istex_url, doi, ark, title = get_doc_url(istex_id, doc_type)
-    content, filename = get_file_from_url(istex_url)
+    istex_struct = get_doc_url(istex_id, doc_type)
+    content, filename = get_file_from_url(istex_struct["url"])
     filename = f"{istex_id}.{doc_type}"
-    return content, filename, doi, ark
+    return content, filename, istex_struct["doi"], istex_struct["ark"]
 
 
 def get_file_from_url(url):
@@ -96,7 +96,7 @@ def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
     _doi = document_json["doi"][0]
     _ark = document_json["ark"][0]
     _title = document_json["title"]
-    return _url, _doi, _ark, _title
+    return {"url":_url, "doi":_doi, "ark":_ark, "title":_title}
 
 
 
