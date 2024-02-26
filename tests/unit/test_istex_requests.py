@@ -9,6 +9,7 @@ from web.istex_proxy import (
     IstexDoctype,
     hit_extract,
     json_to_hits,
+    get_file_from_id,
 )
 
 
@@ -20,9 +21,9 @@ class TestIstex:
         WHEN the id_to_url  is called
         THEN check istex_id is contained in url
         """
-        _istex_url, _doi = get_doc_url(istex_id)
+        _istex_url, _doi, _ark = get_doc_url(istex_id)
         assert istex_id in _istex_url
-        assert _doi == '10.1051/0004-6361/201937378'
+        assert _doi == "10.1051/0004-6361/201937378"
 
     def test_get_doc_url_txt(self, istex_id):
         """
@@ -30,9 +31,25 @@ class TestIstex:
         WHEN the id_to_url  is called for txt url
         THEN check 'txt' is contained in url
         """
-        _istex_url, _doi = get_doc_url(istex_id, IstexDoctype.TXT)
+        _istex_url, _doi, _ark = get_doc_url(istex_id, IstexDoctype.TXT)
         _parts = _istex_url.split("/")
         assert _parts[-1] == "txt"
+
+    def test_get_doc_url_ark(self, istex_id):
+        """
+        GIVEN an istex_id
+        WHEN the id_to_url  is called for txt url
+        THEN check 'akr' is returned
+        """
+        _istex_url, _doi, _ark = get_doc_url(istex_id)
+        assert _ark == "ark:/67375/80W-QC194JKZ-X"
+
+    def test_get_file_from_id(self, istex_id):
+        _c, _f, _d, _a = get_file_from_id(istex_id)
+        assert _a == "ark:/67375/80W-QC194JKZ-X"
+        assert _d == "10.1051/0004-6361/201937378"
+        assert _f == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1.pdf"
+        assert _c is not None
 
     def test_extract_hit(self, istex_search_json):
         json_hit = istex_search_json["hits"][0]

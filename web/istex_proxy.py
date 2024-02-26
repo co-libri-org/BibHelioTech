@@ -43,12 +43,12 @@ def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
 
     @param istex_id:  istex id
     @param doc_type: doc type (PDF, TXT, TEI ,....)
-    @return: (file_stream, file_name)
+    @return: (file_stream, file_name, doi, ark)
     """
-    istex_url, doi = get_doc_url(istex_id, doc_type)
+    istex_url, doi, ark = get_doc_url(istex_id, doc_type)
     content, filename = get_file_from_url(istex_url)
     filename = f"{istex_id}.{doc_type}"
-    return content, filename, doi
+    return content, filename, doi, ark
 
 
 def get_file_from_url(url):
@@ -75,11 +75,11 @@ def get_file_from_url(url):
 
 def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
     """
-    Build url to request Istex for pdf, txt, or any supported doctype.
+    Build url to request file from Istex for pdf, txt, or any supported doctype.
 
     @param doc_type: the type of document to fetch
     @param istex_id:  the istex document id.
-    @return: a http url returning a file, and its doi
+    @return: a http url returning a file, and its doi and ark
     """
     doc_url = ISTEX_BASE_URL + istex_id
     print(doc_url)
@@ -94,7 +94,8 @@ def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
             _url = _elmnt["uri"]
             break
     _doi = document_json["doi"][0]
-    return _url, _doi
+    _ark = document_json["ark"][0]
+    return _url, _doi, _ark
 
 
 def hit_extract(hit):

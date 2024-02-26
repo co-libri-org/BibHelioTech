@@ -301,7 +301,7 @@ def istex_upload_id():
             status=400,
         )
     else:
-        fs, filename, doi = get_file_from_id(istex_id, doc_type)
+        fs, filename, doi, ark = get_file_from_id(istex_id, doc_type)
         paper_id = pdf_to_db(fs, filename, doi)
         return (
             jsonify(
