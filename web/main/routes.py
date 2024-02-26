@@ -98,7 +98,7 @@ def get_paper_file(paper_id, file_type):
 # TODO: REWRITE rename to file_to_db
 # TODO: REFACTOR insert into models.Paper ?
 # TODO: REWRITE raise exception or send message to calling route to be flashed
-def pdf_to_db(file_stream, filename, doi=None):
+def pdf_to_db(file_stream, filename, doi=None, ark=None):
     """
     Push Paper to db from a pdf stream
 
@@ -135,6 +135,8 @@ def pdf_to_db(file_stream, filename, doi=None):
     paper.set_file_path(_file_path, _file_type)
     if doi is not None:
         paper.set_doi(doi)
+    if ark is not None:
+        paper.set_ark(ark)
     return paper.id
 
 
@@ -302,7 +304,7 @@ def istex_upload_id():
         )
     else:
         fs, filename, doi, ark = get_file_from_id(istex_id, doc_type)
-        paper_id = pdf_to_db(fs, filename, doi)
+        paper_id = pdf_to_db(fs, filename, doi, ark)
         return (
             jsonify(
                 {
