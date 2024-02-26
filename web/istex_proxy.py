@@ -48,7 +48,7 @@ def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
     istex_struct = get_doc_url(istex_id, doc_type)
     content, filename = get_file_from_url(istex_struct["url"])
     filename = f"{istex_id}.{doc_type}"
-    return content, filename, istex_struct["doi"], istex_struct["ark"]
+    return content, filename, istex_struct
 
 
 def get_file_from_url(url):

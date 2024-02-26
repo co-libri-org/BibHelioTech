@@ -42,16 +42,26 @@ class TestIstex:
         """
         GIVEN an istex_id
         WHEN the id_to_url  is called for txt url
-        THEN check 'akr' is returned
+        THEN check 'ark' is returned
         """
         istex_struct = get_doc_url(istex_id)
         _ark = istex_struct["ark"]
         assert _ark == "ark:/67375/80W-QC194JKZ-X"
 
+    def test_get_doc_url_url(self, istex_id):
+        """
+        GIVEN an istex_id
+        WHEN the id_to_url  is called for txt url
+        THEN check 'url' is returned
+        """
+        istex_struct = get_doc_url(istex_id)
+        _url = istex_struct["url"]
+        assert _url == "https://api.istex.fr/document/BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1/fulltext/pdf"
+
     def test_get_file_from_id(self, istex_id):
-        _c, _f, _d, _a = get_file_from_id(istex_id)
-        assert _a == "ark:/67375/80W-QC194JKZ-X"
-        assert _d == "10.1051/0004-6361/201937378"
+        _c, _f, istex_struct = get_file_from_id(istex_id)
+        assert istex_struct["ark"] == "ark:/67375/80W-QC194JKZ-X"
+        assert istex_struct["doi"] == "10.1051/0004-6361/201937378"
         assert _f == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1.pdf"
         assert _c is not None
 

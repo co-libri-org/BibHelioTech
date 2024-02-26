@@ -98,7 +98,7 @@ def get_paper_file(paper_id, file_type):
 # TODO: REWRITE rename to file_to_db
 # TODO: REFACTOR insert into models.Paper ?
 # TODO: REWRITE raise exception or send message to calling route to be flashed
-def pdf_to_db(file_stream, filename, doi=None, ark=None):
+def pdf_to_db(file_stream, filename, istex_struct=None):
     """
     Push Paper to db from a pdf stream
 
@@ -126,17 +126,19 @@ def pdf_to_db(file_stream, filename, doi=None, ark=None):
         _file_type = BhtFileType.TXT
     else:
         return None
-    _paper_title = _split_filename[0]
+    if istex_struct is not None:
+        _paper_title = istex_struct["title"]
+    else:
+        _paper_title = _split_filename[0]
     paper = Paper.query.filter_by(title=_paper_title).one_or_none()
     if paper is None:
         paper = Paper(title=_paper_title)
 
     # set_file_path() will add and commit paper
     paper.set_file_path(_file_path, _file_type)
-    if doi is not None:
-        paper.set_doi(doi)
-    if ark is not None:
-        paper.set_ark(ark)
+    if istex_struct is not None:
+        paper.set_doi(istex_struct["doi"])
+        paper.set_ark(istex_struct["ark"])
     return paper.id
 
 
@@ -303,8 +305,8 @@ def istex_upload_id():
             status=400,
         )
     else:
-        fs, filename, doi, ark = get_file_from_id(istex_id, doc_type)
-        paper_id = pdf_to_db(fs, filename, doi, ark)
+        fs, filename, istex_struct = get_file_from_id(istex_id, doc_type)
+        paper_id = pdf_to_db(fs, filename, istex_struct)
         return (
             jsonify(
                 {

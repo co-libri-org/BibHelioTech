@@ -91,7 +91,7 @@ class TestIstexRoutes:
         assert response.status_code == 201
         # then test that paper was indeed inserted in db
         paper = db.session.get(Paper, response.json["paper_id"])
-        assert paper.title == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"
+        assert paper.title == "Proton-proton collisional age to order solar wind types"
 
 
 class TestCatalogsRoutes:

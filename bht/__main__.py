@@ -111,7 +111,7 @@ if __name__ == "__main__":
         #     sys.exit()
         # doc_type = IstexDoctype.TXT
         doc_type = IstexDoctype.CLEANED
-        content, filename, doi, ark = get_file_from_id(args.istex_id, doc_type)
+        content, filename, istex_struct = get_file_from_id(args.istex_id, doc_type)
         filepath = os.path.join(yml_settings["BHT_DATA_DIR"], filename)
         with open(filepath, "wb") as binary_file:
             # Write bytes to file
@@ -125,7 +125,7 @@ if __name__ == "__main__":
                 PipeStep.ENTITIES,
             ]
         done_steps = run_pipeline(
-            doi=doi,
+            doi=istex_struct["doi"],
             file_path=filepath,
             doc_type=doc_type,
             pipe_steps=pipe_steps,
