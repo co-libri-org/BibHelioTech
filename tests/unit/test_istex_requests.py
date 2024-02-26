@@ -21,7 +21,7 @@ class TestIstex:
         WHEN the id_to_url  is called
         THEN check istex_id is contained in url
         """
-        _istex_url, _doi, _ark = get_doc_url(istex_id)
+        _istex_url, _doi, _ark, _title = get_doc_url(istex_id)
         assert istex_id in _istex_url
         assert _doi == "10.1051/0004-6361/201937378"
 
@@ -31,7 +31,7 @@ class TestIstex:
         WHEN the id_to_url  is called for txt url
         THEN check 'txt' is contained in url
         """
-        _istex_url, _doi, _ark = get_doc_url(istex_id, IstexDoctype.TXT)
+        _istex_url, _doi, _ark, _title = get_doc_url(istex_id, IstexDoctype.TXT)
         _parts = _istex_url.split("/")
         assert _parts[-1] == "txt"
 
@@ -41,7 +41,7 @@ class TestIstex:
         WHEN the id_to_url  is called for txt url
         THEN check 'akr' is returned
         """
-        _istex_url, _doi, _ark = get_doc_url(istex_id)
+        _istex_url, _doi, _ark, _title = get_doc_url(istex_id)
         assert _ark == "ark:/67375/80W-QC194JKZ-X"
 
     def test_get_file_from_id(self, istex_id):
