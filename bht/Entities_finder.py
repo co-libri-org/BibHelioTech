@@ -294,7 +294,7 @@ def inst_recognition(content_as_str, inst_dict):
     """
     2nd Entities Finder step:
 
-    Find intruments in the Article's content
+    Find instruments in the Article's content
 
     @param content_as_str:  article's content as string
     @param inst_dict: dict of instruments
@@ -309,8 +309,8 @@ def inst_recognition(content_as_str, inst_dict):
                 test = re.finditer("" + inst + "(\.|,| |;)", content_as_str)
                 inst_dict_list += [
                     {
-                        "end": matches.end(),
                         "start": matches.start(),
+                        "end": matches.end(),
                         "text": matches.group()
                         .strip()
                         .translate(str.maketrans("", "", string.punctuation)),
@@ -322,8 +322,8 @@ def inst_recognition(content_as_str, inst_dict):
                     test = re.finditer("" + key + "(\.|,| |;)", content_as_str)
                     inst_dict_list += [
                         {
-                            "end": matches.end(),
                             "start": matches.start(),
+                            "end": matches.end(),
                             "text": matches.group()
                             .strip()
                             .translate(str.maketrans("", "", string.punctuation)),
@@ -335,8 +335,8 @@ def inst_recognition(content_as_str, inst_dict):
                         for matches in test_2:
                             inst_dict_list += [
                                 {
-                                    "end": matches.end(),
                                     "start": matches.start(),
+                                    "end": matches.end(),
                                     "text": key,
                                 }
                             ]
@@ -348,14 +348,29 @@ def inst_recognition(content_as_str, inst_dict):
                             for matches in test_2:
                                 inst_dict_list += [
                                     {
-                                        "end": matches.end(),
                                         "start": matches.start(),
+                                        "end": matches.end(),
                                         "text": key,
                                     }
                                 ]
+    # Sort by start
     inst_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
+
+    # Add 'type = instr'
     inst_dict_list = list(map(lambda _d: _d | {"type": "instr"}, inst_dict_list))
-    return inst_dict_list
+
+    # Remove overlapping
+    res_inst_list = []
+    for i, _d in enumerate(inst_dict_list):
+        if i == 0:
+            res_inst_list.append(_d)
+            continue
+        # keep only if current start after previous stop
+        _p = inst_dict_list[i - 1]
+        if _d["start"] > _p["end"]:
+            res_inst_list.append(_d)
+
+    return res_inst_list
 
 
 def clean_sats_inside_insts(sats_list, insts_list):

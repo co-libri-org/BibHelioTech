@@ -54,7 +54,7 @@ class TestEntitiesFinder:
     def test_inst_recognition(self, article_as_str, data_frames):
         inst_dict = data_frames[DataBankSheet.INSTR]
         inst_dict_list = inst_recognition(article_as_str, inst_dict)
-        assert len(inst_dict_list) == 56
+        assert len(inst_dict_list) == 48
 
     def test_clean_sats(self, article_as_str, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
@@ -74,7 +74,7 @@ class TestEntitiesFinder:
         new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
         _final_links = make_final_links(new_sat_dict_list, inst_list, article_as_str)
         assert len(_final_links) == 39
-        assert list(_final_links[0][0].keys()) == ["end", "start", "text", "type"]
+        assert list(_final_links[0][0].keys()) == ["start", "end", "text", "type"]
         for fl in _final_links:
             assert len(fl) == 2
 
