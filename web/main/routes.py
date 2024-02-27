@@ -227,10 +227,10 @@ def paper_pipeline(pipeline_mode, paper_id, step_num):
     # get the papers directory path
     paper = db.session.get(Paper, paper_id)
     if not paper:
-        flash(f"No such paper {paper_id}")
+        flash(f"No such paper {paper_id}", "error")
         return redirect(url_for("main.papers"))
     if not paper.has_cat:
-        flash(f"Paper {paper_id} was not already processed.")
+        flash(f"Paper {paper_id} was not already processed.", "warning")
         return redirect(url_for("main.paper_show", paper_id=paper_id))
     ocr_dir = os.path.dirname(paper.cat_path)
     step_lighter = StepLighter(ocr_dir, step_num, pipeline_mode)
@@ -254,7 +254,7 @@ def enlighted_json():
         flash(f"No such paper {paper_id}")
         return redirect(url_for("main.papers"))
     if not paper.has_cat:
-        flash(f"Paper {paper_id} was not already processed.")
+        flash(f"Paper {paper_id} was not already processed.", "warning")
         return redirect(url_for("main.paper_show", paper_id=paper_id))
     ocr_dir = os.path.dirname(paper.cat_path)
     step_lighter = StepLighter(ocr_dir, step_num, pipeline_mode)

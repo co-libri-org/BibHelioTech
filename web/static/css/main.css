@@ -13,6 +13,9 @@ ul.flashes {
     padding: 10px ;
     margin: 0;
 }
+.flashes li.flash-warning {
+    background-color: #ffffcc;
+}
 .flashes li.flash-error {
     background-color: #ff9e9e;
 }
