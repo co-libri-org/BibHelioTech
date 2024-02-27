@@ -451,13 +451,30 @@ def istex():
     """
     if request.method == "GET":
         return render_template("istex.html", istex_list=[])
-    elif request.method == "POST":
-        istex_req_url = request.form["istex_req_url"]
+    # else method == "POST"
+    istex_req_url = request.form["istex_req_url"]
+    istex_req_url_a = f'<a href="{istex_req_url}" title="requested url"> {istex_req_url} </a>'
+    try:
         r = requests.get(url=istex_req_url)
-        istex_list = json_to_hits(r.json())
-        return render_template(
-            "istex.html", istex_list=istex_list, istex_req_url=istex_req_url
-        )
+        json_content = r.json()
+        istex_list = json_to_hits(json_content)
+    except (
+        requests.exceptions.MissingSchema,
+        requests.exceptions.InvalidURL,
+        requests.exceptions.ConnectionError,
+    ):
+        flash(f"Could not connect to <{istex_req_url}>", "error")
+        return redirect(url_for("main.istex"))
+    except requests.exceptions.JSONDecodeError:
+        flash(f"Wrong JSON content from <{istex_req_url_a}>", "error")
+        return redirect(url_for("main.istex"))
+    except Exception as e:
+        flash(f"There was an error reading json from <{istex_req_url_a}>", "error")
+        flash(f"{e.__repr__()}", "error")
+        return redirect(url_for("main.istex"))
+    return render_template(
+        "istex.html", istex_list=istex_list, istex_req_url=istex_req_url
+    )
 
 
 @bp.route("/catalogs", methods=["GET"])
