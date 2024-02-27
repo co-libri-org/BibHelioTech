@@ -301,12 +301,29 @@ def inst_recognition(content_as_str, inst_dict):
     @return: dict of instruments found in the article
     """
 
+    # Grab a flattened list of instruments structures from Entities_DataBank.xls file
+    instruments_list = []
+    for inst_list in inst_dict.values():
+        instruments_list += inst_list
+
     # INST recognition
     inst_dict_list = []
-    for INSTs, Instrument in inst_dict.items():
-        for inst in Instrument:
-            if isinstance(inst, str):
-                test = re.finditer("" + inst + "(\.|,| |;)", content_as_str)
+    for inst in instruments_list:
+        if isinstance(inst, str):
+            test = re.finditer("" + inst + "(\.|,| |;)", content_as_str)
+            inst_dict_list += [
+                {
+                    "start": matches.start(),
+                    "end": matches.end(),
+                    "text": matches.group()
+                    .strip()
+                    .translate(str.maketrans("", "", string.punctuation)),
+                }
+                for matches in test
+            ]
+        elif isinstance(inst, dict):
+            for key, value in inst.items():
+                test = re.finditer("" + key + "(\.|,| |;)", content_as_str)
                 inst_dict_list += [
                     {
                         "start": matches.start(),
@@ -317,21 +334,21 @@ def inst_recognition(content_as_str, inst_dict):
                     }
                     for matches in test
                 ]
-            elif isinstance(inst, dict):
-                for key, value in inst.items():
-                    test = re.finditer("" + key + "(\.|,| |;)", content_as_str)
-                    inst_dict_list += [
-                        {
-                            "start": matches.start(),
-                            "end": matches.end(),
-                            "text": matches.group()
-                            .strip()
-                            .translate(str.maketrans("", "", string.punctuation)),
-                        }
-                        for matches in test
-                    ]
-                    if isinstance(value, str):
-                        test_2 = re.finditer("" + value + "(\.|,| |;)", content_as_str)
+                if isinstance(value, str):
+                    test_2 = re.finditer("" + value + "(\.|,| |;)", content_as_str)
+                    for matches in test_2:
+                        inst_dict_list += [
+                            {
+                                "start": matches.start(),
+                                "end": matches.end(),
+                                "text": key,
+                            }
+                        ]
+                elif isinstance(value, list):
+                    for syns in value:
+                        test_2 = re.finditer(
+                            "" + syns + "(\.|,| |;)", content_as_str
+                        )
                         for matches in test_2:
                             inst_dict_list += [
                                 {
@@ -340,19 +357,6 @@ def inst_recognition(content_as_str, inst_dict):
                                     "text": key,
                                 }
                             ]
-                    elif isinstance(value, list):
-                        for syns in value:
-                            test_2 = re.finditer(
-                                "" + syns + "(\.|,| |;)", content_as_str
-                            )
-                            for matches in test_2:
-                                inst_dict_list += [
-                                    {
-                                        "start": matches.start(),
-                                        "end": matches.end(),
-                                        "text": key,
-                                    }
-                                ]
     # Sort by start
     inst_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
 
