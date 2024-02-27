@@ -54,7 +54,7 @@ class TestEntitiesFinder:
     def test_inst_recognition(self, article_as_str, data_frames):
         inst_dict = data_frames[DataBankSheet.INSTR]
         inst_dict_list = inst_recognition(article_as_str, inst_dict)
-        assert len(inst_dict_list) == 48
+        assert len(inst_dict_list) == 12
 
     def test_clean_sats(self, article_as_str, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]

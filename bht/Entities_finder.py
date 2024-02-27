@@ -306,11 +306,14 @@ def inst_recognition(content_as_str, inst_dict):
     for inst_list in inst_dict.values():
         instruments_list += inst_list
 
+    pattern_string = " {searched_string}(\.|,| |;)"
+
     # INST recognition
     inst_dict_list = []
     for inst in instruments_list:
         if isinstance(inst, str):
-            test = re.finditer("" + inst + "(\.|,| |;)", content_as_str)
+            searched_pattern = pattern_string.format(searched_string=inst)
+            test = re.finditer(searched_pattern, content_as_str)
             inst_dict_list += [
                 {
                     "start": matches.start(),
@@ -323,7 +326,8 @@ def inst_recognition(content_as_str, inst_dict):
             ]
         elif isinstance(inst, dict):
             for key, value in inst.items():
-                test = re.finditer("" + key + "(\.|,| |;)", content_as_str)
+                searched_pattern = pattern_string.format(searched_string=key)
+                test = re.finditer(searched_pattern, content_as_str)
                 inst_dict_list += [
                     {
                         "start": matches.start(),
@@ -335,7 +339,8 @@ def inst_recognition(content_as_str, inst_dict):
                     for matches in test
                 ]
                 if isinstance(value, str):
-                    test_2 = re.finditer("" + value + "(\.|,| |;)", content_as_str)
+                    searched_pattern = pattern_string.format(searched_string=value)
+                    test_2 = re.finditer(searched_pattern, content_as_str)
                     for matches in test_2:
                         inst_dict_list += [
                             {
@@ -346,9 +351,8 @@ def inst_recognition(content_as_str, inst_dict):
                         ]
                 elif isinstance(value, list):
                     for syns in value:
-                        test_2 = re.finditer(
-                            "" + syns + "(\.|,| |;)", content_as_str
-                        )
+                        searched_pattern = pattern_string.format(searched_string=syns)
+                        test_2 = re.finditer(searched_pattern, content_as_str)
                         for matches in test_2:
                             inst_dict_list += [
                                 {
