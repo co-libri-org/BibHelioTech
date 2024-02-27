@@ -21,7 +21,7 @@ class RawDumper:
         entitled_struct = copy.deepcopy(struct_to_dump)
         entitled_struct.append(f"{self.dump_step}- {message}")
         with open(
-            folder + "/" + f"raw{self.dump_step}_{self.name}.json", "w"
+            os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
         ) as raw_file:
             raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
         self.dump_step = self.dump_step + 1
