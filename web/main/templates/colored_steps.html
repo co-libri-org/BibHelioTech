@@ -13,8 +13,8 @@
 {% else %}
     {% set prev_step = curr_step -1 %}
 {% endif %}
-{% if curr_step == step_lighter.all_steps -1 %}
-    {% set next_step = step_lighter.all_steps -1 %}
+{% if curr_step == (step_lighter.all_steps  | length) -1 %}
+    {% set next_step = (step_lighter.all_steps  | length) -1 %}
 {% else %}
     {% set next_step = curr_step + 1 %}
 {% endif %}
@@ -23,11 +23,11 @@
     <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=next_step)}}">{{pipeline_mode}} Next</a>
 </div>
 <div id="step_menu">
-    {% for step in range(step_lighter.all_steps) %}
+    {% for step in range(step_lighter.all_steps|length) %}
     {% if step - curr_step == 0 %}
-    <a class="a_selected" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} {{step}}</a>
+    <a class="a_selected" title="{{step_lighter.all_steps[step]}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} {{step}}</a>
     {% else %}
-    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} {{step}}</a>
+    <a title="{{step_lighter.all_steps[step]}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} {{step}}</a>
     {% endif %}
     {% endfor %}
 </div>

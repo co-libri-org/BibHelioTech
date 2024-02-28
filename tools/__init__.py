@@ -2,6 +2,7 @@ import glob
 import json
 import copy
 import os
+import re
 
 from tools.tools_errors import ToolsValueError, ToolsFileError
 
@@ -29,6 +30,8 @@ class RawDumper:
 
 # TODO: shall we move this to models.paper ?
 class StepLighter:
+    _all_captions = []
+
     def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
         self.step = int(step_num)
         self.ocr_dir = ocr_dir
@@ -55,9 +58,22 @@ class StepLighter:
 
         @return: number of steps in the directory
         """
+        if self._all_captions:
+            return self._all_captions
         jsonfiles_pattern = os.path.join(self.ocr_dir, f"raw*_{self.enlight_mode}.json")
-        all_files = glob.glob(jsonfiles_pattern, recursive=True)
-        return len(all_files)
+        all_files = glob.glob(jsonfiles_pattern)
+        # sort list by step number extracted from file name
+        all_files.sort(
+            key=lambda path: int(re.sub(r".*raw(\d+)_.*\.json", r"\1", path))
+        )
+        # now build the list of captions
+        for f in all_files:
+            with open(f) as json_fd:
+                json_content = json.load(json_fd)
+                step_caption = json_content.pop()
+                self._all_captions.append(step_caption)
+
+        return self._all_captions
 
     @property
     def json_filepath(self):
@@ -122,7 +138,6 @@ def enlight_txt(txt_content, json_content):
     ]
 
     filtered_content.sort(key=lambda x: x["start"])
-
 
     # remove duplicates
     uniq_content = []
