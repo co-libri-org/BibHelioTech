@@ -773,6 +773,9 @@ def entities_finder(current_OCR_folder, DOI=None):
         ]
     raw_dumper.dump_to_raw(regs_dict_list, "Find Region", current_OCR_folder)
 
+    # 11- Association of the low-level region name
+    #     (e.g. magnetosphere) with the nearest high-level name (planet name).
+
     planet_list = [
         "earth",
         "jupiter",
@@ -790,7 +793,6 @@ def entities_finder(current_OCR_folder, DOI=None):
         "interstellar",
     ]
 
-    # Association of the low-level region name (e.g. magnetosphere) with the nearest high-level name (planet name).
     dicts_index = 0
     founded_regions_list = []
     for dicts in regs_dict_list:
@@ -822,6 +824,8 @@ def entities_finder(current_OCR_folder, DOI=None):
         current_OCR_folder,
     )
 
+    # 11- Association of the low-level region name
+    #     (e.g. magnetosphere) with the nearest high-level name (planet name).
     compteur = 0
     for elements in founded_regions_list:
         if (
@@ -845,7 +849,7 @@ def entities_finder(current_OCR_folder, DOI=None):
         founded_regions_list, "Filter founded regions list", current_OCR_folder
     )
 
-    # Re-organisation of the dictionary list:
+    # 12 Re-organisation of the dictionary list:
     #   planets in index 0
     #   low level in index 1
     compteur = 0
@@ -864,7 +868,8 @@ def entities_finder(current_OCR_folder, DOI=None):
         current_OCR_folder,
     )
 
-    # Checking and deleting planet/low level pairs is not possible (e.g. Mercury/Atmosphere)
+    # 13- Checking and deleting planet/low level pairs is not possible
+    #     (e.g. Mercury/Atmosphere)
     path = []
     compteur = 0
     for elements in founded_regions_list:
@@ -894,7 +899,7 @@ def entities_finder(current_OCR_folder, DOI=None):
         founded_regions_list, "Delete planets from regions list", current_OCR_folder
     )
 
-    # removal of duplicate pairs
+    # 14- Removal of duplicate pairs
     compteur = 0
     for i in founded_regions_list:
         compteur_2 = compteur
@@ -911,7 +916,7 @@ def entities_finder(current_OCR_folder, DOI=None):
         founded_regions_list, "Remove duplicated from regions list", current_OCR_folder
     )
 
-    # case satellite mentioned in the article but no region concerning it:
+    # 15- case satellite mentioned in the article but no region concerning it:
     #   default association with the first item in its region list.
     if len(founded_regions_list) == 0:
         for elements in final_links:
@@ -944,8 +949,9 @@ def entities_finder(current_OCR_folder, DOI=None):
         current_OCR_folder,
     )
 
-    # SAT and REG linker
-    # result and path should be outside of the scope of find_path to persist values during recursive calls to the function
+    # 16- SAT and REG linker
+    #     result and path should be outside the scope of find_path
+    #     to persist values during recursive calls to the function
     path = []
 
     temp = []
@@ -1082,9 +1088,10 @@ def entities_finder(current_OCR_folder, DOI=None):
 
         compteur_sat += 1
 
-    raw_dumper.dump_to_raw(final_links, "Sat and Reg linker", current_OCR_folder)
+    raw_dumper.dump_to_raw(final_links, "Sats / Region linker", current_OCR_folder)
 
-    # Re-written according to the formatting below
+    # 17- Now create events list according to the formatting below
+
     final_amda_dict = {
         "start_time": "",
         "stop_time": "",
@@ -1152,6 +1159,14 @@ def entities_finder(current_OCR_folder, DOI=None):
 
     final_amda_list = sorted(final_amda_list, key=lambda d: d["start_time"])
 
+    raw_dumper.dump_to_raw(
+        final_amda_list,
+        f"Found {len(final_amda_list)} events (see json)",
+        current_OCR_folder,
+    )
+
+    # 18- Filter Sats for to uniq
+
     distinct_sats = list(set([dicts["sat"] for dicts in final_amda_list]))
 
     for elems in final_amda_list:
@@ -1168,6 +1183,12 @@ def entities_finder(current_OCR_folder, DOI=None):
                 temp.append(dicts)
         temp_final.append(temp)
         temp = []
+
+    raw_dumper.dump_to_raw(
+        final_amda_list,
+        f"Final events list cleaned to {len(final_amda_list)} elements (see json)",
+        current_OCR_folder,
+    )
 
     # write in file
     with open(
