@@ -148,6 +148,13 @@ def staticversion_filter(filename):
     return newfilename
 
 
+@bp.app_template_filter("basename")
+def basename_filter(filename):
+    if not filename:
+        return None
+    return os.path.basename(filename)
+
+
 @bp.route("/")
 def index():
     # return render_template("index.html")
@@ -453,7 +460,9 @@ def istex():
         return render_template("istex.html", istex_list=[])
     # else method == "POST"
     istex_req_url = request.form["istex_req_url"]
-    istex_req_url_a = f'<a href="{istex_req_url}" title="requested url"> {istex_req_url} </a>'
+    istex_req_url_a = (
+        f'<a href="{istex_req_url}" title="requested url"> {istex_req_url} </a>'
+    )
     try:
         r = requests.get(url=istex_req_url)
         json_content = r.json()
