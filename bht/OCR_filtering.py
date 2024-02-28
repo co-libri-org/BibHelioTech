@@ -68,9 +68,9 @@ def ocr_filter(current_OCR_folder):
     in_file.close()
     out_file.close()
 
-    out_file = open(current_OCR_folder + "/" + "out_filtered_text.txt", "r")
-    content = out_file.read()
-    out_file.close()
+    # out_file = open(current_OCR_folder + "/" + "out_filtered_text.txt", "r")
+    # content = out_file.read()
+    # out_file.close()
 
     # content = content[int(len(content) * (10 / 100)):int(len(content) * (96 / 100))]
     #
