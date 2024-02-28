@@ -1,6 +1,8 @@
 import re
 import json
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+
+import dateutil.parser as parser
 
 from bht.bht_logging import init_logger
 from tools import RawDumper
@@ -598,7 +600,21 @@ def SUTime_transform(current_OCR_folder):
         except:
             continue
 
-    raw_dumper.dump_to_raw(JSON_list, "Change type TIME to DURATION", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        JSON_list, "Change type TIME to DURATION", current_OCR_folder
+    )
+
+    # Change DATE to DURATION
+    for elmnt in JSON_list:
+        if elmnt["type"] == "DATE":
+            date_string = elmnt["timex-value"]
+            begin_date = parser.parse(date_string)
+            end_date = begin_date + timedelta(days=1) - timedelta(seconds=1)
+            elmnt["value"]={"begin": begin_date.isoformat(), "end": end_date.isoformat()}
+            elmnt["type"] = "DURATION"
+    raw_dumper.dump_to_raw(
+        JSON_list, "Change type DATE to DURATION", current_OCR_folder
+    )
 
     # resolution of all XXXX
     compteur_dicts = 0
@@ -650,9 +666,7 @@ def SUTime_transform(current_OCR_folder):
                 dicts["value"] += "-15"
         compteur_dicts += 1
 
-    raw_dumper.dump_to_raw(
-        JSON_list, "Date rewriting", current_OCR_folder
-    )
+    raw_dumper.dump_to_raw(JSON_list, "Date rewriting", current_OCR_folder)
 
     compteur = 0
     for dicts in JSON_list:
