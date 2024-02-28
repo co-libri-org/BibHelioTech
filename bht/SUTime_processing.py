@@ -598,7 +598,7 @@ def SUTime_transform(current_OCR_folder):
         except:
             continue
 
-    raw_dumper.dump_to_raw(JSON_list, "Deal type TIME", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "Change type TIME to DURATION", current_OCR_folder)
 
     # resolution of all XXXX
     compteur_dicts = 0
@@ -651,7 +651,7 @@ def SUTime_transform(current_OCR_folder):
         compteur_dicts += 1
 
     raw_dumper.dump_to_raw(
-        JSON_list, "begin -01, end-28, DATE-15, TIME-15", current_OCR_folder
+        JSON_list, "Date rewriting", current_OCR_folder
     )
 
     compteur = 0
