@@ -25,7 +25,7 @@ Show a list of catalogs files not already inserted in db
 <table class="table-hover table">
     {% for paper in catalogs %}
     <tr>
-        <td class="col-2">
+        <td class="col-4 text-truncate" style="max-width: 550px;" title="{{paper.ark}}">
             {{paper.title}}
         </td>
         <td class="col-6">
