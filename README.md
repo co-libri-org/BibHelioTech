@@ -135,13 +135,13 @@ we recommend the usage of the SqlAlchemy migration tool.
 
 It needs the environment variable FLASK_APP.
 
-After db structure was changed, you can save a migration script:
+After db structure was changed, you can save a migration script on development side:
 
     FLASK_APP=web flask db migrate
     git add migrations
     git commit -m "Db migration"
 
-After deployment:
+After deployment on server side:
 
     FLASK_APP=web flask db upgrade
 
