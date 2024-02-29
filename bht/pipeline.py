@@ -84,9 +84,9 @@ def run_step_sutime(dest_pdf_dir):
     SUTime_transform(dest_pdf_dir)
 
 
-def run_step_entities(dest_pdf_dir, doi=None):
+def run_step_entities(dest_pdf_dir, doi=None, publication_date=None):
     _logger.info("BHT PIPELINE STEP 5: Search Entities")
-    entities_finder(dest_pdf_dir, doi)
+    entities_finder(dest_pdf_dir, doi, publication_date)
     search_pattern = os.path.join(dest_pdf_dir, "**", "*bibheliotech*.txt")
     _logger.debug(f"searching {search_pattern}")
     result_catalogs = glob.glob(search_pattern, recursive=True)
@@ -94,11 +94,12 @@ def run_step_entities(dest_pdf_dir, doi=None):
     return catalog_file
 
 
-def bht_run_file(orig_file, result_base_dir, file_type, doi=None):
+def bht_run_file(orig_file, result_base_dir, file_type, doi=None, publication_date=None):
     """
     Given a  file of type <file_type>, go through the whole pipeline process and make a catalog
 
-    @param doi:
+    @param publication_date: document's publication date (retrieved later if None)
+    @param doi: document's DOI (retrieved later if None)
     @param file_type: either pdf or txt or any of BhtFileType
     @param orig_file:  the sci article in pdf or txt format
     @param result_base_dir: the root working directory
@@ -127,7 +128,7 @@ def bht_run_file(orig_file, result_base_dir, file_type, doi=None):
     run_step_sutime(dest_file_dir)
 
     # 4- Entities recognition, association and writing of HPEvent
-    catalog_file = run_step_entities(dest_file_dir, doi)
+    catalog_file = run_step_entities(dest_file_dir, doi, publication_date)
 
     if not os.path.isfile(catalog_file):
         raise BhtResultError(f"No such file {catalog_file}")

@@ -637,7 +637,7 @@ def normalize_links(_final_links, TSO):
     return _final_links
 
 
-def entities_finder(current_OCR_folder, DOI=None):
+def entities_finder(current_OCR_folder, DOI=None, publication_date=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
 
@@ -737,11 +737,11 @@ def entities_finder(current_OCR_folder, DOI=None):
         final_links, 'Add sats\' occurences: "SO"', current_OCR_folder
     )
 
-    # TODO: REFACTOR get the published date elsewhere, at the beginning
-    published_date = published_date_finder(token, v, DOI)
+    if publication_date is None:
+        publication_date = published_date_finder(token, v, DOI)
 
     # 8- Association of the closest duration of a satellite.
-    temp, final_links = closest_duration(temp, final_links, data_frames, published_date)
+    temp, final_links = closest_duration(temp, final_links, data_frames, publication_date)
     raw_dumper.dump_to_raw(
         final_links, "Add closest duration from sutime files", current_OCR_folder
     )
