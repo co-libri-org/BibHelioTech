@@ -202,6 +202,7 @@ class Paper(db.Model):
     doi = db.Column(db.String, unique=True)
     ark = db.Column(db.String, unique=True)
     istex_id = db.Column(db.String, unique=True)
+    publication_date = db.Column(db.String)
     pdf_path = db.Column(db.String, unique=True)
     txt_path = db.Column(db.String, unique=True)
     cat_path = db.Column(db.String, unique=True)
