@@ -22,9 +22,6 @@ def published_date_finder(token, v, doi):
     url = "https://api.adsabs.harvard.edu/v1/search/query?q=" + doi + "&fl=date"
     r = requests.get(url, headers={"Authorization": "Bearer " + token}, verify=False)
     json_object = r.json()
-    # json_object = json.loads(json_dict)
-    # print(type(json_object))
-    # sys.exit()
     if json_object["responseHeader"]["status"] == 0:
         publish_date = json_object["response"]["docs"][0]["date"]
         if re.search("(([0-9]{4})-([0-9]{2})-([0-9]{2}))", publish_date):
