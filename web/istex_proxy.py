@@ -79,7 +79,7 @@ def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
 
     @param doc_type: the type of document to fetch
     @param istex_id:  the istex document id.
-    @return: a http url returning a file, and its doi and ark
+    @return: a dict struct with http url, and other doc attributes
     """
     doc_url = ISTEX_BASE_URL + istex_id
     print(doc_url)
@@ -93,11 +93,14 @@ def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
         if _elmnt["extension"] == doc_type.value:
             _url = _elmnt["uri"]
             break
-    _doi = document_json["doi"][0]
-    _ark = document_json["ark"][0]
-    _title = document_json["title"]
-    return {"url":_url, "doi":_doi, "ark":_ark, "title":_title}
-
+    _res_dict = {
+        "url": _url,
+        "doi": document_json["doi"][0],
+        "ark": document_json["ark"][0],
+        "title": document_json["title"],
+        "pub_date": document_json["publicationDate"],
+    }
+    return _res_dict
 
 
 def hit_extract(hit):
