@@ -265,6 +265,11 @@ class Paper(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def set_istex_id(self, istex_id):
+        self.istex_id = istex_id
+        db.session.add(self)
+        db.session.commit()
+
     def push_cat(self, force=False):
         """Insert our catalog's events to db"""
         # do it if not already done, or force

@@ -27,6 +27,7 @@ class TestIstex:
         assert istex_id in _istex_url
         assert _doi == "10.1051/0004-6361/201937378"
         assert istex_struct["pub_date"] == "2020"
+        assert istex_struct["istex_id"] == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"
 
     def test_get_doc_url_txt(self, istex_id):
         """
