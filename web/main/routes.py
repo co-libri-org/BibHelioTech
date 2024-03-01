@@ -140,6 +140,7 @@ def pdf_to_db(file_stream, filename, istex_struct=None):
         paper.set_doi(istex_struct["doi"])
         paper.set_ark(istex_struct["ark"])
         paper.set_pubdate(istex_struct["pub_date"])
+        paper.set_istex_id(istex_struct["istex_id"])
     return paper.id
 
 
