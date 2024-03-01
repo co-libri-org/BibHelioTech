@@ -260,6 +260,11 @@ class Paper(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def set_pubdate(self, pub_date):
+        self.publication_date = pub_date
+        db.session.add(self)
+        db.session.commit()
+
     def push_cat(self, force=False):
         """Insert our catalog's events to db"""
         # do it if not already done, or force

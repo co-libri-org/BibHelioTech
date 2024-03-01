@@ -72,6 +72,17 @@ class TestModels:
         assert paper.title == "title"
         assert paper.pdf_path == "path"
 
+    def test_paper_set_pubdate(self):
+        """
+        GIVEN Paper model
+        WHEN pubdate is set
+        THEN verify it was stored
+        """
+        paper = Paper(title="title", pdf_path="path", publication_date="2015")
+        assert paper.publication_date == "2015"
+        paper.set_pubdate("2020")
+        assert paper.publication_date == "2020"
+
     def test_paper_cat_in_db(self):
         """
         GIVEN Paper model
