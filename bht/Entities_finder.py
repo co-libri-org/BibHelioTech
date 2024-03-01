@@ -673,6 +673,7 @@ def entities_finder(current_OCR_folder, DOI=None, publication_date=None):
     AMDA_dict = data_frames[DataBankSheet.SATS_REG]
     SPAN_dict = data_frames[DataBankSheet.TIME_SPAN]
 
+    # sanity checks
     if DOI is None:
         # try to find in tei file
         import glob
@@ -683,6 +684,9 @@ def entities_finder(current_OCR_folder, DOI=None, publication_date=None):
             raise BhtPipelineError("Couldn't find any tei.xml file")
         file_name = found[0]
         DOI = find_DOI(file_name)  # retrieving the DOI of the article being processed.
+
+    if publication_date is None:
+        publication_date = published_date_finder(token, v, DOI)
 
     # loading the text file (content of the article)
     content_path = os.path.join(current_OCR_folder, "out_filtered_text.txt")
@@ -737,11 +741,10 @@ def entities_finder(current_OCR_folder, DOI=None, publication_date=None):
         final_links, 'Add sats\' occurences: "SO"', current_OCR_folder
     )
 
-    if publication_date is None:
-        publication_date = published_date_finder(token, v, DOI)
-
     # 8- Association of the closest duration of a satellite.
-    temp, final_links = closest_duration(temp, final_links, data_frames, publication_date)
+    temp, final_links = closest_duration(
+        temp, final_links, data_frames, publication_date
+    )
     raw_dumper.dump_to_raw(
         final_links, "Add closest duration from sutime files", current_OCR_folder
     )
