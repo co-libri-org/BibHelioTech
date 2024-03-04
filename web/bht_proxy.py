@@ -50,7 +50,8 @@ def pipe_paper(paper_id, basedir, file_type):
                            f"pdf: {_paper.pdf_path}"
                            f"txt: {_paper.txt_path}"
                            f"and type {file_type}: hastxt={_paper.has_txt} haspdf={_paper.has_pdf}")
-    catalogfile = bht_run_file(file_path, basedir, file_type, _paper.doi)
+    _doc_meta_info = {"doi": _paper.doi, "pub_date": _paper.publication_date}
+    catalogfile = bht_run_file(file_path, basedir, file_type, _doc_meta_info)
     _paper.set_cat_path(catalogfile)
     # FIXME: return real result
     return _paper.id

@@ -637,7 +637,7 @@ def normalize_links(_final_links, TSO):
     return _final_links
 
 
-def entities_finder(current_OCR_folder, DOI=None, publication_date=None):
+def entities_finder(current_OCR_folder, doc_meta_info=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
 
@@ -674,6 +674,8 @@ def entities_finder(current_OCR_folder, DOI=None, publication_date=None):
     SPAN_dict = data_frames[DataBankSheet.TIME_SPAN]
 
     # sanity checks
+    DOI = doc_meta_info.get("doi") if doc_meta_info is not None else None
+    publication_date = doc_meta_info.get("pub_date") if doc_meta_info is not None else None
     if DOI is None:
         # try to find in tei file
         import glob

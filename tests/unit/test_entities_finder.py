@@ -20,7 +20,7 @@ from bht.databank_reader import DataBank, DataBankSheet
 
 class TestEntitiesFinder:
     def test_entities_finder_method(self, ocr_dir_test):
-        entities_finder(ocr_dir_test, DOI="10.1002/2015GL064052")
+        entities_finder(ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052"})
         recognition_file = os.path.join(ocr_dir_test, "reg_recognition_res.txt")
         catalog_file = os.path.join(
             ocr_dir_test, "1010022015GL064052_bibheliotech_V1.txt"
@@ -29,7 +29,7 @@ class TestEntitiesFinder:
         assert os.path.isfile(catalog_file)
 
     def test_catalog_not_empty(self, ocr_dir_test):
-        entities_finder(ocr_dir_test, DOI="10.1002/2015GL064052")
+        entities_finder(ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052"})
         catalog_file = os.path.join(
             ocr_dir_test, "1010022015GL064052_bibheliotech_V1.txt"
         )
@@ -38,7 +38,7 @@ class TestEntitiesFinder:
             assert len(_r_content) == 52
 
     def test_no_image_as_syn(self, ocr_dir_test):
-        entities_finder(ocr_dir_test, DOI="10.1002/2015GL064052")
+        entities_finder(ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052"})
         catalog_file = os.path.join(
             ocr_dir_test, "1010022015GL064052_bibheliotech_V1.txt"
         )

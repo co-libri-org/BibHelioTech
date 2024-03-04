@@ -84,9 +84,9 @@ def run_step_sutime(dest_pdf_dir):
     SUTime_transform(dest_pdf_dir)
 
 
-def run_step_entities(dest_pdf_dir, doi=None, publication_date=None):
+def run_step_entities(dest_pdf_dir, doc_meta_info=None):
     _logger.info("BHT PIPELINE STEP 5: Search Entities")
-    entities_finder(dest_pdf_dir, doi, publication_date)
+    entities_finder(dest_pdf_dir, doc_meta_info)
     search_pattern = os.path.join(dest_pdf_dir, "**", "*bibheliotech*.txt")
     _logger.debug(f"searching {search_pattern}")
     result_catalogs = glob.glob(search_pattern, recursive=True)
@@ -94,22 +94,17 @@ def run_step_entities(dest_pdf_dir, doi=None, publication_date=None):
     return catalog_file
 
 
-def bht_run_file(orig_file, result_base_dir, file_type, doi=None, publication_date=None):
+def bht_run_file(orig_file, result_base_dir, file_type, doc_meta_info=None):
     """
     Given a  file of type <file_type>, go through the whole pipeline process and make a catalog
 
-    @param publication_date: document's publication date (retrieved later if None)
-    @param doi: document's DOI (retrieved later if None)
     @param file_type: either pdf or txt or any of BhtFileType
     @param orig_file:  the sci article in pdf or txt format
     @param result_base_dir: the root working directory
+    @param doc_meta_info:  dict with paper doi, istex_id, publication_date ...
     @return: an HPEvents catalog
     """
 
-    str = "{} {} {} {}".format(orig_file, result_base_dir, file_type, doi)
-    print("-"*len(str))
-    print(str)
-    print("-"*len(str))
     # 0
     dest_file_dir = run_step_mkdir(orig_file, result_base_dir, file_type)
 
@@ -128,7 +123,7 @@ def bht_run_file(orig_file, result_base_dir, file_type, doi=None, publication_da
     run_step_sutime(dest_file_dir)
 
     # 4- Entities recognition, association and writing of HPEvent
-    catalog_file = run_step_entities(dest_file_dir, doi, publication_date)
+    catalog_file = run_step_entities(dest_file_dir, doc_meta_info)
 
     if not os.path.isfile(catalog_file):
         raise BhtResultError(f"No such file {catalog_file}")
@@ -193,7 +188,8 @@ def bht_run_dir(_base_pdf_dir):
 def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None, doi=None):
     """
 
-    @param doi:
+
+    @param doi: #TODO pass doc_meta_info instead
     @param dest_file_dir:
     @param doc_type:
     @param file_path:
@@ -232,7 +228,7 @@ def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None, doi=Non
         done_steps.append(PipeStep.SUTIME)
 
     if PipeStep.ENTITIES in pipe_steps:
-        run_step_entities(dest_file_dir, doi)
+        run_step_entities(dest_file_dir, doc_meta_info={"doi": doi})
         done_steps.append(PipeStep.ENTITIES)
 
     return done_steps

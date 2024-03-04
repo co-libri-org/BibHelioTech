@@ -3,7 +3,7 @@ import os
 import sys
 from datetime import datetime
 
-from bht.pipeline import bht_run_file, bht_run_dir, run_pipeline, PipeStep
+from bht.pipeline import bht_run_file, run_pipeline, PipeStep
 from bht_config import yml_settings
 
 # TODO: REFACTOR dont import anything from web. to bht !!!!
@@ -87,9 +87,8 @@ if __name__ == "__main__":
         if not args.pub_date:
             print("Set Publication_Date with --pub-date opt")
             sys.exit()
-        bht_run_file(
-            args.txt_file, papers_dir, BhtFileType.TXT, args.doi, args.pub_date
-        )
+        doc_meta_info = {"doi":args.doi, "pub_date":args.pub_date}
+        bht_run_file(args.txt_file, papers_dir, BhtFileType.TXT, doc_meta_info)
     elif args.pipe_dir:
         if PipeStep.GROBID in pipe_steps and not args.doi:
             print("Include GROBID pipe-stop, or use --doi ")

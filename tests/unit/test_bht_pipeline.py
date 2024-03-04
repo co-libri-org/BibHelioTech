@@ -33,14 +33,18 @@ class TestBhtPipeline:
 class TestBhtPipelineSteps:
     def test_run_step_entities(self, ocr_dir_test):
         doi = "10.1002/2015GL064052"
-        catalog_file = run_step_entities(ocr_dir_test, doi)
+        catalog_file = run_step_entities(ocr_dir_test, doc_meta_info={"doi": doi})
         with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
             assert len(_r_content) == 52
 
+    def test_run_step_entities_with_no_metadoc(self, tmp_path):
+        with pytest.raises(BhtPipelineError):
+            run_step_entities(tmp_path, doc_meta_info=None)
+
     def test_run_step_entities_with_no_doi(self, tmp_path):
         with pytest.raises(BhtPipelineError):
-            run_step_entities(tmp_path, None)
+            run_step_entities(tmp_path, doc_meta_info={"doi": None})
 
 
 @skip_bht
