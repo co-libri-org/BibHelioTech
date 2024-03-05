@@ -604,21 +604,6 @@ def SUTime_transform(current_OCR_folder):
         JSON_list, "Change type TIME to DURATION", current_OCR_folder
     )
 
-    # Change DATE to DURATION
-    for elmnt in JSON_list:
-        if elmnt["type"] == "DATE":
-            date_string = elmnt["timex-value"]
-            try:
-                begin_date = parser.parse(date_string)
-            except parser.ParserError:
-                continue
-            end_date = begin_date + timedelta(days=1) - timedelta(seconds=1)
-            elmnt["value"]={"begin": begin_date.isoformat(), "end": end_date.isoformat()}
-            elmnt["type"] = "DURATION"
-    raw_dumper.dump_to_raw(
-        JSON_list, "Change type DATE to DURATION", current_OCR_folder
-    )
-
     # resolution of all XXXX
     compteur_dicts = 0
     for dicts in JSON_list:
@@ -726,6 +711,21 @@ def SUTime_transform(current_OCR_folder):
         compteur += 1
 
     raw_dumper.dump_to_raw(JSON_list, "DURATION gets Nearest date", current_OCR_folder)
+
+    # Change DATE to DURATION
+    for elmnt in JSON_list:
+        if elmnt["type"] == "DATE":
+            date_string = elmnt["timex-value"]
+            try:
+                begin_date = parser.parse(date_string)
+            except parser.ParserError:
+                continue
+            end_date = begin_date + timedelta(days=1) - timedelta(seconds=1)
+            elmnt["value"]={"begin": begin_date.isoformat(), "end": end_date.isoformat()}
+            elmnt["type"] = "DURATION"
+    raw_dumper.dump_to_raw(
+        JSON_list, "Change type DATE to DURATION", current_OCR_folder
+    )
 
     # CLEAR EMPTY
     # At the end of the treatment, deletion of all SUTime results which is not a DURATION
