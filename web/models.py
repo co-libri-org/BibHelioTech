@@ -5,6 +5,8 @@ from enum import StrEnum, auto
 
 from bht_config import yml_settings
 from web import db
+from web.errors import IstexError
+from web.istex_proxy import ark_to_id, get_doc_url
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -215,7 +217,14 @@ class Paper(db.Model):
     task_stopped = db.Column(db.DateTime)
 
     def __repr__(self):
-        return f"<Paper {self.id} {self.title} {self.pdf_path} {self.txt_path} {self.cat_path} {self.task_id}>"
+        return f"""<Paper #{self.id}
+        title:    {self.title}
+        pdf:      {self.pdf_path}
+        txt:      {self.txt_path}
+        cat:      {self.cat_path}
+        doi:      {self.doi}
+        ark:      {self.ark}
+        istex_id: {self.istex_id}>"""
 
     def set_task_id(self, task_id):
         self.task_id = task_id
@@ -278,6 +287,20 @@ class Paper(db.Model):
             if self.has_cat:
                 self.cat_in_db = True
                 catfile_to_db(self.cat_path)
+
+    def istex_update(self):
+        """From our ids, update meta information from istex api"""
+        if self.istex_id is None:
+            if self.ark is None:
+                raise IstexError("Unable to grap meta info")
+            self.istex_id = ark_to_id(self.ark)
+        istex_struct = get_doc_url(self.istex_id)
+        self.title = istex_struct["title"]
+        self.doi = istex_struct["doi"]
+        self.ark = istex_struct["ark"]
+        self.publication_date = istex_struct["pub_date"]
+        db.session.add(self)
+        db.session.commit()
 
     @property
     def has_cat(self):

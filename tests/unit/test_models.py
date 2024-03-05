@@ -1,5 +1,7 @@
+import pytest
 from datetime import datetime
 
+from web.errors import IstexError
 from web.models import (
     Paper,
     Catalog,
@@ -61,7 +63,30 @@ class TestDb:
         assert not paper.has_pdf
 
 
-class TestModels:
+class TestPaper:
+    def test_paper_update_raises(self, paper_for_test, db):
+        with pytest.raises(IstexError):
+            paper_for_test.istex_update()
+        assert paper_for_test.title == "2016GL069787-test"
+
+    def test_paper_update_no_id(self, paper_for_test, db):
+        paper_for_test.set_ark("ark:/67375/80W-QC194JKZ-X")
+        paper_for_test.istex_update()
+        assert paper_for_test.istex_id == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"
+        assert (
+            paper_for_test.title
+            == "Proton-proton collisional age to order solar wind types"
+        )
+
+    def test_paper_update_no_ark(self, paper_for_test, db):
+        paper_for_test.set_istex_id("BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1")
+        paper_for_test.istex_update()
+        assert paper_for_test.ark == "ark:/67375/80W-QC194JKZ-X"
+        assert (
+            paper_for_test.title
+            == "Proton-proton collisional age to order solar wind types"
+        )
+
     def test_paper(self):
         """
         GIVEN Paper model
@@ -112,6 +137,8 @@ class TestModels:
         paper_for_test.push_cat()
         # assert paper_for_test.cat_in_db
 
+
+class TestModels:
     def test_catalog(self, hpevents_list):
         """
         GIVEN HpEvent List and Catalog Model
