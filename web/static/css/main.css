@@ -1,5 +1,5 @@
 tr {
-vertical-align: baseline;
+    vertical-align: baseline;
 }
 
 ul.flashes {
@@ -93,6 +93,21 @@ a.btn[disabled] {
 .title-cell:hover {
     cursor: pointer;
     background-color:var(--bs-warning);
+}
+
+/* PAPERS LIST */
+.bht-status {
+    border-radius: 5pt;
+    padding: 5px;
+}
+.bht-status.finished {
+    /*background-color: #ccffdd;*/
+}
+.bht-status.started {
+    background-color: #cce6ff;
+}
+.bht-status.failed {
+    background-color:  #ffcccc;
 }
 
 /* PAPER SHOW */

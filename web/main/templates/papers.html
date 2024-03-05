@@ -138,28 +138,34 @@ function setStatus(paper_id) {
 
     const taskStatus = res.data.task_status;
     const statusElmtId = '#bht-status-'+res.data.paper_id
+    const catElementId = '#cat-link-'+res.data.paper_id;
 
     $(spinnerElmtId).removeClass('d-inline-block')
     $(spinnerElmtId).addClass('d-none')
 
-    $(statusElmtId).html(res.data.task_status)
     $(statusElmtId).html(res.data.task_status+" "+res.data.task_elapsed)
     $(statusElmtId).attr('title', 'Started: '+res.data.task_started)
 
     if (taskStatus === 'started' ) {
         $(spinnerElmtId).removeClass('d-none')
         $(spinnerElmtId).addClass('d-inline-block')
+        $(statusElmtId).removeClass("finished");
+        $(statusElmtId).removeClass("failed");
+        $(statusElmtId).addClass("started");
     }
     if (taskStatus === 'finished' ) {
-        const catElementId = '#cat-link-'+res.data.paper_id;
-        $(catElementId).removeAttr('disabled');
+        $(statusElmtId).removeClass("started");
+        $(statusElmtId).addClass("finished");
+        $(catElementId).attr('disabled');
         if  ( res.data.cat_is_processed === false){
             $(catElementId).find('span').removeClass('invisible').addClass('visible');
             }
         return false;
     }
     if ( taskStatus === 'failed'){
-        $(catElementId).addAttr('disabled')
+        $(statusElmtId).removeClass("started");
+        $(statusElmtId).addClass("failed");
+        $(catElementId).attr('disabled')
          return false;
     }
     setTimeout(function () {
