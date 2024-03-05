@@ -24,4 +24,5 @@ jobs:
             git checkout  dev-deploy
             git reset --hard  dev-deploy
             git pull
-            WEB_TAG=dev WEB_PORT=8081 docker compose -p bht-dev up -d   --build
+            WEB_TAG=dev WEB_PORT=8081 docker compose -p bht-dev up -d  --build
+            WEB_TAG=dev docker compose -p bht-dev exec web flask  --app web db upgrade
