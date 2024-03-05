@@ -10,11 +10,23 @@ from web.istex_proxy import (
     hit_extract,
     json_to_hits,
     get_file_from_id,
+    ark_to_id,
 )
 
 
 @skip_istex
 class TestIstex:
+    def test_ark_to_id(self):
+        """
+        GIVEN an ark
+        WHEN the ark_to_id() is called
+        THEN check istex_id is the proper one
+        @return:
+        """
+        doc_ark =  "ark:/67375/80W-QC194JKZ-X"
+        _istex_id = ark_to_id(doc_ark)
+        assert _istex_id == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"
+
     def test_get_doc_url(self, istex_id):
         """
         GIVEN an istex_id
@@ -58,7 +70,10 @@ class TestIstex:
         """
         istex_struct = get_doc_url(istex_id)
         _url = istex_struct["url"]
-        assert _url == "https://api.istex.fr/document/BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1/fulltext/pdf"
+        assert (
+            _url
+            == "https://api.istex.fr/document/BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1/fulltext/pdf"
+        )
 
     def test_get_file_from_id(self, istex_id):
         _c, _f, istex_struct = get_file_from_id(istex_id)

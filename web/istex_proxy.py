@@ -7,7 +7,7 @@ from requests import RequestException
 
 from web.errors import IstexParamError
 
-ISTEX_BASE_URL = "https://api.istex.fr/document/"
+ISTEX_BASE_URL = "https://api.istex.fr/"
 
 
 # TODO: REFACTOR choose between IstexDocType or  web.models.BhtFileType
@@ -35,6 +35,18 @@ def json_to_hits(istex_json):
         except IndexError:
             continue
     return our_json
+
+
+def ark_to_id(ark):
+    """
+    When given an ark, request istex api and grab documents' id
+    @param ark:  ark identifier
+    @return:  istex_id
+    """
+    ark_url = f"{ISTEX_BASE_URL}{ark}"
+    r = requests.get(url=ark_url)
+    document_json = r.json()
+    return document_json["idIstex"]
 
 
 def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
@@ -81,8 +93,7 @@ def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
     @param istex_id:  the istex document id.
     @return: a dict struct with http url, and other doc attributes
     """
-    doc_url = ISTEX_BASE_URL + istex_id
-    print(doc_url)
+    doc_url = f"{ISTEX_BASE_URL}document/{istex_id}"
     r = requests.get(url=doc_url)
     document_json = r.json()
     # Default url value
