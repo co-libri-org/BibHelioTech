@@ -140,6 +140,12 @@ function setStatus(paper_id) {
     const statusElmtId = '#bht-status-'+res.data.paper_id
     const catElementId = '#cat-link-'+res.data.paper_id;
 
+    $(statusElmtId).removeClass("finished");
+    $(statusElmtId).removeClass("started");
+    $(statusElmtId).removeClass("failed");
+    $(statusElmtId).removeClass("queued");
+    $(statusElmtId).addClass(taskStatus);
+
     $(spinnerElmtId).removeClass('d-inline-block')
     $(spinnerElmtId).addClass('d-none')
 
@@ -149,13 +155,8 @@ function setStatus(paper_id) {
     if (taskStatus === 'started' ) {
         $(spinnerElmtId).removeClass('d-none')
         $(spinnerElmtId).addClass('d-inline-block')
-        $(statusElmtId).removeClass("finished");
-        $(statusElmtId).removeClass("failed");
-        $(statusElmtId).addClass("started");
     }
     if (taskStatus === 'finished' ) {
-        $(statusElmtId).removeClass("started");
-        $(statusElmtId).addClass("finished");
         $(catElementId).attr('disabled');
         if  ( res.data.cat_is_processed === false){
             $(catElementId).find('span').removeClass('invisible').addClass('visible');
@@ -163,8 +164,6 @@ function setStatus(paper_id) {
         return false;
     }
     if ( taskStatus === 'failed'){
-        $(statusElmtId).removeClass("started");
-        $(statusElmtId).addClass("failed");
         $(catElementId).attr('disabled')
          return false;
     }

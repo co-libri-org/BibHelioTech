@@ -100,13 +100,16 @@ a.btn[disabled] {
     border-radius: 5pt;
     padding: 5px;
 }
-.bht-status.finished {
-    /*background-color: #ccffdd;*/
-}
-.bht-status.started {
+.bht-status.queued {
+    /* queued is blue */
     background-color: #cce6ff;
 }
+.bht-status.started {
+    /* started is green */
+    background-color: #ccffdd;
+}
 .bht-status.failed {
+    /* failed is red */
     background-color:  #ffcccc;
 }
 
