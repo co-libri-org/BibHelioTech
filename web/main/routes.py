@@ -35,6 +35,7 @@ from web.istex_proxy import (
     json_to_hits,
     IstexDoctype,
 )
+from ..errors import IstexError
 
 
 def allowed_file(filename):
@@ -217,6 +218,17 @@ def paper_del(paper_id):
     db.session.commit()
     flash(f"Paper {paper_id} deleted")
     return redirect(url_for("main.papers"))
+
+
+@bp.route("/paper/update/<paper_id>", methods=["GET"])
+def paper_update(paper_id):
+    paper = db.session.get(Paper, paper_id)
+    try:
+        paper.istex_update()
+        flash("Paper updated from Istex api")
+    except IstexError:
+        flash(f"There was an error on update", "error")
+    return redirect(url_for("main.paper_show", paper_id=paper_id))
 
 
 @bp.route("/paper/show/<paper_id>", methods=["GET"])
