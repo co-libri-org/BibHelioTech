@@ -3,32 +3,36 @@
 {%  endblock %}
 {% block content %}
 
-<h1>{{paper.title}}</h1>
+<h1>&laquo;{{paper.title}}&raquo;</h1>
+<!--   href="{{url_for('main.paper_pipeline', paper_id=paper.id, step_num=0, pipeline_mode='sutime')}}"-->
+<a class="btn btn-warning"
+   href="#"
+   title="reload from istex">Reload Meta</a>
 <table id="paper_keys" class="table table-striped">
     <tbody>
     <tr>
-        <th>has_pdf:</th>
-        <td>{{paper.has_pdf}}</td>
-    </tr>
-    <tr>
         <th>pdf_path:</th>
-        <td>{{paper.pdf_path | basename}}</td>
-    </tr>
-    <tr>
-        <th>has_txt:</th>
-        <td>{{paper.has_txt}}</td>
+        {% if paper.has_pdf %}
+        <td class="paper_attr_yes">>{{paper.pdf_path | basename}}</td>
+        {% else %}
+        <td class="paper_attr_no">No PDF file</td>
+        {% endif %}
     </tr>
     <tr>
         <th>txt_path:</th>
-        <td>{{paper.txt_path | basename}}</td>
-    </tr>
-    <tr>
-        <th>has_cat:</th>
-        <td>{{paper.has_cat}}</td>
+        {% if paper.has_txt %}
+        <td class="paper_attr_yes">{{paper.txt_path | basename}}</td>
+        {% else %}
+        <td class="paper_attr_no">No TXT file</td>
+        {% endif %}
     </tr>
     <tr>
         <th>cat_path:</th>
-        <td>{{paper.cat_path}}</td>
+        {% if paper.has_txt %}
+        <td class="paper_attr_yes">{{paper.cat_path | basename}}</td>
+        {% else %}
+        <td class="paper_attr_no">No CAT file</td>
+        {% endif %}
     </tr>
     <tr>
         <th>doi:</th>

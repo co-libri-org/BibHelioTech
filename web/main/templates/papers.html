@@ -42,8 +42,8 @@
             {{paper.id}}
             </a>
         </th>
-        <td class="text-truncate" style="max-width: 550px;" title="{{paper.ark}}">
-            {{paper.title}}
+        <td style="max-width: 550px;" title="{{paper.ark}}">
+            &laquo;{{paper.title | truncate(95, False, end=" ...")}}&raquo;
         </td>
         <td>
             <a class="btn btn-warning"
