@@ -12,7 +12,7 @@
     <tr>
         <th>pdf file:</th>
         {% if paper.has_pdf %}
-        <td class="paper_attr_yes">>{{paper.pdf_path | basename}}</td>
+        <td class="paper_attr_yes">{{paper.pdf_path | basename}}</td>
         {% else %}
         <td class="paper_attr_no">No PDF file</td>
         {% endif %}

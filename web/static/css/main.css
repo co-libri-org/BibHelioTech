@@ -97,8 +97,10 @@ a.btn[disabled] {
 
 /* PAPERS LIST */
 .bht-status {
+    display: inline-block;
+    width: 84%;
     border-radius: 5pt;
-    padding: 5px;
+    padding: 3px;
 }
 .bht-status.queued {
     /* queued is blue */
