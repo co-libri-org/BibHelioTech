@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 {% macro page_active(page) %}{% if  page in request.endpoint %} bg-warning active{% endif %}{% endmacro %}
 {% macro disabled(isdisabled) %}{% if  isdisabled %} disabled {% endif %}{% endmacro %}
+{% set base_title = "BHT-"+config.VERSION %}
 
 <html lang="en">
 <head>
-    <title>BibHelioTech - {{config.VERSION}}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="{{url_for('static', filename='css/main.css') | staticversion }} " rel="stylesheet">

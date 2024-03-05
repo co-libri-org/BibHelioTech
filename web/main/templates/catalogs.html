@@ -1,5 +1,6 @@
 {% extends "base_page.html" %}
 {% block more_head %}
+<title> {{catalogs | length}} Catalogs pending - {{base_title}}</title>
 {% endblock %}
 {% block content %}
 {% if db_stats.num_events > 0 %}
