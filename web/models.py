@@ -291,9 +291,14 @@ class Paper(db.Model):
     def istex_update(self):
         """From our ids, update meta information from istex api"""
         if self.istex_id is None:
-            if self.ark is None:
+            if self.ark:
+                self.istex_id = ark_to_id(self.ark)
+            elif self.has_txt:
+                self.istex_id = os.path.basename(self.txt_path).split('.')[0]
+            elif self.has_pdf:
+                self.istex_id = os.path.basename(self.pdf_path).split('.')[0]
+            else:
                 raise IstexError("Unable to grap meta info")
-            self.istex_id = ark_to_id(self.ark)
         istex_struct = get_doc_url(self.istex_id)
         self.title = istex_struct["title"]
         self.doi = istex_struct["doi"]
