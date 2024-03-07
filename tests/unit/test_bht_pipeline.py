@@ -2,6 +2,7 @@ import os
 import pytest
 
 from bht.GROBID_generator import GROBID_generation
+from bht.OCR_filtering import content_filter
 from bht.errors import BhtPipelineError
 from bht.pipeline import run_pipeline, run_step_entities, PipeStep
 from bht.published_date_finder import published_date_finder
@@ -49,6 +50,18 @@ class TestBhtPipelineSteps:
 
 @skip_bht
 class TestBhtPipelineTools:
+    def test_content_filter(self, cleaned_for_test):
+        """
+        GIVEN a file
+        WHEN called the content filtering
+        THEN check string "from 2011 to 2014" is not changed
+        """
+        with open(cleaned_for_test) as cleaned_file:
+            content = cleaned_file.read()
+        assert "from 2011 to 2014" in content
+        content = content_filter(content)
+        assert "from 2011 to 2014" in content
+
     @skip_slow_test
     def test_pipepaper(self, paper_for_test):
         """
