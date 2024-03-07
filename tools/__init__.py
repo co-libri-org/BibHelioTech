@@ -30,9 +30,9 @@ class RawDumper:
 
 # TODO: shall we move this to models.paper ?
 class StepLighter:
-    _all_captions = []
 
     def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
+        self._all_captions = []
         self.step = int(step_num)
         self.ocr_dir = ocr_dir
         self.enlight_mode = enlight_mode
