@@ -13,7 +13,9 @@
     <tr>
         <th>pdf file:</th>
         {% if paper.has_pdf %}
-        <td class="paper_attr_yes">{{paper.pdf_path | basename}}</td>
+        <td class="paper_attr_yes">
+            <a title="get pdf file" href="{{url_for('main.pdf', paper_id=paper.id)}}">{{paper.pdf_path | basename}}</a>
+        </td>
         {% else %}
         <td class="paper_attr_no">No PDF file</td>
         {% endif %}
@@ -21,7 +23,9 @@
     <tr>
         <th>txt file:</th>
         {% if paper.has_txt %}
-        <td class="paper_attr_yes">{{paper.txt_path | basename}}</td>
+        <td class="paper_attr_yes">
+            <a title="get txt file" href="{{url_for('main.txt', paper_id=paper.id)}}">{{paper.txt_path | basename}}</a>
+        </td>
         {% else %}
         <td class="paper_attr_no">No TXT file</td>
         {% endif %}
@@ -29,7 +33,9 @@
     <tr>
         <th>cat file:</th>
         {% if paper.has_txt %}
-        <td class="paper_attr_yes">{{paper.cat_path | basename}}</td>
+        <td class="paper_attr_yes">
+            <a title="get cat file" href="{{url_for('main.cat', paper_id=paper.id)}}">{{paper.cat_path | basename}}</a>
+        </td>
         {% else %}
         <td class="paper_attr_no">No CAT file</td>
         {% endif %}
