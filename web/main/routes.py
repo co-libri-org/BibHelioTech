@@ -477,6 +477,7 @@ def istex():
     istex_req_url_a = (
         f'<a href="{istex_req_url}" title="requested url"> {istex_req_url} </a>'
     )
+    # now try to get some results from Istex, or quit with err message
     try:
         r = requests.get(url=istex_req_url)
         json_content = r.json()
@@ -495,8 +496,14 @@ def istex():
         flash(f"There was an error reading json from <{istex_req_url_a}>", "error")
         flash(f"{e.__repr__()}", "error")
         return redirect(url_for("main.istex"))
+    # get papers from db so we can show we already have them
+    # build dict of papers indexed with istex_id
+    istex_papers = {p.istex_id: p for p in Paper.query.all()}
     return render_template(
-        "istex.html", istex_list=istex_list, istex_req_url=istex_req_url
+        "istex.html",
+        istex_list=istex_list,
+        istex_req_url=istex_req_url,
+        istex_papers=istex_papers,
     )
 
 

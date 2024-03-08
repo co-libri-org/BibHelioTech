@@ -48,9 +48,25 @@
     </thead>
     <tbody>
     {% for istex in istex_list %}
-    <tr>
+    {# Guess if current article was already added to db. Display accordingly #}
+    {% if istex.id in istex_papers.keys() %}
+        {% set tr_class = "paper_exists" %}
+        {% set paper = istex_papers[istex.id] %}
+        {% set paper_url = url_for("main.paper_show", paper_id = paper.id) %}
+        {% if paper.has_pdf %}
+            {% set has_pdf_disabled = "disabled" %}
+        {% endif %}
+        {% if paper.has_txt %}
+            {% set has_txt_disabled = "disabled" %}
+        {% endif %}
+    {% endif %}
+    <tr class="{{tr_class}}">
         <th scope="col"><input id="istex-check-{{istex.id}}" value="{{istex.id}}" type="checkbox"></th>
-        <th scope="row">{{loop.index}}</th>
+        <th scope="row">
+            {% if tr_class == "paper_exists" %}
+                <a class="btn btn-warning" title="show existing paper id={{paper_id}}"
+                   href="{{paper_url}}">{{paper.id}}</a></th>
+            {% endif %}
         <td class="title-cell text-truncate" style="max-width: 350px;" title="Show abstract"
             data-bs-toggle="modal" data-title="{{istex.title}}" data-abstract="{{istex.abstract}}"
             data-bs-target="#abstract-modal">{{istex.title}}
@@ -64,14 +80,14 @@
             <form class="form_single" method="post" action="{{url_for('main.istex_upload_id')}}">
                 <input type="hidden" name="istex_id" value="{{istex.id}}">
                 <input type="hidden" name="doc_type" value="pdf">
-                <input type=submit value="Add PDF" class="btn btn-warning" title="Add Paper to local database as PDF">
+                <input type=submit value="Add PDF" class="btn btn-warning" {{has_pdf_disabled}} title="Add Paper to local database as PDF">
             </form>
         </td>
         <td>
             <form class="form_single" method="post" action="{{url_for('main.istex_upload_id')}}">
                 <input type="hidden" name="istex_id" value="{{istex.id}}">
                 <input type="hidden" name="doc_type" value="cleaned">
-                <input type=submit value="Add TXT" class="btn btn-warning" title="Add Paper to local database as TEXT">
+                <input type=submit value="Add TXT" class="btn btn-warning" {{has_txt_disabled}} title="Add Paper to local database as TEXT">
             </form>
         </td>
     </tr>
@@ -107,79 +123,79 @@
 {% block scripts %}
 <script>
 
-$(document).ready(function() {
+    $(document).ready(function() {
 
-    // Show abstract in a modal window when title clicked
-    //
-    $("#abstract-modal").on("show.bs.modal", function(event) {
-        // Get the button that triggered the modal
-        var button = $(event.relatedTarget);
+        // Show abstract in a modal window when title clicked
+        //
+        $("#abstract-modal").on("show.bs.modal", function(event) {
+            // Get the button that triggered the modal
+            var button = $(event.relatedTarget);
 
-        // Change modal content
-        var article_author = button.siblings(".istex-first_author").text()  +" et al."
-        var article_year = button.siblings(".istex-year").text()
-        var article_title = button.text()
-        var article_abstract = button.data("abstract")
-        var modal_heading = article_title+', ' +article_author+', '+article_year
-        $(this).find(".modal-heading").text(modal_heading);
-        $(this).find(".modal-body").children("p").text(article_abstract);
-    });
+            // Change modal content
+            var article_author = button.siblings(".istex-first_author").text()  +" et al."
+            var article_year = button.siblings(".istex-year").text()
+            var article_title = button.text()
+            var article_abstract = button.data("abstract")
+            var modal_heading = article_title+', ' +article_author+', '+article_year
+            $(this).find(".modal-heading").text(modal_heading);
+            $(this).find(".modal-body").children("p").text(article_abstract);
+        });
 
-    // (de)Select  all checkboxes when main is (de)selected
-    //
-    $("#checkAll").click(function(){
-        $('input:checkbox').not(this).prop('checked', this.checked);
-    });
+        // (de)Select  all checkboxes when main is (de)selected
+        //
+        $("#checkAll").click(function(){
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
 
-    $("form.form_single").each(function() {
-        var the_form = $(this)
-        the_form.submit(function(e) {
-            submit_btn = $(this).children('input[type=submit]');
-            submit_btn.fadeOut();
-            e.preventDefault();
-            const data = Object.fromEntries([...new FormData(this)]);
-            $.post({
-                url: "{{url_for('main.istex_upload_id')}}",
-                data: JSON.stringify(data),
-                contentType: 'application/json; charset=utf-8'
-            })
-              .done(function( data ) {
-                submit_btn.fadeIn();
-                console.log("Added file " + data.filename + " for istex_id: " +data.istex_id + " as paper : "+data.paper_id);
+        $("form.form_single").each(function() {
+            var the_form = $(this)
+            the_form.submit(function(e) {
+                submit_btn = $(this).children('input[type=submit]');
+                submit_btn.fadeOut();
+                e.preventDefault();
+                const data = Object.fromEntries([...new FormData(this)]);
+                $.post({
+                    url: "{{url_for('main.istex_upload_id')}}",
+                    data: JSON.stringify(data),
+                    contentType: 'application/json; charset=utf-8'
+                })
+                  .done(function( data ) {
+                    submit_btn.fadeIn();
+                    console.log("Added file " + data.filename + " for istex_id: " +data.istex_id + " as paper : "+data.paper_id);
+                  });
               });
-          });
-    });
+        });
 
-    // When Add all PDF clicked, parse any checked box and call the api url with this istex id as parameter
-    $("#addAllPdf").click(function(){
-        $("input:checked").not($('#checkAll')).each(function() {
-            istex_id = $(this).val()
-            $.post({
-                url: "{{url_for('main.istex_upload_id')}}",
-                data: JSON.stringify({ istex_id: istex_id, doc_type: "pdf"}),
-                contentType: 'application/json; charset=utf-8'
-            })
-              .done(function( data ) {
-                console.log("Added file " + data.filename + " for istex_id: " +data.istex_id + " as paper : "+data.paper_id);
+        // When Add all PDF clicked, parse any checked box and call the api url with this istex id as parameter
+        $("#addAllPdf").click(function(){
+            $("input:checked").not($('#checkAll')).each(function() {
+                istex_id = $(this).val()
+                $.post({
+                    url: "{{url_for('main.istex_upload_id')}}",
+                    data: JSON.stringify({ istex_id: istex_id, doc_type: "pdf"}),
+                    contentType: 'application/json; charset=utf-8'
+                })
+                  .done(function( data ) {
+                    console.log("Added file " + data.filename + " for istex_id: " +data.istex_id + " as paper : "+data.paper_id);
+                  });
               });
-          });
-    });
+        });
 
-    // When Add all TXT clicked, parse any checked box and call the api url with this istex id as parameter
-    $("#addAllTxt").click(function(){
-        $("input:checked").not($('#checkAll')).each(function() {
-            istex_id = $(this).val()
-            $.post({
-                url: "{{url_for('main.istex_upload_id')}}",
-                data: JSON.stringify({ istex_id: istex_id, doc_type: "txt"}),
-                contentType: 'application/json; charset=utf-8'
-            })
-              .done(function( data ) {
-                console.log("Added file " + data.filename + " for istex_id: " +data.istex_id + " as paper : "+data.paper_id);
+        // When Add all TXT clicked, parse any checked box and call the api url with this istex id as parameter
+        $("#addAllTxt").click(function(){
+            $("input:checked").not($('#checkAll')).each(function() {
+                istex_id = $(this).val()
+                $.post({
+                    url: "{{url_for('main.istex_upload_id')}}",
+                    data: JSON.stringify({ istex_id: istex_id, doc_type: "txt"}),
+                    contentType: 'application/json; charset=utf-8'
+                })
+                  .done(function( data ) {
+                    console.log("Added file " + data.filename + " for istex_id: " +data.istex_id + " as paper : "+data.paper_id);
+                  });
               });
-          });
+        });
     });
-});
 
 </script>
 {% endblock %}

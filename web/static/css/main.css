@@ -70,6 +70,7 @@ padding: 1px 2px !important;
 }
 
 button.btn[disabled] ,
+input.btn[disabled] ,
 a.btn[disabled] {
     background-color: lightgrey;
     text-decoration-line: line-through;
@@ -94,6 +95,15 @@ a.btn[disabled] {
     cursor: pointer;
     background-color:var(--bs-warning);
 }
+
+/* ISTEX RESULTS */
+/* change tr color to show if is in db */
+tr.paper_exists {
+    background-color: #f5ecd3 ;
+}
+
+/* Disable btn if document already in db  */
+/* see above input.btn[disabled] */
 
 /* PAPERS LIST */
 .bht-status {
