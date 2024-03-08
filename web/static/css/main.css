@@ -102,6 +102,16 @@ tr.paper_exists {
     background-color: #f5ecd3 ;
 }
 
+td.td_num {
+    text-align: center;
+}
+input.failed{
+    background-color: #ffcccc !important;
+}
+input.success{
+    background-color: #ccffdd !important;
+  }
+
 /* Disable btn if document already in db  */
 /* see above input.btn[disabled] */
 
