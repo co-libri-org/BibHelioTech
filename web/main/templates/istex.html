@@ -36,7 +36,7 @@
     <thead>
     <tr>
         <th scope="col" class="col"><input id="checkAll" type="checkbox" title="Select all papers"></th>
-        <th scope="col" class="col td_numr>#</th>
+        <th scope="col" class="col td_num">#</th>
         <th scope="col" class="col">Title</th>
         <th scope="col" class="col">Year</th>
         <th scope="col" class="col">First Author</th>
@@ -49,15 +49,19 @@
     <tbody>
     {% for istex in istex_list %}
     {# Guess if current article was already added to db. Display accordingly #}
+    {% set btn_pdf_value = "Add PDF" %}
+    {% set btn_txt_value = "Add TXT" %}
     {% if istex.id in istex_papers.keys() %}
         {% set tr_class = "paper_exists" %}
         {% set paper = istex_papers[istex.id] %}
         {% set paper_url = url_for("main.paper_show", paper_id = paper.id) %}
         {% if paper.has_pdf %}
             {% set has_pdf_disabled = "disabled" %}
+            {% set btn_pdf_value = "PDF Added" %}
         {% endif %}
         {% if paper.has_txt %}
             {% set has_txt_disabled = "disabled" %}
+            {% set btn_txt_value = "TXT Added" %}
         {% endif %}
     {% endif %}
     <tr class="{{tr_class}}">
@@ -83,14 +87,14 @@
             <form class="form_single" method="post" action="{{url_for('main.istex_upload_id')}}">
                 <input type="hidden" name="istex_id" value="{{istex.id}}">
                 <input type="hidden" name="doc_type" value="pdf">
-                <input type=submit value="Add PDF" class="btn btn-warning" {{has_pdf_disabled}} title="Add Paper to local database as PDF">
+                <input type=submit value="{{btn_pdf_value}}" class="btn btn-warning" {{has_pdf_disabled}} title="Add Paper to local database as PDF">
             </form>
         </td>
         <td>
             <form class="form_single" method="post" action="{{url_for('main.istex_upload_id')}}">
                 <input type="hidden" name="istex_id" value="{{istex.id}}">
                 <input type="hidden" name="doc_type" value="cleaned">
-                <input type=submit value="Add TXT" class="btn btn-warning" {{has_txt_disabled}} title="Add Paper to local database as TEXT">
+                <input type=submit value="{{btn_txt_value}}" class="btn btn-warning" {{has_txt_disabled}} title="Add Paper to local database as TEXT">
             </form>
         </td>
     </tr>
