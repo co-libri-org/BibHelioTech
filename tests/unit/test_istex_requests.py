@@ -41,6 +41,17 @@ class TestIstex:
         assert istex_struct["pub_date"] == "2020"
         assert istex_struct["istex_id"] == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"
 
+    def test_get_doc_url_broken(self):
+        """
+        GIVEN an istex_id
+        WHEN the id_to_url  is called
+        THEN check istex_id is contained in url
+        """
+        _istex_id = "B368E1257857C4E925D2768DF79CC59C952AE711"
+        istex_struct = get_doc_url(_istex_id, IstexDoctype.TXT)
+        expected_url = "https://api.istex.fr/document/B368E1257857C4E925D2768DF79CC59C952AE711/fulltext/txt"
+        assert istex_struct["url"] == expected_url
+
     def test_get_doc_url_txt(self, istex_id):
         """
         GIVEN an istex_id
