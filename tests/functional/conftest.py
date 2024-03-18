@@ -8,12 +8,6 @@ from selenium import webdriver
 
 from web.main.routes import pdf_to_db
 
-# TODO: REWRITE move and rewrite all skip fixture to one place
-skip_selenium = pytest.mark.skipif(
-    os.environ.get("BHT_DONTSKIPSELENIUM") is None
-    or not os.environ.get("BHT_DONTSKIPSELENIUM"),
-    reason="SELENIUM Skipping",
-)
 
 
 @pytest.fixture(scope="module")

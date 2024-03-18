@@ -10,20 +10,27 @@ from web import db as _db
 from web.main.routes import pdf_to_db
 from web.models import Paper, HpEvent, BhtFileType
 
+skip_selenium = pytest.mark.skipif(
+    os.environ.get("BHT_SKIP_SELENIUM") is not None
+    and os.environ.get("BHT_SKIP_SELENIUM"),
+    reason="SELENIUM Skipping",
+    )
+
 skip_bht = pytest.mark.skipif(
-    os.environ.get("BHT_DONTSKIPBHT") is None or not os.environ.get("BHT_DONTSKIPBHT"),
+    os.environ.get("BHT_SKIP_BHT") is not None
+    and os.environ.get("BHT_SKIP_BHT"),
     reason="BHT skipping (too long)",
 )
 
 skip_istex = pytest.mark.skipif(
-    os.environ.get("BHT_DONTSKIPISTEX") is None
-    or not os.environ.get("BHT_DONTSKIPISTEX"),
+    os.environ.get("BHT_SKIP_ISTEX") is not None
+    and os.environ.get("BHT_SKIP_ISTEX"),
     reason="ISTEX skipping (no auth)",
 )
 
 skip_slow_test = pytest.mark.skipif(
-    os.environ.get("BHT_SKIPSLOWTESTS") is not None
-    and os.environ.get("BHT_SKIPSLOWTESTS"),
+    os.environ.get("BHT_SKIP_SLOW") is not None
+    and os.environ.get("BHT_SKIP_SLOW"),
     reason="Slow test skipping",
 )
 

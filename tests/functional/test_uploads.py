@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 
-from tests.functional.conftest import skip_selenium
+from tests.conftest import skip_selenium
 
 
 @skip_selenium
