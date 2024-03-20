@@ -475,7 +475,7 @@ def istex():
     # else method == "POST"
     istex_req_url = request.form["istex_req_url"]
     istex_req_url_a = (
-        f'<a href="{istex_req_url}" title="requested url"> {istex_req_url} </a>'
+        f'<a target="_blank" href="{istex_req_url}" title="get istex request"> {istex_req_url} </a>'
     )
     # now try to get some results from Istex, or quit with err message
     try:

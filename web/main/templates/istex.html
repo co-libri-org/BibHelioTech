@@ -23,9 +23,9 @@
 <hr class="mt-4 mb-4">
 {% if istex_req_url %}
 <div class="row mb-5">
-    <h4>Results for:</h4>
+    <h4>{{istex_list | length }} Results for request :</h4>
     <p>
-        {{ istex_req_url }}
+        <a target="_blank" title="Get json from istex (needs auth)" href="{{ istex_req_url }}">{{ istex_req_url }}</a>
     </p>
 </div>
 {% endif %}
@@ -37,6 +37,7 @@
     <tr>
         <th scope="col" class="col"><input id="checkAll" type="checkbox" title="Select all papers"></th>
         <th scope="col" class="col td_num">#</th>
+        <th scope="col" class="col td_num">Id</th>
         <th scope="col" class="col">Title</th>
         <th scope="col" class="col">Year</th>
         <th scope="col" class="col">First Author</th>
@@ -66,6 +67,7 @@
     {% endif %}
     <tr class="{{tr_class}}">
         <th scope="col"><input id="istex-check-{{istex.id}}" value="{{istex.id}}" type="checkbox"></th>
+        <th scope="row" class="td_num">{{loop.index}}</th>
         <td scope="row" class="td_num">
             {% if tr_class == "paper_exists" %}
                 <a class="btn btn-warning" title="show existing paper id={{paper.id}}"
