@@ -115,6 +115,7 @@ input.success{
 
 /* PAPERS LIST */
 .bht-status {
+    color: black;
     display: inline-block;
     width: 84%;
     border-radius: 5pt;
@@ -130,7 +131,10 @@ input.success{
 }
 .bht-status.failed {
     /* failed is red */
-    background-color:  #ffcccc;
+    background-color: #ff6666;
+    font-weight: 400;
+    color: black;
+
 }
 
 /* PAPER SHOW */

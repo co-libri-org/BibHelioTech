@@ -389,7 +389,17 @@ def bht_status(paper_id):
                 task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
             )
         except NoSuchJobError:
-            return jsonify({"status": "error"})
+            response_object = {
+                "status": "error",
+                "data": {"paper_id": paper.id, "err_message": "No Job"},
+            }
+            return jsonify(response_object), 503
+        except redis.connection.ConnectionError:
+            response_object = {
+                "status": "error",
+                "data": {"paper_id": paper.id, "err_message": "Redis Cnx Err"},
+            }
+            return jsonify(response_object), 503
 
         task_started = job.started_at
         task_status = job.get_status(refresh=True)
@@ -430,12 +440,19 @@ def bht_run():
         return redirect(url_for("main.papers"))
 
     # TODO: REFACTOR CUT START and delegate to Paper and Task models
-    q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
-    task = q.enqueue(
-        get_pipe_callback(test=current_app.config["TESTING"]),
-        args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type),
-        job_timeout=600,
-    )
+    try:
+        q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
+        task = q.enqueue(
+            get_pipe_callback(test=current_app.config["TESTING"]),
+            args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type),
+            job_timeout=600,
+        )
+    except redis.connection.ConnectionError:
+        response_object = {
+            "status": "error",
+            "data": {"paper_id": paper_id, "err_message": "Failed: no Redis"},
+        }
+        return jsonify(response_object), 503
 
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
@@ -474,9 +491,7 @@ def istex():
         return render_template("istex.html", istex_list=[])
     # else method == "POST"
     istex_req_url = request.form["istex_req_url"]
-    istex_req_url_a = (
-        f'<a target="_blank" href="{istex_req_url}" title="get istex request"> {istex_req_url} </a>'
-    )
+    istex_req_url_a = f'<a target="_blank" href="{istex_req_url}" title="get istex request"> {istex_req_url} </a>'
     # now try to get some results from Istex, or quit with err message
     try:
         r = requests.get(url=istex_req_url)

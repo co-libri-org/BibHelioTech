@@ -23,7 +23,7 @@
 <table class="table-hover table">
     <thead>
     <tr>
-        <th scope="col" style="width: 20px;">#</th>
+        <th scope="col" style="width: 20px;">Id</th>
         <th scope="col" style="width: 680px;">Title</th>
         <th scope="col" style="width: 40px;">del</th>
         <th scope="col" style="width: 40px;">pdf</th>
@@ -111,19 +111,31 @@
 // BHT tasks management
 
 $('.run-bht').on('click', function() {
+  let paper_id = $(this).data('paper_id');
+  const statusElmtId = '#bht-status-'+paper_id;
+  $(statusElmtId).hide();
   $.ajax({
     url: '/bht_run',
-    data: { paper_id: $(this).data('paper_id') ,
+    data: { paper_id:  paper_id,
             file_type: $(this).data('file_type')},
     method: 'POST'
   })
   .done((res) => {
-    console.log('bht task sent');
-    setStatus(res.data.paper_id);
-    location.reload();
+    if ( res.status === "success" ){
+        setStatus(res.data.paper_id);
+        location.reload();
+    } else {
+        alert("Error: "+res.data.err_message);
+    }
   })
   .fail((err) => {
-    console.log(err);
+    // Show there was an error if any
+    err_message = err.responseJSON.data.err_message;
+    paper_id = err.responseJSON.data.paper_id;
+    $(statusElmtId).removeClass("finished started failed queued");
+    $(statusElmtId).addClass("failed");
+    $(statusElmtId).html(err_message);
+    $(statusElmtId).show();
   });
 });
 
@@ -134,25 +146,27 @@ function setStatus(paper_id) {
     method: 'GET',
   })
   .done((res) => {
-    if (res.status === 'error' ) return false;
-    const spinnerElmtId = '#spinner-'+res.data.paper_id
-
     const taskStatus = res.data.task_status;
+
+    // Build dom elements' ids to grab
+    const spinnerElmtId = '#spinner-'+res.data.paper_id
     const statusElmtId = '#bht-status-'+res.data.paper_id
     const catElementId = '#cat-link-'+res.data.paper_id;
 
-    $(statusElmtId).removeClass("finished");
-    $(statusElmtId).removeClass("started");
-    $(statusElmtId).removeClass("failed");
-    $(statusElmtId).removeClass("queued");
+    // Update css class
+    $(statusElmtId).removeClass("finished started failed queued");
     $(statusElmtId).addClass(taskStatus);
 
+    // Disable spinner
     $(spinnerElmtId).removeClass('d-inline-block')
     $(spinnerElmtId).addClass('d-none')
 
+    // Update status text content
     $(statusElmtId).html(res.data.task_status+" "+res.data.task_elapsed)
     $(statusElmtId).attr('title', 'Started: '+res.data.task_started)
 
+
+    // Update display depending on status
     if (taskStatus === 'started' ) {
         $(spinnerElmtId).removeClass('d-none')
         $(spinnerElmtId).addClass('d-inline-block')
@@ -168,14 +182,24 @@ function setStatus(paper_id) {
         $(catElementId).attr('disabled')
          return false;
     }
+
+    // Update all statuses after 1s
     setTimeout(function () {
       setStatus(res.data.paper_id);
     }, 1000);
   })
   .fail((err) => {
-    console.log(err);
+
+    // Show there was an error if any
+    err_message = err.responseJSON.data.err_message;
+    paper_id = err.responseJSON.data.paper_id;
+    const statusElmtId = '#bht-status-'+paper_id;
+    $(statusElmtId).removeClass("finished started failed queued");
+    $(statusElmtId).addClass("failed");
+    $(statusElmtId).html(err_message);
   });
 }
+
 //
 $('.bht-status').each(function(index){
     const paperId = $(this).attr('id').substring(11);
