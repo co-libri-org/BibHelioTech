@@ -121,9 +121,13 @@ input.success{
     border-radius: 5pt;
     padding: 3px;
 }
-.bht-status.queued, .bht-status.undefined {
+.bht-status.queued{
     /* queued is blue */
     background-color: #cce6ff;
+}
+.bht-status.undefined {
+    color: #505050;
+    background-color: #eaeaea;
 }
 .bht-status.started {
     /* started is green */
