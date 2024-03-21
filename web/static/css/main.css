@@ -121,7 +121,7 @@ input.success{
     border-radius: 5pt;
     padding: 3px;
 }
-.bht-status.queued {
+.bht-status.queued, .bht-status.undefined {
     /* queued is blue */
     background-color: #cce6ff;
 }

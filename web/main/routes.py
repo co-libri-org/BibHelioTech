@@ -390,13 +390,13 @@ def bht_status(paper_id):
             )
         except NoSuchJobError:
             response_object = {
-                "status": "error",
-                "data": {"paper_id": paper.id, "err_message": "No Job"},
+                "status": "undefined",
+                "data": {"paper_id": paper.id, "err_message": "No job yet"},
             }
             return jsonify(response_object), 503
         except redis.connection.ConnectionError:
             response_object = {
-                "status": "error",
+                "status": "failed",
                 "data": {"paper_id": paper.id, "err_message": "Redis Cnx Err"},
             }
             return jsonify(response_object), 503
@@ -449,7 +449,7 @@ def bht_run():
         )
     except redis.connection.ConnectionError:
         response_object = {
-            "status": "error",
+            "status": "failed",
             "data": {"paper_id": paper_id, "err_message": "Failed: no Redis"},
         }
         return jsonify(response_object), 503

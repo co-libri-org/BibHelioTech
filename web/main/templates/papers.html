@@ -130,10 +130,11 @@ $('.run-bht').on('click', function() {
   })
   .fail((err) => {
     // Show there was an error if any
+    err_status = err.responseJSON.status;
     err_message = err.responseJSON.data.err_message;
     paper_id = err.responseJSON.data.paper_id;
-    $(statusElmtId).removeClass("finished started failed queued");
-    $(statusElmtId).addClass("failed");
+    $(statusElmtId).removeClass("finished started failed queued undefined");
+    $(statusElmtId).addClass(err_status);
     $(statusElmtId).html(err_message);
     $(statusElmtId).show();
   });
@@ -154,7 +155,7 @@ function setStatus(paper_id) {
     const catElementId = '#cat-link-'+res.data.paper_id;
 
     // Update css class
-    $(statusElmtId).removeClass("finished started failed queued");
+    $(statusElmtId).removeClass("finished started failed queued undefined");
     $(statusElmtId).addClass(taskStatus);
 
     // Disable spinner
@@ -191,11 +192,12 @@ function setStatus(paper_id) {
   .fail((err) => {
 
     // Show there was an error if any
+    err_status = err.responseJSON.status;
     err_message = err.responseJSON.data.err_message;
     paper_id = err.responseJSON.data.paper_id;
     const statusElmtId = '#bht-status-'+paper_id;
-    $(statusElmtId).removeClass("finished started failed queued");
-    $(statusElmtId).addClass("failed");
+    $(statusElmtId).removeClass("finished started failed queued undefined");
+    $(statusElmtId).addClass(err_status);
     $(statusElmtId).html(err_message);
   });
 }
