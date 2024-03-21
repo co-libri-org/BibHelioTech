@@ -132,10 +132,12 @@ $('.run-bht').on('click', function() {
     // Show there was an error if any
     err_status = err.responseJSON.status;
     err_message = err.responseJSON.data.err_message;
+    alt_message = err.responseJSON.data.alt_message;
     paper_id = err.responseJSON.data.paper_id;
     $(statusElmtId).removeClass("finished started failed queued undefined");
     $(statusElmtId).addClass(err_status);
     $(statusElmtId).html(err_message);
+    $(statusElmtId).attr("title", alt_message);
     $(statusElmtId).show();
   });
 });
@@ -194,11 +196,13 @@ function setStatus(paper_id) {
     // Show there was an error if any
     err_status = err.responseJSON.status;
     err_message = err.responseJSON.data.err_message;
+    alt_message = err.responseJSON.data.alt_message;
     paper_id = err.responseJSON.data.paper_id;
     const statusElmtId = '#bht-status-'+paper_id;
     $(statusElmtId).removeClass("finished started failed queued undefined");
     $(statusElmtId).addClass(err_status);
     $(statusElmtId).html(err_message);
+    $(statusElmtId).attr("title", alt_message);
   });
 }
 

@@ -114,7 +114,11 @@ input.success{
 /* see above input.btn[disabled] */
 
 /* PAPERS LIST */
+.bht-status:hover {
+    border: 1pt solid lightgrey;
+}
 .bht-status {
+    border: 1pt solid transparent;
     color: black;
     display: inline-block;
     width: 84%;
@@ -138,8 +142,11 @@ input.success{
     background-color: #ff6666;
     font-weight: 400;
     color: black;
-
 }
+.bht-status.failed:hover {
+    border: 1pt solid grey;
+}
+
 
 /* PAPER SHOW */
 

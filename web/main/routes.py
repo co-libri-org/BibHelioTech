@@ -391,13 +391,21 @@ def bht_status(paper_id):
         except NoSuchJobError:
             response_object = {
                 "status": "undefined",
-                "data": {"paper_id": paper.id, "err_message": "No job yet"},
+                "data": {
+                    "paper_id": paper.id,
+                    "err_message": "No job yet",
+                    "alt_message": "No pipeline was run on that paper",
+                },
             }
             return jsonify(response_object), 503
         except redis.connection.ConnectionError:
             response_object = {
                 "status": "failed",
-                "data": {"paper_id": paper.id, "err_message": "Redis Cnx Err"},
+                "data": {
+                    "paper_id": paper.id,
+                    "err_message": "Redis Cnx Err",
+                    "alt_message": "Database to read and write tasks is unreachable",
+                },
             }
             return jsonify(response_object), 503
 
@@ -450,7 +458,11 @@ def bht_run():
     except redis.connection.ConnectionError:
         response_object = {
             "status": "failed",
-            "data": {"paper_id": paper_id, "err_message": "Failed: no Redis"},
+            "data": {
+                "paper_id": paper_id,
+                "err_message": "Failed: no Redis",
+                "alt_message": "Database to read and write tasks is unreachable",
+            },
         }
         return jsonify(response_object), 503
 
