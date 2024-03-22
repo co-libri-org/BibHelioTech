@@ -1,9 +1,14 @@
+#step_menu {
+    margin: 10pt 0;
+}
+
 #step_menu a , #step_navigator a{
-    padding: 0 1em;
+    padding: 0 0.5em;
     border: solid 2pt grey;
     background: lightgrey;
     text-decoration: none;
 }
+
 #step_menu a.a_selected {
     background: white;
     border: solid 2pt black;
@@ -19,22 +24,48 @@
     background: white;
 }
 
-.DATE {
+.highlight.DATE {
     background: lightgreen;
 }
-.DURATION {
+.highlight.DURATION {
     background: lightyellow;
 }
-.TIME {
+.highlight.TIME {
     background: lightblue;
 }
+.highlight.sat {
+    color: black;
+    background: coral;
+}
+.highlight.instr {
+    color: black;
+    background: aqua;
+}
+.highlight.region {
+    color: black;
+    background: khaki;
+}
 
-#legend {
-    margin: 10pt;
+#highlight_legend, #colored_content, #step_menu {
+    width: 80%;
 }
 
 #colored_content {
-    width: 80%;
+    margin: 1px 0 0 0 ;
+    border: solid 1pt black;
     font-size: 10px;
-    padding: 5em;
+    padding: 3em 5em 3em 5em ;
+    text-align: justify;
+}
+
+#highlight_legend {
+    margin: 0 0 20pt 0;
+    text-align: right;
+}
+
+#highlight_legend span{
+    display: inline-block;
+    width: 60px;
+    text-align: center;
+    font-size: 7pt;
 }

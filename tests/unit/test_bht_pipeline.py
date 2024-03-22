@@ -2,6 +2,7 @@ import os
 import pytest
 
 from bht.GROBID_generator import GROBID_generation
+from bht.OCR_filtering import content_filter
 from bht.errors import BhtPipelineError
 from bht.pipeline import run_pipeline, run_step_entities, PipeStep
 from bht.published_date_finder import published_date_finder
@@ -33,18 +34,34 @@ class TestBhtPipeline:
 class TestBhtPipelineSteps:
     def test_run_step_entities(self, ocr_dir_test):
         doi = "10.1002/2015GL064052"
-        catalog_file = run_step_entities(ocr_dir_test, doi)
+        catalog_file = run_step_entities(ocr_dir_test, doc_meta_info={"doi": doi})
         with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
             assert len(_r_content) == 52
 
+    def test_run_step_entities_with_no_metadoc(self, tmp_path):
+        with pytest.raises(BhtPipelineError):
+            run_step_entities(tmp_path, doc_meta_info=None)
+
     def test_run_step_entities_with_no_doi(self, tmp_path):
         with pytest.raises(BhtPipelineError):
-            run_step_entities(tmp_path, None)
+            run_step_entities(tmp_path, doc_meta_info={"doi": None})
 
 
 @skip_bht
 class TestBhtPipelineTools:
+    def test_content_filter(self, cleaned_for_test):
+        """
+        GIVEN a file
+        WHEN called the content filtering
+        THEN check string "from 2011 to 2014" is not changed
+        """
+        with open(cleaned_for_test) as cleaned_file:
+            content = cleaned_file.read()
+        assert "from 2011 to 2014" in content
+        content = content_filter(content)
+        assert "from 2011 to 2014" in content
+
     @skip_slow_test
     def test_pipepaper(self, paper_for_test):
         """

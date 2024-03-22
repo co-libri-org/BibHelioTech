@@ -1,9 +1,9 @@
-name: ovh-buid-deploy
+name: ovh-build-deploy
 
 on:
   push:
     branches:
-      - "ovh-deploy"
+      - "dev-deploy"
 
 jobs:
 
@@ -19,11 +19,10 @@ jobs:
           password: ${{ secrets.VPS_PASSWD }}
           port: 22
           script: |
-            cd BibHelioTech
-            docker compose down
-            git checkout  ovh-deploy
-            git reset --hard  ovh-deploy
+            cd bht-dev
+            WEB_TAG=dev WEB_PORT=8081 docker compose -p bht-dev down
+            git checkout  dev-deploy
+            git reset --hard  dev-deploy
             git pull
-            docker compose build
-            docker compose up -d
-            docker compose run -e FLASK_APP=web web flask db upgrade
+            WEB_TAG=dev WEB_PORT=8081 docker compose -p bht-dev up -d  --build
+            WEB_TAG=dev docker compose -p bht-dev exec web flask  --app web db upgrade

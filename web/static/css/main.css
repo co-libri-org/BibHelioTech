@@ -1,5 +1,5 @@
 tr {
-vertical-align: baseline;
+    vertical-align: baseline;
 }
 
 ul.flashes {
@@ -12,6 +12,9 @@ ul.flashes {
     border: 1px lightgrey solid;
     padding: 10px ;
     margin: 0;
+}
+.flashes li.flash-warning {
+    background-color: #ffffcc;
 }
 .flashes li.flash-error {
     background-color: #ff9e9e;
@@ -67,12 +70,11 @@ padding: 1px 2px !important;
 }
 
 button.btn[disabled] ,
+input.btn[disabled] ,
 a.btn[disabled] {
     background-color: lightgrey;
-    text-decoration-line: line-through;
     border: solid black 1pt;
     pointer-events: none;
-    text-decoration-line: line-through;
     color: black;
 }
 
@@ -90,4 +92,68 @@ a.btn[disabled] {
 .title-cell:hover {
     cursor: pointer;
     background-color:var(--bs-warning);
+}
+
+/* ISTEX RESULTS */
+/* change tr color to show if is in db */
+tr.paper_exists {
+    background-color: #f5ecd3 ;
+}
+
+th.td_num, td.td_num {
+    text-align: center !important;
+}
+input.failed{
+    background-color: #ffcccc !important;
+}
+input.success{
+    background-color: #ccffdd !important;
+  }
+
+/* Disable btn if document already in db  */
+/* see above input.btn[disabled] */
+
+/* PAPERS LIST */
+.bht-status:hover {
+    border: 1pt solid lightgrey;
+}
+.bht-status {
+    border: 1pt solid transparent;
+    color: black;
+    display: inline-block;
+    width: 84%;
+    border-radius: 5pt;
+    padding: 3px;
+}
+.bht-status.queued{
+    /* queued is blue */
+    background-color: #cce6ff;
+}
+.bht-status.undefined {
+    color: #505050;
+    background-color: #eaeaea;
+}
+.bht-status.started {
+    /* started is green */
+    background-color: #ccffdd;
+}
+.bht-status.failed {
+    /* failed is red */
+    background-color: #ff6666;
+    font-weight: 400;
+    color: black;
+}
+.bht-status.failed:hover {
+    border: 1pt solid grey;
+}
+
+
+/* PAPER SHOW */
+
+.paper_attr_yes {
+}
+
+.paper_attr_no {
+    color: red !important;
+    font-weight: bold;
 }

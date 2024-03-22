@@ -3,8 +3,9 @@ import os
 import sys
 from datetime import datetime
 
-from bht.pipeline import bht_run_file, bht_run_dir, run_pipeline, PipeStep
+from bht.pipeline import bht_run_file, run_pipeline, PipeStep
 from bht_config import yml_settings
+
 # TODO: REFACTOR dont import anything from web. to bht !!!!
 from web.istex_proxy import IstexDoctype, get_file_from_id
 from web.models import BhtFileType
@@ -29,7 +30,7 @@ if __name__ == "__main__":
         dest="pipe_steps",
         help="Add pipeline steps to run in given directory.",
         choices=[ps.name for ps in list(PipeStep)],
-        nargs='*'
+        nargs="*",
     )
     parser.add_argument(
         "-i",
@@ -37,26 +38,17 @@ if __name__ == "__main__":
         type=str,
         help="Run pipeline on txt document from ISTEX id. (dont grobid or ocr)",
     )
-    parser.add_argument(
-        "-d",
-        "--pipe-dir",
-        type=str,
-        help="Run pipeline on directory.")
+    parser.add_argument("-d", "--pipe-dir", type=str, help="Run pipeline on directory.")
     parser.add_argument(
         "-t",
         "--txt-file",
         type=str,
         help="Run pipeline on txt file (needs --doi to be set)",
     )
+    parser.add_argument("--doi", type=str, help="Set DOI if txt")
+    parser.add_argument("--pub-date", type=str, help="Set PublicationDate if txt")
     parser.add_argument(
-        "--doi",
-        type=str,
-        help="Set DOI if txt")
-    parser.add_argument(
-        "-f",
-        "--pdf-file",
-        type=str,
-        help="Run pipeline from pdf file."
+        "-f", "--pdf-file", type=str, help="Run pipeline from pdf file."
     )
     parser.add_argument(
         "-b",
@@ -84,21 +76,26 @@ if __name__ == "__main__":
     #  Get pipe steps if any
     pipe_steps = []
     if args.pipe_steps:
-        pipe_steps = [PipeStep[p] for p in args.pipe_steps ]
+        pipe_steps = [PipeStep[p] for p in args.pipe_steps]
 
     if args.pdf_file:
         bht_run_file(args.pdf_file, papers_dir, BhtFileType.PDF)
     elif args.txt_file:
         if not args.doi:
-            print("Set DOI with --doit opt")
+            print("Set DOI with --doi opt")
             sys.exit()
-        bht_run_file(args.txt_file, papers_dir, BhtFileType.TXT, args.doi)
+        if not args.pub_date:
+            print("Set Publication_Date with --pub-date opt")
+            sys.exit()
+        doc_meta_info = {"doi":args.doi, "pub_date":args.pub_date}
+        bht_run_file(args.txt_file, papers_dir, BhtFileType.TXT, doc_meta_info)
     elif args.pipe_dir:
         if PipeStep.GROBID in pipe_steps and not args.doi:
             print("Include GROBID pipe-stop, or use --doi ")
             sys.exit()
         done_steps = run_pipeline(
             doi=args.doi,
+            # TODO: pub_date=args.pub_date,
             dest_file_dir=args.pipe_dir,
             file_path=None,
             doc_type=None,
@@ -111,21 +108,21 @@ if __name__ == "__main__":
         #     sys.exit()
         # doc_type = IstexDoctype.TXT
         doc_type = IstexDoctype.CLEANED
-        content, filename, doi = get_file_from_id(args.istex_id, doc_type)
+        content, filename, istex_struct = get_file_from_id(args.istex_id, doc_type)
         filepath = os.path.join(yml_settings["BHT_DATA_DIR"], filename)
         with open(filepath, "wb") as binary_file:
             # Write bytes to file
             binary_file.write(content)
         print(f"Written to {filepath}")
         if not pipe_steps:
-            pipe_steps =[
+            pipe_steps = [
                 PipeStep.MKDIR,
                 PipeStep.FILTER,
                 PipeStep.SUTIME,
                 PipeStep.ENTITIES,
             ]
         done_steps = run_pipeline(
-            doi=doi,
+            doi=istex_struct["doi"],
             file_path=filepath,
             doc_type=doc_type,
             pipe_steps=pipe_steps,

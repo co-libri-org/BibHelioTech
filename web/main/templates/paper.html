@@ -1,36 +1,66 @@
 {% extends "base_page.html" %}
 {%  block more_head %}
+<title>Paper #{{paper.id}} - {{base_title}}</title>
 {%  endblock %}
 {% block content %}
 
-<h1>{{paper.title}}</h1>
-<table>
+<h1>&laquo;{{paper.title}}&raquo;</h1>
+<a class="btn btn-warning"
+   href="{{url_for('main.paper_update', paper_id=paper.id)}}"
+   title="reload from istex">Reload From ISTEX</a>
+<table id="paper_keys" class="table table-striped">
+    <tbody>
     <tr>
-        <td>pdf_path</td>
-        <td>{{paper.pdf_path}}</td>
+        <th>pdf file:</th>
+        {% if paper.has_pdf %}
+        <td class="paper_attr_yes">
+            <a title="get pdf file" href="{{url_for('main.pdf', paper_id=paper.id)}}">{{paper.pdf_path | basename}}</a>
+        </td>
+        {% else %}
+        <td class="paper_attr_no">No PDF file</td>
+        {% endif %}
     </tr>
     <tr>
-        <td>has_pdf</td>
-        <td>{{paper.has_pdf}}</td>
+        <th>txt file:</th>
+        {% if paper.has_txt %}
+        <td class="paper_attr_yes">
+            <a title="get txt file" href="{{url_for('main.txt', paper_id=paper.id)}}">{{paper.txt_path | basename}}</a>
+        </td>
+        {% else %}
+        <td class="paper_attr_no">No TXT file</td>
+        {% endif %}
     </tr>
     <tr>
-        <td>cat_path</td>
-        <td>{{paper.cat_path}}</td>
+        <th>cat file:</th>
+        {% if paper.has_txt %}
+        <td class="paper_attr_yes">
+            <a title="get cat file" href="{{url_for('main.cat', paper_id=paper.id)}}">{{paper.cat_path | basename}}</a>
+        </td>
+        {% else %}
+        <td class="paper_attr_no">No CAT file</td>
+        {% endif %}
     </tr>
     <tr>
-        <td>has_cat</td>
-        <td>{{paper.has_cat}}</td>
+        <th>doi:</th>
+        <td>{{paper.doi}}</td>
     </tr>
     <tr>
-        <td>txt_path</td>
-        <td>{{paper.txt_path}}</td>
+        <th>ark:</th>
+        <td>{{paper.ark}}</td>
     </tr>
     <tr>
-        <td>has_txt</td>
-        <td>{{paper.has_txt}}</td>
+        <th>pub_date:</th>
+        <td>{{paper.publication_date}}</td>
     </tr>
+    <tr>
+        <th>istex_id:</th>
+        <td>{{paper.istex_id}}</td>
+    </tr>
+    </tbody>
 </table>
 
-<a class="btn btn-warning" href="{{url_for('main.paper_pipeline', paper_id=paper.id, step_num=0, pipeline_mode='sutime')}}">Sutime Steps</a>
-<a class="btn btn-warning" href="{{url_for('main.paper_pipeline', paper_id=paper.id, step_num=0, pipeline_mode='entities')}}">Entities Steps</a>
+<a class="btn btn-warning"
+   href="{{url_for('main.paper_pipeline', paper_id=paper.id, step_num=0, pipeline_mode='sutime')}}">Sutime Steps</a>
+<a class="btn btn-warning"
+   href="{{url_for('main.paper_pipeline', paper_id=paper.id, step_num=0, pipeline_mode='entities')}}">Entities Steps</a>
 {% endblock %}

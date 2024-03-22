@@ -28,6 +28,18 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.5.0] - 2024-03-22 - Enhance Task Management
+### Fixed
+- Paper path bug
+
+### Changed
+- Paper model embeds more attributes
+- Task status management
+- Tests rewriting
+
+### New
+- Paper page with links
+
 ## [0.4.5] - 2024-02-14 - Show Sutime Pipeline
 ### New
 - Produce json extraction at pipeline steps

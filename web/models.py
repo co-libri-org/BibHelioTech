@@ -5,6 +5,8 @@ from enum import StrEnum, auto
 
 from bht_config import yml_settings
 from web import db
+from web.errors import IstexError
+from web.istex_proxy import ark_to_id, get_doc_url
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -202,6 +204,7 @@ class Paper(db.Model):
     doi = db.Column(db.String, unique=True)
     ark = db.Column(db.String, unique=True)
     istex_id = db.Column(db.String, unique=True)
+    publication_date = db.Column(db.String)
     pdf_path = db.Column(db.String, unique=True)
     txt_path = db.Column(db.String, unique=True)
     cat_path = db.Column(db.String, unique=True)
@@ -214,7 +217,14 @@ class Paper(db.Model):
     task_stopped = db.Column(db.DateTime)
 
     def __repr__(self):
-        return f"<Paper {self.id} {self.title} {self.pdf_path} {self.txt_path} {self.cat_path} {self.task_id}>"
+        return f"""<Paper #{self.id}
+        title:    {self.title}
+        pdf:      {self.pdf_path}
+        txt:      {self.txt_path}
+        cat:      {self.cat_path}
+        doi:      {self.doi}
+        ark:      {self.ark}
+        istex_id: {self.istex_id}>"""
 
     def set_task_id(self, task_id):
         self.task_id = task_id
@@ -254,6 +264,21 @@ class Paper(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def set_ark(self, ark):
+        self.ark = ark
+        db.session.add(self)
+        db.session.commit()
+
+    def set_pubdate(self, pub_date):
+        self.publication_date = pub_date
+        db.session.add(self)
+        db.session.commit()
+
+    def set_istex_id(self, istex_id):
+        self.istex_id = istex_id
+        db.session.add(self)
+        db.session.commit()
+
     def push_cat(self, force=False):
         """Insert our catalog's events to db"""
         # do it if not already done, or force
@@ -262,6 +287,25 @@ class Paper(db.Model):
             if self.has_cat:
                 self.cat_in_db = True
                 catfile_to_db(self.cat_path)
+
+    def istex_update(self):
+        """From our ids, update meta information from istex api"""
+        if self.istex_id is None:
+            if self.ark:
+                self.istex_id = ark_to_id(self.ark)
+            elif self.has_txt:
+                self.istex_id = os.path.basename(self.txt_path).split('.')[0]
+            elif self.has_pdf:
+                self.istex_id = os.path.basename(self.pdf_path).split('.')[0]
+            else:
+                raise IstexError("Unable to grap meta info")
+        istex_struct = get_doc_url(self.istex_id)
+        self.title = istex_struct["title"]
+        self.doi = istex_struct["doi"]
+        self.ark = istex_struct["ark"]
+        self.publication_date = istex_struct["pub_date"]
+        db.session.add(self)
+        db.session.commit()
 
     @property
     def has_cat(self):

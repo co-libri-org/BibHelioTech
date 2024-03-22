@@ -35,6 +35,7 @@ from web.istex_proxy import (
     json_to_hits,
     IstexDoctype,
 )
+from ..errors import IstexError
 
 
 def allowed_file(filename):
@@ -98,7 +99,7 @@ def get_paper_file(paper_id, file_type):
 # TODO: REWRITE rename to file_to_db
 # TODO: REFACTOR insert into models.Paper ?
 # TODO: REWRITE raise exception or send message to calling route to be flashed
-def pdf_to_db(file_stream, filename, doi=None):
+def pdf_to_db(file_stream, filename, istex_struct=None):
     """
     Push Paper to db from a pdf stream
 
@@ -126,15 +127,21 @@ def pdf_to_db(file_stream, filename, doi=None):
         _file_type = BhtFileType.TXT
     else:
         return None
-    _paper_title = _split_filename[0]
+    if istex_struct is not None:
+        _paper_title = istex_struct["title"]
+    else:
+        _paper_title = _split_filename[0]
     paper = Paper.query.filter_by(title=_paper_title).one_or_none()
     if paper is None:
         paper = Paper(title=_paper_title)
 
     # set_file_path() will add and commit paper
     paper.set_file_path(_file_path, _file_type)
-    if doi is not None:
-        paper.set_doi(doi)
+    if istex_struct is not None:
+        paper.set_doi(istex_struct["doi"])
+        paper.set_ark(istex_struct["ark"])
+        paper.set_pubdate(istex_struct["pub_date"])
+        paper.set_istex_id(istex_struct["istex_id"])
     return paper.id
 
 
@@ -142,6 +149,13 @@ def pdf_to_db(file_stream, filename, doi=None):
 def staticversion_filter(filename):
     newfilename = "{0}?v={1}".format(filename, current_app.config["VERSION"])
     return newfilename
+
+
+@bp.app_template_filter("basename")
+def basename_filter(filename):
+    if not filename:
+        return None
+    return os.path.basename(filename)
 
 
 @bp.route("/")
@@ -206,6 +220,17 @@ def paper_del(paper_id):
     return redirect(url_for("main.papers"))
 
 
+@bp.route("/paper/update/<paper_id>", methods=["GET"])
+def paper_update(paper_id):
+    paper = db.session.get(Paper, paper_id)
+    try:
+        paper.istex_update()
+        flash("Paper updated from Istex api")
+    except IstexError:
+        flash(f"There was an error on update", "error")
+    return redirect(url_for("main.paper_show", paper_id=paper_id))
+
+
 @bp.route("/paper/show/<paper_id>", methods=["GET"])
 def paper_show(paper_id):
     paper = db.session.get(Paper, paper_id)
@@ -223,10 +248,10 @@ def paper_pipeline(pipeline_mode, paper_id, step_num):
     # get the papers directory path
     paper = db.session.get(Paper, paper_id)
     if not paper:
-        flash(f"No such paper {paper_id}")
+        flash(f"No such paper {paper_id}", "error")
         return redirect(url_for("main.papers"))
     if not paper.has_cat:
-        flash(f"Paper {paper_id} was not already processed.")
+        flash(f"Paper {paper_id} was not already processed.", "warning")
         return redirect(url_for("main.paper_show", paper_id=paper_id))
     ocr_dir = os.path.dirname(paper.cat_path)
     step_lighter = StepLighter(ocr_dir, step_num, pipeline_mode)
@@ -250,7 +275,7 @@ def enlighted_json():
         flash(f"No such paper {paper_id}")
         return redirect(url_for("main.papers"))
     if not paper.has_cat:
-        flash(f"Paper {paper_id} was not already processed.")
+        flash(f"Paper {paper_id} was not already processed.", "warning")
         return redirect(url_for("main.paper_show", paper_id=paper_id))
     ocr_dir = os.path.dirname(paper.cat_path)
     step_lighter = StepLighter(ocr_dir, step_num, pipeline_mode)
@@ -301,8 +326,8 @@ def istex_upload_id():
             status=400,
         )
     else:
-        fs, filename, doi = get_file_from_id(istex_id, doc_type)
-        paper_id = pdf_to_db(fs, filename, doi)
+        fs, filename, istex_struct = get_file_from_id(istex_id, doc_type)
+        paper_id = pdf_to_db(fs, filename, istex_struct)
         return (
             jsonify(
                 {
@@ -364,7 +389,25 @@ def bht_status(paper_id):
                 task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
             )
         except NoSuchJobError:
-            return jsonify({"status": "error"})
+            response_object = {
+                "status": "undefined",
+                "data": {
+                    "paper_id": paper.id,
+                    "err_message": "No job yet",
+                    "alt_message": "No pipeline was run on that paper",
+                },
+            }
+            return jsonify(response_object), 503
+        except redis.connection.ConnectionError:
+            response_object = {
+                "status": "failed",
+                "data": {
+                    "paper_id": paper.id,
+                    "err_message": "Redis Cnx Err",
+                    "alt_message": "Database to read and write tasks is unreachable",
+                },
+            }
+            return jsonify(response_object), 503
 
         task_started = job.started_at
         task_status = job.get_status(refresh=True)
@@ -405,12 +448,23 @@ def bht_run():
         return redirect(url_for("main.papers"))
 
     # TODO: REFACTOR CUT START and delegate to Paper and Task models
-    q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
-    task = q.enqueue(
-        get_pipe_callback(test=current_app.config["TESTING"]),
-        args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type),
-        job_timeout=600,
-    )
+    try:
+        q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
+        task = q.enqueue(
+            get_pipe_callback(test=current_app.config["TESTING"]),
+            args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type),
+            job_timeout=600,
+        )
+    except redis.connection.ConnectionError:
+        response_object = {
+            "status": "failed",
+            "data": {
+                "paper_id": paper_id,
+                "err_message": "Failed: no Redis",
+                "alt_message": "Database to read and write tasks is unreachable",
+            },
+        }
+        return jsonify(response_object), 503
 
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
@@ -447,13 +501,37 @@ def istex():
     """
     if request.method == "GET":
         return render_template("istex.html", istex_list=[])
-    elif request.method == "POST":
-        istex_req_url = request.form["istex_req_url"]
+    # else method == "POST"
+    istex_req_url = request.form["istex_req_url"]
+    istex_req_url_a = f'<a target="_blank" href="{istex_req_url}" title="get istex request"> {istex_req_url} </a>'
+    # now try to get some results from Istex, or quit with err message
+    try:
         r = requests.get(url=istex_req_url)
-        istex_list = json_to_hits(r.json())
-        return render_template(
-            "istex.html", istex_list=istex_list, istex_req_url=istex_req_url
-        )
+        json_content = r.json()
+        istex_list = json_to_hits(json_content)
+    except (
+        requests.exceptions.MissingSchema,
+        requests.exceptions.InvalidURL,
+        requests.exceptions.ConnectionError,
+    ):
+        flash(f"Could not connect to <{istex_req_url}>", "error")
+        return redirect(url_for("main.istex"))
+    except requests.exceptions.JSONDecodeError:
+        flash(f"Wrong JSON content from <{istex_req_url_a}>", "error")
+        return redirect(url_for("main.istex"))
+    except Exception as e:
+        flash(f"There was an error reading json from <{istex_req_url_a}>", "error")
+        flash(f"{e.__repr__()}", "error")
+        return redirect(url_for("main.istex"))
+    # get papers from db so we can show we already have them
+    # build dict of papers indexed with istex_id
+    istex_papers = {p.istex_id: p for p in Paper.query.all()}
+    return render_template(
+        "istex.html",
+        istex_list=istex_list,
+        istex_req_url=istex_req_url,
+        istex_papers=istex_papers,
+    )
 
 
 @bp.route("/catalogs", methods=["GET"])

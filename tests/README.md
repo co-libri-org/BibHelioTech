@@ -13,26 +13,26 @@ or use the whole docker stack
 
 you may want to skip slow tests:
 
-    BHT_SKIPSLOWTESTS=True python -m pytest tests
+    BHT_SKIP_SLOW=True python -m pytest tests
 
 you may want to skip bht tests:
 
-    BHT_DONTSKIPBHT=True python -m pytest tests
+    BHT_SKIP_BHT=True python -m pytest tests
 
 or allow ISTEX tests if you have IP authorisation
 
-    BHT_DONTSKIPISTEX=True python -m pytest tests
+    BHT_SKIP_ISTEX=False python -m pytest tests
     # defaults to False, that is it wont run istex tests
 
 or allow Selenium functionnal tests if available
 
-    BHT_DONTSKIPSELENIUM=True python -m pytest tests
+    BHT_SKIP_SELENIUM=False python -m pytest tests
     # defaults to False, that is it wont run selenium tests
 
 a whole test would then look like
 
-    export BHT_DONTSKIPSELENIUM=True
-    export BHT_DONTSKIPISTEX=True
-    export BHT_SKIPSLOWTESTS=False
-    export BHT_DONTSKIPBHT=True
+    export BHT_SKIP_SLOW=False
+    export BHT_SKIP_SELENIUM=False
+    export BHT_SKIP_ISTEX=False
+    export BHT_SKIP_BHT=False
     python -m pytest tests

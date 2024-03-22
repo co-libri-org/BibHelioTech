@@ -294,67 +294,91 @@ def inst_recognition(content_as_str, inst_dict):
     """
     2nd Entities Finder step:
 
-    Find intruments in the Article's content
+    Find instruments in the Article's content
 
     @param content_as_str:  article's content as string
     @param inst_dict: dict of instruments
     @return: dict of instruments found in the article
     """
 
+    # Grab a flattened list of instruments structures from Entities_DataBank.xls file
+    instruments_list = []
+    for inst_list in inst_dict.values():
+        instruments_list += inst_list
+
+    pattern_string = " {searched_string}(\.|,| |;)"
+
     # INST recognition
     inst_dict_list = []
-    for INSTs, Instrument in inst_dict.items():
-        for inst in Instrument:
-            if isinstance(inst, str):
-                test = re.finditer("" + inst + "(\.|,| |;)", content_as_str)
+    for inst in instruments_list:
+        if isinstance(inst, str):
+            searched_pattern = pattern_string.format(searched_string=inst)
+            test = re.finditer(searched_pattern, content_as_str)
+            inst_dict_list += [
+                {
+                    "start": matches.start(),
+                    "end": matches.end(),
+                    "text": matches.group()
+                    .strip()
+                    .translate(str.maketrans("", "", string.punctuation)),
+                }
+                for matches in test
+            ]
+        elif isinstance(inst, dict):
+            for key, value in inst.items():
+                searched_pattern = pattern_string.format(searched_string=key)
+                test = re.finditer(searched_pattern, content_as_str)
                 inst_dict_list += [
                     {
-                        "end": matches.end(),
                         "start": matches.start(),
+                        "end": matches.end(),
                         "text": matches.group()
                         .strip()
                         .translate(str.maketrans("", "", string.punctuation)),
                     }
                     for matches in test
                 ]
-            elif isinstance(inst, dict):
-                for key, value in inst.items():
-                    test = re.finditer("" + key + "(\.|,| |;)", content_as_str)
-                    inst_dict_list += [
-                        {
-                            "end": matches.end(),
-                            "start": matches.start(),
-                            "text": matches.group()
-                            .strip()
-                            .translate(str.maketrans("", "", string.punctuation)),
-                        }
-                        for matches in test
-                    ]
-                    if isinstance(value, str):
-                        test_2 = re.finditer("" + value + "(\.|,| |;)", content_as_str)
+                if isinstance(value, str):
+                    searched_pattern = pattern_string.format(searched_string=value)
+                    test_2 = re.finditer(searched_pattern, content_as_str)
+                    for matches in test_2:
+                        inst_dict_list += [
+                            {
+                                "start": matches.start(),
+                                "end": matches.end(),
+                                "text": key,
+                            }
+                        ]
+                elif isinstance(value, list):
+                    for syns in value:
+                        searched_pattern = pattern_string.format(searched_string=syns)
+                        test_2 = re.finditer(searched_pattern, content_as_str)
                         for matches in test_2:
                             inst_dict_list += [
                                 {
-                                    "end": matches.end(),
                                     "start": matches.start(),
+                                    "end": matches.end(),
                                     "text": key,
                                 }
                             ]
-                    elif isinstance(value, list):
-                        for syns in value:
-                            test_2 = re.finditer(
-                                "" + syns + "(\.|,| |;)", content_as_str
-                            )
-                            for matches in test_2:
-                                inst_dict_list += [
-                                    {
-                                        "end": matches.end(),
-                                        "start": matches.start(),
-                                        "text": key,
-                                    }
-                                ]
+    # Sort by start
     inst_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
-    return inst_dict_list
+
+    # Add 'type = instr'
+    inst_dict_list = list(map(lambda _d: _d | {"type": "instr"}, inst_dict_list))
+
+    # Remove overlapping
+    res_inst_list = []
+    for i, _d in enumerate(inst_dict_list):
+        if i == 0:
+            res_inst_list.append(_d)
+            continue
+        # keep only if current start after previous stop
+        _p = inst_dict_list[i - 1]
+        if _d["start"] > _p["end"]:
+            res_inst_list.append(_d)
+
+    return res_inst_list
 
 
 def clean_sats_inside_insts(sats_list, insts_list):
@@ -498,7 +522,7 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
     @param _final_links:
     @param data_frames:
     @param published_date:
-    @return:
+    @return: temp, final_links
     """
     # FIXME: CRITICAL deepcopy should work. Look at temp generation to understand
     # _fl_to_return = copy.deepcopy(_final_links)
@@ -591,7 +615,29 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
     return _temp_to_return, _fl_to_return
 
 
-def entities_finder(current_OCR_folder, DOI=None):
+def normalize_links(_final_links, TSO):
+    for elements in _final_links:
+        if ("D" not in elements[0]) and ("R" in elements[0]):
+            elements[0]["D"] = 1
+        elif ("D" in elements[0]) and ("R" not in elements[0]):
+            elements[0]["R"] = 1
+        elif ("D" not in elements[0]) and ("R" not in elements[0]):
+            elements[0]["D"] = 1
+            elements[0]["R"] = 1
+
+        elements[0]["conf"] = (elements[0]["D"] * elements[0]["R"]) / (
+            elements[0]["SO"] / TSO["occur_sat"]
+        )  # à normalizé par max de conf
+
+    maxi = max([elements[0]["conf"] for elements in _final_links])
+    for elements in _final_links:
+        elements[0]["conf"] = (
+            elements[0]["conf"] / maxi
+        )  # normalisation by the maximum confidence index
+    return _final_links
+
+
+def entities_finder(current_OCR_folder, doc_meta_info=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
 
@@ -627,6 +673,9 @@ def entities_finder(current_OCR_folder, DOI=None):
     AMDA_dict = data_frames[DataBankSheet.SATS_REG]
     SPAN_dict = data_frames[DataBankSheet.TIME_SPAN]
 
+    # sanity checks
+    DOI = doc_meta_info.get("doi") if doc_meta_info is not None else None
+    publication_date = doc_meta_info.get("pub_date") if doc_meta_info is not None else None
     if DOI is None:
         # try to find in tei file
         import glob
@@ -637,6 +686,9 @@ def entities_finder(current_OCR_folder, DOI=None):
             raise BhtPipelineError("Couldn't find any tei.xml file")
         file_name = found[0]
         DOI = find_DOI(file_name)  # retrieving the DOI of the article being processed.
+
+    if publication_date is None:
+        publication_date = published_date_finder(token, v, DOI)
 
     # loading the text file (content of the article)
     content_path = os.path.join(current_OCR_folder, "out_filtered_text.txt")
@@ -669,49 +721,67 @@ def entities_finder(current_OCR_folder, DOI=None):
 
     # 4- Make a list of lists ... see make_final_links() for more details.
     final_links = make_final_links(new_sat_dict_list, inst_list, content_upper)
-    raw_dumper.dump_to_raw(final_links, "Final Links", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        final_links, "Cleaned sats with instr list", current_OCR_folder
+    )
 
     # 5- Update instruments list for each satellite in links list
     final_links = update_final_instruments(final_links, data_frames)
-    raw_dumper.dump_to_raw(final_links, "Final Links with instruments", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        final_links, "Remove instruments not in stats", current_OCR_folder
+    )
 
     # 6- Change the names of all found satellites by their main name
     final_links = update_final_synonyms(final_links, data_frames)
-    raw_dumper.dump_to_raw(final_links, "Final Links with synonyms", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        final_links, "Change sat name with base synonym", current_OCR_folder
+    )
 
     # 7- Add satellites occurrences to the list
     temp, final_links = add_sat_occurrence(final_links, sutime_json)
-    raw_dumper.dump_to_raw(final_links, "Final Links with sats occ", current_OCR_folder)
-
-    # TODO: REFACTOR get the published date elsewhere, at the beginning
-    published_date = published_date_finder(token, v, DOI)
+    raw_dumper.dump_to_raw(
+        final_links, 'Add sats\' occurences: "SO"', current_OCR_folder
+    )
 
     # 8- Association of the closest duration of a satellite.
-    temp, final_links = closest_duration(temp, final_links, data_frames, published_date)
-    raw_dumper.dump_to_raw(final_links, "Final Links with closest duration", current_OCR_folder)
+    temp, final_links = closest_duration(
+        temp, final_links, data_frames, publication_date
+    )
+    raw_dumper.dump_to_raw(
+        final_links, "Add closest duration from sutime files", current_OCR_folder
+    )
 
+    # 9- Normalisation
     TSO = {"occur_sat": len(new_sat_dict_list), "nb_durations": len(sutime_json)}
-    for elements in final_links:
-        if ("D" not in elements[0]) and ("R" in elements[0]):
-            elements[0]["D"] = 1
-        elif ("D" in elements[0]) and ("R" not in elements[0]):
-            elements[0]["R"] = 1
-        elif ("D" not in elements[0]) and ("R" not in elements[0]):
-            elements[0]["D"] = 1
-            elements[0]["R"] = 1
+    final_links = normalize_links(final_links, TSO)
+    raw_dumper.dump_to_raw(
+        final_links, "Normalize links attributes", current_OCR_folder
+    )
 
-        elements[0]["conf"] = (elements[0]["D"] * elements[0]["R"]) / (
-            elements[0]["SO"] / TSO["occur_sat"]
-        )  # à normalizé par max de conf
+    # 10- REG recognition
+    regs_dict_list = []
 
-    maxi = max([elements[0]["conf"] for elements in final_links])
-    for elements in final_links:
-        elements[0]["conf"] = (
-            elements[0]["conf"] / maxi
-        )  # normalisation by the maximum confidence index
+    for regs in REG_general_list:
+        test = re.finditer(
+            "( |\n)" + "(" + regs + "|" + regs.lower() + ")" + "(\.|,| )", content_upper
+        )
+        regs_dict_list += [
+            {
+                "type": "region",
+                "end": matches.end(),
+                "start": matches.start(),
+                "text": matches.group()
+                .strip()
+                .translate(str.maketrans("", "", string.punctuation)),
+            }
+            for matches in test
+        ]
+    raw_dumper.dump_to_raw(regs_dict_list, "Find Region", current_OCR_folder)
 
-    # REG recognition
-    planete_list = [
+    # 11- Association of the low-level region name
+    #     (e.g. magnetosphere) with the nearest high-level name (planet name).
+
+    planet_list = [
         "earth",
         "jupiter",
         "mars",
@@ -727,35 +797,17 @@ def entities_finder(current_OCR_folder, DOI=None):
         "comet",
         "interstellar",
     ]
-    regs_dict_list = []
 
-    for regs in REG_general_list:
-        test = re.finditer(
-            "( |\n)" + "(" + regs + "|" + regs.lower() + ")" + "(\.|,| )", content_upper
-        )
-        regs_dict_list += [
-            {
-                "end": matches.end(),
-                "start": matches.start(),
-                "text": matches.group()
-                .strip()
-                .translate(str.maketrans("", "", string.punctuation)),
-            }
-            for matches in test
-        ]
-
-    # Association of the low-level region name (e.g. magnetosphere) with the nearest high-level name (planet name).
     dicts_index = 0
     founded_regions_list = []
-    temp = []
     for dicts in regs_dict_list:
-        if dicts["text"].lower() in planete_list:
+        if dicts["text"].lower() in planet_list:
             temp = []
             sens_aller = dicts_index + 1
             sens_retour = dicts_index - 1
             # direction -->
             while sens_aller < len(regs_dict_list):
-                if regs_dict_list[sens_aller]["text"] not in planete_list:
+                if regs_dict_list[sens_aller]["text"] not in planet_list:
                     temp.append(regs_dict_list[sens_aller])
                     temp.append(dicts)
                     founded_regions_list.append(temp)
@@ -763,7 +815,7 @@ def entities_finder(current_OCR_folder, DOI=None):
                 sens_aller += 1
             # direction <--
             while sens_retour >= 0:
-                if regs_dict_list[sens_retour]["text"] not in planete_list:
+                if regs_dict_list[sens_retour]["text"] not in planet_list:
                     temp.append(dicts)
                     temp.append(regs_dict_list[sens_retour])
                     founded_regions_list.append(temp)
@@ -771,18 +823,26 @@ def entities_finder(current_OCR_folder, DOI=None):
                 sens_retour -= 1
         dicts_index += 1
 
+    raw_dumper.dump_to_raw(
+        founded_regions_list,
+        "Association of the low-level region name",
+        current_OCR_folder,
+    )
+
+    # 11- Association of the low-level region name
+    #     (e.g. magnetosphere) with the nearest high-level name (planet name).
     compteur = 0
     for elements in founded_regions_list:
         if (
-            elements[0]["text"].lower() in planete_list
-            and elements[1]["text"].lower() in planete_list
+            elements[0]["text"].lower() in planet_list
+            and elements[1]["text"].lower() in planet_list
         ):
             if (
                 elements[0]["text"].lower() != elements[1]["text"].lower()
             ):  # deletion of planet/planet pairs when these are different.
                 founded_regions_list[compteur].clear()
-        elif (elements[0]["text"].lower() not in planete_list) and (
-            elements[1]["text"].lower() not in planete_list
+        elif (elements[0]["text"].lower() not in planet_list) and (
+            elements[1]["text"].lower() not in planet_list
         ):  # removal of low-level/low-level pairs.
             founded_regions_list[compteur].clear()
         compteur += 1
@@ -790,21 +850,31 @@ def entities_finder(current_OCR_folder, DOI=None):
         elements for elements in founded_regions_list if elements != []
     ]
 
-    # Re-organisation of the dictionary list:
+    raw_dumper.dump_to_raw(
+        founded_regions_list, "Filter founded regions list", current_OCR_folder
+    )
+
+    # 12 Re-organisation of the dictionary list:
     #   planets in index 0
     #   low level in index 1
     compteur = 0
     for list_of_dicts in founded_regions_list:
-        if (list_of_dicts[0]["text"].lower() not in planete_list) and (
-            list_of_dicts[1]["text"].lower() in planete_list
+        if (list_of_dicts[0]["text"].lower() not in planet_list) and (
+            list_of_dicts[1]["text"].lower() in planet_list
         ):
             temp_0 = founded_regions_list[compteur][0]
             temp_1 = founded_regions_list[compteur][1]
             founded_regions_list[compteur][0] = temp_1
             founded_regions_list[compteur][1] = temp_0
         compteur += 1
+    raw_dumper.dump_to_raw(
+        founded_regions_list,
+        "Reorganisation of founded regions list",
+        current_OCR_folder,
+    )
 
-    # Checking and deleting planet/low level pairs is not possible (e.g. Mercury/Atmosphere)
+    # 13- Checking and deleting planet/low level pairs is not possible
+    #     (e.g. Mercury/Atmosphere)
     path = []
     compteur = 0
     for elements in founded_regions_list:
@@ -830,7 +900,11 @@ def entities_finder(current_OCR_folder, DOI=None):
                 elements[1] = elements[0]
         compteur += 1
 
-    # removal of duplicate pairs
+    raw_dumper.dump_to_raw(
+        founded_regions_list, "Delete planets from regions list", current_OCR_folder
+    )
+
+    # 14- Removal of duplicate pairs
     compteur = 0
     for i in founded_regions_list:
         compteur_2 = compteur
@@ -843,7 +917,11 @@ def entities_finder(current_OCR_folder, DOI=None):
         elements for elements in founded_regions_list if elements != []
     ]
 
-    # case satellite mentioned in the article but no region concerning it:
+    raw_dumper.dump_to_raw(
+        founded_regions_list, "Remove duplicated from regions list", current_OCR_folder
+    )
+
+    # 15- case satellite mentioned in the article but no region concerning it:
     #   default association with the first item in its region list.
     if len(founded_regions_list) == 0:
         for elements in final_links:
@@ -870,8 +948,15 @@ def entities_finder(current_OCR_folder, DOI=None):
             elements for elements in founded_regions_list if elements != []
         ]
 
-    # SAT and REG linker
-    # result and path should be outside of the scope of find_path to persist values during recursive calls to the function
+    raw_dumper.dump_to_raw(
+        founded_regions_list,
+        "case satellite mentioned in the article but no region",
+        current_OCR_folder,
+    )
+
+    # 16- SAT and REG linker
+    #     result and path should be outside the scope of find_path
+    #     to persist values during recursive calls to the function
     path = []
 
     temp = []
@@ -1008,7 +1093,10 @@ def entities_finder(current_OCR_folder, DOI=None):
 
         compteur_sat += 1
 
-    # Re-written according to the formatting below
+    raw_dumper.dump_to_raw(final_links, "Sats / Region linker", current_OCR_folder)
+
+    # 17- Now create events list according to the formatting below
+
     final_amda_dict = {
         "start_time": "",
         "stop_time": "",
@@ -1076,6 +1164,14 @@ def entities_finder(current_OCR_folder, DOI=None):
 
     final_amda_list = sorted(final_amda_list, key=lambda d: d["start_time"])
 
+    raw_dumper.dump_to_raw(
+        final_amda_list,
+        f"Found {len(final_amda_list)} events (see json)",
+        current_OCR_folder,
+    )
+
+    # 18- Filter Sats for to uniq
+
     distinct_sats = list(set([dicts["sat"] for dicts in final_amda_list]))
 
     for elems in final_amda_list:
@@ -1092,6 +1188,12 @@ def entities_finder(current_OCR_folder, DOI=None):
                 temp.append(dicts)
         temp_final.append(temp)
         temp = []
+
+    raw_dumper.dump_to_raw(
+        final_amda_list,
+        f"Final events list cleaned to {len(final_amda_list)} elements (see json)",
+        current_OCR_folder,
+    )
 
     # write in file
     with open(
