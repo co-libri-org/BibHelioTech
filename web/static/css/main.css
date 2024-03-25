@@ -116,6 +116,7 @@ input.success{
 /* PAPERS LIST */
 .bht-status:hover {
     border: 1pt solid lightgrey;
+    background-color: white !important;
 }
 .bht-status {
     border: 1pt solid transparent;
@@ -137,14 +138,11 @@ input.success{
     /* started is green */
     background-color: #ccffdd;
 }
-.bht-status.failed {
+.bht-status.failed{
     /* failed is red */
     background-color: #ff6666;
-    font-weight: 400;
+    font-weight: 500;
     color: black;
-}
-.bht-status.failed:hover {
-    border: 1pt solid grey;
 }
 
 
