@@ -28,6 +28,12 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+
+## [0.6.0] - yyyy-mm-dd - Include pipeline version
+### Fixed
+### Changed
+### New
+
 ## [0.5.0] - 2024-03-22 - Enhance Task Management
 ### Fixed
 - Paper path bug
