@@ -23,7 +23,8 @@
 <table class="table-hover table">
     <thead>
     <tr>
-        <th scope="col" style="width: 20px;">Id</th>
+        <th scope="col" style="width: 20px">#</th>
+        <th scope="col" style="width: 20px">Id</th>
         <th scope="col" style="width: 680px;">Title</th>
         <th scope="col" style="width: 40px;">del</th>
         <th scope="col" style="width: 40px;">pdf</th>
@@ -37,7 +38,8 @@
     <tbody>
     {% for paper in papers_list %}
     <tr>
-        <th scope="row">
+        <th scope="row" class="td_num">{{loop.index}}</th>
+        <th scope="row" class="td_num">
             <a class="btn btn-warning" href="{{url_for('main.paper_show', paper_id=paper.id)}}"
                title="Show paper">
             {{paper.id}}
