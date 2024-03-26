@@ -25,7 +25,7 @@
     <tr>
         <th scope="col" style="width: 20px">#</th>
         <th scope="col" style="width: 20px">Id</th>
-        <th scope="col" style="width: 680px;">Title</th>
+        <th scope="col" style="width: 580px;">Title</th>
         <th scope="col" style="width: 40px;">del</th>
         <th scope="col" style="width: 40px;">pdf</th>
         <th scope="col" style="width: 40px;">txt</th>
@@ -46,7 +46,7 @@
             </a>
         </th>
         <td style="max-width: 550px;" title="{{paper.ark}}">
-            &laquo;{{paper.title | truncate(95, False, end=" ...")}}&raquo;
+            &laquo;{{paper.title | truncate(85, False, end=" ...")}}&raquo;
         </td>
         <td>
             <a class="btn btn-warning"
@@ -96,7 +96,7 @@
                 run
             </button>
         </td>
-        <td style="width: 80px;">
+        <td style="width: 150px;">
             <span class="bht-status" id="bht-status-{{paper.id}}"></span>
             <span class="spinner-border spinner-border-sm text-warning d-none" id="spinner-{{paper.id}}"></span>
         </td>
@@ -127,13 +127,14 @@ $('.run-bht').on('click', function() {
         setStatus(res.data.paper_id);
         location.reload();
     } else {
-        alert("Error: "+res.data.err_message);
+        alert("Error: "+res.data.message);
     }
   })
   .fail((err) => {
-    // Show there was an error if any
-    err_status = err.responseJSON.status;
-    err_message = err.responseJSON.data.err_message;
+    // Show there was an error returned by /bht-run
+    alert(err);
+    err_status = err.responseJSON.data.task_status;
+    err_message = err.responseJSON.data.message;
     alt_message = err.responseJSON.data.alt_message;
     paper_id = err.responseJSON.data.paper_id;
     $(statusElmtId).removeClass("finished started failed queued undefined");
@@ -167,8 +168,8 @@ function setStatus(paper_id) {
     $(spinnerElmtId).addClass('d-none')
 
     // Update status text content
-    $(statusElmtId).html(res.data.task_status+" "+res.data.task_elapsed)
-    $(statusElmtId).attr('title', 'Started: '+res.data.task_started)
+    $(statusElmtId).html(res.data.message)
+    $(statusElmtId).attr('title', res.data.alt_message)
 
 
     // Update display depending on status
@@ -188,22 +189,23 @@ function setStatus(paper_id) {
          return false;
     }
 
-    // Update all statuses after 1s
-    setTimeout(function () {
-      setStatus(res.data.paper_id);
-    }, 1000);
+//    // Update all statuses after 1s
+//    setTimeout(function () {
+//      setStatus(res.data.paper_id);
+//    }, 1000);
   })
   .fail((err) => {
 
-    // Show there was an error if any
-    err_status = err.responseJSON.status;
-    err_message = err.responseJSON.data.err_message;
+    // Show there was an error returned by /bht_status/p_id
+    console.log(err);
+    err_status = err.responseJSON.data.task_status;
+    err_message = err.responseJSON.data.message;
     alt_message = err.responseJSON.data.alt_message;
     paper_id = err.responseJSON.data.paper_id;
     const statusElmtId = '#bht-status-'+paper_id;
     $(statusElmtId).removeClass("finished started failed queued undefined");
     $(statusElmtId).addClass(err_status);
-    $(statusElmtId).html(err_message);
+    $(statusElmtId).html(message);
     $(statusElmtId).attr("title", alt_message);
   });
 }
