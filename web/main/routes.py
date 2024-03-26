@@ -470,9 +470,8 @@ def bht_status(paper_id):
             response_object = StatusResponse(
                 status="failed",
                 paper_id=paper.id,
-                task_status="failed",
                 message="Redis Cnx Err",
-                alt_message="Database to read and write tasks is unreachable",
+                alt_message="Database to read tasks status is unreachable",
             )
             return response_object.response, 503
 
@@ -502,7 +501,7 @@ def bht_run():
             status="failed",
             paper_id=int(paper_id),
             message="Failed, no Redis",
-            alt_message="Database to read and write tasks is unreachable",
+            alt_message="System to run tasks is unreachable",
         )
         return response_object.response, 503
 
