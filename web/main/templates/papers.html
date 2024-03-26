@@ -111,29 +111,8 @@
 <script>
 
 // BHT tasks management
-
-$('.run-bht').on('click', function() {
-  let paper_id = $(this).data('paper_id');
-  const statusElmtId = '#bht-status-'+paper_id;
-  $(statusElmtId).hide();
-  $.ajax({
-    url: '/bht_run',
-    data: { paper_id:  paper_id,
-            file_type: $(this).data('file_type')},
-    method: 'POST'
-  })
-  .done((res) => {
-    if ( res.status === "success" ){
-        setStatus(res.data.paper_id);
-        location.reload();
-    } else {
-        alert("Error: "+res.data.message);
-    }
-  })
-  .fail((err) => {
-    // Show there was an error returned by /bht-run
-    alert(err);
-    err_status = err.responseJSON.data.task_status;
+function failedToStatus(err, statusElmtId){
+    err_status = err.responseJSON.status;
     err_message = err.responseJSON.data.message;
     alt_message = err.responseJSON.data.alt_message;
     paper_id = err.responseJSON.data.paper_id;
@@ -141,10 +120,7 @@ $('.run-bht').on('click', function() {
     $(statusElmtId).addClass(err_status);
     $(statusElmtId).html(err_message);
     $(statusElmtId).attr("title", alt_message);
-    $(statusElmtId).show();
-  });
-});
-
+}
 
 function setStatus(paper_id) {
   $.ajax({
@@ -176,6 +152,10 @@ function setStatus(paper_id) {
     if (taskStatus === 'started' ) {
         $(spinnerElmtId).removeClass('d-none')
         $(spinnerElmtId).addClass('d-inline-block')
+        // Update running statuses after 1s
+        setTimeout(function () {
+          setStatus(res.data.paper_id);
+        }, 1000);
     }
     if (taskStatus === 'finished' ) {
         $(catElementId).attr('disabled');
@@ -189,26 +169,40 @@ function setStatus(paper_id) {
          return false;
     }
 
-//    // Update all statuses after 1s
-//    setTimeout(function () {
-//      setStatus(res.data.paper_id);
-//    }, 1000);
   })
   .fail((err) => {
-
     // Show there was an error returned by /bht_status/p_id
-    console.log(err);
-    err_status = err.responseJSON.data.task_status;
-    err_message = err.responseJSON.data.message;
-    alt_message = err.responseJSON.data.alt_message;
-    paper_id = err.responseJSON.data.paper_id;
     const statusElmtId = '#bht-status-'+paper_id;
-    $(statusElmtId).removeClass("finished started failed queued undefined");
-    $(statusElmtId).addClass(err_status);
-    $(statusElmtId).html(message);
-    $(statusElmtId).attr("title", alt_message);
+    failedToStatus(err, statusElmtId);
   });
 }
+
+$('.run-bht').on('click', function() {
+  let paper_id = $(this).data('paper_id');
+  const statusElmtId = '#bht-status-'+paper_id;
+  $(statusElmtId).hide();
+  $.ajax({
+    url: '/bht_run',
+    data: { paper_id:  paper_id,
+            file_type: $(this).data('file_type')},
+    method: 'POST'
+  })
+  .done((res) => {
+    if ( res.status === "success" ){
+        setStatus(res.data.paper_id);
+        location.reload();
+    } else {
+        alert("Error: "+res.data.message);
+    }
+  })
+  .fail((err) => {
+    // Show there was an error returned by /bht-run
+    failedToStatus(err, statusElmtId);
+    $(statusElmtId).show();
+  });
+});
+
+
 
 //
 $('.bht-status').each(function(index){
