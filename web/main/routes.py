@@ -38,6 +38,56 @@ from web.istex_proxy import (
 from ..errors import IstexError
 
 
+class StatusResponse:
+    """
+    In response to a status api request
+    instantiate an object with parameters,
+    return the jsonified dictionnary as expected by the request
+    """
+
+    _response = {
+        "status": "success",
+        "data": {
+            "paper_id": None,
+            "task_status": None,
+            "task_started": None,
+            "cat_is_processed": None,
+            "message": None,
+            "alt_message": None,
+        },
+    }
+
+    def __init__(
+        self,
+        status: str = None,
+        paper_id: int = None,
+        task_status: str = None,
+        task_started: datetime = None,
+        cat_is_processed: bool = None,
+        message: str = None,
+        alt_message: str = None,
+    ):
+        if task_started is not None:
+            task_started_str = task_started.strftime("%a, %b %d, %Y - %H:%M:%S")
+        else:
+            task_started_str = ""
+        self._response = {
+            "status": status,
+            "data": {
+                "paper_id": paper_id,
+                "task_status": task_status,
+                "task_started": task_started_str,
+                "cat_is_processed": cat_is_processed,
+                "message": message,
+                "alt_message": alt_message,
+            },
+        }
+
+    @property
+    def response(self):
+        return jsonify(self._response)
+
+
 def allowed_file(filename):
     # TODO: REFACTOR use models.FileType instead
     return (
@@ -107,7 +157,7 @@ def pdf_to_db(file_stream, filename, istex_struct=None):
 
     :parameter: file_stream the file content
     :parameter: filename
-    :return: the paper's id, None if couldnt do it
+    :return: the paper's id, or None if couldn't do it
     """
     filename = secure_filename(filename)
     upload_dir = current_app.config["WEB_UPLOAD_DIR"]
@@ -375,67 +425,59 @@ def bht_status(paper_id):
         except Exception as e:
             current_app.logger.error(f"Got error on paper task date: {e}")
             elapsed = ""
-        data = {
-            "task_status": paper.task_status,
-            "task_elapsed": elapsed,
-            "task_started": paper.task_started,
-            "cat_is_processed": paper.has_cat and paper.cat_in_db,
-            "paper_id": paper.id,
-        }
+        response_object = StatusResponse(
+            paper_id=paper.id,
+            task_status=paper.task_status,
+            cat_is_processed=paper.has_cat and paper.cat_in_db,
+            message=f"{paper.task_status} {elapsed}",
+            alt_message=f"Started {paper.task_started}",
+        )
     else:  # Get tasks info from task manager
         task_id = paper.task_id
         try:
             job = Job.fetch(
                 task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
             )
+            task_started = job.started_at
+            task_status = job.get_status(refresh=True)
+
+            if task_status == "started":
+                elapsed = str(datetime.datetime.utcnow() - task_started).split(".")[0]
+            elif task_status == "finished":
+                elapsed = str(job.ended_at - task_started).split(".")[0]
+            else:
+                elapsed = ""
+
+            paper.set_task_status(task_status)
+            paper.set_task_started(task_started)
+            paper.set_task_stopped(job.ended_at)
+            response_object = StatusResponse(
+                paper_id=paper.id,
+                task_status=task_status,
+                task_started=task_started,
+                cat_is_processed=paper.has_cat and paper.cat_in_db,
+                message=f"{task_status} {elapsed}",
+                alt_message=f"Started {paper.task_started}",
+            )
         except NoSuchJobError:
-            response_object = {
-                "status": "undefined",
-                "data": {
-                    "paper_id": paper.id,
-                    "err_message": "No job yet",
-                    "alt_message": "No pipeline was run on that paper",
-                },
-            }
-            return jsonify(response_object), 503
+            response_object = StatusResponse(
+                paper_id=paper.id,
+                task_status="undefined",
+                message="No job run yet",
+                alt_message="No pipeline was run on that paper",
+            )
         except redis.connection.ConnectionError:
-            response_object = {
-                "status": "failed",
-                "data": {
-                    "paper_id": paper.id,
-                    "err_message": "Redis Cnx Err",
-                    "alt_message": "Database to read and write tasks is unreachable",
-                },
-            }
-            return jsonify(response_object), 503
+            response_object = StatusResponse(
+                status="failed",
+                paper_id=paper.id,
+                task_status="failed",
+                message="Redis Cnx Err",
+                alt_message="Database to read and write tasks is unreachable",
+            )
+            return response_object.response, 503
 
-        task_started = job.started_at
-        task_status = job.get_status(refresh=True)
-
-        if task_status == "started":
-            elapsed = str(datetime.datetime.utcnow() - task_started).split(".")[0]
-        elif task_status == "finished":
-            elapsed = str(job.ended_at - task_started).split(".")[0]
-        else:
-            elapsed = ""
-
-        paper.set_task_status(task_status)
-        paper.set_task_started(task_started)
-        paper.set_task_stopped(job.ended_at)
-
-        data = {
-            "task_status": task_status,
-            "task_elapsed": elapsed,
-            "task_started": task_started,
-            "cat_is_processed": paper.has_cat and paper.cat_in_db,
-            "paper_id": paper.id,
-        }
         # TODO: END CUTTING
-    # TODO: REFACTOR set data = {} in one place only (here for ex)
-    if data["task_started"] is not None:
-        data["task_started"] = data["task_started"].strftime("%a, %b %d, %Y - %H:%M:%S")
-    response_object = {"status": "success", "data": data}
-    return jsonify(response_object)
+    return response_object.response, 200
 
 
 @bp.route("/bht_run", methods=["POST"])
@@ -451,33 +493,28 @@ def bht_run():
     try:
         q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
         task = q.enqueue(
-            get_pipe_callback(test=current_app.config["TESTING"]),
+            get_pipe_callback(test=current_app.config["TESTING"], fail=False),
             args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type),
             job_timeout=600,
         )
     except redis.connection.ConnectionError:
-        response_object = {
-            "status": "failed",
-            "data": {
-                "paper_id": paper_id,
-                "err_message": "Failed: no Redis",
-                "alt_message": "Database to read and write tasks is unreachable",
-            },
-        }
-        return jsonify(response_object), 503
+        response_object = StatusResponse(
+            status="failed",
+            paper_id=int(paper_id),
+            message="Failed, no Redis",
+            alt_message="Database to read and write tasks is unreachable",
+        )
+        return response_object.response, 503
 
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
     paper.set_task_status("queued")
     # TODO: CUT END
 
-    response_object = {
-        "status": "success",
-        "data": {
-            "paper_id": paper.id,
-        },
-    }
-    return jsonify(response_object), 202
+    response_object = StatusResponse(
+        status="success", task_status="queued", paper_id=paper.id
+    )
+    return response_object.response, 202
 
 
 @bp.route("/istex_test", methods=["GET"])
@@ -523,7 +560,7 @@ def istex():
         flash(f"There was an error reading json from <{istex_req_url_a}>", "error")
         flash(f"{e.__repr__()}", "error")
         return redirect(url_for("main.istex"))
-    # get papers from db so we can show we already have them
+    # get papers from db, so we can show we already have them
     # build dict of papers indexed with istex_id
     istex_papers = {p.istex_id: p for p in Paper.query.all()}
     return render_template(
