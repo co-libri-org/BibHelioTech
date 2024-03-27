@@ -4,7 +4,16 @@ from web.errors import *
 from web.models import Paper, BhtFileType
 
 
-def get_pipe_callback(test=True, fail=False):
+def random_sleep(min_secs, max_secs):
+    import time
+    import random
+
+    num_secs = random.randint(min_secs, max_secs)
+    time.sleep(num_secs)
+    return num_secs
+
+
+def get_pipe_callback(test=True, fail=True):
     """Wrapper to exec a task callback depending on configuration
 
     @return: callback
@@ -19,7 +28,9 @@ def get_pipe_callback(test=True, fail=False):
 
 
 def pipe_paper_failed(_p_id, _b_dir, _ft):
-    raise WebError()
+    """Raise exception after an random num of seconds"""
+    num_secs = random_sleep(min_secs=5, max_secs=20)
+    raise WebError(f"Failed after {num_secs} seconds")
 
 
 def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_secs=20):
@@ -27,12 +38,7 @@ def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_sec
 
     @return: num seconds spent
     """
-    import time
-    import random
-
-    num_secs = random.randint(min_secs, max_secs)
-    time.sleep(num_secs)
-    return num_secs
+    return random_sleep(min_secs, max_secs)
 
 
 # TODO: REFACTOR should this go to a models.paper.method() ?
