@@ -49,9 +49,15 @@ function setStatus(paper_id) {
                     setStatus(res.data.paper_id);
                 }, 1000);
             }
+            if (taskStatus === 'queued') {
+                // wait for queued to be executed
+                setTimeout(function() {
+                    setStatus(res.data.paper_id);
+                }, 1000);
+            }
             if (taskStatus === 'finished') {
                 // update catalog availability when task finished, then quit
-                $(catElementId).attr('disabled');
+                $(catElementId).removeAttr('disabled');
                 if (res.data.cat_is_processed === false) {
                     $(catElementId).find('span').removeClass('invisible').addClass('visible');
                 }
@@ -59,7 +65,8 @@ function setStatus(paper_id) {
             }
             if (taskStatus === 'failed') {
                 // disable catalog access when task failed, then quit
-                $(catElementId).attr('disabled')
+                $(catElementId).attr('disabled', 'disabled');
+                $(catElementId).find('span').removeClass('visible').addClass('invisible');
                 return false;
             }
         })
@@ -78,7 +85,7 @@ function updateAllStatuses() {
     });
 }
 
-// Run a task by paper's id
+// Run a task by paper's id at run-btn click
 //
 function setBhtRunOnClick() {
     $('.run-bht').on('click', function() {
