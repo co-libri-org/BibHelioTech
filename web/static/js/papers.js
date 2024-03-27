@@ -1,4 +1,4 @@
-// BHT tasks management
+// BHT tasks display
 
 // Update the status element from error returned from server (503)
 //
@@ -69,38 +69,47 @@ function setStatus(paper_id) {
         });
 }
 
+// Update status for all papers
+//
+function updateAllStatuses() {
+    $('.bht-status').each(function(index) {
+        const paperId = $(this).attr('id').substring(11);
+        setStatus(paperId);
+    });
+}
+
 // Run a task by paper's id
 //
-$('.run-bht').on('click', function() {
-    let paper_id = $(this).data('paper_id');
-    const statusElmtId = '#bht-status-' + paper_id;
-    $(statusElmtId).hide();
-    $.ajax({
-            url: '/bht_run',
-            data: {
-                paper_id: paper_id,
-                file_type: $(this).data('file_type')
-            },
-            method: 'POST'
-        })
-        .done((res) => {
-            if (res.status === "success") {
-                setStatus(res.data.paper_id);
-                location.reload();
-            } else {
-                alert("Error: " + res.data.message);
-            }
-        })
-        .fail((err) => {
-            // Show there was an error returned by /bht-run
-            failedToStatus(err, statusElmtId);
-            $(statusElmtId).show();
-        });
-});
+function setBhtRunOnClick() {
+    $('.run-bht').on('click', function() {
+        let paper_id = $(this).data('paper_id');
+        const statusElmtId = '#bht-status-' + paper_id;
+        $(statusElmtId).hide();
+        $.ajax({
+                url: '/bht_run',
+                data: {
+                    paper_id: paper_id,
+                    file_type: $(this).data('file_type')
+                },
+                method: 'POST'
+            })
+            .done((res) => {
+                if (res.status === "success") {
+                    setStatus(res.data.paper_id);
+                    location.reload();
+                } else {
+                    alert("Error: " + res.data.message);
+                }
+            })
+            .fail((err) => {
+                // Show there was an error returned by /bht-run
+                failedToStatus(err, statusElmtId);
+                $(statusElmtId).show();
+            });
+    });
+}
 
-
-//
-$('.bht-status').each(function(index) {
-    const paperId = $(this).attr('id').substring(11);
-    setStatus(paperId);
+$(document).ready(function() {
+    setBhtRunOnClick();
+    updateAllStatuses();
 });
