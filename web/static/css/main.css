@@ -141,7 +141,7 @@ input.success{
 }
 .bht-status.failed{
     /* failed is red */
-    background-color: #ff6666;
+    background-color: #ff9999;
     font-weight: 400;
     color: black;
 }
