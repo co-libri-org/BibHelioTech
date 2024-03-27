@@ -40,9 +40,9 @@ from ..errors import IstexError
 
 class StatusResponse:
     """
-    In response to a status api request
-    instantiate an object with parameters,
-    return the jsonified dictionnary as expected by the request
+    In response to a get_status api request,
+    instantiate an object with arguments,
+    then return the jsonified dictionnary as expected by the request
     """
 
     _response = {
@@ -71,12 +71,15 @@ class StatusResponse:
             task_started_str = task_started.strftime("%a, %b %d, %Y - %H:%M:%S")
         else:
             task_started_str = ""
+
+        if task_status in ["started", "finished", "failed"] and alt_message is None:
+            alt_message = f"Started {task_started_str}"
+
         self._response = {
             "status": status,
             "data": {
                 "paper_id": paper_id,
                 "task_status": task_status,
-                "task_started": task_started_str,
                 "cat_is_processed": cat_is_processed,
                 "message": message,
                 "alt_message": alt_message,
@@ -84,7 +87,7 @@ class StatusResponse:
         }
 
     @property
-    def response(self):
+    def json(self):
         return jsonify(self._response)
 
 
@@ -428,9 +431,9 @@ def bht_status(paper_id):
         response_object = StatusResponse(
             paper_id=paper.id,
             task_status=paper.task_status,
+            task_started=paper.task_started,
             cat_is_processed=paper.has_cat and paper.cat_in_db,
             message=f"{paper.task_status} {elapsed}",
-            alt_message=f"Started {paper.task_started}",
         )
     else:  # Get tasks info from task manager
         task_id = paper.task_id
@@ -457,7 +460,6 @@ def bht_status(paper_id):
                 task_started=task_started,
                 cat_is_processed=paper.has_cat and paper.cat_in_db,
                 message=f"{task_status} {elapsed}",
-                alt_message=f"Started {paper.task_started}",
             )
         except NoSuchJobError:
             response_object = StatusResponse(
@@ -473,10 +475,10 @@ def bht_status(paper_id):
                 message="Redis Cnx Err",
                 alt_message="Database to read tasks status is unreachable",
             )
-            return response_object.response, 503
+            return response_object.json, 503
 
         # TODO: END CUTTING
-    return response_object.response, 200
+    return response_object.json, 200
 
 
 @bp.route("/bht_run", methods=["POST"])
@@ -492,7 +494,7 @@ def bht_run():
     try:
         q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
         task = q.enqueue(
-            get_pipe_callback(test=current_app.config["TESTING"], fail=False),
+            get_pipe_callback(test=current_app.config["TESTING"]),
             args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type),
             job_timeout=600,
         )
@@ -503,7 +505,7 @@ def bht_run():
             message="Failed, no Redis",
             alt_message="System to run tasks is unreachable",
         )
-        return response_object.response, 503
+        return response_object.json, 503
 
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
@@ -513,7 +515,7 @@ def bht_run():
     response_object = StatusResponse(
         status="success", task_status="queued", paper_id=paper.id
     )
-    return response_object.response, 202
+    return response_object.json, 202
 
 
 @bp.route("/istex_test", methods=["GET"])
