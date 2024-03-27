@@ -91,7 +91,7 @@ function setBhtRunOnClick() {
     $('.run-bht').on('click', function() {
         let paper_id = $(this).data('paper_id');
         const statusElmtId = '#bht-status-' + paper_id;
-        $(statusElmtId).hide();
+        $(statusElmtId).fadeOut(200).fadeIn(200);
         $.ajax({
                 url: '/bht_run',
                 data: {
@@ -103,7 +103,6 @@ function setBhtRunOnClick() {
             .done((res) => {
                 if (res.status === "success") {
                     setStatus(res.data.paper_id);
-                    location.reload();
                 } else {
                     alert("Error: " + res.data.message);
                 }
@@ -111,7 +110,6 @@ function setBhtRunOnClick() {
             .fail((err) => {
                 // Show there was an error returned by /bht-run
                 failedToStatus(err, statusElmtId);
-                $(statusElmtId).show();
             });
     });
 }
