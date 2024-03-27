@@ -13,7 +13,7 @@ def random_sleep(min_secs, max_secs):
     return num_secs
 
 
-def get_pipe_callback(test=True, fail=True):
+def get_pipe_callback(test=True, fail=False):
     """Wrapper to exec a task callback depending on configuration
 
     @return: callback
@@ -28,13 +28,13 @@ def get_pipe_callback(test=True, fail=True):
 
 
 def pipe_paper_failed(_p_id, _b_dir, _ft):
-    """Raise exception after an random num of seconds"""
+    """Raise exception after a random num of seconds"""
     num_secs = random_sleep(min_secs=5, max_secs=20)
     raise WebError(f"Failed after {num_secs} seconds")
 
 
 def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_secs=20):
-    """Spend time
+    """Spend time a random num of seconds
 
     @return: num seconds spent
     """
