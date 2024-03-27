@@ -35,7 +35,7 @@ from web.istex_proxy import (
     json_to_hits,
     IstexDoctype,
 )
-from ..errors import IstexError
+from ..errors import IstexError, WebError
 
 
 class StatusResponse:
@@ -59,7 +59,7 @@ class StatusResponse:
 
     def __init__(
         self,
-        status: str = None,
+        status: str = "success",
         paper_id: int = None,
         task_status: str = None,
         task_started: datetime = None,
@@ -70,10 +70,12 @@ class StatusResponse:
         if task_started is not None:
             task_started_str = task_started.strftime("%a, %b %d, %Y - %H:%M:%S")
         else:
-            task_started_str = ""
+            task_started_str = "(no time info)"
 
         if task_status in ["started", "finished", "failed"] and alt_message is None:
             alt_message = f"Started {task_started_str}"
+        elif task_status in ["queued"] and alt_message is None:
+            alt_message = f"Waiting since {task_started_str}"
 
         self._response = {
             "status": status,
@@ -421,7 +423,7 @@ def bht_status(paper_id):
         return redirect(url_for("main.papers"))  #
 
     # TODO: REFACTOR cut and delegate to Paper and Task models
-    # Get tasks info from db if task has finished
+    # Get task info from db if task has finished
     if paper.task_status == "finished" or paper.task_status == "failed":
         try:
             elapsed = str(paper.task_stopped - paper.task_started).split(".")[0]
@@ -435,21 +437,26 @@ def bht_status(paper_id):
             cat_is_processed=paper.has_cat and paper.cat_in_db,
             message=f"{paper.task_status} {elapsed}",
         )
-    else:  # Get tasks info from task manager
+    else:  # Get task info from task manager
         task_id = paper.task_id
         try:
             job = Job.fetch(
                 task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
             )
-            task_started = job.started_at
             task_status = job.get_status(refresh=True)
 
             if task_status == "started":
+                task_started = job.started_at
                 elapsed = str(datetime.datetime.utcnow() - task_started).split(".")[0]
-            elif task_status == "finished":
+            elif task_status in ["finished", "failed"]:
+                task_started = job.started_at
                 elapsed = str(job.ended_at - task_started).split(".")[0]
-            else:
+            elif task_status == "queued":
+                task_started = job.enqueued_at
                 elapsed = ""
+            else:
+                # TODO: send a response object
+                raise WebError(f"Unknown status {task_status}")
 
             paper.set_task_status(task_status)
             paper.set_task_started(task_started)
