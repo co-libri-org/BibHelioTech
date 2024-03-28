@@ -28,6 +28,11 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+
+## [0.5.1] - 2024-03-28 - Fixed Task display
+### Changed
+- Task status update while running
+
 ## [0.5.0] - 2024-03-22 - Enhance Task Management
 ### Fixed
 - Paper path bug

@@ -1,32 +1,44 @@
 from bht.pipeline import bht_run_file
 from web import db
-from web.errors import PdfFileError
+from web.errors import *
 from web.models import Paper, BhtFileType
 
 
-def get_pipe_callback(test=True):
-    """Wrapper to exec a task callback depending on configuration
-
-    @return: callback
-    """
-
-    if test:
-        return pipe_paper_mocked
-    else:
-        return pipe_paper
-
-
-def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_secs=20):
-    """Spend time
-
-    @return: num seconds spent
-    """
+def random_sleep(min_secs, max_secs):
     import time
     import random
 
     num_secs = random.randint(min_secs, max_secs)
     time.sleep(num_secs)
     return num_secs
+
+
+def get_pipe_callback(test=True, fail=False):
+    """Wrapper to exec a task callback depending on configuration
+
+    @return: callback
+    """
+
+    if fail:
+        return pipe_paper_failed
+    if test:
+        return pipe_paper_mocked
+    else:
+        return pipe_paper
+
+
+def pipe_paper_failed(_p_id, _b_dir, _ft):
+    """Raise exception after a random num of seconds"""
+    num_secs = random_sleep(min_secs=5, max_secs=20)
+    raise WebError(f"Failed after {num_secs} seconds")
+
+
+def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_secs=20):
+    """Spend time a random num of seconds
+
+    @return: num seconds spent
+    """
+    return random_sleep(min_secs, max_secs)
 
 
 # TODO: REFACTOR should this go to a models.paper.method() ?
@@ -46,10 +58,12 @@ def pipe_paper(paper_id, basedir, file_type):
     elif file_type == BhtFileType.TXT and _paper.has_txt:
         file_path = _paper.txt_path
     else:
-        raise PdfFileError(f"No such file for paper {paper_id} \n"
-                           f"pdf: {_paper.pdf_path}"
-                           f"txt: {_paper.txt_path}"
-                           f"and type {file_type}: hastxt={_paper.has_txt} haspdf={_paper.has_pdf}")
+        raise PdfFileError(
+            f"No such file for paper {paper_id} \n"
+            f"pdf: {_paper.pdf_path}"
+            f"txt: {_paper.txt_path}"
+            f"and type {file_type}: hastxt={_paper.has_txt} haspdf={_paper.has_pdf}"
+        )
     _doc_meta_info = {"doi": _paper.doi, "pub_date": _paper.publication_date}
     catalogfile = bht_run_file(file_path, basedir, file_type, _doc_meta_info)
     _paper.set_cat_path(catalogfile)

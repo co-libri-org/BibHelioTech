@@ -23,8 +23,9 @@
 <table class="table-hover table">
     <thead>
     <tr>
-        <th scope="col" style="width: 20px;">Id</th>
-        <th scope="col" style="width: 680px;">Title</th>
+        <th scope="col" style="width: 20px">#</th>
+        <th scope="col" style="width: 20px">Id</th>
+        <th scope="col" style="width: 580px;">Title</th>
         <th scope="col" style="width: 40px;">del</th>
         <th scope="col" style="width: 40px;">pdf</th>
         <th scope="col" style="width: 40px;">txt</th>
@@ -37,14 +38,15 @@
     <tbody>
     {% for paper in papers_list %}
     <tr>
-        <th scope="row">
+        <th scope="row" class="td_num">{{loop.index}}</th>
+        <th scope="row" class="td_num">
             <a class="btn btn-warning" href="{{url_for('main.paper_show', paper_id=paper.id)}}"
                title="Show paper">
-            {{paper.id}}
+                {{paper.id}}
             </a>
         </th>
         <td style="max-width: 550px;" title="{{paper.ark}}">
-            &laquo;{{paper.title | truncate(95, False, end=" ...")}}&raquo;
+            &laquo;{{paper.title | truncate(85, False, end=" ...")}}&raquo;
         </td>
         <td>
             <a class="btn btn-warning"
@@ -68,9 +70,9 @@
                href="{{url_for('main.cat', paper_id=paper.id)}}"
                title="Get catalog file{{' (not in db)' if not paper.cat_in_db}}" {{disabled(not paper.has_cat)}}>cat
                 {% if paper.has_cat and not paper.cat_in_db %}
-                    {%set circle_visibility = "visible"%}
+                {%set circle_visibility = "visible"%}
                 {% else %}
-                    {%set circle_visibility = "invisible"%}
+                {%set circle_visibility = "invisible"%}
                 {% endif %}
                 <span class="{{circle_visibility}} position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                 </span>
@@ -94,7 +96,7 @@
                 run
             </button>
         </td>
-        <td style="width: 80px;">
+        <td style="width: 150px;">
             <span class="bht-status" id="bht-status-{{paper.id}}"></span>
             <span class="spinner-border spinner-border-sm text-warning d-none" id="spinner-{{paper.id}}"></span>
         </td>
@@ -106,114 +108,5 @@
 {%endblock%}
 
 {% block scripts %}
-<script>
-
-// BHT tasks management
-
-$('.run-bht').on('click', function() {
-  let paper_id = $(this).data('paper_id');
-  const statusElmtId = '#bht-status-'+paper_id;
-  $(statusElmtId).hide();
-  $.ajax({
-    url: '/bht_run',
-    data: { paper_id:  paper_id,
-            file_type: $(this).data('file_type')},
-    method: 'POST'
-  })
-  .done((res) => {
-    if ( res.status === "success" ){
-        setStatus(res.data.paper_id);
-        location.reload();
-    } else {
-        alert("Error: "+res.data.err_message);
-    }
-  })
-  .fail((err) => {
-    // Show there was an error if any
-    err_status = err.responseJSON.status;
-    err_message = err.responseJSON.data.err_message;
-    alt_message = err.responseJSON.data.alt_message;
-    paper_id = err.responseJSON.data.paper_id;
-    $(statusElmtId).removeClass("finished started failed queued undefined");
-    $(statusElmtId).addClass(err_status);
-    $(statusElmtId).html(err_message);
-    $(statusElmtId).attr("title", alt_message);
-    $(statusElmtId).show();
-  });
-});
-
-
-function setStatus(paper_id) {
-  $.ajax({
-    url: `/bht_status/${paper_id}`,
-    method: 'GET',
-  })
-  .done((res) => {
-    const taskStatus = res.data.task_status;
-
-    // Build dom elements' ids to grab
-    const spinnerElmtId = '#spinner-'+res.data.paper_id
-    const statusElmtId = '#bht-status-'+res.data.paper_id
-    const catElementId = '#cat-link-'+res.data.paper_id;
-
-    // Update css class
-    $(statusElmtId).removeClass("finished started failed queued undefined");
-    $(statusElmtId).addClass(taskStatus);
-
-    // Disable spinner
-    $(spinnerElmtId).removeClass('d-inline-block')
-    $(spinnerElmtId).addClass('d-none')
-
-    // Update status text content
-    $(statusElmtId).html(res.data.task_status+" "+res.data.task_elapsed)
-    $(statusElmtId).attr('title', 'Started: '+res.data.task_started)
-
-
-    // Update display depending on status
-    if (taskStatus === 'started' ) {
-        $(spinnerElmtId).removeClass('d-none')
-        $(spinnerElmtId).addClass('d-inline-block')
-    }
-    if (taskStatus === 'finished' ) {
-        $(catElementId).attr('disabled');
-        if  ( res.data.cat_is_processed === false){
-            $(catElementId).find('span').removeClass('invisible').addClass('visible');
-            }
-        return false;
-    }
-    if ( taskStatus === 'failed'){
-        $(catElementId).attr('disabled')
-         return false;
-    }
-
-    // Update all statuses after 1s
-    setTimeout(function () {
-      setStatus(res.data.paper_id);
-    }, 1000);
-  })
-  .fail((err) => {
-
-    // Show there was an error if any
-    err_status = err.responseJSON.status;
-    err_message = err.responseJSON.data.err_message;
-    alt_message = err.responseJSON.data.alt_message;
-    paper_id = err.responseJSON.data.paper_id;
-    const statusElmtId = '#bht-status-'+paper_id;
-    $(statusElmtId).removeClass("finished started failed queued undefined");
-    $(statusElmtId).addClass(err_status);
-    $(statusElmtId).html(err_message);
-    $(statusElmtId).attr("title", alt_message);
-  });
-}
-
-//
-$('.bht-status').each(function(index){
-    const paperId = $(this).attr('id').substring(11);
-    setStatus(paperId);
-});
-
-
-
-</script>
-
+<script src="{{url_for('static', filename='js/papers.js') | staticversion }} " defer></script>
 {% endblock %}
