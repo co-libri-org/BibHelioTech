@@ -28,6 +28,8 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.6.0] - 2024-03-xx - Insert Pipeline Version
+### New
 
 ## [0.5.1] - 2024-03-28 - Fixed Task display
 ### Changed
