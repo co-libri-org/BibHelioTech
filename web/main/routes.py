@@ -517,6 +517,7 @@ def bht_run():
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
     paper.set_task_status("queued")
+    paper.set_cat_path(None)
     # TODO: CUT END
 
     response_object = StatusResponse(
