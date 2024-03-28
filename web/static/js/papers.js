@@ -1,4 +1,21 @@
+//
 // BHT tasks display
+//
+
+// Change the catalog status depending on request response
+//
+function toggleCatalog(res, action) {
+    const catElmtId = '#cat-link-' + res.data.paper_id;
+    if (action == "enable") {
+        $(catElmtId).removeAttr('disabled');
+        if (res.data.cat_is_processed === false) {
+            $(catElmtId).find('span').removeClass('invisible').addClass('visible');
+        }
+    } else if (action == "disable") {
+        $(catElmtId).attr('disabled', 'disabled');
+        $(catElmtId).find('span').removeClass('visible').addClass('invisible');
+    }
+}
 
 // Update the status element from error returned from server (503)
 //
@@ -19,7 +36,6 @@ function setStatus(paper_id) {
     // Build dom elements' ids to grab
     const spinnerElmtId = '#spinner-' + paper_id
     const statusElmtId = '#bht-status-' + paper_id
-    const catElementId = '#cat-link-' + paper_id;
     $.ajax({
             url: `/bht_status/${paper_id}`,
             method: 'GET',
@@ -57,16 +73,12 @@ function setStatus(paper_id) {
             }
             if (taskStatus === 'finished') {
                 // update catalog availability when task finished, then quit
-                $(catElementId).removeAttr('disabled');
-                if (res.data.cat_is_processed === false) {
-                    $(catElementId).find('span').removeClass('invisible').addClass('visible');
-                }
+                toggleCatalog(res, "enable");
                 return false;
             }
             if (taskStatus === 'failed') {
                 // disable catalog access when task failed, then quit
-                $(catElementId).attr('disabled', 'disabled');
-                $(catElementId).find('span').removeClass('visible').addClass('invisible');
+                toggleCatalog(res, "disable")
                 return false;
             }
         })
@@ -101,6 +113,7 @@ function setBhtRunOnClick() {
                 method: 'POST'
             })
             .done((res) => {
+                toggleCatalog(res, "disable");
                 if (res.status === "success") {
                     setStatus(res.data.paper_id);
                 } else {
