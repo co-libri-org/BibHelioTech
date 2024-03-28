@@ -29,10 +29,9 @@ or major refactoring improvements.
 
 --------------------------------------------------------------------------------
 
-## [0.6.0] - yyyy-mm-dd - Include pipeline version
-### Fixed
+## [0.5.1] - 2024-03-28 - Fixed Task display
 ### Changed
-### New
+- Task status update while running
 
 ## [0.5.0] - 2024-03-22 - Enhance Task Management
 ### Fixed
