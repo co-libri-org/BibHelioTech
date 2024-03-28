@@ -492,8 +492,8 @@ def bht_status(paper_id):
 def bht_run():
     paper_id = request.form["paper_id"]
     file_type = request.form["file_type"]
-    found_pdf_file = get_paper_file(paper_id, file_type.upper())
-    if found_pdf_file is None:
+    found_file = get_paper_file(paper_id, file_type.upper())
+    if found_file is None:
         flash("No file for that paper.")
         return redirect(url_for("main.papers"))
 
