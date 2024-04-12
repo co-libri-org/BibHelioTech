@@ -28,8 +28,11 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.6.0] - 2024-04-12 - Fixed Sutime Filter
+### Changed
+- Custom english file removed from 
 
-## [0.5.1] - 2024-03-28 - Fixed Task display
+## [0.5.1] - 2024-03-28 - Changed Task display
 ### Changed
 - Task status update while running
 
