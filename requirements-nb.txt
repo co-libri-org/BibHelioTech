@@ -5,3 +5,6 @@ odfpy
 pandas
 pyarrow
 scipy
+jupyter_nbextensions_configurator
+import_ipynb
+openpyxl
