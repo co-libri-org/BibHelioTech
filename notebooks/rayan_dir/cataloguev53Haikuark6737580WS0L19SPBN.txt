@@ -1,0 +1,22 @@
+# Name:10105100046361202141149_bibheliotech_V2;
+# Creation Date:2024-04-16T11:30:43.190891
+# Description: Catalogue of events
+# start | stop | doi | mission | instrument | abstract | region | D | R | O | occur_sat | nb_durations | conf
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:RESUM; size:1; type:char;
+# Parameter 5: id:column5; name:REGS; size:1; type:char;
+# Parameter 6: id:column6; name:D; size:1; type:int;
+# Parameter 7: id:column7; name:R; size:1; type:int;
+# Parameter 8: id:column8; name:SO; size:1; type:int;
+# Parameter 9: id:column9; name:occur_sat; size:1; type:int;
+# Parameter 10: id:column10; name:nb_durations; size:1; type:int;
+# Parameter 11: id:column11; name:conf; size:1; type:float;
+2020-07-16T18:25:30.000Z 2020-07-16T18:35:00.000Z https://doi.org/10.1051/0004-6361/202141149 "Solar Orbiter" "SWA (PAS), MAG" "Observation of a reconnection event at the boundary of a magnetic switchback, showing multiple thermal proton populations and beams." "noregion" Nan Nan Nan Nan Nan Nan
+2020-07-16T03:15:20.000Z 2020-07-16T03:15:20.000Z https://doi.org/10.1051/0004-6361/202141149 "Solar Orbiter" "SWA (PAS), MAG" "Possible reconnection event with ambiguous signatures." "noregion" Nan Nan Nan Nan Nan Nan
+2020-07-16T05:47:50.000Z 2020-07-16T05:47:50.000Z https://doi.org/10.1051/0004-6361/202141149 "Solar Orbiter" "SWA (PAS), MAG" "Possible reconnection event with ambiguous signatures." "noregion" Nan Nan Nan Nan Nan Nan
+2020-07-16T06:06:00.000Z 2020-07-16T06:06:00.000Z https://doi.org/10.1051/0004-6361/202141149 "Solar Orbiter" "SWA (PAS), MAG" "Possible reconnection event with ambiguous signatures." "noregion" Nan Nan Nan Nan Nan Nan
+2020-07-16T14:28:15.000Z 2020-07-16T14:28:15.000Z https://doi.org/10.1051/0004-6361/202141149 "Solar Orbiter" "SWA (PAS), MAG" "Possible reconnection event with ambiguous signatures." "noregion" Nan Nan Nan Nan Nan Nan
+2020-07-16T22:02:00.000Z 2020-07-16T22:02:00.000Z https://doi.org/10.1051/0004-6361/202141149 "Solar Orbiter" "SWA (PAS), MAG" "Possible reconnection event with ambiguous signatures." "noregion" Nan Nan Nan Nan Nan Nan
+2020-07-16T23:21:10.000Z 2020-07-16T23:21:10.000Z https://doi.org/10.1051/0004-6361/202141149 "Solar Orbiter" "SWA (PAS), MAG" "Possible reconnection event with ambiguous signatures." "noregion" Nan Nan Nan Nan Nan Nan

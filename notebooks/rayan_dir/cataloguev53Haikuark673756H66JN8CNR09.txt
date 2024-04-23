@@ -1,0 +1,21 @@
+# Name:101016jasr200502044_bibheliotech_V2;
+# Creation Date:2024-04-16T11:29:39.306917
+# Description: Catalogue of events
+# start | stop | doi | mission | instrument | abstract | region | D | R | O | occur_sat | nb_durations | conf
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:RESUM; size:1; type:char;
+# Parameter 5: id:column5; name:REGS; size:1; type:char;
+# Parameter 6: id:column6; name:D; size:1; type:int;
+# Parameter 7: id:column7; name:R; size:1; type:int;
+# Parameter 8: id:column8; name:SO; size:1; type:int;
+# Parameter 9: id:column9; name:occur_sat; size:1; type:int;
+# Parameter 10: id:column10; name:nb_durations; size:1; type:int;
+# Parameter 11: id:column11; name:conf; size:1; type:float;
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1016/j.asr.2005.02.044 "Solar Orbiter" "Visible imagery and magnetometry" "Observations of the photosphere-corona interface at 100 km spatial resolution and 10 μT sensitivity for the longitudinal magnetic field component." "noregion" Nan Nan Nan Nan Nan Nan
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1016/j.asr.2005.02.044 "Solar Orbiter" "X-ray and EUV spectral imaging" "Observations of the solar atmosphere at 100 km spatial resolution and SUMER-like spectral resolution to measure Doppler velocities at km/s." "noregion" Nan Nan Nan Nan Nan Nan
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1016/j.asr.2005.02.044 "Solar Orbiter" "Radio package" "Detection of radio signatures, such as Type II bursts, associated with particle acceleration events." "noregion" Nan Nan Nan Nan Nan Nan
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1016/j.asr.2005.02.044 "Solar Orbiter" "Plasma package" "Measurements of solar wind plasma parameters, including distribution functions of various elements, to study the connection between in-situ phenomena and their solar origins." "noregion" Nan Nan Nan Nan Nan Nan
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1016/j.asr.2005.02.044 "Solar Orbiter" "Fields package" "Detection of plasma waves with a magnetometer providing a resolution of a few pT." "noregion" Nan Nan Nan Nan Nan Nan
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1016/j.asr.2005.02.044 "Solar Orbiter" "Particles package" "Measurements of protons, electrons, heavy ions, solar neutrons, and accelerated particles to study their connection with remote-sensing observations." "noregion" Nan Nan Nan Nan Nan Nan

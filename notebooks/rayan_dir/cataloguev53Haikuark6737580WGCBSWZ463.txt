@@ -1,0 +1,21 @@
+# Name:10105100046361202243765_bibheliotech_V2;
+# Creation Date:2024-04-16T11:30:20.740046
+# Description: Catalogue of events
+# start | stop | doi | mission | instrument | abstract | region | D | R | O | occur_sat | nb_durations | conf
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:RESUM; size:1; type:char;
+# Parameter 5: id:column5; name:REGS; size:1; type:char;
+# Parameter 6: id:column6; name:D; size:1; type:int;
+# Parameter 7: id:column7; name:R; size:1; type:int;
+# Parameter 8: id:column8; name:SO; size:1; type:int;
+# Parameter 9: id:column9; name:occur_sat; size:1; type:int;
+# Parameter 10: id:column10; name:nb_durations; size:1; type:int;
+# Parameter 11: id:column11; name:conf; size:1; type:float;
+2021-09-14T03:20:00.000Z 2021-09-14T04:40:00.000Z https://doi.org/10.1051/0004-6361/202243765 "Solar Dynamics Observatory" "Atmospheric Imaging Assembly" "AIA 171 Å and 193 Å observations of the jet event." "noregion" Nan Nan Nan Nan Nan Nan
+2021-09-14T03:29:00.000Z 2021-09-14T04:26:00.000Z https://doi.org/10.1051/0004-6361/202243765 "Solar Dynamics Observatory" "Atmospheric Imaging Assembly" "Jet event observed in AIA 171 Å and 193 Å, lasting for nearly an hour with multiple small-scale eruptions, plasma flows, and moving blobs." "noregion" Nan Nan Nan Nan Nan Nan
+2021-09-14T04:11:00.000Z 2021-09-14T04:30:00.000Z https://doi.org/10.1051/0004-6361/202243765 "Solar Orbiter" "Extreme Ultraviolet Imager" "Detailed observations of the jet base at the end of the event, revealing propagating plasma blobs and fan-spine topology." "noregion" Nan Nan Nan Nan Nan Nan
+2021-09-14T03:29:16.000Z 2021-09-14T03:29:28.000Z https://doi.org/10.1051/0004-6361/202243765 "Solar Dynamics Observatory" "Atmospheric Imaging Assembly" "Dark material moving away from the jet base during the first jet, possibly a mini-filament eruption." "noregion" Nan Nan Nan Nan Nan Nan
+2021-09-14T03:58:00.000Z 2021-09-14T03:58:00.000Z https://doi.org/10.1051/0004-6361/202243765 "Solar Dynamics Observatory" "Atmospheric Imaging Assembly" "Counter-propagating blobs originating from a brightening near the dome apex." "noregion" Nan Nan Nan Nan Nan Nan
+2021-09-14T03:20:00.000Z 2021-09-14T04:40:00.000Z https://doi.org/10.1051/0004-6361/202243765 "Solar Orbiter" "Extreme Ultraviolet Imager" "Recurring intensity fluctuations near the dome apex, potentially related to wave-modulated or oscillatory reconnection." "noregion" Nan Nan Nan Nan Nan Nan

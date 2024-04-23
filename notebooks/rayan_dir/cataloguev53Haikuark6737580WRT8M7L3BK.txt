@@ -1,0 +1,18 @@
+# Name:10105100046361202142381_bibheliotech_V2;
+# Creation Date:2024-04-16T11:29:23.486832
+# Description: Catalogue of events
+# start | stop | doi | mission | instrument | abstract | region | D | R | O | occur_sat | nb_durations | conf
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:RESUM; size:1; type:char;
+# Parameter 5: id:column5; name:REGS; size:1; type:char;
+# Parameter 6: id:column6; name:D; size:1; type:int;
+# Parameter 7: id:column7; name:R; size:1; type:int;
+# Parameter 8: id:column8; name:SO; size:1; type:int;
+# Parameter 9: id:column9; name:occur_sat; size:1; type:int;
+# Parameter 10: id:column10; name:nb_durations; size:1; type:int;
+# Parameter 11: id:column11; name:conf; size:1; type:float;
+2020-05-30T00:00:00.000Z 2020-05-31T00:00:00.000Z https://doi.org/10.1051/0004-6361/202142381 "Solar Orbiter" "MAG" "Flux rope events observed in Solar Orbiter's magnetic field and plasma data near the heliospheric current sheet." "noregion" Nan Nan Nan Nan Nan Nan
+2020-06-19T18:00:00.000Z 2020-06-20T01:00:00.000Z https://doi.org/10.1051/0004-6361/202142381 "Parker Solar Probe" "FIELDS, SWEAP/SPC, SWEAP/SPAN-i, SWEAP/SPAN-e" "Two flux rope events measured by Parker Solar Probe near the heliospheric current sheet, characterized by increases in magnetic field strength, reversals in field components, and changes in plasma density and electron pitch-angle distributions." "noregion" Nan Nan Nan Nan Nan Nan
+2020-06-17T00:00:00.000Z 2020-06-25T00:00:00.000Z https://doi.org/10.1051/0004-6361/202142381 "Parker Solar Probe" "FIELDS, SWEAP/SPC, SWEAP/SPAN-i, SWEAP/SPAN-e" "Period of multiple heliospheric current sheet crossings and small to average size flux ropes observed by Parker Solar Probe, consistent with the variability seen in the simulations." "noregion" Nan Nan Nan Nan Nan Nan
