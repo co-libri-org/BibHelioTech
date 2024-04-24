@@ -34,6 +34,7 @@ from web.istex_proxy import (
     get_file_from_id,
     json_to_hits,
     IstexDoctype,
+    ark_to_istex_url,
 )
 from ..errors import IstexError, WebError
 
@@ -548,10 +549,23 @@ def istex():
     # Juste display form at first sight
     if request.method == "GET":
         return render_template("istex.html", istex_list=[])
-    # else method == "POST", treat url and  display resulting papers list
+
+    # else method == "POST", deal with url or ark arguments
     istex_req_url = request.form["istex_req_url"]
+    ark_istex = request.form["ark_istex"]
+    if istex_req_url:
+        # just go on with it
+        pass
+    elif ark_istex:
+        # then build the request_url from ark
+        istex_req_url = ark_to_istex_url(ark_istex)
+    else:
+        flash(f"Could not read any argument: istex_req_url or ark_istex ", "error")
+        return redirect(url_for("main.istex"))
+
     # build a link to allow direct human check by click into error message
     istex_req_url_a = f'<a target="_blank" href="{istex_req_url}" title="get istex request"> {istex_req_url} </a>'
+
     # now try to get some results from Istex, or quit with err message
     try:
         r = requests.get(url=istex_req_url)
@@ -571,8 +585,10 @@ def istex():
         flash(f"There was an error reading json from <{istex_req_url_a}>", "error")
         flash(f"{e.__repr__()}", "error")
         return redirect(url_for("main.istex"))
+
     # get papers from db, so we can show we already have them
     istex_papers = {p.istex_id: p for p in Paper.query.all()}
+
     # build dict of papers indexed with istex_id
     return render_template(
         "istex.html",

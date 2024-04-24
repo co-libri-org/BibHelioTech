@@ -1,9 +1,6 @@
-from pprint import pprint
-
-import pytest
+import requests
 
 from tests.conftest import skip_slow_test, skip_istex
-from web.errors import IstexParamError
 from web.istex_proxy import (
     get_doc_url,
     IstexDoctype,
@@ -11,6 +8,7 @@ from web.istex_proxy import (
     json_to_hits,
     get_file_from_id,
     ark_to_id,
+    ark_to_istex_url,
 )
 
 
@@ -23,8 +21,22 @@ class TestIstex:
         THEN check istex_id is the proper one
         @return:
         """
-        doc_ark =  "ark:/67375/80W-QC194JKZ-X"
+        doc_ark = "ark:/67375/80W-QC194JKZ-X"
         _istex_id = ark_to_id(doc_ark)
+        assert _istex_id == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"
+
+    def test_ark_to_url(self):
+        """
+        GIVEN an ark
+        WHEN the ark_to_istex_url is called
+        THEN check the response contains what we expect
+        @return:
+        """
+        istex_ark = "ark:/67375/80W-QC194JKZ-X"
+        istex_req_url = ark_to_istex_url(istex_ark)
+        r = requests.get(url=istex_req_url)
+        json_content = r.json()
+        _istex_id = json_content['hits'][0]['id']
         assert _istex_id == "BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1"
 
     def test_get_doc_url(self, istex_id):
