@@ -2,6 +2,7 @@ import glob
 import json
 import copy
 import os
+import pprint
 import re
 
 from tools.tools_errors import ToolsValueError, ToolsFileError
@@ -105,7 +106,13 @@ class StepLighter:
         self.enlighted_txt_content = enlight_txt(txt_content, json_content)
 
 
-def struct_to_title(content_struct):
+def struct_to_title_0(content_struct):
+    content_type = content_struct["type"]
+    content_title = pprint.pformat(content_struct)
+    return content_type, content_title.replace("\n", "&#10;")
+
+
+def struct_to_title_1(content_struct):
     """Convert a sutime struct to a html tooltip"""
     content_type = content_struct["type"]
     content_title = f'Text: {content_struct["text"]}'
@@ -169,7 +176,7 @@ def enlight_txt(txt_content, json_content):
     res_txt = txt_content[:]
     running_offset = 0
     for i, content_struct in enumerate(uniq_content):
-        content_type, content_title = struct_to_title(content_struct)
+        content_type, content_title = struct_to_title_0(content_struct)
 
         opening_tag = f'<span class="highlight {content_type}" title="{content_title}">'
         closing_tag = "</span>"
