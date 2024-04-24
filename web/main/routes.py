@@ -545,10 +545,12 @@ def istex():
     Parse the json response data
     Redirect to our "istex" page to display papers list
     """
+    # Juste display form at first sight
     if request.method == "GET":
         return render_template("istex.html", istex_list=[])
-    # else method == "POST"
+    # else method == "POST", treat url and  display resulting papers list
     istex_req_url = request.form["istex_req_url"]
+    # build a link to allow direct human check by click into error message
     istex_req_url_a = f'<a target="_blank" href="{istex_req_url}" title="get istex request"> {istex_req_url} </a>'
     # now try to get some results from Istex, or quit with err message
     try:
@@ -570,8 +572,8 @@ def istex():
         flash(f"{e.__repr__()}", "error")
         return redirect(url_for("main.istex"))
     # get papers from db, so we can show we already have them
-    # build dict of papers indexed with istex_id
     istex_papers = {p.istex_id: p for p in Paper.query.all()}
+    # build dict of papers indexed with istex_id
     return render_template(
         "istex.html",
         istex_list=istex_list,
