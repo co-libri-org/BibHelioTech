@@ -28,6 +28,12 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.7.0] - 2024-05-xx - Fixed Sutime Filter
+### Fixed
+### Changed
+### New
+- request papers by ark
+
 ## [0.6.0] - 2024-04-12 - Fixed Sutime Filter
 ### Changed
 - Custom english file removed from 
