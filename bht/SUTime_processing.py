@@ -18,6 +18,7 @@ def SUTime_treatement(current_OCR_folder, sutime):
     input_content = file.read()
 
     test_list = sutime.parse(input_content)  # Analysis of the whole text by SUTime
+    raw_dumper.dump_to_raw(test_list, "Raw sutime output", current_OCR_folder)
 
     compteur = 0
     for dicts in test_list:
