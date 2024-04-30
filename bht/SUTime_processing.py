@@ -451,6 +451,8 @@ def SUTime_transform(current_OCR_folder):
 
     JSON_list = [i for i in JSON_list if i != {}]  # filtrage des dictionnaires vides
 
+    raw_dumper.dump_to_raw(JSON_list, "Current Year to XXXX", current_OCR_folder)
+
     for dicts in JSON_list:
         try:
             # Removal in the DURATIONS of the "+0000" added in the times, induced by the reading of "UTC" by SUTime
@@ -635,7 +637,7 @@ def SUTime_transform(current_OCR_folder):
                 )
         compteur_dicts += 1
 
-    raw_dumper.dump_to_raw(JSON_list, "Remove current Year", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "Resolution of XXXX to closest year in text", current_OCR_folder)
 
     # date correction when in short format (YYYY-MM (no DD))
     compteur_dicts = 0
