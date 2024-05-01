@@ -1,0 +1,21 @@
+# Name:101007s0015900300219_bibheliotech_V2;
+# Creation Date:2024-04-16T11:29:44.313352
+# Description: Catalogue of events
+# start | stop | doi | mission | instrument | abstract | region | D | R | O | occur_sat | nb_durations | conf
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:RESUM; size:1; type:char;
+# Parameter 5: id:column5; name:REGS; size:1; type:char;
+# Parameter 6: id:column6; name:D; size:1; type:int;
+# Parameter 7: id:column7; name:R; size:1; type:int;
+# Parameter 8: id:column8; name:SO; size:1; type:int;
+# Parameter 9: id:column9; name:occur_sat; size:1; type:int;
+# Parameter 10: id:column10; name:nb_durations; size:1; type:int;
+# Parameter 11: id:column11; name:conf; size:1; type:float;
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1007/s00159-003-0021-9 "SOHO" "MDI" "Photospheric magnetic field observations." "noregion" Nan Nan Nan Nan Nan Nan
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1007/s00159-003-0021-9 "SOHO" "EIT" "EUV 171Å observations of the solar corona." "noregion" Nan Nan Nan Nan Nan Nan
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1007/s00159-003-0021-9 "Yohkoh" "SXT" "Observations of active region transient brightenings (ARTBs)." "noregion" Nan Nan Nan Nan Nan Nan
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1007/s00159-003-0021-9 "TRACE" "-" "Observations of transversally oscillating coronal loops." "noregion" Nan Nan Nan Nan Nan Nan
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1007/s00159-003-0021-9 "SOHO" "CDS" "Observations of longitudinally oscillating coronal loops." "noregion" Nan Nan Nan Nan Nan Nan
+2022-01-01T00:00:00.000Z 2022-01-01T00:00:00.000Z https://doi.org/10.1007/s00159-003-0021-9 "SOHO" "SUMER" "Observations of explosive events in the transition region." "noregion" Nan Nan Nan Nan Nan Nan

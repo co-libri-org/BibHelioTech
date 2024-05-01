@@ -1,0 +1,19 @@
+# Name:10105100046361202141683_bibheliotech_V2;
+# Creation Date:2024-04-16T11:30:24.699990
+# Description: Catalogue of events
+# start | stop | doi | mission | instrument | abstract | region | D | R | O | occur_sat | nb_durations | conf
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:RESUM; size:1; type:char;
+# Parameter 5: id:column5; name:REGS; size:1; type:char;
+# Parameter 6: id:column6; name:D; size:1; type:int;
+# Parameter 7: id:column7; name:R; size:1; type:int;
+# Parameter 8: id:column8; name:SO; size:1; type:int;
+# Parameter 9: id:column9; name:occur_sat; size:1; type:int;
+# Parameter 10: id:column10; name:nb_durations; size:1; type:int;
+# Parameter 11: id:column11; name:conf; size:1; type:float;
+2021-02-23T17:17:00.000Z 2021-02-23T17:17:20.000Z https://doi.org/10.1051/0004-6361/202141683 "Solar Orbiter" "EUI/HRI EUV" "Observation of a bidirectional jet, a typical signature of magnetic reconnection." "noregion" Nan Nan Nan Nan Nan Nan
+2021-02-23T17:17:20.000Z 2021-02-23T17:17:40.000Z https://doi.org/10.1051/0004-6361/202141683 "Solar Orbiter" "EUI/HRI EUV" "Observation of intermittent unidirectional jets originating from a compact bright source." "noregion" Nan Nan Nan Nan Nan Nan
+2021-02-23T17:19:40.000Z 2021-02-23T17:20:00.000Z https://doi.org/10.1051/0004-6361/202141683 "Solar Orbiter" "EUI/HRI EUV" "Observation of a unidirectional jet ejected from a localized brightening, exhibiting some deceleration as it propagates." "noregion" Nan Nan Nan Nan Nan Nan
+2021-02-23T17:18:20.000Z 2021-02-23T17:18:40.000Z https://doi.org/10.1051/0004-6361/202141683 "Solar Orbiter" "EUI/HRI EUV" "Observation of a faint jet ejected from a dynamic source region." "noregion" Nan Nan Nan Nan Nan Nan

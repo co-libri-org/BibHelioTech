@@ -1,0 +1,18 @@
+# Name:1010022014JA020628_bibheliotech_V2;
+# Creation Date:2024-04-16T11:30:33.950501
+# Description: Catalogue of events
+# start | stop | doi | mission | instrument | abstract | region | D | R | O | occur_sat | nb_durations | conf
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:RESUM; size:1; type:char;
+# Parameter 5: id:column5; name:REGS; size:1; type:char;
+# Parameter 6: id:column6; name:D; size:1; type:int;
+# Parameter 7: id:column7; name:R; size:1; type:int;
+# Parameter 8: id:column8; name:SO; size:1; type:int;
+# Parameter 9: id:column9; name:occur_sat; size:1; type:int;
+# Parameter 10: id:column10; name:nb_durations; size:1; type:int;
+# Parameter 11: id:column11; name:conf; size:1; type:float;
+1995-07-01T00:00:00.000Z 1996-07-01T00:00:00.000Z https://doi.org/10.1002/2014JA020628 "Wind" "MFI, 3DP" "Observations during this interval include a magnetic cloud with a clear large-scale rotation in the magnetic field components, a proton temperature below the surrounding environment, and a proton beta lower than 1." "noregion" Nan Nan Nan Nan Nan Nan
+1997-08-03T13:52:00.000Z 1997-08-04T02:03:00.000Z https://doi.org/10.1002/2014JA020628 "Wind" "MFI, 3DP" "Observations during this interval include a magnetic cloud with a clear large-scale rotation in the magnetic field components, a proton temperature below the surrounding environment, and a proton beta lower than 1. The velocity decreases from around 500 to 410 km/s throughout the magnetic cloud, indicating radial expansion." "noregion" Nan Nan Nan Nan Nan Nan
+2000-08-12T06:20:00.000Z 2000-08-13T00:00:00.000Z https://doi.org/10.1002/2014JA020628 "Wind" "MFI, 3DP" "Observations during this interval include a magnetic cloud with a well-determined front boundary but a more complex rear boundary, as well as the presence of two shocks within the magnetic cloud." "noregion" Nan Nan Nan Nan Nan Nan

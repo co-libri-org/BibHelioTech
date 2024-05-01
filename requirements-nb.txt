@@ -1,0 +1,10 @@
+jupyter
+jupyterlab_vim
+matplotlib
+odfpy
+pandas
+pyarrow
+scipy
+jupyter_nbextensions_configurator
+import_ipynb
+openpyxl

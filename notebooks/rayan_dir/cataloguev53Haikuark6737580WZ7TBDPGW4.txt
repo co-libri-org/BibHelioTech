@@ -1,0 +1,20 @@
+# Name:10105100046361202244170_bibheliotech_V2;
+# Creation Date:2024-04-16T11:31:17.946506
+# Description: Catalogue of events
+# start | stop | doi | mission | instrument | abstract | region | D | R | O | occur_sat | nb_durations | conf
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:RESUM; size:1; type:char;
+# Parameter 5: id:column5; name:REGS; size:1; type:char;
+# Parameter 6: id:column6; name:D; size:1; type:int;
+# Parameter 7: id:column7; name:R; size:1; type:int;
+# Parameter 8: id:column8; name:SO; size:1; type:int;
+# Parameter 9: id:column9; name:occur_sat; size:1; type:int;
+# Parameter 10: id:column10; name:nb_durations; size:1; type:int;
+# Parameter 11: id:column11; name:conf; size:1; type:float;
+2022-03-17T03:32:00.000Z 2022-03-17T03:35:00.000Z https://doi.org/10.1051/0004-6361/202244170 "Solar Orbiter" "EUI/HRI EUV" "Observations of a pair of coronal loops that were entwined or braided, with a localized brightening associated with the braiding." "noregion" Nan Nan Nan Nan Nan Nan
+2022-03-19T00:00:00.000Z 2022-03-19T00:03:00.000Z https://doi.org/10.1051/0004-6361/202244170 "Solar Orbiter" "EUI/HRI EUV" "Observations of a compact loop system that exhibited rapid evolution, including clear signs of braiding, and the ejection of confined plasma jets from one end of the loop system." "noregion" Nan Nan Nan Nan Nan Nan
+2022-04-01T00:00:00.000Z 2022-04-01T00:03:00.000Z https://doi.org/10.1051/0004-6361/202244170 "Solar Orbiter" "EUI/HRI EUV" "Observations of additional examples of coronal braids over chromospheric filamentary structures." "noregion" Nan Nan Nan Nan Nan Nan
+2022-03-17T03:34:00.000Z 2022-03-17T03:36:00.000Z https://doi.org/10.1051/0004-6361/202244170 "Solar Dynamics Observatory" "AIA" "Observations of a localized intensity enhancement around the footpoint of the braided loops, likely associated with the deposition of energy in the transition region from the heating event." "noregion" Nan Nan Nan Nan Nan Nan
+2022-03-17T03:32:00.000Z 2022-03-17T03:34:00.000Z https://doi.org/10.1051/0004-6361/202244170 "Hinode" "XRT" "Observations of coronal emission during the untangling of the loops over filamentary structures, with the soft X-ray emission organized in a more loop-like feature compared to the complexity seen in the EUI/HRI EUV images." "noregion" Nan Nan Nan Nan Nan Nan

@@ -314,6 +314,14 @@ STEP 4: GROBID python client installation
 * pip package should have been installed with requirements.txt
 * copy grobid-client-config.json-dist grobid-client-config.json
 
+## Jupyter Notebooks
+
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install -r requirements-nb.txt
+    jupyter notebook notebooks/
+
+* plot intervals
 
 ## License
 
