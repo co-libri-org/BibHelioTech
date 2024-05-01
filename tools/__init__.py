@@ -23,7 +23,7 @@ class RawDumper:
         entitled_struct = copy.deepcopy(struct_to_dump)
         entitled_struct.append(f"{self.dump_step}- {message}")
         with open(
-            os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
+                os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
         ) as raw_file:
             raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
         self.dump_step = self.dump_step + 1
@@ -38,6 +38,7 @@ class StepLighter:
         self.enlight_mode = enlight_mode
         self.enlighted_txt_content = ""
         self.caption_content = ""
+        self.analysed_json_text = ""
 
     @property
     def caption(self):
@@ -50,6 +51,12 @@ class StepLighter:
         if not self.enlighted_txt_content:
             self.enlight_step()
         return self.enlighted_txt_content
+
+    @property
+    def analysed_json(self):
+        if not self.analysed_json_text:
+            self.analyse_json()
+        return self.analysed_json_text
 
     @property
     def all_steps(self):
@@ -104,6 +111,47 @@ class StepLighter:
         self.caption_content = step_caption
 
         self.enlighted_txt_content = enlight_txt(txt_content, json_content)
+
+    def analyse_json(self):
+        """
+        Given a json file from Sutime output, analyse entities, output as text
+        @return: String with sutime dict's keys [text, timex-value, value]
+        """
+        with open(self.json_filepath, "r") as json_df:
+            dicts_list = json.load(json_df)
+        msg = dicts_list.pop()
+
+        # compute types
+        all_types = [elmt["type"] for elmt in dicts_list]
+        uniq_types = sorted(set(all_types))
+        count_types = {_t: all_types.count(_t) for _t in uniq_types}
+
+        msg = f"{msg}: {len(dicts_list)} elmnts"
+        msg_sub = len(msg) * "-"
+        _res_str = "\n"
+        _res_str += f"{msg_sub:^50}\n"
+        _res_str += f"{msg:^50}\n"
+        _res_str += f"{msg_sub:^50}\n"
+        _res_str += "\n"
+
+        for k, v in count_types.items():
+            type_number = f"{v:>3} {k:8}"
+            _res_str += f"{type_number:^50}\n"
+        _res_str += "\n\n"
+
+        title_str = f'{"type":9}: {"text":27} {"timex-value":>20}      {"value"}\n'
+        _res_str += title_str
+        _res_str += len(title_str) * "-" + "\n"
+        for elmt in dicts_list:
+            if type(elmt) is not dict or "timex-value" not in elmt:
+                continue
+            _type = elmt["type"]
+            _text = f'"{elmt["text"]}"'
+            _timex = elmt["timex-value"]
+            _value = elmt["value"]
+            _res_str += f"{_type:9}: {_text:27} {_timex:>20} ---> {_value}\n"
+
+        self.analysed_json_text = _res_str
 
 
 def struct_to_title_0(content_struct):
