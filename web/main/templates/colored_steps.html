@@ -6,7 +6,10 @@
 {% block content %}
 
 <a class="btn btn-warning" href="{{url_for('main.paper_show', paper_id=paper_id)}}"> Back to paper</a>
-<a class="btn btn-warning" href="{{url_for('main.enlighted_json', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step)}}"> Show Json {{curr_step}}</a>
+<a class="btn btn-warning" href="{{url_for('main.enlighted_json', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, comp_type='raw')}}"> Raw Json {{curr_step}}</a>
+{% if pipeline_mode == 'sutime' %}
+<a class="btn btn-warning" href="{{url_for('main.enlighted_json', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, comp_type='analysed')}}"> Analysed {{curr_step}}</a>
+{% endif %}
 <br>
 <br>
 {% if curr_step == 0 %}
