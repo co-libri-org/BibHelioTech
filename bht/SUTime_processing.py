@@ -718,7 +718,7 @@ def SUTime_transform(current_OCR_folder):
     # Change DATE to DURATION
     for elmnt in JSON_list:
         if elmnt["type"] == "DATE":
-            date_string = elmnt["timex-value"]
+            date_string = elmnt["value"]
             try:
                 begin_date = parser.parse(date_string)
             except parser.ParserError:
