@@ -453,6 +453,38 @@ def SUTime_transform(current_OCR_folder):
 
     raw_dumper.dump_to_raw(JSON_list, "Current Year to XXXX", current_OCR_folder)
 
+    # resolution of all XXXX
+    compteur_dicts = 0
+    for dicts in JSON_list:
+        if dicts["type"] == "DURATION":
+            if "begin" in dicts["value"]:
+                if re.search("XXXX", dicts["value"]["begin"]):
+                    year = nearest_year(JSON_list, compteur_dicts)
+                    JSON_list[compteur_dicts]["value"]["begin"] = re.sub(
+                        r"XXXX", year, dicts["value"]["begin"]
+                    )
+            if "end" in dicts["value"]:
+                if re.search("XXXX", dicts["value"]["end"]):
+                    year = nearest_year(JSON_list, compteur_dicts)
+                    JSON_list[compteur_dicts]["value"]["end"] = re.sub(
+                        r"XXXX", year, dicts["value"]["end"]
+                    )
+        elif dicts["type"] == "DATE":
+            if re.search("XXXX", dicts["value"]):
+                year = nearest_year(JSON_list, compteur_dicts)
+                JSON_list[compteur_dicts]["value"] = re.sub(
+                    "XXXX", year, dicts["value"]
+                )
+        elif dicts["type"] == "TIME":
+            if re.search("XXXX", dicts["value"]):
+                year = nearest_year(JSON_list, compteur_dicts)
+                JSON_list[compteur_dicts]["value"] = re.sub(
+                    "XXXX", year, dicts["value"]
+                )
+        compteur_dicts += 1
+
+    raw_dumper.dump_to_raw(JSON_list, "Resolution of XXXX to closest year in text", current_OCR_folder)
+
     for dicts in JSON_list:
         try:
             # Removal in the DURATIONS of the "+0000" added in the times, induced by the reading of "UTC" by SUTime
@@ -606,38 +638,6 @@ def SUTime_transform(current_OCR_folder):
     raw_dumper.dump_to_raw(
         JSON_list, "Change type TIME to DURATION", current_OCR_folder
     )
-
-    # resolution of all XXXX
-    compteur_dicts = 0
-    for dicts in JSON_list:
-        if dicts["type"] == "DURATION":
-            if "begin" in dicts["value"]:
-                if re.search("XXXX", dicts["value"]["begin"]):
-                    year = nearest_year(JSON_list, compteur_dicts)
-                    JSON_list[compteur_dicts]["value"]["begin"] = re.sub(
-                        r"XXXX", year, dicts["value"]["begin"]
-                    )
-            if "end" in dicts["value"]:
-                if re.search("XXXX", dicts["value"]["end"]):
-                    year = nearest_year(JSON_list, compteur_dicts)
-                    JSON_list[compteur_dicts]["value"]["end"] = re.sub(
-                        r"XXXX", year, dicts["value"]["end"]
-                    )
-        elif dicts["type"] == "DATE":
-            if re.search("XXXX", dicts["value"]):
-                year = nearest_year(JSON_list, compteur_dicts)
-                JSON_list[compteur_dicts]["value"] = re.sub(
-                    "XXXX", year, dicts["value"]
-                )
-        elif dicts["type"] == "TIME":
-            if re.search("XXXX", dicts["value"]):
-                year = nearest_year(JSON_list, compteur_dicts)
-                JSON_list[compteur_dicts]["value"] = re.sub(
-                    "XXXX", year, dicts["value"]
-                )
-        compteur_dicts += 1
-
-    raw_dumper.dump_to_raw(JSON_list, "Resolution of XXXX to closest year in text", current_OCR_folder)
 
     # date correction when in short format (YYYY-MM (no DD))
     compteur_dicts = 0
