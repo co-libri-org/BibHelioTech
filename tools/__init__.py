@@ -23,7 +23,7 @@ class RawDumper:
         entitled_struct = copy.deepcopy(struct_to_dump)
         entitled_struct.append(f"{self.dump_step}- {message}")
         with open(
-                os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
+            os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
         ) as raw_file:
             raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
         self.dump_step = self.dump_step + 1
@@ -134,10 +134,15 @@ class StepLighter:
         _res_str += f"{msg_sub:^50}\n"
         _res_str += "\n"
 
+        written_types = 0
         for k, v in count_types.items():
+            written_types += 1
             type_number = f"{v:>3} {k:8}"
             _res_str += f"{type_number:^50}\n"
-        _res_str += "\n\n"
+
+        # now, make sure num types lines is equal to 4
+        more_cr = 4-written_types
+        _res_str += more_cr * "\n"
 
         title_str = f'{"type":9}: {"text":27} {"timex-value":>20}      {"value"}\n'
         _res_str += title_str
