@@ -17,3 +17,4 @@ test-upload
 DATA
 bht2.log
 logs
+.ipynb_checkpoints
