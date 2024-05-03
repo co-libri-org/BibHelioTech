@@ -555,23 +555,23 @@ def SUTime_transform(current_OCR_folder):
                         if group_counter_min == 1:  # beginning in the years
                             begin = "".join(
                                 list(test.group(1, 2, 4, 5, 7, 8, 9, 10, 12, 13, 14))
-                            ) + str(".%03d" % (495))
+                            ) + str(".%03d" % (000))
                             end = "".join(
                                 list(test.group(1, 2, 4, 5, 7, 8, 9, 10, 12, 13, 14))
-                            ) + str(".%03d" % (505))
+                            ) + str(".%03d" % (999))
                         elif group_counter_min == 4:  # beginning at months
                             begin = "".join(
                                 list(test.group(4, 5, 7, 8, 9, 10, 12, 13, 14))
-                            ) + str(".%03d" % (495))
+                            ) + str(".%03d" % (000))
                             end = "".join(
                                 list(test.group(4, 5, 7, 8, 9, 10, 12, 13, 14))
-                            ) + str(".%03d" % (505))
+                            ) + str(".%03d" % (999))
                         elif group_counter_min == 8:  # start at T (undated time)
                             begin = "".join(
                                 list(test.group(8, 9, 10, 12, 13, 14))
-                            ) + str(".%03d" % (495))
+                            ) + str(".%03d" % (000))
                             end = "".join(list(test.group(8, 9, 10, 12, 13, 14))) + str(
-                                ".%03d" % (505)
+                                ".%03d" % (999)
                             )
                     elif group_counter_max == 12:  # end to the minutes
                         if group_counter_min == 1:  # beginning in the years
