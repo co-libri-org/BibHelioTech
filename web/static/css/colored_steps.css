@@ -72,3 +72,8 @@
     text-align: center;
     font-size: 7pt;
 }
+
+a.btn-warning.current {
+    border: solid 1pt black !important ;
+    pointer-events: none;
+}

@@ -7,11 +7,27 @@
 
 <a class="btn btn-warning" href="{{url_for('main.paper_show', paper_id=paper_id)}}"> Back to paper</a>
 
-<a class="btn btn-warning" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='enlighted')}}"> Enlighted {{curr_step}}</a>
-{% if pipeline_mode == 'sutime' %}
-<a class="btn btn-warning" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='analysed')}}"> Analysed {{curr_step}}</a>
+{% if disp_mode is defined and disp_mode == "enlighted" %}
+    {% set enlighted_active = "current" %}
+{% else %}
+    {% set enlighted_active = "" %}
 {% endif %}
-<a class="btn btn-warning" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='raw')}}"> Raw Json {{curr_step}}</a>
+{% if disp_mode == "raw" %}
+    {% set raw_active = "current" %}
+{% else %}
+    {% set raw_active = "" %}
+{% endif %}
+{% if disp_mode == "analysed" %}
+    {% set analysed_active = "current" %}
+{% else %}
+    {% set analysed_active = "" %}
+{% endif %}
+
+<a class="btn btn-warning {{enlighted_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='enlighted')}}"> Enlighted {{curr_step}}</a>
+{% if pipeline_mode == 'sutime' %}
+<a class="btn btn-warning {{analysed_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='analysed')}}"> Analysed {{curr_step}}</a>
+{% endif %}
+<a class="btn btn-warning {{raw_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='raw')}}"> Raw Json {{curr_step}}</a>
 <br>
 <br>
 {% if curr_step == 0 %}
