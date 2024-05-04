@@ -125,7 +125,7 @@ class StepLighter:
         dicts_list.pop()
         self.raw_json_text = json.dumps(dicts_list, indent=4)
 
-    def analyse_json(self):
+    def analyse_json(self, with_header=False):
         """
         Given a json file from Sutime output, analyse entities, output as text
         @return: String with sutime dict's keys [text, timex-value, value]
@@ -138,14 +138,15 @@ class StepLighter:
         all_types = [elmt["type"] for elmt in dicts_list]
         uniq_types = sorted(set(all_types))
         count_types = {_t: all_types.count(_t) for _t in uniq_types}
-
-        msg = f"{msg}: {len(dicts_list)} elmnts"
-        msg_sub = len(msg) * "-"
         _res_str = "\n"
-        _res_str += f"{msg_sub:^50}\n"
-        _res_str += f"{msg:^50}\n"
-        _res_str += f"{msg_sub:^50}\n"
-        _res_str += "\n"
+
+        if with_header:
+            msg = f"{msg}: {len(dicts_list)} elmnts"
+            msg_sub = len(msg) * "-"
+            _res_str += f"{msg_sub:^50}\n"
+            _res_str += f"{msg:^50}\n"
+            _res_str += f"{msg_sub:^50}\n"
+            _res_str += "\n"
 
         written_types = 0
         for k, v in count_types.items():
@@ -153,8 +154,8 @@ class StepLighter:
             type_number = f"{v:>3} {k:8}"
             _res_str += f"{type_number:^50}\n"
 
-        # now, make sure num types lines is equal to 4
-        more_cr = 4 - written_types
+        # now, make sure num types lines is equal to 5
+        more_cr = 5 - written_types
         _res_str += more_cr * "\n"
 
         title_str = f'{"type":9}: {"text":27} {"timex-value":>20}      {"value"}\n'
