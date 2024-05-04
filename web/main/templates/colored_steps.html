@@ -37,6 +37,7 @@
 </div>
 <h3>{{step_lighter.caption}}</h3>
 
+{% if disp_mode == "enlighted" %}
     <div id="highlight_legend">
         <span class="highlight DATE">DATE</span>
         <span class="highlight DURATION">DURATION</span>
@@ -45,18 +46,19 @@
         <span class="highlight instr">INSTR</span>
         <span class="highlight region">REGION</span>
     </div>
+{% endif %}
 <div id="colored_content">
-    {% if disp_mode == "enlighted" %}
+{% if disp_mode == "enlighted" %}
     {{step_lighter.enlighted_txt|safe}}
-    {% elif disp_mode == "raw" %}
+{% elif disp_mode == "raw" %}
     <pre>
     {{step_lighter.raw_json|safe}}
     </pre>
-    {% elif disp_mode == "analysed" %}
+{% elif disp_mode == "analysed" %}
     <pre>
     {{step_lighter.analysed_json|safe}}
     </pre>
-    {% endif %}
+{% endif %}
 </div>
 
 {% endblock %}
