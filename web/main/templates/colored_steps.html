@@ -46,7 +46,17 @@
         <span class="highlight region">REGION</span>
     </div>
 <div id="colored_content">
+    {% if disp_mode == "enlighted" %}
     {{step_lighter.enlighted_txt|safe}}
+    {% elif disp_mode == "raw" %}
+    <pre>
+    {{step_lighter.raw_json|safe}}
+    </pre>
+    {% elif disp_mode == "analysed" %}
+    <pre>
+    {{step_lighter.analysed_json|safe}}
+    </pre>
+    {% endif %}
 </div>
 
 {% endblock %}
