@@ -38,6 +38,7 @@ class StepLighter:
         self.enlight_mode = enlight_mode
         self.enlighted_txt_content = ""
         self.caption_content = ""
+        self.raw_json_text = ""
         self.analysed_json_text = ""
 
     @property
@@ -51,6 +52,12 @@ class StepLighter:
         if not self.enlighted_txt_content:
             self.enlight_step()
         return self.enlighted_txt_content
+
+    @property
+    def raw_json(self):
+        if not self.raw_json_text:
+            self.dump_json()
+        return self.raw_json_text
 
     @property
     def analysed_json(self):
@@ -112,6 +119,12 @@ class StepLighter:
 
         self.enlighted_txt_content = enlight_txt(txt_content, json_content)
 
+    def dump_json(self):
+        with open(self.json_filepath, "r") as json_df:
+            dicts_list = json.load(json_df)
+        dicts_list.pop()
+        self.raw_json_text = json.dumps(dicts_list, indent=4)
+
     def analyse_json(self):
         """
         Given a json file from Sutime output, analyse entities, output as text
@@ -141,7 +154,7 @@ class StepLighter:
             _res_str += f"{type_number:^50}\n"
 
         # now, make sure num types lines is equal to 4
-        more_cr = 4-written_types
+        more_cr = 4 - written_types
         _res_str += more_cr * "\n"
 
         title_str = f'{"type":9}: {"text":27} {"timex-value":>20}      {"value"}\n'
