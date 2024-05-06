@@ -28,6 +28,11 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.8.0] - 2024-05-XX - Show Multi Mode pipeline
+### Fixed
+### Changed
+### New
+
 ## [0.7.0] - 2024-05-06 - Enhance Sutime Presentation
 ### Changed
 - show whole sutime struct in tooltips
