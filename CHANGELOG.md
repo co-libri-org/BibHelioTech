@@ -28,12 +28,12 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
-## [0.8.0] - 2024-05-XX - Show Multi Mode pipeline
-### Fixed
-### Changed
+## [0.8.0] - 2024-05-06 Show Multi Mode pipeline
 ### New
+- new disp_mod in pipeline route
+- views raw-json and analysed-json 
 
-## [0.7.0] - 2024-05-06 - Enhance Sutime Presentation
+## [0.7.0] - 2024-05-03 - Enhance Sutime Presentation
 ### Changed
 - show whole sutime struct in tooltips
 ### New
