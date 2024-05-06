@@ -2,6 +2,7 @@ import glob
 import json
 import copy
 import os
+import pprint
 import re
 
 from tools.tools_errors import ToolsValueError, ToolsFileError
@@ -30,7 +31,6 @@ class RawDumper:
 
 # TODO: shall we move this to models.paper ?
 class StepLighter:
-
     def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
         self._all_captions = []
         self.step = int(step_num)
@@ -38,6 +38,7 @@ class StepLighter:
         self.enlight_mode = enlight_mode
         self.enlighted_txt_content = ""
         self.caption_content = ""
+        self.analysed_json_text = ""
 
     @property
     def caption(self):
@@ -50,6 +51,12 @@ class StepLighter:
         if not self.enlighted_txt_content:
             self.enlight_step()
         return self.enlighted_txt_content
+
+    @property
+    def analysed_json(self):
+        if not self.analysed_json_text:
+            self.analyse_json()
+        return self.analysed_json_text
 
     @property
     def all_steps(self):
@@ -105,6 +112,81 @@ class StepLighter:
 
         self.enlighted_txt_content = enlight_txt(txt_content, json_content)
 
+    def analyse_json(self):
+        """
+        Given a json file from Sutime output, analyse entities, output as text
+        @return: String with sutime dict's keys [text, timex-value, value]
+        """
+        with open(self.json_filepath, "r") as json_df:
+            dicts_list = json.load(json_df)
+        msg = dicts_list.pop()
+
+        # compute types
+        all_types = [elmt["type"] for elmt in dicts_list]
+        uniq_types = sorted(set(all_types))
+        count_types = {_t: all_types.count(_t) for _t in uniq_types}
+
+        msg = f"{msg}: {len(dicts_list)} elmnts"
+        msg_sub = len(msg) * "-"
+        _res_str = "\n"
+        _res_str += f"{msg_sub:^50}\n"
+        _res_str += f"{msg:^50}\n"
+        _res_str += f"{msg_sub:^50}\n"
+        _res_str += "\n"
+
+        written_types = 0
+        for k, v in count_types.items():
+            written_types += 1
+            type_number = f"{v:>3} {k:8}"
+            _res_str += f"{type_number:^50}\n"
+
+        # now, make sure num types lines is equal to 4
+        more_cr = 4-written_types
+        _res_str += more_cr * "\n"
+
+        title_str = f'{"type":9}: {"text":27} {"timex-value":>20}      {"value"}\n'
+        _res_str += title_str
+        _res_str += len(title_str) * "-" + "\n"
+        for elmt in dicts_list:
+            if type(elmt) is not dict or "timex-value" not in elmt:
+                continue
+            _type = elmt["type"]
+            _text = f'"{elmt["text"]}"'
+            _timex = elmt["timex-value"]
+            _value = elmt["value"]
+            _res_str += f"{_type:9}: {_text:27} {_timex:>20} ---> {_value}\n"
+
+        self.analysed_json_text = _res_str
+
+
+def struct_to_title_0(content_struct):
+    content_type = content_struct["type"]
+    content_title = pprint.pformat(content_struct)
+    return content_type, content_title.replace("\n", "&#10;")
+
+
+def struct_to_title_1(content_struct):
+    """Convert a sutime struct to a html tooltip"""
+    content_type = content_struct["type"]
+    content_title = f'Text: {content_struct["text"]}'
+    if content_type == "DURATION":
+        if "value" in content_struct.keys():
+            if "begin" in content_struct["value"]:
+                content_title += f'&#10;Begin: {content_struct["value"]["begin"]}'
+            if "end" in content_struct["value"]:
+                content_title += f'&#10;End: {content_struct["value"]["end"]}'
+    elif content_type == "sat":
+        if "D" in content_struct.keys():
+            content_title += f'&#10;D: {content_struct["D"]}'
+        if "R" in content_struct.keys():
+            content_title += f'&#10;R: {content_struct["R"]}'
+        if "SO" in content_struct.keys():
+            content_title += f'&#10;SO: {content_struct["SO"]}'
+        if "conf" in content_struct.keys():
+            content_title += f'&#10;conf: {content_struct["conf"]}'
+        # pass
+    return content_type, content_title
+
 
 def enlight_txt(txt_content, json_content):
     """
@@ -147,24 +229,7 @@ def enlight_txt(txt_content, json_content):
     res_txt = txt_content[:]
     running_offset = 0
     for i, content_struct in enumerate(uniq_content):
-        content_type = content_struct["type"]
-        content_title = f'Text: {content_struct["text"]}'
-        if content_type == "DURATION":
-            if "value" in content_struct.keys():
-                if "begin" in content_struct["value"]:
-                    content_title += f'&#10;Begin: {content_struct["value"]["begin"]}'
-                if "end" in content_struct["value"]:
-                    content_title += f'&#10;End: {content_struct["value"]["end"]}'
-        elif content_type == "sat":
-            if "D" in content_struct.keys():
-                content_title += f'&#10;D: {content_struct["D"]}'
-            if "R" in content_struct.keys():
-                content_title += f'&#10;R: {content_struct["R"]}'
-            if "SO" in content_struct.keys():
-                content_title += f'&#10;SO: {content_struct["SO"]}'
-            if "conf" in content_struct.keys():
-                content_title += f'&#10;conf: {content_struct["conf"]}'
-            # pass
+        content_type, content_title = struct_to_title_0(content_struct)
 
         opening_tag = f'<span class="highlight {content_type}" title="{content_title}">'
         closing_tag = "</span>"

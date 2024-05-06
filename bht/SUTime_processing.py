@@ -18,6 +18,7 @@ def SUTime_treatement(current_OCR_folder, sutime):
     input_content = file.read()
 
     test_list = sutime.parse(input_content)  # Analysis of the whole text by SUTime
+    raw_dumper.dump_to_raw(test_list, "Raw sutime output", current_OCR_folder)
 
     compteur = 0
     for dicts in test_list:
@@ -450,6 +451,40 @@ def SUTime_transform(current_OCR_folder):
 
     JSON_list = [i for i in JSON_list if i != {}]  # filtrage des dictionnaires vides
 
+    raw_dumper.dump_to_raw(JSON_list, "Current Year to XXXX", current_OCR_folder)
+
+    # resolution of all XXXX
+    compteur_dicts = 0
+    for dicts in JSON_list:
+        if dicts["type"] == "DURATION":
+            if "begin" in dicts["value"]:
+                if re.search("XXXX", dicts["value"]["begin"]):
+                    year = nearest_year(JSON_list, compteur_dicts)
+                    JSON_list[compteur_dicts]["value"]["begin"] = re.sub(
+                        r"XXXX", year, dicts["value"]["begin"]
+                    )
+            if "end" in dicts["value"]:
+                if re.search("XXXX", dicts["value"]["end"]):
+                    year = nearest_year(JSON_list, compteur_dicts)
+                    JSON_list[compteur_dicts]["value"]["end"] = re.sub(
+                        r"XXXX", year, dicts["value"]["end"]
+                    )
+        elif dicts["type"] == "DATE":
+            if re.search("XXXX", dicts["value"]):
+                year = nearest_year(JSON_list, compteur_dicts)
+                JSON_list[compteur_dicts]["value"] = re.sub(
+                    "XXXX", year, dicts["value"]
+                )
+        elif dicts["type"] == "TIME":
+            if re.search("XXXX", dicts["value"]):
+                year = nearest_year(JSON_list, compteur_dicts)
+                JSON_list[compteur_dicts]["value"] = re.sub(
+                    "XXXX", year, dicts["value"]
+                )
+        compteur_dicts += 1
+
+    raw_dumper.dump_to_raw(JSON_list, "Resolution of XXXX to closest year in text", current_OCR_folder)
+
     for dicts in JSON_list:
         try:
             # Removal in the DURATIONS of the "+0000" added in the times, induced by the reading of "UTC" by SUTime
@@ -520,23 +555,23 @@ def SUTime_transform(current_OCR_folder):
                         if group_counter_min == 1:  # beginning in the years
                             begin = "".join(
                                 list(test.group(1, 2, 4, 5, 7, 8, 9, 10, 12, 13, 14))
-                            ) + str(".%03d" % (495))
+                            ) + str(".%03d" % (000))
                             end = "".join(
                                 list(test.group(1, 2, 4, 5, 7, 8, 9, 10, 12, 13, 14))
-                            ) + str(".%03d" % (505))
+                            ) + str(".%03d" % (999))
                         elif group_counter_min == 4:  # beginning at months
                             begin = "".join(
                                 list(test.group(4, 5, 7, 8, 9, 10, 12, 13, 14))
-                            ) + str(".%03d" % (495))
+                            ) + str(".%03d" % (000))
                             end = "".join(
                                 list(test.group(4, 5, 7, 8, 9, 10, 12, 13, 14))
-                            ) + str(".%03d" % (505))
+                            ) + str(".%03d" % (999))
                         elif group_counter_min == 8:  # start at T (undated time)
                             begin = "".join(
                                 list(test.group(8, 9, 10, 12, 13, 14))
-                            ) + str(".%03d" % (495))
+                            ) + str(".%03d" % (000))
                             end = "".join(list(test.group(8, 9, 10, 12, 13, 14))) + str(
-                                ".%03d" % (505)
+                                ".%03d" % (999)
                             )
                     elif group_counter_max == 12:  # end to the minutes
                         if group_counter_min == 1:  # beginning in the years
@@ -603,38 +638,6 @@ def SUTime_transform(current_OCR_folder):
     raw_dumper.dump_to_raw(
         JSON_list, "Change type TIME to DURATION", current_OCR_folder
     )
-
-    # resolution of all XXXX
-    compteur_dicts = 0
-    for dicts in JSON_list:
-        if dicts["type"] == "DURATION":
-            if "begin" in dicts["value"]:
-                if re.search("XXXX", dicts["value"]["begin"]):
-                    year = nearest_year(JSON_list, compteur_dicts)
-                    JSON_list[compteur_dicts]["value"]["begin"] = re.sub(
-                        r"XXXX", year, dicts["value"]["begin"]
-                    )
-            if "end" in dicts["value"]:
-                if re.search("XXXX", dicts["value"]["end"]):
-                    year = nearest_year(JSON_list, compteur_dicts)
-                    JSON_list[compteur_dicts]["value"]["end"] = re.sub(
-                        r"XXXX", year, dicts["value"]["end"]
-                    )
-        elif dicts["type"] == "DATE":
-            if re.search("XXXX", dicts["value"]):
-                year = nearest_year(JSON_list, compteur_dicts)
-                JSON_list[compteur_dicts]["value"] = re.sub(
-                    "XXXX", year, dicts["value"]
-                )
-        elif dicts["type"] == "TIME":
-            if re.search("XXXX", dicts["value"]):
-                year = nearest_year(JSON_list, compteur_dicts)
-                JSON_list[compteur_dicts]["value"] = re.sub(
-                    "XXXX", year, dicts["value"]
-                )
-        compteur_dicts += 1
-
-    raw_dumper.dump_to_raw(JSON_list, "Remove current Year", current_OCR_folder)
 
     # date correction when in short format (YYYY-MM (no DD))
     compteur_dicts = 0
@@ -715,7 +718,7 @@ def SUTime_transform(current_OCR_folder):
     # Change DATE to DURATION
     for elmnt in JSON_list:
         if elmnt["type"] == "DATE":
-            date_string = elmnt["timex-value"]
+            date_string = elmnt["value"]
             try:
                 begin_date = parser.parse(date_string)
             except parser.ParserError:

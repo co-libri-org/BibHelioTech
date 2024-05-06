@@ -28,6 +28,13 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.7.0] - 2024-05-06 - Enhance Sutime Presentation
+### Changed
+- show whole sutime struct in tooltips
+### New
+- request papers by ark
+- show analysed json
+
 ## [0.6.0] - 2024-04-12 - Fixed Sutime Filter
 ### Changed
 - Custom english file removed from 

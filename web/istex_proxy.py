@@ -49,6 +49,14 @@ def ark_to_id(ark):
     return document_json["idIstex"]
 
 
+def ark_to_istex_url(ark_istex):
+    """ "
+    From an ark_istex, build the request url so we can call it and get the papers' json
+    """
+    req_url = f'{ISTEX_BASE_URL}document/?q=(arkIstex:"{ark_istex}")&facet=corpusName[*]&size=10&output=*&stats'
+    return req_url
+
+
 def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
     """
     Get file content from istex by id and doctype

@@ -34,6 +34,7 @@ from web.istex_proxy import (
     get_file_from_id,
     json_to_hits,
     IstexDoctype,
+    ark_to_istex_url,
 )
 from ..errors import IstexError, WebError
 
@@ -58,14 +59,14 @@ class StatusResponse:
     }
 
     def __init__(
-        self,
-        status: str = "success",
-        paper_id: int = None,
-        task_status: str = None,
-        task_started: datetime = None,
-        cat_is_processed: bool = None,
-        message: str = None,
-        alt_message: str = None,
+            self,
+            status: str = "success",
+            paper_id: int = None,
+            task_status: str = None,
+            task_started: datetime = None,
+            cat_is_processed: bool = None,
+            message: str = None,
+            alt_message: str = None,
     ):
         if task_started is not None:
             task_started_str = task_started.strftime("%a, %b %d, %Y - %H:%M:%S")
@@ -96,9 +97,9 @@ class StatusResponse:
 def allowed_file(filename):
     # TODO: REFACTOR use models.FileType instead
     return (
-        "." in filename
-        and filename.rsplit(".", 1)[1].lower()
-        in current_app.config["ALLOWED_EXTENSIONS"]
+            "." in filename
+            and filename.rsplit(".", 1)[1].lower()
+            in current_app.config["ALLOWED_EXTENSIONS"]
     )
 
 
@@ -325,6 +326,7 @@ def enlighted_json():
     pipeline_mode = request.args.get("pipeline_mode")
     paper_id = request.args.get("paper_id")
     step_num = request.args.get("step_num")
+    comp_type = request.args.get("comp_type")
     paper = db.session.get(Paper, paper_id)
     if not paper:
         flash(f"No such paper {paper_id}")
@@ -334,10 +336,20 @@ def enlighted_json():
         return redirect(url_for("main.paper_show", paper_id=paper_id))
     ocr_dir = os.path.dirname(paper.cat_path)
     step_lighter = StepLighter(ocr_dir, step_num, pipeline_mode)
-    return send_file(
-        step_lighter.json_filepath,
-        mimetype="application/json",
-    )
+    if comp_type == "raw":
+        response = send_file(
+            step_lighter.json_filepath,
+            mimetype="application/json",
+        )
+    elif comp_type == "analysed":
+        response = Response(response=step_lighter.analysed_json, mimetype="text/plain",
+                            headers={'Content-disposition': 'inline'})
+        # headers={'Content-disposition': 'inline; filename=hello.txt'})
+    else:
+        flash(f"Wrong comp_type value", "warning")
+        return redirect(url_for("main.paper_show", paper_id=paper_id))
+
+    return response
 
 
 @bp.route("/papers/<name>")
@@ -532,7 +544,7 @@ def istex_test():
     from web.istex_proxy import json_to_hits
 
     with open(
-        os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
+            os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
     ) as fp:
         istex_list = json_to_hits(json.load(fp))
     return render_template("istex.html", istex_list=istex_list)
@@ -545,20 +557,35 @@ def istex():
     Parse the json response data
     Redirect to our "istex" page to display papers list
     """
+    # Juste display form at first sight
     if request.method == "GET":
         return render_template("istex.html", istex_list=[])
-    # else method == "POST"
+
+    # else method == "POST", deal with url or ark arguments
     istex_req_url = request.form["istex_req_url"]
+    ark_istex = request.form["ark_istex"]
+    if istex_req_url:
+        # just go on with it
+        pass
+    elif ark_istex:
+        # then build the request_url from ark
+        istex_req_url = ark_to_istex_url(ark_istex)
+    else:
+        flash(f"Could not read any argument: istex_req_url or ark_istex ", "error")
+        return redirect(url_for("main.istex"))
+
+    # build a link to allow direct human check by click into error message
     istex_req_url_a = f'<a target="_blank" href="{istex_req_url}" title="get istex request"> {istex_req_url} </a>'
+
     # now try to get some results from Istex, or quit with err message
     try:
         r = requests.get(url=istex_req_url)
         json_content = r.json()
         istex_list = json_to_hits(json_content)
     except (
-        requests.exceptions.MissingSchema,
-        requests.exceptions.InvalidURL,
-        requests.exceptions.ConnectionError,
+            requests.exceptions.MissingSchema,
+            requests.exceptions.InvalidURL,
+            requests.exceptions.ConnectionError,
     ):
         flash(f"Could not connect to <{istex_req_url}>", "error")
         return redirect(url_for("main.istex"))
@@ -569,9 +596,11 @@ def istex():
         flash(f"There was an error reading json from <{istex_req_url_a}>", "error")
         flash(f"{e.__repr__()}", "error")
         return redirect(url_for("main.istex"))
+
     # get papers from db, so we can show we already have them
-    # build dict of papers indexed with istex_id
     istex_papers = {p.istex_id: p for p in Paper.query.all()}
+
+    # build dict of papers indexed with istex_id
     return render_template(
         "istex.html",
         istex_list=istex_list,
