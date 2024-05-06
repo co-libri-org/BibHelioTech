@@ -5,11 +5,29 @@
 {%  endblock %}
 {% block content %}
 
-<a class="btn btn-warning" href="{{url_for('main.paper_show', paper_id=paper_id)}}"> Back to paper</a>
-<a class="btn btn-warning" href="{{url_for('main.enlighted_json', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, comp_type='raw')}}"> Raw Json {{curr_step}}</a>
-{% if pipeline_mode == 'sutime' %}
-<a class="btn btn-warning" href="{{url_for('main.enlighted_json', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, comp_type='analysed')}}"> Analysed {{curr_step}}</a>
+{% if disp_mode is defined and disp_mode == "enlighted" %}
+    {% set enlighted_active = "current" %}
+{% else %}
+    {% set enlighted_active = "" %}
 {% endif %}
+{% if disp_mode == "raw" %}
+    {% set raw_active = "current" %}
+{% else %}
+    {% set raw_active = "" %}
+{% endif %}
+{% if disp_mode == "analysed" %}
+    {% set analysed_active = "current" %}
+{% else %}
+    {% set analysed_active = "" %}
+{% endif %}
+
+<a title="show paper page" class="btn btn-warning" href="{{url_for('main.paper_show', paper_id=paper_id)}}"> Back to paper</a>
+<a title="paper texte colored" class="btn btn-warning {{enlighted_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='enlighted')}}"> Enlighted {{curr_step}}</a>
+{% if pipeline_mode == 'sutime' %}
+<a title="analysed json" class="btn btn-warning {{analysed_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='analysed')}}"> Analysed {{curr_step}}</a>
+{% endif %}
+<a title="raw json" class="btn btn-warning {{raw_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='raw')}}"> Raw Json {{curr_step}}</a>
+<h2 id="pipeline_title" > {{pipeline_mode | upper}} pipeline steps </h2>
 <br>
 <br>
 {% if curr_step == 0 %}
@@ -23,20 +41,21 @@
     {% set next_step = curr_step + 1 %}
 {% endif %}
 <div id="step_navigator">
-    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=prev_step)}}">Prev {{pipeline_mode}}</a>
-    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=next_step)}}">{{pipeline_mode}} Next</a>
+    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=prev_step, disp_mode=disp_mode)}}">Prev {{pipeline_mode}}</a>
+    <a href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=next_step, disp_mode=disp_mode)}}">{{pipeline_mode}} Next</a>
 </div>
 <div id="step_menu">
     {% for step in range(step_lighter.all_steps|length) %}
     {% if step - curr_step == 0 %}
-    <a class="a_selected" title="{{step_lighter.all_steps[step]}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} {{step}}</a>
+    <a class="a_selected" title="{{step_lighter.all_steps[step]}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step, disp_mode=disp_mode)}}">Step {{step}}</a>
     {% else %}
-    <a title="{{step_lighter.all_steps[step]}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step)}}">{{pipeline_mode}} {{step}}</a>
+    <a title="{{step_lighter.all_steps[step]}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=step, disp_mode=disp_mode)}}">Step {{step}}</a>
     {% endif %}
     {% endfor %}
 </div>
 <h3>{{step_lighter.caption}}</h3>
 
+{% if disp_mode == "enlighted" %}
     <div id="highlight_legend">
         <span class="highlight DATE">DATE</span>
         <span class="highlight DURATION">DURATION</span>
@@ -45,8 +64,19 @@
         <span class="highlight instr">INSTR</span>
         <span class="highlight region">REGION</span>
     </div>
+{% endif %}
 <div id="colored_content">
+{% if disp_mode == "enlighted" %}
     {{step_lighter.enlighted_txt|safe}}
+{% elif disp_mode == "raw" %}
+    <pre>
+    {{step_lighter.raw_json|safe}}
+    </pre>
+{% elif disp_mode == "analysed" %}
+    <pre>
+    {{step_lighter.analysed_json|safe}}
+    </pre>
+{% endif %}
 </div>
 
 {% endblock %}

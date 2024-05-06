@@ -57,6 +57,9 @@
     padding: 3em 5em 3em 5em ;
     text-align: justify;
 }
+#colored_content>pre {
+    font-size:1.5em;
+}
 
 #highlight_legend {
     margin: 0 0 20pt 0;
@@ -68,4 +71,15 @@
     width: 60px;
     text-align: center;
     font-size: 7pt;
+}
+
+a.btn-warning.current {
+    border: solid 1pt black !important ;
+    pointer-events: none;
+}
+
+#pipeline_title {
+    display:inline;
+    vertical-align: middle;
+    margin-left: 3em;
 }

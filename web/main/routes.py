@@ -296,11 +296,15 @@ def paper_show(paper_id):
     return render_template("paper.html", paper=paper)
 
 
-@bp.route("/paper/<pipeline_mode>/<paper_id>/<step_num>", methods=["GET"])
-def paper_pipeline(pipeline_mode, paper_id, step_num):
+@bp.route("/paper/<pipeline_mode>/<paper_id>/<step_num>", defaults={'disp_mode': "enlighted"}, methods=["GET"])
+@bp.route("/paper/<pipeline_mode>/<paper_id>/<step_num>/<disp_mode>", methods=["GET"])
+def paper_pipeline(pipeline_mode, paper_id, step_num, disp_mode):
     if pipeline_mode not in ["sutime", "entities"]:
         flash(f"No such pipeline mode {pipeline_mode} for paper {paper_id} ")
         return redirect(url_for("main.papers"))
+    if disp_mode not in ["enlighted", "raw", "analysed"]:
+        flash(f"No such display mode {disp_mode} for paper {paper_id} ")
+        return redirect(url_for("main.paper_show", paper_id=paper_id))
     # get the papers directory path
     paper = db.session.get(Paper, paper_id)
     if not paper:
@@ -318,6 +322,7 @@ def paper_pipeline(pipeline_mode, paper_id, step_num):
         paper_id=paper_id,
         pipeline_mode=pipeline_mode,
         step_lighter=step_lighter,
+        disp_mode=disp_mode,
     )
 
 
