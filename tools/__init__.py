@@ -161,8 +161,10 @@ class StepLighter:
         _res_str += title_str
         _res_str += len(title_str) * "-" + "\n"
         for elmt in dicts_list:
-            if type(elmt) is not dict or "timex-value" not in elmt:
+            if type(elmt) is not dict:
                 continue
+            if "timex-value" not in elmt:
+                elmt["timex-value"] = ""
             _type = elmt["type"]
             _text = f'"{elmt["text"]}"'
             _timex = elmt["timex-value"]
