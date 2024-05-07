@@ -147,29 +147,44 @@ class StepLighter:
             _res_str += f"{msg_sub:^50}\n"
             _res_str += "\n"
 
+        # Show types report
         written_types = 0
         for k, v in count_types.items():
             written_types += 1
             type_number = f"{v:>3} {k:8}"
             _res_str += f"{type_number:^50}\n"
 
-        # now, make sure num types lines is equal to 5
-        more_cr = 5 - written_types
+        # now, make sure types report height is always the same
+        types_report_height = 5
+        more_cr = types_report_height - written_types
         _res_str += more_cr * "\n"
 
-        title_str = f'{"type":9}: {"text":27} {"timex-value":>20}      {"value"}\n'
+        # convert all dict values to string
+        for _elmnt in dicts_list:
+            if type(_elmnt["value"]) is dict:
+                print("IS DICT")
+                _elmnt["value"] = _elmnt["value"].__repr__()
+
+        # get fields lengths
+        _type_max_lgth = max([len(elmt["type"]) for elmt in dicts_list])
+        _text_max_lgth = max([len(elmt["text"]) for elmt in dicts_list]) + 2
+        _value_max_lgth = max([len(elmt["value"]) for elmt in dicts_list]) + 2
+
+        title_str = f'{"type":{_type_max_lgth}}|{"value":{_value_max_lgth}}|{"text":{_text_max_lgth}}\n'
         _res_str += title_str
         _res_str += len(title_str) * "-" + "\n"
         for elmt in dicts_list:
             if type(elmt) is not dict:
                 continue
             if "timex-value" not in elmt:
-                elmt["timex-value"] = ""
+                elmt["timex-value"] = "None"
             _type = elmt["type"]
             _text = f'"{elmt["text"]}"'
             _timex = elmt["timex-value"]
             _value = elmt["value"]
-            _res_str += f"{_type:9}: {_text:27} {_timex:>20} ---> {_value}\n"
+            _res_str += (
+                f"{_type:{_type_max_lgth}}|{_value:{_value_max_lgth}}|{_text:{_text_max_lgth}}\n"
+            )
 
         return _res_str
 

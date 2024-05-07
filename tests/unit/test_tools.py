@@ -13,6 +13,11 @@ class TestStepLighter:
         # get  the whole output as a list
         analysed_lines = step_lighter.analyse_json().split("\n")
         # only keep lines from json struct
-        filtered_lines = [_l for _l in analysed_lines if '--->' in _l]
+        filtered_lines = []
+        for _l in analysed_lines:
+            _type = _l.split("|")[0].strip()
+            if _type in ["DATE", "DURATION", "TIME"]:
+                filtered_lines.append(_type)
         json_struct = json.loads(step_lighter.dump_json())
+        # Compare analysed list length with json structs number
         assert len(json_struct) == len(filtered_lines)
