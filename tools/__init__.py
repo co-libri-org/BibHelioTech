@@ -44,25 +44,25 @@ class StepLighter:
     @property
     def caption(self):
         if not self.caption_content:
-            self.enlight_step()
+            self.caption_content, self.enlighted_txt_content = self.enlight_step()
         return self.caption_content
 
     @property
     def enlighted_txt(self):
         if not self.enlighted_txt_content:
-            self.enlight_step()
+            self.caption_content, self.enlighted_txt_content = self.enlight_step()
         return self.enlighted_txt_content
 
     @property
     def raw_json(self):
         if not self.raw_json_text:
-            self.dump_json()
+            self.raw_json_text = self.dump_json()
         return self.raw_json_text
 
     @property
     def analysed_json(self):
         if not self.analysed_json_text:
-            self.analyse_json()
+            self.analysed_json_text = self.analyse_json()
         return self.analysed_json_text
 
     @property
@@ -115,15 +115,13 @@ class StepLighter:
         with open(txtfilename) as txt_fd:
             txt_content = txt_fd.read()
 
-        self.caption_content = step_caption
-
-        self.enlighted_txt_content = enlight_txt(txt_content, json_content)
+        return step_caption, enlight_txt(txt_content, json_content)
 
     def dump_json(self):
         with open(self.json_filepath, "r") as json_df:
             dicts_list = json.load(json_df)
         dicts_list.pop()
-        self.raw_json_text = json.dumps(dicts_list, indent=4)
+        return json.dumps(dicts_list, indent=4)
 
     def analyse_json(self, with_header=False):
         """
@@ -132,6 +130,7 @@ class StepLighter:
         """
         with open(self.json_filepath, "r") as json_df:
             dicts_list = json.load(json_df)
+        # remove step message at end of json
         msg = dicts_list.pop()
 
         # compute types
@@ -170,7 +169,7 @@ class StepLighter:
             _value = elmt["value"]
             _res_str += f"{_type:9}: {_text:27} {_timex:>20} ---> {_value}\n"
 
-        self.analysed_json_text = _res_str
+        return _res_str
 
 
 def struct_to_title_0(content_struct):
