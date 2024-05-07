@@ -1,0 +1,93 @@
+[
+    {
+        "end": 1302,
+        "start": 1294,
+        "text": "Imager",
+        "type": "instr"
+    },
+    {
+        "end": 5385,
+        "start": 5380,
+        "text": "ESA",
+        "type": "instr"
+    },
+    {
+        "end": 7005,
+        "start": 6993,
+        "text": "Solar Wind",
+        "type": "instr"
+    },
+    {
+        "end": 9333,
+        "start": 9328,
+        "text": "EUV",
+        "type": "instr"
+    },
+    {
+        "end": 9357,
+        "start": 9352,
+        "text": "AIA",
+        "type": "instr"
+    },
+    {
+        "end": 9366,
+        "start": 9360,
+        "text": "EUVI",
+        "type": "instr"
+    },
+    {
+        "end": 19307,
+        "start": 19302,
+        "text": "PAS",
+        "type": "instr"
+    },
+    {
+        "end": 25157,
+        "start": 25153,
+        "text": "1D",
+        "type": "instr"
+    },
+    {
+        "end": 25163,
+        "start": 25159,
+        "text": "2D",
+        "type": "instr"
+    },
+    {
+        "end": 30028,
+        "start": 30024,
+        "text": "2D",
+        "type": "instr"
+    },
+    {
+        "end": 41557,
+        "start": 41553,
+        "text": "1D",
+        "type": "instr"
+    },
+    {
+        "end": 41563,
+        "start": 41559,
+        "text": "2D",
+        "type": "instr"
+    },
+    {
+        "end": 41866,
+        "start": 41862,
+        "text": "2D",
+        "type": "instr"
+    },
+    {
+        "end": 46225,
+        "start": 46221,
+        "text": "1D",
+        "type": "instr"
+    },
+    {
+        "end": 53681,
+        "start": 53677,
+        "text": "2D",
+        "type": "instr"
+    },
+    "1- Instruments Recognition"
+]

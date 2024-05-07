@@ -1,0 +1,721 @@
+[
+    {
+        "end": 1227,
+        "start": 1219,
+        "text": "recently",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 5422,
+        "start": 5406,
+        "text": "February 10 2020",
+        "timex-value": "2020-02-10",
+        "type": "DATE",
+        "value": "2020-02-10"
+    },
+    {
+        "end": 5543,
+        "start": 5534,
+        "text": "June 2020",
+        "timex-value": "2020-06",
+        "type": "DATE",
+        "value": "2020-06"
+    },
+    {
+        "end": 6064,
+        "start": 6057,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 6482,
+        "start": 6478,
+        "text": "past",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 7612,
+        "start": 7605,
+        "text": "July 23",
+        "timex-value": "2024-07-23",
+        "type": "DATE",
+        "value": "2024-07-23"
+    },
+    {
+        "end": 7621,
+        "start": 7617,
+        "text": "2020",
+        "timex-value": "2020",
+        "type": "DATE",
+        "value": "2020"
+    },
+    {
+        "end": 7711,
+        "start": 7670,
+        "text": "From July 23 at 12:00 to July 24 at 12:00",
+        "type": "DURATION",
+        "value": {
+            "begin": "XXXX-07-23T12:00",
+            "end": "XXXX-07-24T12:00"
+        }
+    },
+    {
+        "end": 8186,
+        "start": 8174,
+        "text": "July 23 2020",
+        "timex-value": "2020-07-23",
+        "type": "DATE",
+        "value": "2020-07-23"
+    },
+    {
+        "end": 9728,
+        "start": 9721,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 9958,
+        "start": 9904,
+        "text": "between 16:00 on July 23 2020 and 6:00 on July 24 2020",
+        "type": "DURATION",
+        "value": {
+            "begin": "2020-07-23T16:00",
+            "end": "2020-07-24T06:00"
+        }
+    },
+    {
+        "end": 10281,
+        "start": 10237,
+        "text": "between 22:00 on July 23 and 2:00 on July 24",
+        "type": "DURATION",
+        "value": {
+            "begin": "XXXX-07-23T22:00",
+            "end": "XXXX-07-24T02:00"
+        }
+    },
+    {
+        "end": 10384,
+        "start": 10371,
+        "text": "several hours",
+        "timex-value": "PTXH",
+        "type": "DURATION",
+        "value": "PTXH"
+    },
+    {
+        "end": 10470,
+        "start": 10454,
+        "text": "18:00 on July 23",
+        "timex-value": "2024-07-23T18:00",
+        "type": "TIME",
+        "value": "2024-07-23T18:00"
+    },
+    {
+        "end": 10516,
+        "start": 10505,
+        "text": "a few hours",
+        "timex-value": "PTXH",
+        "type": "DURATION",
+        "value": "PTXH"
+    },
+    {
+        "end": 10639,
+        "start": 10632,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 10685,
+        "start": 10678,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 10877,
+        "start": 10870,
+        "text": "Current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 11208,
+        "start": 11178,
+        "text": "From 20:45 to 21:30 on July 23",
+        "type": "DURATION",
+        "value": {
+            "begin": "T20:45",
+            "end": "XXXX-07-23T21:30"
+        }
+    },
+    {
+        "end": 11677,
+        "start": 11672,
+        "text": "8 min",
+        "timex-value": "PT8M",
+        "type": "DURATION",
+        "value": "PT8M"
+    },
+    {
+        "end": 12096,
+        "start": 12090,
+        "text": "20 min",
+        "timex-value": "PT20M",
+        "type": "DURATION",
+        "value": "PT20M"
+    },
+    {
+        "end": 12123,
+        "start": 12117,
+        "text": "20 min",
+        "timex-value": "PT20M",
+        "type": "DURATION",
+        "value": "PT20M"
+    },
+    {
+        "end": 12194,
+        "start": 12188,
+        "text": "20-min",
+        "timex-value": "PT20M",
+        "type": "DURATION",
+        "value": "PT20M"
+    },
+    {
+        "end": 12452,
+        "start": 12446,
+        "text": "20-min",
+        "timex-value": "PT20M",
+        "type": "DURATION",
+        "value": "PT20M"
+    },
+    {
+        "end": 13713,
+        "start": 13674,
+        "text": "between 20:45 and 21:30 on July 23 2020",
+        "type": "DURATION",
+        "value": {
+            "begin": "T20:45",
+            "end": "2020-07-23T21:30"
+        }
+    },
+    {
+        "end": 14199,
+        "start": 14194,
+        "text": "20:38",
+        "timex-value": "2024-05-06T20:38",
+        "type": "TIME",
+        "value": "2024-05-06T20:38"
+    },
+    {
+        "end": 14291,
+        "start": 14286,
+        "text": "21:29",
+        "timex-value": "2024-05-06T21:29",
+        "type": "TIME",
+        "value": "2024-05-06T21:29"
+    },
+    {
+        "end": 15043,
+        "start": 15038,
+        "text": "7 min",
+        "timex-value": "PT7M",
+        "type": "DURATION",
+        "value": "PT7M"
+    },
+    {
+        "end": 17235,
+        "start": 17228,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 17334,
+        "start": 17305,
+        "text": "between 21:02:00 and 21:02:40",
+        "type": "DURATION",
+        "value": {
+            "begin": "T21:02:00",
+            "end": "T21:02:40"
+        }
+    },
+    {
+        "end": 17412,
+        "start": 17405,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 17533,
+        "start": 17526,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 18025,
+        "start": 18018,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 18168,
+        "start": 18161,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 18390,
+        "start": 18383,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 18777,
+        "start": 18770,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 19033,
+        "start": 19026,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 19161,
+        "start": 19153,
+        "text": "21:02:24",
+        "timex-value": "2024-05-06T21:02:24",
+        "type": "TIME",
+        "value": "2024-05-06T21:02:24"
+    },
+    {
+        "end": 19461,
+        "start": 19454,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 19558,
+        "start": 19551,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 19670,
+        "start": 19650,
+        "text": "21:02:00 to 21:02:24",
+        "type": "DURATION",
+        "value": {
+            "begin": "T21:02:00",
+            "end": "T21:02:24"
+        }
+    },
+    {
+        "end": 19732,
+        "start": 19712,
+        "text": "21:02:24 to 21:02:40",
+        "type": "DURATION",
+        "value": {
+            "begin": "T21:02:24",
+            "end": "T21:02:40"
+        }
+    },
+    {
+        "end": 20137,
+        "start": 20130,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 21429,
+        "start": 21422,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 22727,
+        "start": 22708,
+        "text": "from 20:14 to 21:50",
+        "type": "DURATION",
+        "value": {
+            "begin": "T20:14",
+            "end": "T21:50"
+        }
+    },
+    {
+        "end": 25432,
+        "start": 25428,
+        "text": "time",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 25493,
+        "start": 25486,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 25572,
+        "start": 25565,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 27178,
+        "start": 27171,
+        "text": "0.9 min",
+        "timex-value": "PT0S",
+        "type": "DURATION",
+        "value": "PT0S"
+    },
+    {
+        "end": 29635,
+        "start": 29631,
+        "text": "1024",
+        "timex-value": "1024",
+        "type": "DATE",
+        "value": "1024"
+    },
+    {
+        "end": 32493,
+        "start": 32487,
+        "text": "Future",
+        "timex-value": "FUTURE_REF",
+        "type": "DATE",
+        "value": "FUTURE_REF"
+    },
+    {
+        "end": 32598,
+        "start": 32591,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 33040,
+        "start": 33017,
+        "text": "between 20:35 and 21:20",
+        "type": "DURATION",
+        "value": {
+            "begin": "T20:35",
+            "end": "T21:20"
+        }
+    },
+    {
+        "end": 33102,
+        "start": 33097,
+        "text": "20:38",
+        "timex-value": "2024-05-06T20:38",
+        "type": "TIME",
+        "value": "2024-05-06T20:38"
+    },
+    {
+        "end": 33144,
+        "start": 33139,
+        "text": "21:29",
+        "timex-value": "2024-05-06T21:29",
+        "type": "TIME",
+        "value": "2024-05-06T21:29"
+    },
+    {
+        "end": 34522,
+        "start": 34499,
+        "text": "between 20:35 and 21:20",
+        "type": "DURATION",
+        "value": {
+            "begin": "T20:35",
+            "end": "T21:20"
+        }
+    },
+    {
+        "end": 35597,
+        "start": 35590,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 35850,
+        "start": 35843,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 36901,
+        "start": 36898,
+        "text": "now",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 39403,
+        "start": 39396,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 39655,
+        "start": 39648,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 40384,
+        "start": 40379,
+        "text": "6 may",
+        "timex-value": "2024-05-06",
+        "type": "DATE",
+        "value": "2024-05-06"
+    },
+    {
+        "end": 41763,
+        "start": 41757,
+        "text": "future",
+        "timex-value": "FUTURE_REF",
+        "type": "DATE",
+        "value": "FUTURE_REF"
+    },
+    {
+        "end": 43891,
+        "start": 43887,
+        "text": "past",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 43938,
+        "start": 43935,
+        "text": "now",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 47877,
+        "start": 47874,
+        "text": "now",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 47985,
+        "start": 47982,
+        "text": "now",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 48764,
+        "start": 48758,
+        "text": "10 min",
+        "timex-value": "PT10M",
+        "type": "DURATION",
+        "value": "PT10M"
+    },
+    {
+        "end": 48902,
+        "start": 48895,
+        "text": "minutes",
+        "timex-value": "PTXM",
+        "type": "DURATION",
+        "value": "PTXM"
+    },
+    {
+        "end": 49031,
+        "start": 49027,
+        "text": "past",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 49203,
+        "start": 49199,
+        "text": "1965",
+        "timex-value": "1965",
+        "type": "DATE",
+        "value": "1965"
+    },
+    {
+        "end": 49316,
+        "start": 49311,
+        "text": "5 min",
+        "timex-value": "PT5M",
+        "type": "DURATION",
+        "value": "PT5M"
+    },
+    {
+        "end": 49803,
+        "start": 49796,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 50079,
+        "start": 50072,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 50592,
+        "start": 50585,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 50703,
+        "start": 50696,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 50762,
+        "start": 50759,
+        "text": "now",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 51457,
+        "start": 51450,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 52508,
+        "start": 52501,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 52597,
+        "start": 52585,
+        "text": "July 23 2020",
+        "timex-value": "2020-07-23",
+        "type": "DATE",
+        "value": "2020-07-23"
+    },
+    {
+        "end": 52835,
+        "start": 52830,
+        "text": "7 min",
+        "timex-value": "PT7M",
+        "type": "DURATION",
+        "value": "PT7M"
+    },
+    {
+        "end": 53900,
+        "start": 53893,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 54985,
+        "start": 54978,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 55143,
+        "start": 55136,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 55358,
+        "start": 55354,
+        "text": "past",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 55929,
+        "start": 55922,
+        "text": "minutes",
+        "timex-value": "PTXM",
+        "type": "DURATION",
+        "value": "PTXM"
+    },
+    {
+        "end": 56632,
+        "start": 56624,
+        "text": "Recently",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    "0- Raw sutime output"
+]

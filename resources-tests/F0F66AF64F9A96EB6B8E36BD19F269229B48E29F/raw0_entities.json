@@ -1,0 +1,81 @@
+[
+    {
+        "end": 2270,
+        "start": 2250,
+        "text": "Parker Solar Probe",
+        "type": "sat"
+    },
+    {
+        "end": 4650,
+        "start": 4645,
+        "text": "IMP",
+        "type": "sat"
+    },
+    {
+        "end": 4652,
+        "start": 4645,
+        "text": "IMP 8",
+        "type": "sat"
+    },
+    {
+        "end": 4664,
+        "start": 4655,
+        "text": "Voyager",
+        "type": "sat"
+    },
+    {
+        "end": 4666,
+        "start": 4655,
+        "text": "Voyager 2",
+        "type": "sat"
+    },
+    {
+        "end": 4692,
+        "start": 4684,
+        "text": "Helios",
+        "type": "sat"
+    },
+    {
+        "end": 5323,
+        "start": 5308,
+        "text": "Solar Orbiter",
+        "type": "sat"
+    },
+    {
+        "end": 7005,
+        "start": 6999,
+        "text": "Wind",
+        "type": "sat"
+    },
+    {
+        "end": 9313,
+        "start": 9308,
+        "text": "SDO",
+        "type": "sat"
+    },
+    {
+        "end": 9326,
+        "start": 9316,
+        "text": "STEREO-A",
+        "type": "sat"
+    },
+    {
+        "end": 10941,
+        "start": 10921,
+        "text": "Parker Solar Probe",
+        "type": "sat"
+    },
+    {
+        "end": 40671,
+        "start": 40656,
+        "text": "Solar Orbiter",
+        "type": "sat"
+    },
+    {
+        "end": 52370,
+        "start": 52365,
+        "text": "PSP",
+        "type": "sat"
+    },
+    "0- Satellites Recognition"
+]
