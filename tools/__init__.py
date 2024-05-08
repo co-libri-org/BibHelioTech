@@ -162,17 +162,18 @@ class StepLighter:
         # convert all dict values to string
         for _elmnt in dicts_list:
             if type(_elmnt["value"]) is dict:
-                print("IS DICT")
                 _elmnt["value"] = _elmnt["value"].__repr__()
 
         # get fields lengths
-        _type_max_lgth = max([len(elmt["type"]) for elmt in dicts_list])
+        _type_max_lgth = max([len(elmt["type"]) for elmt in dicts_list]) + 2
         _text_max_lgth = max([len(elmt["text"]) for elmt in dicts_list]) + 2
-        _value_max_lgth = max([len(elmt["value"]) for elmt in dicts_list]) + 2
+        _value_max_lgth = max([len(elmt["value"]) for elmt in dicts_list])
 
         title_str = f'{"type":{_type_max_lgth}}|{"value":{_value_max_lgth}}|{"text":{_text_max_lgth}}\n'
         _res_str += title_str
-        _res_str += len(title_str) * "-" + "\n"
+        # _res_str += len(title_str) * "-" + "\n"
+        _res_str += "-"*_type_max_lgth+"+"+"-"*_value_max_lgth+"+"+"-"*_text_max_lgth+"\n"
+
         for elmt in dicts_list:
             if type(elmt) is not dict:
                 continue
