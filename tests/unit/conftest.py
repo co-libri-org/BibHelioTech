@@ -73,6 +73,15 @@ def ocr_dir_test(tmp_path_factory):
 
 
 @pytest.fixture(scope="module")
+def ocr_dir_sutime(tmp_path_factory):
+    data_dir = "F0F66AF64F9A96EB6B8E36BD19F269229B48E29F"
+    ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)
+    ocr_dir_dest = tmp_path_factory.mktemp("test_dir") / data_dir
+    ocr_dir_test_done = shutil.copytree(ocr_dir_orig, ocr_dir_dest)
+    yield ocr_dir_test_done
+
+
+@pytest.fixture(scope="module")
 def test_logfile(tmp_path_factory):
     _logfile = tmp_path_factory.mktemp("test_temp") / "test.log"
     yield _logfile

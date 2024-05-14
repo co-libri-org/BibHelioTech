@@ -1,6 +1,6 @@
 {% extends "base_page.html" %}
 {%  block more_head %}
-<title>{{step_lighter.all_steps | length}} {{pipeline_mode | upper}} Steps - {{base_title}}</title>
+<title>{{step_lighter.all_steps | length}} {{disp_mode}} {{pipeline_mode | upper}} Steps- {{base_title}}</title>
 <link href="{{url_for('static', filename='css/colored_steps.css') | staticversion }} " rel="stylesheet">
 {%  endblock %}
 {% block content %}

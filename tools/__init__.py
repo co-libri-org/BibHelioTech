@@ -44,25 +44,25 @@ class StepLighter:
     @property
     def caption(self):
         if not self.caption_content:
-            self.enlight_step()
+            self.caption_content, self.enlighted_txt_content = self.enlight_step()
         return self.caption_content
 
     @property
     def enlighted_txt(self):
         if not self.enlighted_txt_content:
-            self.enlight_step()
+            self.caption_content, self.enlighted_txt_content = self.enlight_step()
         return self.enlighted_txt_content
 
     @property
     def raw_json(self):
         if not self.raw_json_text:
-            self.dump_json()
+            self.raw_json_text = self.dump_json()
         return self.raw_json_text
 
     @property
     def analysed_json(self):
         if not self.analysed_json_text:
-            self.analyse_json()
+            self.analysed_json_text = self.analyse_json()
         return self.analysed_json_text
 
     @property
@@ -115,15 +115,13 @@ class StepLighter:
         with open(txtfilename) as txt_fd:
             txt_content = txt_fd.read()
 
-        self.caption_content = step_caption
-
-        self.enlighted_txt_content = enlight_txt(txt_content, json_content)
+        return step_caption, enlight_txt(txt_content, json_content)
 
     def dump_json(self):
         with open(self.json_filepath, "r") as json_df:
             dicts_list = json.load(json_df)
         dicts_list.pop()
-        self.raw_json_text = json.dumps(dicts_list, indent=4)
+        return json.dumps(dicts_list, indent=4)
 
     def analyse_json(self, with_header=False):
         """
@@ -132,6 +130,7 @@ class StepLighter:
         """
         with open(self.json_filepath, "r") as json_df:
             dicts_list = json.load(json_df)
+        # remove step message at end of json
         msg = dicts_list.pop()
 
         # compute types
@@ -148,29 +147,47 @@ class StepLighter:
             _res_str += f"{msg_sub:^50}\n"
             _res_str += "\n"
 
+        # Show types report
         written_types = 0
         for k, v in count_types.items():
             written_types += 1
             type_number = f"{v:>3} {k:8}"
             _res_str += f"{type_number:^50}\n"
 
-        # now, make sure num types lines is equal to 5
-        more_cr = 5 - written_types
+        # now, make sure types report height is always the same
+        types_report_height = 5
+        more_cr = types_report_height - written_types
         _res_str += more_cr * "\n"
 
-        title_str = f'{"type":9}: {"text":27} {"timex-value":>20}      {"value"}\n'
+        # convert all dict values to string
+        for _elmnt in dicts_list:
+            if type(_elmnt["value"]) is dict:
+                _elmnt["value"] = _elmnt["value"].__repr__()
+
+        # get fields lengths
+        _type_max_lgth = max([len(elmt["type"]) for elmt in dicts_list]) + 2
+        _text_max_lgth = max([len(elmt["text"]) for elmt in dicts_list]) + 2
+        _value_max_lgth = max([len(elmt["value"]) for elmt in dicts_list])
+
+        title_str = f'{"type":{_type_max_lgth}}|{"value":{_value_max_lgth}}|{"text":{_text_max_lgth}}\n'
         _res_str += title_str
-        _res_str += len(title_str) * "-" + "\n"
+        # _res_str += len(title_str) * "-" + "\n"
+        _res_str += "-"*_type_max_lgth+"+"+"-"*_value_max_lgth+"+"+"-"*_text_max_lgth+"\n"
+
         for elmt in dicts_list:
-            if type(elmt) is not dict or "timex-value" not in elmt:
+            if type(elmt) is not dict:
                 continue
+            if "timex-value" not in elmt:
+                elmt["timex-value"] = "None"
             _type = elmt["type"]
             _text = f'"{elmt["text"]}"'
             _timex = elmt["timex-value"]
             _value = elmt["value"]
-            _res_str += f"{_type:9}: {_text:27} {_timex:>20} ---> {_value}\n"
+            _res_str += (
+                f"{_type:{_type_max_lgth}}|{_value:{_value_max_lgth}}|{_text:{_text_max_lgth}}\n"
+            )
 
-        self.analysed_json_text = _res_str
+        return _res_str
 
 
 def struct_to_title_0(content_struct):

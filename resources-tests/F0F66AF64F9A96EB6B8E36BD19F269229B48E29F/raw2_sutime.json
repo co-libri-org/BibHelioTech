@@ -1,0 +1,201 @@
+[
+    {
+        "end": 5422,
+        "start": 5406,
+        "text": "February 10 2020",
+        "timex-value": "2020-02-10",
+        "type": "DATE",
+        "value": "2020-02-10"
+    },
+    {
+        "end": 5543,
+        "start": 5534,
+        "text": "June 2020",
+        "timex-value": "2020-06",
+        "type": "DATE",
+        "value": "2020-06"
+    },
+    {
+        "end": 7612,
+        "start": 7605,
+        "text": "July 23",
+        "timex-value": "2024-07-23",
+        "type": "DATE",
+        "value": "XXXX-07-23"
+    },
+    {
+        "end": 7711,
+        "start": 7670,
+        "text": "From July 23 at 12:00 to July 24 at 12:00",
+        "type": "DURATION",
+        "value": {
+            "begin": "XXXX-07-23T12:00",
+            "end": "XXXX-07-24T12:00"
+        }
+    },
+    {
+        "end": 8186,
+        "start": 8174,
+        "text": "July 23 2020",
+        "timex-value": "2020-07-23",
+        "type": "DATE",
+        "value": "2020-07-23"
+    },
+    {
+        "end": 9958,
+        "start": 9904,
+        "text": "between 16:00 on July 23 2020 and 6:00 on July 24 2020",
+        "type": "DURATION",
+        "value": {
+            "begin": "2020-07-23T16:00",
+            "end": "2020-07-24T06:00"
+        }
+    },
+    {
+        "end": 10281,
+        "start": 10237,
+        "text": "between 22:00 on July 23 and 2:00 on July 24",
+        "type": "DURATION",
+        "value": {
+            "begin": "XXXX-07-23T22:00",
+            "end": "XXXX-07-24T02:00"
+        }
+    },
+    {
+        "end": 10470,
+        "start": 10454,
+        "text": "18:00 on July 23",
+        "timex-value": "2024-07-23T18:00",
+        "type": "TIME",
+        "value": "XXXX-07-23T18:00"
+    },
+    {
+        "end": 11208,
+        "start": 11178,
+        "text": "From 20:45 to 21:30 on July 23",
+        "type": "DURATION",
+        "value": {
+            "begin": "T20:45",
+            "end": "XXXX-07-23T21:30"
+        }
+    },
+    {
+        "end": 13713,
+        "start": 13674,
+        "text": "between 20:45 and 21:30 on July 23 2020",
+        "type": "DURATION",
+        "value": {
+            "begin": "T20:45",
+            "end": "2020-07-23T21:30"
+        }
+    },
+    {
+        "end": 14199,
+        "start": 14194,
+        "text": "20:38",
+        "timex-value": "T20:38",
+        "type": "TIME",
+        "value": "T20:38"
+    },
+    {
+        "end": 14291,
+        "start": 14286,
+        "text": "21:29",
+        "timex-value": "T21:29",
+        "type": "TIME",
+        "value": "T21:29"
+    },
+    {
+        "end": 17334,
+        "start": 17305,
+        "text": "between 21:02:00 and 21:02:40",
+        "type": "DURATION",
+        "value": {
+            "begin": "T21:02:00",
+            "end": "T21:02:40"
+        }
+    },
+    {
+        "end": 19161,
+        "start": 19153,
+        "text": "21:02:24",
+        "timex-value": "T21:02:24",
+        "type": "TIME",
+        "value": "T21:02:24"
+    },
+    {
+        "end": 19670,
+        "start": 19650,
+        "text": "21:02:00 to 21:02:24",
+        "type": "DURATION",
+        "value": {
+            "begin": "T21:02:00",
+            "end": "T21:02:24"
+        }
+    },
+    {
+        "end": 19732,
+        "start": 19712,
+        "text": "21:02:24 to 21:02:40",
+        "type": "DURATION",
+        "value": {
+            "begin": "T21:02:24",
+            "end": "T21:02:40"
+        }
+    },
+    {
+        "end": 22727,
+        "start": 22708,
+        "text": "from 20:14 to 21:50",
+        "type": "DURATION",
+        "value": {
+            "begin": "T20:14",
+            "end": "T21:50"
+        }
+    },
+    {
+        "end": 33040,
+        "start": 33017,
+        "text": "between 20:35 and 21:20",
+        "type": "DURATION",
+        "value": {
+            "begin": "T20:35",
+            "end": "T21:20"
+        }
+    },
+    {
+        "end": 33102,
+        "start": 33097,
+        "text": "20:38",
+        "timex-value": "T20:38",
+        "type": "TIME",
+        "value": "T20:38"
+    },
+    {
+        "end": 33144,
+        "start": 33139,
+        "text": "21:29",
+        "timex-value": "T21:29",
+        "type": "TIME",
+        "value": "T21:29"
+    },
+    {
+        "end": 34522,
+        "start": 34499,
+        "text": "between 20:35 and 21:20",
+        "type": "DURATION",
+        "value": {
+            "begin": "T20:35",
+            "end": "T21:20"
+        }
+    },
+    {
+        "end": 52597,
+        "start": 52585,
+        "text": "July 23 2020",
+        "timex-value": "2020-07-23",
+        "type": "DATE",
+        "value": "2020-07-23"
+    },
+    "2- Current Year to XXXX"
+]

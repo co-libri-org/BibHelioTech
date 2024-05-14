@@ -657,7 +657,7 @@ def SUTime_transform(current_OCR_folder):
                 dicts["value"] += "-15"
         compteur_dicts += 1
 
-    raw_dumper.dump_to_raw(JSON_list, "Date rewriting", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "Date rewriting: add day number to short date", current_OCR_folder)
 
     compteur = 0
     for dicts in JSON_list:

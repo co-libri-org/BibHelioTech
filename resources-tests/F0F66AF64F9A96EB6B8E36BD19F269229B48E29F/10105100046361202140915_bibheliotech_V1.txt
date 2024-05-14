@@ -1,0 +1,25 @@
+# Name: 10105100046361202140915_bibheliotech_V1;
+# Creation Date: 2024-05-06T18:26:46.078457;
+# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "https://github.com/ADablanc/BibHelioTech.git") on the paper "https://doi.org/10.1051/0004-6361/202140915". The two first columns are the start/stop times of the event. the third column is the DOI of the paper, the fourth column is the mission that observed the event with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term);
+# Parameter 1: id:column1; name:DOI; size:1; type:char;
+# Parameter 2: id:column2; name:SATS; size:1; type:char;
+# Parameter 3: id:column3; name:INSTS; size:1; type:char;
+# Parameter 4: id:column4; name:REGS; size:1; type:char;
+# Parameter 5: id:column5; name:D; size:1; type:int;
+# Parameter 6: id:column6; name:R; size:1; type:int;
+# Parameter 7: id:column7; name:SO; size:1; type:int;
+# Parameter 8: id:column8; name:occur_sat; size:1; type:int;
+# Parameter 9: id:column9; name:nb_durations; size:1; type:int;
+# Parameter 10: id:column10; name:conf; size:1; type:float;
+2020-02-10T00:00:00.000 2020-02-10T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "PSP" "" "Sun" 3156 1 3 12 22 0.063784635906142 
+2020-02-10T00:00:00.000 2020-02-10T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "IMP" "" "Heliosphere.NearEarth" 761 1 1 12 22 0.046140787000545684 
+2020-02-10T00:00:00.000 2020-02-10T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "IMP-8" "" "Heliosphere.NearEarth" 761 1 1 12 22 0.046140787000545684 
+2020-02-10T00:00:00.000 2020-02-10T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "Voyager" "" "Heliosphere.NearEarth" 751 1 1 12 22 0.045534469168738254 
+2020-02-10T00:00:00.000 2020-02-10T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "Voyager-2" "" "Heliosphere.NearEarth" 751 1 1 12 22 0.045534469168738254 
+2020-02-10T00:00:00.000 2020-02-10T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "Helios" "" "Heliosphere.Inner" 722 1 1 12 22 0.043776147456496696 
+2020-02-10T00:00:00.000 2020-02-10T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "SolarOrbiter" "" "Heliosphere.Inner" 98 1 2 12 22 0.002970957375856424 
+2020-02-10T00:00:00.000 2020-02-10T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "SDO" "AIA" "Earth.Magnetosphere" 3902 1 1 12 22 0.23658521797126053 
+2020-06-15T00:00:00.000 2020-06-15T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "STEREO-A" "" "Heliosphere.Remote1AU" 3782 1 1 12 22 0.22930940398957134 
+2020-07-23T00:00:00.000 2020-07-23T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "PSP" "" "Sun" 3316 1 3 12 22 0.06701833100911497 
+2020-07-23T00:00:00.000 2020-07-23T23:59:59.999 https://doi.org/10.1051/0004-6361/202140915 "PSP" "" "Sun" 44191 1 3 12 22 0.893126376846743 
+2020-07-23T12:00:00.000 2020-07-24T12:00:59.999 https://doi.org/10.1051/0004-6361/202140915 "SolarOrbiter" "" "Heliosphere.Inner" 32986 1 2 12 22 1.0 
