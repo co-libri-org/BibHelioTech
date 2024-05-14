@@ -28,10 +28,11 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
-## [0.9.0] - 2024-05-xx Fix Sutime Filter (2)
+## [0.9.0] - 2024-05-14 Fix Sutime Filter (2)
 ### Fixed
-### Changed
+- Now keep DURATION  without 'timex-value'
 ### New
+- Refactoring: SutimeTools.py holds analysis methods 
 
 ## [0.8.0] - 2024-05-06 Show Multi Mode pipeline
 ### New
