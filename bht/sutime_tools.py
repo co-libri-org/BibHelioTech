@@ -8,7 +8,8 @@ def dt2date(_dt):
 
 def date_from_struct(_sutime_struct):
     """Extract a date from any SUTIME structure
-    May be a DATE or a DURATION; TIME don't handle dates
+    May be a DATE or a DURATION;
+    We dont parse TIME as it doesnt handle dates
 
     @return python date or None
     """
