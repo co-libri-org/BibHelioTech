@@ -5,6 +5,7 @@ import os
 import pprint
 import re
 
+from bht_config import yml_settings
 from tools.tools_errors import ToolsValueError, ToolsFileError
 
 
@@ -19,9 +20,11 @@ class RawDumper:
         self.name = name
 
     def dump_to_raw(self, struct_to_dump, message, folder):
-        # append message to struct for later reading
+        # append version and message to struct for later reading
         entitled_struct = copy.deepcopy(struct_to_dump)
-        entitled_struct.append(f"{self.dump_step}- {message}")
+        entitled_struct.append(
+            {"pipeline_version": yml_settings["BHT_PIPELINE_VERSION"], "message": f"{self.dump_step}- {message}"}
+        )
         with open(
             os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
         ) as raw_file:
@@ -172,7 +175,14 @@ class StepLighter:
         title_str = f'{"type":{_type_max_lgth}}|{"value":{_value_max_lgth}}|{"text":{_text_max_lgth}}\n'
         _res_str += title_str
         # _res_str += len(title_str) * "-" + "\n"
-        _res_str += "-"*_type_max_lgth+"+"+"-"*_value_max_lgth+"+"+"-"*_text_max_lgth+"\n"
+        _res_str += (
+            "-" * _type_max_lgth
+            + "+"
+            + "-" * _value_max_lgth
+            + "+"
+            + "-" * _text_max_lgth
+            + "\n"
+        )
 
         for elmt in dicts_list:
             if type(elmt) is not dict:
@@ -183,9 +193,7 @@ class StepLighter:
             _text = f'"{elmt["text"]}"'
             _timex = elmt["timex-value"]
             _value = elmt["value"]
-            _res_str += (
-                f"{_type:{_type_max_lgth}}|{_value:{_value_max_lgth}}|{_text:{_text_max_lgth}}\n"
-            )
+            _res_str += f"{_type:{_type_max_lgth}}|{_value:{_value_max_lgth}}|{_text:{_text_max_lgth}}\n"
 
         return _res_str
 
