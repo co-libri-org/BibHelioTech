@@ -3,13 +3,14 @@ from datetime import datetime, date
 
 
 def dt2date(_dt):
-    return date(_dt.year, _dt.month, _dt.day)
+    _date =date(_dt.year, _dt.month, _dt.day)
+    return _date
 
 
 def date_from_struct(_sutime_struct):
     """Extract a date from any SUTIME structure
     May be a DATE or a DURATION;
-    We dont parse TIME as it doesnt handle dates
+    We don't parse TIME as it doesn't handle dates
 
     @return python date or None
     """
@@ -43,6 +44,8 @@ def date_from_struct(_sutime_struct):
         _res_date = _dt_begin
     elif _dt_end is not None and _dt_end != _dt_today:
         _res_date = _dt_end
+    else:
+        print("NONE OF ALL")
 
     return _res_date
 
