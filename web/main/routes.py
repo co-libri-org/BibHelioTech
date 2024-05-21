@@ -668,7 +668,7 @@ def api_catalogs():
     """
     mission_id = request.args.get("mission_id")
     mission = Mission.query.get(mission_id)
-    # TODO: REFACTOR extract to method and merge common code with api_catalog_txt
+    # TODO: REFACTOR extract to event model method and merge common code with api_catalog_txt
     events_list = [
         event.get_dict()
         for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
