@@ -667,7 +667,7 @@ def api_catalogs():
     """
     mission_id = request.args.get("mission_id")
     mission = Mission.query.get(mission_id)
-    # TODO: REFACTOR extract to method and merge common code
+    # TODO: REFACTOR extract to method and merge common code with api_catalog_txt
     events_list = [
         event.get_dict()
         for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
@@ -690,7 +690,12 @@ def api_catalogs():
 
 @bp.route("/api/catalogs/txt", methods=["GET"])
 def api_catalogs_txt():
-    """Download the txt version of the catalog for the mission
+    """Download the txt version of the catalog for the given mission
+
+    To do that,
+     - retrieve from db all events related to that mission id
+     - Dump this events list to a text file.
+
 
     :parameter: mission_id  in get request
     :return: catalog text file as attachment
@@ -702,7 +707,7 @@ def api_catalogs_txt():
             f"No valid parameters for url: {mission_id} {mission}",
             status=400,
         )
-    # TODO: REFACTOR extract to method and merge common code
+    # TODO: REFACTOR extract to method and merge common code with api_catalogs
     events_list = [
         event.get_dict()
         for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(

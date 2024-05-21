@@ -20,8 +20,9 @@ class BhtFileType(StrEnum):
 
 def rows_to_catstring(events_list, catalog_name):
     """Build a text file of events in amda catalog format
+    Event dict has keys ['doi','instrument','mission','region','start_date','stop_date']
 
-    :parameter: dict events list
+    :parameter: list of events as dicts
     :return: string to write to txt file
     """
     date_now = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
