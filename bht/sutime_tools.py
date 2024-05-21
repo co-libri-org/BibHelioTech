@@ -64,7 +64,6 @@ if __name__ == "__main__":
             _date = "None"
         else:
             _date = _date.strftime("%Y-%m-%d")
-
         # print(f"<{type(_date.__repr__())}>")
         print(f"{_st['type']:9} {_date.__repr__():<15} {_st['value'].__repr__():<65} {_st['text']}")
 

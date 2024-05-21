@@ -27,7 +27,8 @@ from flask import (
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, rows_to_catstring, BhtFileType
+from web.models import Paper, Mission, HpEvent, BhtFileType
+from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
     get_file_from_url,
