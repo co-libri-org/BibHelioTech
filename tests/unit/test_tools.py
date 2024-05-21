@@ -27,8 +27,13 @@ class TestStepLighter:
 class TestBhtTools:
     def test_rows_to_catstring(self, cat_for_test):
         hp_events = catfile_to_rows(cat_for_test)
-        cat_str = rows_to_catstring(hp_events, "what")
-        assert len(cat_str) == 6902
+        cat_str = rows_to_catstring(
+            hp_events,
+            "test_rows_to_catstring",
+            ["doi", "sats", "insts", "regs", "start_date", "stop_date"],
+        )
+        print(cat_str)
+        assert len(cat_str) == 7039
 
     def test_catfile_to_rows(self, cat_for_test):
         hp_events = catfile_to_rows(cat_for_test)

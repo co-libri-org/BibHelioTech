@@ -5,13 +5,38 @@ import textwrap
 from bht_config import yml_settings
 
 
-def rows_to_catstring(events_list, catalog_name):
-    """Build a text file of events in amda catalog format
-    Event dict has keys ['doi','instrument','mission','region','start_date','stop_date']
-
-    :parameter: list of events as dicts
-    :return: string to write to txt file
+def rows_to_catstring(events_list, catalog_name, columns=None):
     """
+    Build a text file of events in amda catalog format
+
+    Events are given as a list of dicts with at least the keys
+
+        ['doi','instrument','mission','region','start_date','stop_date']
+
+    @param events_list: a list of events as dicts
+    @param catalog_name:  the name of the catalog being created
+    @param columns: the keys of the event dict we want to write down
+    @return: a string containing the events' catalog as text
+    """
+
+    parameters = {
+        "start_date": {"name": "START_DATE", "size": 1, "type": "date"},
+        "stop_date": {"name": "STOP_DATE", "size": 1, "type": "date"},
+        "doi": {"name": "DOI", "size": 1, "type": "char"},
+        "sats": {"name": "SATS", "size": 1, "type": "char"},
+        "insts": {"name": "INSTS", "size": 1, "type": "char"},
+        "regs": {"name": "REGS", "size": 1, "type": "char"},
+        "d": {"name": "D", "size": 1, "type": "int"},
+        "r": {"name": "R", "size": 1, "type": "int"},
+        "so": {"name": "SO", "size": 1, "type": "int"},
+        "occur_sat": {"OCCUR_SAT": "START_DATE", "size": 1, "type": "int"},
+        "nb_durations": {"NB_DURATIONS": "START_DATE", "size": 1, "type": "int"},
+        "conf": {"name": "CONF", "size": 1, "type": "float"},
+    }
+    if columns is None:
+        columns = list(parameters.keys())
+
+    # Print catalog's general header
     date_now = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
     r_string = f"""
     # Name: {catalog_name};
@@ -27,12 +52,16 @@ def rows_to_catstring(events_list, catalog_name):
     # The fourth column is the mission that observed the event with the list of instruments listed in the fifth column.
     # The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term);
     #
-    # Parameter 1: id:column1; name:DOI; size:1; type:char;
-    # Parameter 2: id:column2; name:SATS; size:1; type:char;
-    # Parameter 3: id:column3; name:INSTS; size:1; type:char;
-    # Parameter 4: id:column4; name:REGS; size:1; type:char;
     """
-    r_string=textwrap.dedent(r_string)
+    r_string = textwrap.dedent(r_string)
+
+    # Print parameters header
+    p_index = 0
+    for k, v in parameters.items():
+        if k not in columns:
+            continue
+        r_string += f'Parameter {p_index}: id:column{p_index}; name: {v["name"]}; size:{v["size"]}; type:{v["type"]};\n'
+        p_index += 1
     for e in events_list:
         r_string += f"{e['start_date']} {e['stop_date']} {e['doi']} {e['mission']} {e['instrument']} {e['region']}\n"
     return r_string
