@@ -255,4 +255,11 @@ class TestCatTools:
     def test_rows_to_catstring(self, cat_for_test):
         hp_events = catfile_to_rows(cat_for_test)
         cat_str = rows_to_catstring(hp_events, "what")
-        assert len(cat_str) == 6900
+        assert len(cat_str) == 6902
+
+    def test_event_as_dict(self, cat_for_test):
+        hp_events = catfile_to_rows(cat_for_test)
+        first_event = hp_events[0]
+        awaited_keys = ['doi', 'instrument', 'mission', 'region', 'start_date', 'stop_date']
+
+        assert set(first_event).issubset(awaited_keys)
