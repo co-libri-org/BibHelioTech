@@ -4,7 +4,8 @@ from bht.catalog_tools import (
     catfile_to_rows,
     rows_to_catstring,
     row_to_dict,
-    hpevent_keys_ordered, dict_to_row,
+    hpevent_keys_ordered,
+    dict_to_row,
 )
 from tools import StepLighter
 import json
@@ -88,23 +89,42 @@ class TestBhtTools:
             "test_rows_to_catstring",
             ["doi", "sats", "insts", "regs", "start_time", "stop_time"],
         )
-        print(cat_str)
-        assert len(cat_str) == 7039
+        assert len(cat_str) == 7051
 
-    def test_catfile_to_rows(self, cat_for_test):
-        hp_events = catfile_to_rows(cat_for_test)
-        assert len(hp_events) == 46
+    def test_rows_to_catstring_allkeys(self, cat_for_test):
+        import csv
 
-    def test_event_as_dict(self, cat_for_test):
-        hp_events = catfile_to_rows(cat_for_test)
+        all_dicts = []
+        with open(cat_for_test, newline="") as csvfile:
+            reader = csv.reader(
+                filter(lambda r: r[0] != "#", csvfile), delimiter=" ", quotechar='"'
+            )
+            for row in reader:
+                all_dicts.append(row_to_dict(row))
+        _cat_string = rows_to_catstring(all_dicts, "test")
+        assert len(all_dicts[0]) == 12
+        assert len(all_dicts) == 46
+
+    def test_catfile_to_rows(self, small_cat_for_test):
+        _hp_events = catfile_to_rows(small_cat_for_test)
+        assert len(_hp_events) == 46
+        _event_dict = _hp_events[0]
+        assert len(_event_dict.keys()) == 6
+
+    def test_catfile_to_rows_allkeys(self, cat_for_test):
+        _hp_events = catfile_to_rows(cat_for_test)
+        _event_dict = _hp_events[0]
+        assert len(_event_dict.keys()) == 12
+
+    def test_event_as_dict(self, small_cat_for_test):
+        hp_events = catfile_to_rows(small_cat_for_test)
         first_event = hp_events[0]
         awaited_keys = [
             "doi",
-            "instrument",
-            "mission",
-            "region",
-            "start_date",
-            "stop_date",
+            "insts",
+            "sats",
+            "regs",
+            "start_time",
+            "stop_time",
         ]
-
-        assert set(first_event).issubset(awaited_keys)
+        assert set(first_event.keys()).issubset(awaited_keys)
