@@ -51,6 +51,20 @@ def row_to_dict(event_row):
     return _r_dict
 
 
+def dict_to_row(event_dict):
+    """
+    From an event dict, transform to row,'space' separated values, in the rigth order.
+
+    @param event_dict:  hpevent dictionnary with variable number of keys
+    @return:  row of the event's values
+    """
+    _r_row = []
+    hpevent_keys = hpevent_keys_ordered[0 : len(event_dict.keys())]
+    for _k in hpevent_keys:
+        _r_row.append(event_dict[_k])
+    return _r_row
+
+
 def rows_to_catstring(events_list, catalog_name, columns=None):
     """
     Build a text file of events in amda catalog format

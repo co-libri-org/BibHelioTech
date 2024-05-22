@@ -4,7 +4,7 @@ from bht.catalog_tools import (
     catfile_to_rows,
     rows_to_catstring,
     row_to_dict,
-    hpevent_keys_ordered,
+    hpevent_keys_ordered, dict_to_row,
 )
 from tools import StepLighter
 import json
@@ -47,10 +47,39 @@ class TestBhtTools:
             23,
             0.048298021250874845,
         ]
-        dict = row_to_dict(_row[:7])
-        assert set(dict.keys()).issubset(hpevent_keys_ordered[:7])
-        dict = row_to_dict(_row[:10])
-        assert set(dict.keys()).issubset(hpevent_keys_ordered[:10])
+        _dict = row_to_dict(_row[:7])
+        pprint(_dict)
+        assert set(_dict.keys()).issubset(hpevent_keys_ordered[:7])
+        _dict = row_to_dict(_row[:10])
+        pprint(_dict)
+        assert set(_dict.keys()).issubset(hpevent_keys_ordered[:10])
+
+    def test_dict_to_row(self):
+        _small_dict = {
+            "d": 7591,
+            "doi": "https://doi.org/10.5194/angeo-28-233-2010",
+            "insts": "",
+            "regs": "Heliosphere.Remote1AU",
+            "sats": "STEREO",
+            "start_time": "2006-08-15T00:00:00.000",
+            "stop_time": "2006-08-15T00:00:59.999",
+        }
+        _long_dict = {
+            "d": 7591,
+            "doi": "https://doi.org/10.5194/angeo-28-233-2010",
+            "insts": "",
+            "occur_sat": 46,
+            "r": 1,
+            "regs": "Heliosphere.Remote1AU",
+            "sats": "STEREO",
+            "so": 15,
+            "start_time": "2006-08-15T00:00:00.000",
+            "stop_time": "2006-08-15T00:00:59.999",
+        }
+        small_row = dict_to_row(_small_dict)
+        assert len(small_row) == len(_small_dict.keys())
+        long_row = dict_to_row(_long_dict)
+        assert len(long_row) == len(_long_dict.keys())
 
     def test_rows_to_catstring(self, cat_for_test):
         hp_events = catfile_to_rows(cat_for_test)
