@@ -36,8 +36,9 @@ hpevent_parameters = {
 
 
 def row_to_dict(event_row):
-    """From a row of value, transform to a dict with keys.
-        The row values may follow the  order of hpevent_keys_ordered list
+    """
+    From a row of value, transform to a dict with keys.
+    The row values may follow the  order of hpevent_keys_ordered list
 
     @param event_row:  row of hpevent values
     @return:  hpevent_dict
@@ -53,7 +54,7 @@ def row_to_dict(event_row):
 
 def dict_to_row(event_dict):
     """
-    From an event dict, transform to row,'space' separated values, in the rigth order.
+    From an event dict, transform to a right ordered row values 'space' separated.
 
     @param event_dict:  hpevent dictionnary with variable number of keys
     @return:  row of the event's values
@@ -79,22 +80,8 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
     @return: a string containing the events' catalog as text
     """
 
-    parameters = {
-        "start_date": {"name": "START_DATE", "size": 1, "type": "date"},
-        "stop_date": {"name": "STOP_DATE", "size": 1, "type": "date"},
-        "doi": {"name": "DOI", "size": 1, "type": "char"},
-        "sats": {"name": "SATS", "size": 1, "type": "char"},
-        "insts": {"name": "INSTS", "size": 1, "type": "char"},
-        "regs": {"name": "REGS", "size": 1, "type": "char"},
-        "d": {"name": "D", "size": 1, "type": "int"},
-        "r": {"name": "R", "size": 1, "type": "int"},
-        "so": {"name": "SO", "size": 1, "type": "int"},
-        "occur_sat": {"OCCUR_SAT": "START_DATE", "size": 1, "type": "int"},
-        "nb_durations": {"NB_DURATIONS": "START_DATE", "size": 1, "type": "int"},
-        "conf": {"name": "CONF", "size": 1, "type": "float"},
-    }
     if columns is None:
-        columns = list(parameters.keys())
+        columns = list(hpevent_parameters.keys())
 
     # Print catalog's general header
     date_now = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
@@ -117,23 +104,27 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
 
     # Print parameters header
     p_index = 0
-    for k, v in parameters.items():
+    for k, v in hpevent_parameters.items():
         if k not in columns:
             continue
-        r_string += f'Parameter {p_index}: id:column{p_index}; name: {v["name"]}; size:{v["size"]}; type:{v["type"]};\n'
+        r_string += f'# Parameter {p_index}: id:column{p_index}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
         p_index += 1
     for e in events_list:
-        r_string += f"{e['start_date']} {e['stop_date']} {e['doi']} {e['mission']} {e['instrument']} {e['region']}\n"
+        r_string += f"{e['start_time']} {e['stop_time']} {e['doi']} {e['sats']} {e['insts']} {e['regs']}\n"
     return r_string
 
 
 def catfile_to_rows(catfile):
     """Get all rows of a catalog file as  dict
-
-      TODO: MODEL should move to Paper or Catalog method
-
        -  read each line, rid of comments
        -  create a hp_event_dict
+
+       Trick: we may get catfiles with different number of columns.
+           sometimes  6 (start, stop, doi, mission, instruments, region)
+           sometimes 12 ( ..., D, R, SO, occur_sat, nb_durations, conf)
+
+       This is the reason of row_to_dict use.
+
     :return: hpevent_dict list
     """
     hpeventdict_list = []
@@ -142,14 +133,6 @@ def catfile_to_rows(catfile):
             filter(lambda r: r[0] != "#", csvfile), delimiter=" ", quotechar='"'
         )
         for row in reader:
-            hpevent_dict = {
-                "start_date": row[0],
-                "stop_date": row[1],
-                "doi": row[2],
-                "mission": row[3],
-                "instrument": row[4],
-                "region": row[5],
-            }
-
+            hpevent_dict = row_to_dict(row)
             hpeventdict_list.append(hpevent_dict)
     return hpeventdict_list
