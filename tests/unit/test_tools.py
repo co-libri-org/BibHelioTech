@@ -1,4 +1,11 @@
-from bht.catalog_tools import catfile_to_rows, rows_to_catstring
+from pprint import pprint
+
+from bht.catalog_tools import (
+    catfile_to_rows,
+    rows_to_catstring,
+    row_to_dict,
+    hpevent_keys_ordered,
+)
 from tools import StepLighter
 import json
 
@@ -25,12 +32,32 @@ class TestStepLighter:
 
 
 class TestBhtTools:
+    def test_row_to_dict(self):
+        _row = [
+            "2006-08-15T00:00:00.000",
+            "2006-08-15T00:00:59.999",
+            "https://doi.org/10.5194/angeo-28-233-2010",
+            "STEREO",
+            "",
+            "Heliosphere.Remote1AU",
+            7591,
+            1,
+            15,
+            46,
+            23,
+            0.048298021250874845,
+        ]
+        dict = row_to_dict(_row[:7])
+        assert set(dict.keys()).issubset(hpevent_keys_ordered[:7])
+        dict = row_to_dict(_row[:10])
+        assert set(dict.keys()).issubset(hpevent_keys_ordered[:10])
+
     def test_rows_to_catstring(self, cat_for_test):
         hp_events = catfile_to_rows(cat_for_test)
         cat_str = rows_to_catstring(
             hp_events,
             "test_rows_to_catstring",
-            ["doi", "sats", "insts", "regs", "start_date", "stop_date"],
+            ["doi", "sats", "insts", "regs", "start_time", "stop_time"],
         )
         print(cat_str)
         assert len(cat_str) == 7039

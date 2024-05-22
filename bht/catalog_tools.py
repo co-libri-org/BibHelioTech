@@ -4,6 +4,52 @@ import textwrap
 
 from bht_config import yml_settings
 
+hpevent_keys_ordered = [
+    "start_time",
+    "stop_time",
+    "doi",
+    "sats",
+    "insts",
+    "regs",
+    "d",
+    "r",
+    "so",
+    "occur_sat",
+    "nb_durations",
+    "conf",
+]
+
+hpevent_parameters = {
+    "start_time": {"col_name": "START_TIME", "size": 1, "type": "date"},
+    "stop_time": {"col_name": "STOP_TIME", "size": 1, "type": "date"},
+    "doi": {"col_name": "DOI", "size": 1, "type": "char"},
+    "sats": {"col_name": "SATS", "size": 1, "type": "char"},
+    "insts": {"col_name": "INSTS", "size": 1, "type": "char"},
+    "regs": {"col_name": "REGS", "size": 1, "type": "char"},
+    "d": {"col_name": "D", "size": 1, "type": "int"},
+    "r": {"col_name": "R", "size": 1, "type": "int"},
+    "so": {"col_name": "SO", "size": 1, "type": "int"},
+    "occur_sat": {"col_name": "OCCUR_SAT", "size": 1, "type": "int"},
+    "nb_durations": {"col_name": "NB_DURATIONS", "size": 1, "type": "int"},
+    "conf": {"col_name": "CONF", "size": 1, "type": "float"},
+}
+
+
+def row_to_dict(event_row):
+    """From a row of value, transform to a dict with keys.
+        The row values may follow the  order of hpevent_keys_ordered list
+
+    @param event_row:  row of hpevent values
+    @return:  hpevent_dict
+    """
+    _r_dict = {}
+    num_cols = len(event_row)
+    hpevent_keys = hpevent_keys_ordered[0:num_cols]
+    hpevent_tuple = zip(hpevent_keys, event_row)
+    for k, v in hpevent_tuple:
+        _r_dict[k] = v
+    return _r_dict
+
 
 def rows_to_catstring(events_list, catalog_name, columns=None):
     """
