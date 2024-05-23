@@ -114,7 +114,7 @@ def dict_to_row(event_dict):
     # transform to row of values
     _r_row = []
     for _k in hpevent_keys:
-        _r_row.append(_converted_dict[_k])
+        _r_row.append(str(_converted_dict[_k]))
     return _r_row
 
 
@@ -162,9 +162,11 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
         r_string += f'# Parameter {p_index}: id:column{p_index}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
         p_index += 1
 
-    # Dump dicts as rows
+    # Dump dicts as rows after converting
     for e in events_list:
-        r_string += f"{e['start_time']} {e['stop_time']} {e['doi']} {e['sats']} {e['insts']} {e['regs']}\n"
+        _row = dict_to_row(e)
+        _row_as_string = " ".join(_row)
+        r_string += _row_as_string
     return r_string
 
 
