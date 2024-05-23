@@ -36,103 +36,38 @@ class TestStepLighter:
 
 
 class TestBhtTools:
-    def test_row_to_dict(self):
-        _row = [
-            "2006-08-15T00:00:00.000",
-            "2006-08-15T00:00:59.999",
-            "https://doi.org/10.5194/angeo-28-233-2010",
-            "STEREO",
-            "",
-            "Heliosphere.Remote1AU",
-            7591,
-            1,
-            15,
-            46,
-            23,
-            0.048298021250874845,
-        ]
-        _dict = row_to_dict(_row[:7])
-        pprint(_dict)
+    def test_row_to_dict(self, event_as_row):
+        _dict = row_to_dict(event_as_row[:7])
         assert set(_dict.keys()).issubset(hpevent_keys_ordered[:7])
-        _dict = row_to_dict(_row[:10])
-        pprint(_dict)
+        _dict = row_to_dict(event_as_row[:10])
         assert set(_dict.keys()).issubset(hpevent_keys_ordered[:10])
 
-    def test_dict_to_row(self):
-        _small_dict = {
-            "d": 7591,
-            "doi": "https://doi.org/10.5194/angeo-28-233-2010",
-            "insts": "",
-            "regs": "Heliosphere.Remote1AU",
-            "sats": "STEREO",
-            "start_time": "2006-08-15T00:00:00.000",
-            "stop_time": "2006-08-15T00:00:59.999",
-        }
-        _long_dict = {
-            "d": 7591,
-            "doi": "https://doi.org/10.5194/angeo-28-233-2010",
-            "insts": "",
-            "occur_sat": 46,
-            "r": 1,
-            "regs": "Heliosphere.Remote1AU",
-            "sats": "STEREO",
-            "so": 15,
-            "start_time": "2006-08-15T00:00:00.000",
-            "stop_time": "2006-08-15T00:00:59.999",
-        }
-        small_row = dict_to_row(_small_dict)
-        assert len(small_row) == len(_small_dict.keys())
-        long_row = dict_to_row(_long_dict)
-        assert len(long_row) == len(_long_dict.keys())
+    def test_dict_to_row(self, small_event_dict, long_event_dict):
+        small_row = dict_to_row(small_event_dict)
+        assert len(small_row) == len(small_event_dict.keys())
+        long_row = dict_to_row(long_event_dict)
+        assert len(long_row) == len(long_event_dict.keys())
 
-    def test_upper_dict_to_row(self):
+    def test_upper_dict_to_row(self, wrong_keys_dict):
         """
         GIVEN an event dict with upper case keys
         WHEN dict_to_row is called
         THEN check no exception were raised
         """
-        _upper_dict = {
-            "D": 1527,
-            "DOI": "10.1002/2015GL064052",
-            "R": 1,
-            "SO": 28,
-            "conf": 0.02775354416575791,
-            "occur_sat": 46,
-            "nb_durations": 22,
-            "insts": "FIPS",
-            "regs": "Mercury",
-            "sats": "MESSENGER",
-            "start_time": "2011-07-01T20:11:00.000",
-            "stop_time": "2011-07-01T20:14:59.999",
-        }
-        _row_from_upper = dict_to_row(_upper_dict)
+        _row_from_upper = dict_to_row(wrong_keys_dict)
         try:
-            _row_from_upper = dict_to_row(_upper_dict)
+            _row_from_upper = dict_to_row(wrong_keys_dict)
         except KeyError:
             pytest.fail("Upper key should have been lowered")
 
-    def test_dict_to_dict(self):
+    def test_dict_to_dict(self, wrong_keys_dict):
         """
         GIVEN an event dict with wrong keys
         WHEN dict_to_dict is applied
         THEN check new dict has correct keys
         @return:
         """
-        _dict_with_wrong_keys = {
-            "D": 1527,
-            "DOI": "10.1002/2015GL064052",
-            "R": 1,
-            "SO": 28,
-            "conf": 0.02775354416575791,
-            "occur_sat": 46,
-            "nb_durations": 22,
-            "inst": "FIPS",
-            "reg": "Mercury",
-            "sat": "MESSENGER",
-            "start_time": "2011-07-01T20:11:00.000",
-            "stop_time": "2011-07-01T20:14:59.999",
-        }
-        _converted_dict = dict_to_dict(_dict_with_wrong_keys)
+        _converted_dict = dict_to_dict(wrong_keys_dict)
         assert set(_converted_dict.keys()).issubset(hpevent_keys_ordered)
         assert True
 

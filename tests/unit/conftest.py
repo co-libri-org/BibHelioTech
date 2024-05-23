@@ -19,6 +19,75 @@ from bht.databank_reader import DataBankSheet
 
 
 @pytest.fixture(scope="module")
+def event_as_row():
+    _row = [
+        "2006-08-15T00:00:00.000",
+        "2006-08-15T00:00:59.999",
+        "https://doi.org/10.5194/angeo-28-233-2010",
+        "STEREO",
+        "",
+        "Heliosphere.Remote1AU",
+        7591,
+        1,
+        15,
+        46,
+        23,
+        0.048298021250874845,
+    ]
+    yield _row
+
+
+@pytest.fixture(scope="module")
+def wrong_keys_dict():
+    _dict_with_wrong_keys = {
+        "D": 1527,
+        "DOI": "10.1002/2015GL064052",
+        "R": 1,
+        "SO": 28,
+        "conf": 0.02775354416575791,
+        "occur_sat": 46,
+        "nb_durations": 22,
+        "inst": "FIPS",
+        "reg": "Mercury",
+        "sat": "MESSENGER",
+        "start_time": "2011-07-01T20:11:00.000",
+        "stop_time": "2011-07-01T20:14:59.999",
+    }
+    yield _dict_with_wrong_keys
+
+
+@pytest.fixture(scope="module")
+def small_event_dict():
+    _small_dict = {
+        "d": 7591,
+        "doi": "https://doi.org/10.5194/angeo-28-233-2010",
+        "insts": "",
+        "regs": "Heliosphere.Remote1AU",
+        "sats": "STEREO",
+        "start_time": "2006-08-15T00:00:00.000",
+        "stop_time": "2006-08-15T00:00:59.999",
+    }
+    yield _small_dict
+
+
+@pytest.fixture(scope="module")
+def long_event_dict():
+    _long_dict = {
+        "d": 7591,
+        "doi": "https://doi.org/10.5194/angeo-28-233-2010",
+        "insts": "",
+        "occur_sat": 46,
+        "r": 1,
+        "regs": "Heliosphere.Remote1AU",
+        "sats": "STEREO",
+        "so": 15,
+        "start_time": "2006-08-15T00:00:00.000",
+        "stop_time": "2006-08-15T00:00:59.999",
+    }
+    yield _long_dict
+
+
+@pytest.fixture(scope="module")
 def final_links(data_frames, article_as_str):
     sat_dict = data_frames[DataBankSheet.SATS]
     sat_dict_list = sat_recognition(article_as_str, sat_dict)
