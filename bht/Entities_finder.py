@@ -5,6 +5,7 @@ from datetime import *
 
 from bht.DOI_finder import *
 from bht.bht_logging import init_logger
+from bht.catalog_tools import rows_to_catstring
 from bht.databank_reader import DataBank, DataBankSheet
 from bht.errors import BhtPipelineError
 from bht.published_date_finder import *
@@ -1233,83 +1234,17 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     print("\n")
     # =============================================================================================================================================================
 
-    with open(
-        os.path.join(
-            current_OCR_folder,
-            DOI.translate(str.maketrans("", "", string.punctuation))
-            + "_bibheliotech_V"
-            + "1.txt",
-        ),
-        "w",
-    ) as f:
-        f.write(
-            "# Name: "
-            + DOI.translate(str.maketrans("", "", string.punctuation))
-            + "_bibheliotech_V"
-            + "1"
-            + ";"
-            + "\n"
-        )
-        f.write("# Creation Date: " + datetime.now().isoformat() + ";" + "\n")
-        f.write(
-            "# Description: Catalogue of events resulting from the HelioNER code (Dablanc & Génot, "
-            + '"https://github.com/ADablanc/BibHelioTech.git"'
-            + ") on the paper "
-            + '"'
-            + "https://doi.org/"
-            + str(DOI)
-            + '"'
-            + ". The two first columns are the start/stop times of the event. the third column is the DOI of the paper, the fourth column is the mission that observed the event with the list of instruments (1 or more) listed in the fifth column. The sixth column is the most probable region of space where the observation took place (SPASE ObservedRegions term);\n"
-        )
-        f.write("# Parameter 1: id:column1; name:DOI; size:1; type:char;" + "\n")
-        f.write("# Parameter 2: id:column2; name:SATS; size:1; type:char;" + "\n")
-        f.write("# Parameter 3: id:column3; name:INSTS; size:1; type:char;" + "\n")
-        f.write("# Parameter 4: id:column4; name:REGS; size:1; type:char;" + "\n")
-        f.write("# Parameter 5: id:column5; name:D; size:1; type:int;" + "\n")
-        f.write("# Parameter 6: id:column6; name:R; size:1; type:int;" + "\n")
-        f.write("# Parameter 7: id:column7; name:SO; size:1; type:int;" + "\n")
-        f.write("# Parameter 8: id:column8; name:occur_sat; size:1; type:int;" + "\n")
-        f.write(
-            "# Parameter 9: id:column9; name:nb_durations; size:1; type:int;" + "\n"
-        )
-        f.write("# Parameter 10: id:column10; name:conf; size:1; type:float;" + "\n")
-        compteur = 0
-        for elements in final_amda_list:
-            f.write(
-                elements["start_time"]
-                + " "
-                + elements["stop_time"]
-                + " "
-                + "https://doi.org/"
-                + str(elements["DOI"])
-                + " "
-                + '"'
-                + elements["sat"]
-                + '"'
-                + " "
-                + '"'
-                + elements["inst"].strip()
-                + '"'
-                + " "
-                + '"'
-                + elements["reg"]
-                + '"'
-                + " "
-                + str(elements["D"])
-                + " "
-                + str(elements["R"])
-                + " "
-                + str(elements["SO"])
-                + " "
-                + str(TSO["occur_sat"])
-                + " "
-                + str(TSO["nb_durations"])
-                + " "
-                + str(elements["conf"])
-                + " "
-                + "\n"
-            )
-            compteur += 1
+    catalog_name = DOI.translate(str.maketrans("", "", string.punctuation)) + "_bibheliotech_V" + "1.txt"
+
+    # add two more elements in hpevent dict:
+    tso_dict = {"occur_sat": str(TSO["occur_sat"]),
+                "nb_durations": str(TSO["nb_durations"])}
+    final_amda_list = [{**tso_dict, **hpevent_dict} for hpevent_dict in final_amda_list]
+
+    cat_as_txt = rows_to_catstring(final_amda_list, catalog_name)
+
+    with open(os.path.join(current_OCR_folder, catalog_name), "w", ) as f:
+        f.write(cat_as_txt)
 
 
 if __name__ == "__main__":
