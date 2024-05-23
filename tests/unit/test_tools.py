@@ -1,11 +1,14 @@
 from pprint import pprint
 
+import pytest
+
 from bht.catalog_tools import (
     catfile_to_rows,
     rows_to_catstring,
     row_to_dict,
     hpevent_keys_ordered,
     dict_to_row,
+    dict_to_dict,
 )
 from tools import StepLighter
 import json
@@ -82,6 +85,57 @@ class TestBhtTools:
         long_row = dict_to_row(_long_dict)
         assert len(long_row) == len(_long_dict.keys())
 
+    def test_upper_dict_to_row(self):
+        """
+        GIVEN an event dict with upper case keys
+        WHEN dict_to_row is called
+        THEN check no exception were raised
+        """
+        _upper_dict = {
+            "D": 1527,
+            "DOI": "10.1002/2015GL064052",
+            "R": 1,
+            "SO": 28,
+            "conf": 0.02775354416575791,
+            "occur_sat": 46,
+            "nb_durations": 22,
+            "insts": "FIPS",
+            "regs": "Mercury",
+            "sats": "MESSENGER",
+            "start_time": "2011-07-01T20:11:00.000",
+            "stop_time": "2011-07-01T20:14:59.999",
+        }
+        _row_from_upper = dict_to_row(_upper_dict)
+        try:
+            _row_from_upper = dict_to_row(_upper_dict)
+        except KeyError:
+            pytest.fail("Upper key should have been lowered")
+
+    def test_dict_to_dict(self):
+        """
+        GIVEN an event dict with wrong keys
+        WHEN dict_to_dict is applied
+        THEN check new dict has correct keys
+        @return:
+        """
+        _dict_with_wrong_keys = {
+            "D": 1527,
+            "DOI": "10.1002/2015GL064052",
+            "R": 1,
+            "SO": 28,
+            "conf": 0.02775354416575791,
+            "occur_sat": 46,
+            "nb_durations": 22,
+            "inst": "FIPS",
+            "reg": "Mercury",
+            "sat": "MESSENGER",
+            "start_time": "2011-07-01T20:11:00.000",
+            "stop_time": "2011-07-01T20:14:59.999",
+        }
+        _converted_dict = dict_to_dict(_dict_with_wrong_keys)
+        assert set(_converted_dict.keys()).issubset(hpevent_keys_ordered)
+        assert True
+
     def test_rows_to_catstring(self, cat_for_test):
         hp_events = catfile_to_rows(cat_for_test)
         cat_str = rows_to_catstring(
@@ -119,12 +173,4 @@ class TestBhtTools:
     def test_event_as_dict(self, small_cat_for_test):
         hp_events = catfile_to_rows(small_cat_for_test)
         first_event = hp_events[0]
-        awaited_keys = [
-            "doi",
-            "insts",
-            "sats",
-            "regs",
-            "start_time",
-            "stop_time",
-        ]
-        assert set(first_event.keys()).issubset(awaited_keys)
+        assert set(first_event.keys()).issubset(hpevent_keys_ordered)

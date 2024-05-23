@@ -52,6 +52,51 @@ def row_to_dict(event_row):
     return _r_dict
 
 
+def dict_to_dict(event_dict):
+    """
+    Sometimes, an incoming hpevent dictionnary needs tweaking to fullfill our standards:
+        - rewriting some keys
+        - converting keys string to lower case
+    @param event_dict:
+    @return:
+    """
+    # translate keys
+    key_matrix = {
+        "start_time": ["START_TIME", "start_date"],
+        "stop_time": ["STOP_TIME", "stop_date"],
+        "doi": ["DOI"],
+        "sats": ["SATS", "sat"],
+        "insts": ["INSTS", "inst"],
+        "regs": ["REGS", "reg"],
+        "d": ["D"],
+        "r": ["R"],
+        "so": ["SO"],
+        "occur_sat": ["OCCUR_SAT"],
+        "nb_durations": ["NB_DURATIONS"],
+        "conf": ["CONF"],
+    }
+    # replace any synonym key with the proper one
+    _proper_dict = {}
+    for proper_key, syn_keys in key_matrix.items():
+        for event_key, event_value in event_dict.items():
+            if event_key in syn_keys:
+                # convert key to proper one
+                _proper_dict[proper_key] = event_value
+            elif event_key in list(key_matrix.keys()):
+                # keep already proper key
+                _proper_dict[event_key] = event_value
+            else:
+                # well, don't keep that wrong key
+                pass
+
+    # convert incoming dict to a lowered keys dict
+    lowered_dict = {}
+    for k, v in _proper_dict.items():
+        lowered_dict[k.lower()] = v
+
+    return lowered_dict
+
+
 def dict_to_row(event_dict):
     """
     From an event dict, transform to a right ordered row values 'space' separated.
@@ -59,10 +104,17 @@ def dict_to_row(event_dict):
     @param event_dict:  hpevent dictionnary with variable number of keys
     @return:  row of the event's values
     """
+    # make a list of keys:
+    #   - ordered as expected
+    #   - with the same length as incoming dict
+    hpevent_keys = hpevent_keys_ordered[0:len(event_dict.keys())]
+
+    _converted_dict = dict_to_dict(event_dict)
+
+    # transform to row of values
     _r_row = []
-    hpevent_keys = hpevent_keys_ordered[0 : len(event_dict.keys())]
     for _k in hpevent_keys:
-        _r_row.append(event_dict[_k])
+        _r_row.append(_converted_dict[_k])
     return _r_row
 
 
@@ -109,6 +161,8 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
             continue
         r_string += f'# Parameter {p_index}: id:column{p_index}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
         p_index += 1
+
+    # Dump dicts as rows
     for e in events_list:
         r_string += f"{e['start_time']} {e['stop_time']} {e['doi']} {e['sats']} {e['insts']} {e['regs']}\n"
     return r_string
