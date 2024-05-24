@@ -250,6 +250,26 @@ class Paper(db.Model):
         db.session.commit()
 
     @property
+    def pipeline_version(self):
+        """
+        Read from catalog file and grab pipeline version number
+        """
+        import re
+        p = re.compile("# BibHelioTechVersion: V(\d[\d.]*);")
+        if not self.has_cat:
+            return "NoVerNum"
+        with open(self.cat_path) as f:
+            version_number = None
+            lines = f.readlines()
+            for _l in lines:
+                _m = p.match(_l)
+                if _m is not None:
+                    version_number = _m.group(1)
+                    break
+
+        return version_number
+
+    @property
     def has_cat(self):
         try:
             has_cat = os.path.isfile(self.cat_path)
