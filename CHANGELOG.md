@@ -28,6 +28,12 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.10.0] - 2024-05-27 Insert and show PipelineVersionNum
+### Changed
+- Refactor catalogs generation code into rewritten methods
+### New
+- Pipeline_Version inserted in db and displayed
+
 ## [0.9.0] - 2024-05-14 Fix Sutime Filter (2)
 ### Fixed
 - Now keep DURATION  without 'timex-value'

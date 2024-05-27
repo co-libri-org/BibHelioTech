@@ -14,23 +14,20 @@ skip_selenium = pytest.mark.skipif(
     os.environ.get("BHT_SKIP_SELENIUM") is not None
     and os.environ.get("BHT_SKIP_SELENIUM"),
     reason="SELENIUM Skipping",
-    )
+)
 
 skip_bht = pytest.mark.skipif(
-    os.environ.get("BHT_SKIP_BHT") is not None
-    and os.environ.get("BHT_SKIP_BHT"),
+    os.environ.get("BHT_SKIP_BHT") is not None and os.environ.get("BHT_SKIP_BHT"),
     reason="BHT skipping (too long)",
 )
 
 skip_istex = pytest.mark.skipif(
-    os.environ.get("BHT_SKIP_ISTEX") is not None
-    and os.environ.get("BHT_SKIP_ISTEX"),
+    os.environ.get("BHT_SKIP_ISTEX") is not None and os.environ.get("BHT_SKIP_ISTEX"),
     reason="ISTEX skipping (no auth)",
 )
 
 skip_slow_test = pytest.mark.skipif(
-    os.environ.get("BHT_SKIP_SLOW") is not None
-    and os.environ.get("BHT_SKIP_SLOW"),
+    os.environ.get("BHT_SKIP_SLOW") is not None and os.environ.get("BHT_SKIP_SLOW"),
     reason="Slow test skipping",
 )
 
@@ -165,6 +162,22 @@ def pdf_for_test():
 @pytest.fixture(scope="module")
 def cat_for_test():
     filename = "105194angeo282332010_bibheliotech_V1.txt"
+    test_cat_file_orig = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"],
+        filename,
+    )
+    test_cat_file_dest = os.path.join(current_app.config["BHT_PAPERS_DIR"], filename)
+    shutil.copy(test_cat_file_orig, test_cat_file_dest)
+    #
+    yield test_cat_file_dest
+    #
+    if os.path.isfile(test_cat_file_dest):
+        os.remove(test_cat_file_dest)
+
+
+@pytest.fixture(scope="module")
+def small_cat_for_test():
+    filename = "small_catalog.txt"
     test_cat_file_orig = os.path.join(
         current_app.config["BHT_RESOURCES_DIR"],
         filename,

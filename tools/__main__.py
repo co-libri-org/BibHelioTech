@@ -5,7 +5,8 @@ import os
 import re
 import shutil
 
-from tools import ToolsError, enlight_txt
+from tools import enlight_txt
+from tools.tools_errors import ToolsError
 
 
 def build_highlight(txt_filepath, json_filepath, dest_dir):

@@ -8,7 +8,6 @@ __all__ = [
 ]
 
 BHT_ROOT_DIR = os.path.dirname(__file__)
-BHT_PIPELINE_VERSION = "1"
 
 config_file = os.path.join(BHT_ROOT_DIR, "bht-config.yml")
 if not os.path.isfile(config_file):
@@ -17,11 +16,13 @@ if not os.path.isfile(config_file):
 with open(config_file) as f:
     yml_settings = yaml.safe_load(f)
 
-yml_settings["BHT_PIPELINE_VERSION"] = BHT_PIPELINE_VERSION
 yml_settings["BHT_LOGFILE_PATH"] = os.path.join(BHT_ROOT_DIR, yml_settings["BHT_LOGFILE_NAME"])
 
 with open(os.path.join(BHT_ROOT_DIR, "VERSION.txt")) as version_file:
     yml_settings["VERSION"] = version_file.read().strip()
+
+with open(os.path.join(BHT_ROOT_DIR, "bht", "PIPELINE_VERSION.txt")) as pipeline_version_file:
+    yml_settings["BHT_PIPELINE_VERSION"] = pipeline_version_file.read().strip()
 
 if not os.path.isabs(yml_settings["BHT_DATA_DIR"]):
     yml_settings["BHT_DATA_DIR"] = os.path.join(

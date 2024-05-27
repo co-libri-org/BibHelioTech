@@ -483,7 +483,9 @@ def SUTime_transform(current_OCR_folder):
                 )
         compteur_dicts += 1
 
-    raw_dumper.dump_to_raw(JSON_list, "Resolution of XXXX to closest year in text", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        JSON_list, "Resolution of XXXX to closest year in text", current_OCR_folder
+    )
 
     for dicts in JSON_list:
         try:
@@ -657,57 +659,62 @@ def SUTime_transform(current_OCR_folder):
                 dicts["value"] += "-15"
         compteur_dicts += 1
 
-    raw_dumper.dump_to_raw(JSON_list, "Date rewriting: add day number to short date", current_OCR_folder)
+    raw_dumper.dump_to_raw(
+        JSON_list, "Date rewriting: add day number to short date", current_OCR_folder
+    )
 
     compteur = 0
     for dicts in JSON_list:
         # addition of the nearest date contained in a DATE or DURATION when faced with a DURATION in the format {begin: T<one time>, end: T<one time>} (no date)
         try:
-            if dicts["type"] == "DURATION":
-                if "begin" in dicts["value"] and "end" in dicts["value"]:
-                    if re.search("^T.*", dicts["value"]["begin"]) and re.search(
-                        "^T.*", dicts["value"]["end"]
-                    ):
-                        nearest = nearest_date(JSON_list, compteur)
-                        if nearest["type"] == "DATE":
-                            temp = {
-                                "begin": nearest["value"] + dicts["value"]["begin"],
-                                "end": nearest["value"] + dicts["value"]["end"],
-                            }
-                            dicts["value"] = temp
-                        elif nearest["type"] == "DURATION":
-                            temp = {
-                                "begin": nearest["value"]["begin"]
-                                + dicts["value"]["begin"],
-                                "end": nearest["value"]["end"] + dicts["value"]["end"],
-                            }
-                            dicts["value"] = temp
-                    elif re.search("^T.*", dicts["value"]["begin"]) and re.search(
-                        "(([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})).*",
-                        dicts["value"]["end"],
-                    ):  # case date in one but not in the other
+            if (
+                dicts["type"] == "DURATION"
+                and "begin" in dicts["value"]
+                and "end" in dicts["value"]
+            ):
+                if re.search("^T.*", dicts["value"]["begin"]) and re.search(
+                    "^T.*", dicts["value"]["end"]
+                ):
+                    nearest = nearest_date(JSON_list, compteur)
+                    if nearest["type"] == "DATE":
                         temp = {
-                            "begin": re.match(
-                                "(([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})).*",
-                                dicts["value"]["end"],
-                            ).group(1)
+                            "begin": nearest["value"] + dicts["value"]["begin"],
+                            "end": nearest["value"] + dicts["value"]["end"],
+                        }
+                        dicts["value"] = temp
+                    elif nearest["type"] == "DURATION":
+                        temp = {
+                            "begin": nearest["value"]["begin"]
                             + dicts["value"]["begin"],
-                            "end": dicts["value"]["end"],
+                            "end": nearest["value"]["end"] + dicts["value"]["end"],
                         }
                         dicts["value"] = temp
-                    elif re.search("^T.*", dicts["value"]["end"]) and re.search(
-                        "(([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})).*",
-                        dicts["value"]["begin"],
-                    ):  # case date in one but not in the other
-                        temp = {
-                            "begin": dicts["value"]["begin"],
-                            "end": re.match(
-                                "(([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})).*",
-                                dicts["value"]["begin"],
-                            ).group(1)
-                            + dicts["value"]["end"],
-                        }
-                        dicts["value"] = temp
+                elif re.search("^T.*", dicts["value"]["begin"]) and re.search(
+                    "(([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})).*",
+                    dicts["value"]["end"],
+                ):  # case date in one but not in the other
+                    temp = {
+                        "begin": re.match(
+                            "(([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})).*",
+                            dicts["value"]["end"],
+                        ).group(1)
+                        + dicts["value"]["begin"],
+                        "end": dicts["value"]["end"],
+                    }
+                    dicts["value"] = temp
+                elif re.search("^T.*", dicts["value"]["end"]) and re.search(
+                    "(([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})).*",
+                    dicts["value"]["begin"],
+                ):  # case date in one but not in the other
+                    temp = {
+                        "begin": dicts["value"]["begin"],
+                        "end": re.match(
+                            "(([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})).*",
+                            dicts["value"]["begin"],
+                        ).group(1)
+                        + dicts["value"]["end"],
+                    }
+                    dicts["value"] = temp
 
         except:
             continue
@@ -724,7 +731,10 @@ def SUTime_transform(current_OCR_folder):
             except parser.ParserError:
                 continue
             end_date = begin_date + timedelta(days=1) - timedelta(seconds=1)
-            elmnt["value"]={"begin": begin_date.isoformat(), "end": end_date.isoformat()}
+            elmnt["value"] = {
+                "begin": begin_date.isoformat(),
+                "end": end_date.isoformat(),
+            }
             elmnt["type"] = "DURATION"
     raw_dumper.dump_to_raw(
         JSON_list, "Change type DATE to DURATION", current_OCR_folder

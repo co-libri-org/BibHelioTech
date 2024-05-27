@@ -27,7 +27,8 @@ from flask import (
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, rows_to_catstring, BhtFileType
+from web.models import Paper, Mission, HpEvent, BhtFileType
+from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
     get_file_from_url,
@@ -667,7 +668,7 @@ def api_catalogs():
     """
     mission_id = request.args.get("mission_id")
     mission = Mission.query.get(mission_id)
-    # TODO: REFACTOR extract to method and merge common code
+    # TODO: REFACTOR extract to event model method and merge common code with api_catalog_txt
     events_list = [
         event.get_dict()
         for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
@@ -690,7 +691,12 @@ def api_catalogs():
 
 @bp.route("/api/catalogs/txt", methods=["GET"])
 def api_catalogs_txt():
-    """Download the txt version of the catalog for the mission
+    """Download the txt version of the catalog for the given mission
+
+    To do that,
+     - retrieve from db all events related to that mission id
+     - Dump this events list to a text file.
+
 
     :parameter: mission_id  in get request
     :return: catalog text file as attachment
@@ -702,7 +708,7 @@ def api_catalogs_txt():
             f"No valid parameters for url: {mission_id} {mission}",
             status=400,
         )
-    # TODO: REFACTOR extract to method and merge common code
+    # TODO: REFACTOR extract to method and merge common code with api_catalogs
     events_list = [
         event.get_dict()
         for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
@@ -712,6 +718,7 @@ def api_catalogs_txt():
     catalog_txt_stream = rows_to_catstring(events_list, mission.name)
     date_now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     bht_pipeline_version = current_app.config["BHT_PIPELINE_VERSION"]
+    # TODO: build catalog name else where, may be from some bht.method()
     file_name = f"{mission.name}_{date_now}_bibheliotech_V{bht_pipeline_version}.txt"
     upload_dir = current_app.config["WEB_UPLOAD_DIR"]
     if not os.path.exists(upload_dir):
