@@ -97,6 +97,36 @@ def dict_to_dict(event_dict):
     return lowered_dict
 
 
+def dict_to_string(event_dict):
+    """
+    From an event dict, transform to a string as expected in catalog line
+
+    @param event_dict:  hpevent dictionnary with variable number of keys
+    @return:  row as a string for catalog
+    """
+    # make a list of keys:
+    #   - ordered as expected
+    #   - with the same length as incoming dict
+    hpevent_keys = hpevent_keys_ordered[0 : len(event_dict.keys())]
+
+    _c_dict = dict_to_dict(event_dict)
+
+    _r_str = ""
+    # transform to row of values
+    for _k in hpevent_keys:
+        if hpevent_parameters[_k]["type"] == "char":
+            _r_str += f'"{_c_dict[_k]}"'
+        elif hpevent_parameters[_k]["type"] == "int":
+            _r_str += f"{_c_dict[_k]}"
+        elif hpevent_parameters[_k]["type"] == "float":
+            _r_str += f"{_c_dict[_k]:.5f}"
+        else:
+            _r_str += f"{_c_dict[_k]}"
+        _r_str += " "
+
+    return _r_str.strip()
+
+
 def dict_to_row(event_dict):
     """
     From an event dict, transform to a right ordered row values 'space' separated.
@@ -107,7 +137,7 @@ def dict_to_row(event_dict):
     # make a list of keys:
     #   - ordered as expected
     #   - with the same length as incoming dict
-    hpevent_keys = hpevent_keys_ordered[0:len(event_dict.keys())]
+    hpevent_keys = hpevent_keys_ordered[0 : len(event_dict.keys())]
 
     _converted_dict = dict_to_dict(event_dict)
 
@@ -164,9 +194,7 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
 
     # Dump dicts as rows after converting
     for e in events_list:
-        _row = dict_to_row(e)
-        _row_as_string = " ".join(_row)
-        r_string += _row_as_string
+        r_string += dict_to_string(e) + "\n"
     return r_string
 
 
