@@ -255,11 +255,11 @@ class Paper(db.Model):
         Read from catalog file and grab pipeline version number
         """
         import re
-        p = re.compile("# BibHelioTechVersion: V(\d[\d.]*);")
+        version_number = ""
         if not self.has_cat:
-            return "NoVerNum"
+            return version_number
+        p = re.compile("# BibHelioTechVersion: V(\d[\d.]*);")
         with open(self.cat_path) as f:
-            version_number = None
             lines = f.readlines()
             for _l in lines:
                 _m = p.match(_l)

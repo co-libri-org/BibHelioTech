@@ -66,9 +66,14 @@
                title="Get txt file" {{disabled(not paper.has_txt)}}>txt</a>
         </td>
         <td>
+            {% if paper.pipeline_version == ""%}
+            {%set cat_txt = "cat"%}
+            {% else %}
+            {%set cat_txt = paper.pipeline_version %}
+            {% endif %}
             <a class="btn btn-warning cat-link position-relative" id="cat-link-{{paper.id}}"
                href="{{url_for('main.cat', paper_id=paper.id)}}"
-               title="Get catalog file{{' (not in db)' if not paper.cat_in_db}}" {{disabled(not paper.has_cat)}}>cat
+               title="Get catalog file {{paper.pipeline_version}} {{' (not in db)' if not paper.cat_in_db}}" {{disabled(not paper.has_cat)}}>{{cat_txt}}
                 {% if paper.has_cat and not paper.cat_in_db %}
                 {%set circle_visibility = "visible"%}
                 {% else %}
@@ -80,7 +85,7 @@
         </td>
         <td>
             <button class='btn btn-warning run-bht'
-                    title="Run bht pipeline on PDF file"
+                    title="Run bht pipeline {{config.BHT_PIPELINE_VERSION}} on PDF file"
                     data-paper_id="{{paper.id}}"
                     data-file_type="pdf"
                     {{disabled(not paper.has_pdf)}}>
@@ -89,7 +94,7 @@
         </td>
         <td>
             <button class='btn btn-warning run-bht'
-                    title="Run bht pipeline on TXT file"
+                    title="Run bht pipeline {{config.BHT_PIPELINE_VERSION}} on TXT file"
                     data-paper_id="{{paper.id}}"
                     data-file_type="txt"
                     {{disabled(not paper.has_txt)}}>
