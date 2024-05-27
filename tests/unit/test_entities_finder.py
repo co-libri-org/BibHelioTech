@@ -42,6 +42,13 @@ class TestEntitiesFinder:
         sat_dict_list = sat_recognition(article_as_str, sat_dict)
         assert len(sat_dict_list) == 39
 
+    def test_sat_recognition_with_chars(self, so_article, data_frames):
+        sat_dict = data_frames[DataBankSheet.SATS]
+        sat_dict_list = sat_recognition(so_article, sat_dict)
+        from pprint import pprint
+        pprint(sat_dict_list)
+        assert len(sat_dict_list) == 5
+
     def test_inst_recognition(self, article_as_str, data_frames):
         inst_dict = data_frames[DataBankSheet.INSTR]
         inst_dict_list = inst_recognition(article_as_str, inst_dict)

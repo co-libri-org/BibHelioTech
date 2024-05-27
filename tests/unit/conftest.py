@@ -133,6 +133,19 @@ def article_as_str():
 
 
 @pytest.fixture(scope="module")
+def so_article():
+    """Article with 'solar orbiter' occurences"""
+    data_dir = "ark_67375_WNG-HPV609C7-D"
+    article_name = "89F0BCBFFBEA0751EECFDBF93D2496624C4F99BA.cleaned"
+    article_as_txt_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], article_name
+    )
+    with open(article_as_txt_path, "r") as file:
+        _article_as_str = file.read()
+    yield _article_as_str
+
+
+@pytest.fixture(scope="module")
 def ocr_dir_test(tmp_path_factory):
     data_dir = "ark_67375_WNG-HPV609C7-D"
     ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)

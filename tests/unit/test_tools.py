@@ -54,7 +54,6 @@ class TestBhtTools:
         WHEN dict_to_row is called
         THEN check no exception were raised
         """
-        _row_from_upper = dict_to_row(wrong_keys_dict)
         try:
             _row_from_upper = dict_to_row(wrong_keys_dict)
         except KeyError:
