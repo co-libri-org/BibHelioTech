@@ -3,6 +3,7 @@ import collections
 import copy
 from datetime import *
 
+from bht_config import yml_settings
 from bht.DOI_finder import *
 from bht.bht_logging import init_logger
 from bht.catalog_tools import rows_to_catstring
@@ -1234,7 +1235,9 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     print("\n")
     # =============================================================================================================================================================
 
-    catalog_name = DOI.translate(str.maketrans("", "", string.punctuation)) + "_bibheliotech_V" + "1.txt"
+    translated_doi = DOI.translate(str.maketrans("", "", string.punctuation))
+    bht_pipeline_version = yml_settings["BHT_PIPELINE_VERSION"]
+    catalog_name = f"{translated_doi}_bibheliotech_V{bht_pipeline_version}.txt"
 
     # add two more elements in hpevent dict:
     tso_dict = {"occur_sat": str(TSO["occur_sat"]),
@@ -1243,8 +1246,11 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     cat_as_txt = rows_to_catstring(final_amda_list, catalog_name)
 
-    with open(os.path.join(current_OCR_folder, catalog_name), "w", ) as f:
+    catalog_path = os.path.join(current_OCR_folder, catalog_name)
+    with open(catalog_path, "w", ) as f:
         f.write(cat_as_txt)
+
+    return catalog_path
 
 
 if __name__ == "__main__":

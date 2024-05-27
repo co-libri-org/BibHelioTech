@@ -86,11 +86,7 @@ def run_step_sutime(dest_pdf_dir):
 
 def run_step_entities(dest_pdf_dir, doc_meta_info=None):
     _logger.info("BHT PIPELINE STEP 5: Search Entities")
-    entities_finder(dest_pdf_dir, doc_meta_info)
-    search_pattern = os.path.join(dest_pdf_dir, "**", "*bibheliotech*.txt")
-    _logger.debug(f"searching {search_pattern}")
-    result_catalogs = glob.glob(search_pattern, recursive=True)
-    catalog_file = result_catalogs[0]
+    catalog_file = entities_finder(dest_pdf_dir, doc_meta_info)
     return catalog_file
 
 

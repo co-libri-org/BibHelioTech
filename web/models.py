@@ -161,12 +161,13 @@ class Paper(db.Model):
     def __repr__(self):
         return f"""<Paper #{self.id}
         title:    {self.title}
+        doi:      {self.doi}
+        ark:      {self.ark}
+        istex_id: {self.istex_id}
         pdf:      {self.pdf_path}
         txt:      {self.txt_path}
         cat:      {self.cat_path}
-        doi:      {self.doi}
-        ark:      {self.ark}
-        istex_id: {self.istex_id}>"""
+        pipe_ver: {self.pipeline_version}>"""
 
     def set_task_id(self, task_id):
         self.task_id = task_id
