@@ -28,6 +28,11 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.11.0-dev] - 2024-06-xx ..................................
+### Fixed
+### Changed
+### New
+
 ## [0.10.0] - 2024-05-27 Insert and show PipelineVersionNum
 ### Changed
 - Refactor catalogs generation code into rewritten methods
