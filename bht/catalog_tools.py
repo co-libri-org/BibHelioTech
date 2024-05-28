@@ -119,16 +119,16 @@ def dict_to_string(event_dict, values_lengths=None):
         _key_type = hpevent_parameters[_k]["type"]
         _key_value = event_dict[_k]
         if _key_type == "date" or _k == "doi":
-            _r_str += f'{_key_value}'
+            _r_str += f"{_key_value}"
         elif _key_type == "char":
             _key_value = f'"{_key_value}"'
-            _r_str += f'{_key_value:<{_key_length+2}}'
+            _r_str += f"{_key_value:<{_key_length+2}}"
         elif _key_type == "int":
             _key_value = int(_key_value)
-            _r_str += f'{_key_value:>{_key_length}}'
+            _r_str += f"{_key_value:>{_key_length}}"
         elif _key_type == "float":
             _key_value = float(_key_value)
-            _r_str += f'{_key_value:.5f}'
+            _r_str += f"{_key_value:.5f}"
         else:
             raise Exception(f"No Such Type <{_key_type}>")
         _r_str += _value_separator
@@ -173,6 +173,10 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
     """
     r_string = textwrap.dedent(r_string)
 
+    #
+    # TODO: rewrite with for i, c in enumerate(columns):
+    #
+
     # Print parameters header
     #
     p_index = 0
@@ -181,6 +185,11 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
             continue
         r_string += f'# Parameter {p_index}: id:column{p_index}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
         p_index += 1
+
+    for i, e in enumerate(events_list):
+        e = dict_to_dict(e)
+        e = {k: e[k] for k in columns}
+        events_list[i] = e
 
     # store max lengths in a dictionnary with same keys as events
     values_lengths = {k: [] for k in events_list[0].keys()}
@@ -196,8 +205,6 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
 
     # Dump dicts as rows after converting
     for e in events_list:
-        # reduce dict to given columns
-        e = {k:e[k] for k in columns}
         r_string += dict_to_string(e, values_lengths) + "\n"
     return r_string
 
