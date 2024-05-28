@@ -104,6 +104,8 @@ def dict_to_string(event_dict):
     @param event_dict:  hpevent dictionnary with variable number of keys
     @return:  row as a string for catalog
     """
+
+    _value_separator = " "
     # make a list of keys:
     #   - ordered as expected
     #   - with the same length as incoming dict
@@ -112,18 +114,25 @@ def dict_to_string(event_dict):
     _c_dict = dict_to_dict(event_dict)
 
     _r_str = ""
-    # transform to row of values
+    # transform to row of values, concatenation on oneline by ordered keys
     for _k in hpevent_keys:
-        if hpevent_parameters[_k]["type"] == "char":
-            _r_str += f'"{_c_dict[_k]}"'
-        elif hpevent_parameters[_k]["type"] == "int":
-            _r_str += f"{_c_dict[_k]}"
-        elif hpevent_parameters[_k]["type"] == "float":
-            _r_str += f"{_c_dict[_k]:.5f}"
+        _key_type = hpevent_parameters[_k]["type"]
+        _key_value = _c_dict[_k]
+        if _key_type == "date" or _k == "doi":
+            _r_str += f'{_key_value}'
+        elif _key_type == "char":
+            _r_str += f'"{_key_value}"'
+        elif _key_type == "int":
+            _key_value = int(_key_value)
+            _r_str += f'{_key_value}'
+        elif _key_type == "float":
+            _key_value = float(_key_value)
+            _r_str += f'{_key_value:.5f}'
         else:
-            _r_str += f"{_c_dict[_k]}"
-        _r_str += " "
+            raise Exception(f"No Such Type <{_key_type}>")
+        _r_str += _value_separator
 
+    # remove leading/trailing slashes
     return _r_str.strip()
 
 
