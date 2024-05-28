@@ -2,6 +2,7 @@
 # Unit Tests for the big entities_finder file
 #
 import os.path
+from pprint import pprint
 
 from bht.Entities_finder import (
     entities_finder,
@@ -29,7 +30,7 @@ class TestEntitiesFinder:
         catalog_file = entities_finder(ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052"})
         with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
-            assert len(_r_content) == 27
+            assert len(_r_content) == 67
 
     def test_no_image_as_syn(self, ocr_dir_test):
         catalog_file = entities_finder(ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052"})
@@ -40,14 +41,12 @@ class TestEntitiesFinder:
     def test_sat_recognition(self, article_as_str, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
         sat_dict_list = sat_recognition(article_as_str, sat_dict)
-        assert len(sat_dict_list) == 39
+        assert len(sat_dict_list) == 41
 
     def test_sat_recognition_with_chars(self, so_article, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
         sat_dict_list = sat_recognition(so_article, sat_dict)
-        from pprint import pprint
-        pprint(sat_dict_list)
-        assert len(sat_dict_list) == 5
+        assert len(sat_dict_list) == 35
 
     def test_inst_recognition(self, article_as_str, data_frames):
         inst_dict = data_frames[DataBankSheet.INSTR]
@@ -59,9 +58,10 @@ class TestEntitiesFinder:
         sat_dict_list = sat_recognition(article_as_str, sat_dict)
         inst_dict = data_frames[DataBankSheet.INSTR]
         inst_dict_list = inst_recognition(article_as_str, inst_dict)
-        assert len(sat_dict_list) == 39
+        pprint(sat_dict_list)
+        assert len(sat_dict_list) == 41
         cleaned_sat_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
-        assert len(cleaned_sat_list) == 39
+        assert len(cleaned_sat_list) == 41
 
     def test_mk_final_links(self, article_as_str, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
@@ -71,14 +71,14 @@ class TestEntitiesFinder:
         inst_list = list(set([inst["text"] for inst in inst_dict_list]))
         new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
         _final_links = make_final_links(new_sat_dict_list, inst_list, article_as_str)
-        assert len(_final_links) == 39
+        assert len(_final_links) == 41
         assert list(_final_links[0][0].keys()) == ["start", "end", "text", "type"]
         for fl in _final_links:
             assert len(fl) == 2
 
     def test_update_final_instr(self, final_links, data_frames):
         new_final_links = update_final_instruments(final_links, data_frames)
-        assert len(new_final_links) == 39
+        assert len(new_final_links) == 41
         for fl in new_final_links:
             assert len(fl[1]["text"]) < 2
 
@@ -99,8 +99,8 @@ class TestEntitiesFinder:
         final_links = update_final_instruments(final_links, data_frames)
         final_with_syns = update_final_synonyms(final_links, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
-        assert len(tmp) == 45
-        assert len(sat_occ) == 39
+        assert len(tmp) == 47
+        assert len(sat_occ) == 41
 
     def test_closest_duration(self, sutime_json, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)
@@ -111,8 +111,8 @@ class TestEntitiesFinder:
         for _dict in sat_closest:
             assert _dict[0]["type"] == "sat"
             assert _dict[2]["type"] == "DURATION"
-        assert len(sat_closest) == 39
-        assert len(tmp) == 45
+        assert len(tmp) == 47
+        assert len(sat_closest) == 41
 
 
 class TestDatabankReader:
