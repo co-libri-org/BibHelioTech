@@ -97,10 +97,11 @@ def dict_to_dict(event_dict):
     return lowered_dict
 
 
-def dict_to_string(event_dict):
+def dict_to_string(event_dict, values_lengths=None):
     """
     From an event dict, transform to a string as expected in catalog line
 
+    @param values_lengths:
     @param event_dict:  hpevent dictionnary with variable number of keys
     @return:  row as a string for catalog
     """
@@ -116,15 +117,17 @@ def dict_to_string(event_dict):
     _r_str = ""
     # transform to row of values, concatenation on oneline by ordered keys
     for _k in hpevent_keys:
+        _key_length = 0 if values_lengths is None else values_lengths[_k]
         _key_type = hpevent_parameters[_k]["type"]
         _key_value = _c_dict[_k]
         if _key_type == "date" or _k == "doi":
             _r_str += f'{_key_value}'
         elif _key_type == "char":
-            _r_str += f'"{_key_value}"'
+            _key_value = f'"{_key_value}"'
+            _r_str += f'{_key_value:<{_key_length+2}}'
         elif _key_type == "int":
             _key_value = int(_key_value)
-            _r_str += f'{_key_value}'
+            _r_str += f'{_key_value:>{_key_length}}'
         elif _key_type == "float":
             _key_value = float(_key_value)
             _r_str += f'{_key_value:.5f}'
@@ -201,9 +204,21 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
         r_string += f'# Parameter {p_index}: id:column{p_index}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
         p_index += 1
 
+    # store max lengths in a dictionnary with same keys as events
+    values_lengths = {k: [] for k in events_list[0].keys()}
+    # first, fill keys with a table of all length
+    for e in events_list:
+        for k, v in e.items():
+            vl = len(str(v))
+            values_lengths[k].append(vl)
+    # then get max only
+    for k, v in values_lengths.items():
+        max_length = max(values_lengths[k])
+        values_lengths[k] = max_length
+
     # Dump dicts as rows after converting
     for e in events_list:
-        r_string += dict_to_string(e) + "\n"
+        r_string += dict_to_string(e, values_lengths) + "\n"
     return r_string
 
 
