@@ -110,16 +110,14 @@ def dict_to_string(event_dict, values_lengths=None):
     # make a list of keys:
     #   - ordered as expected
     #   - with the same length as incoming dict
-    hpevent_keys = hpevent_keys_ordered[0 : len(event_dict.keys())]
-
-    _c_dict = dict_to_dict(event_dict)
+    hpevent_keys = hpevent_keys_ordered[0: len(event_dict.keys())]
 
     _r_str = ""
     # transform to row of values, concatenation on oneline by ordered keys
     for _k in hpevent_keys:
         _key_length = 0 if values_lengths is None else values_lengths[_k]
         _key_type = hpevent_parameters[_k]["type"]
-        _key_value = _c_dict[_k]
+        _key_value = event_dict[_k]
         if _key_type == "date" or _k == "doi":
             _r_str += f'{_key_value}'
         elif _key_type == "char":
