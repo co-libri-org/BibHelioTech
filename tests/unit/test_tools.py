@@ -8,6 +8,7 @@ from bht.catalog_tools import (
     row_to_dict,
     hpevent_keys_ordered,
     dict_to_row,
+    dict_to_string,
     dict_to_dict,
 )
 from tools import StepLighter
@@ -47,6 +48,12 @@ class TestBhtTools:
         assert len(small_row) == len(small_event_dict.keys())
         long_row = dict_to_row(long_event_dict)
         assert len(long_row) == len(long_event_dict.keys())
+
+    def test_dict_to_string(self, small_event_dict, long_event_dict):
+        small_string = dict_to_string(small_event_dict)
+        assert len(small_string.split(" ")) == len(small_event_dict.keys())
+        long_string = dict_to_string(long_event_dict)
+        assert len(long_string.split(" ")) == len(long_event_dict.keys())
 
     def test_upper_dict_to_row(self, wrong_keys_dict):
         """
