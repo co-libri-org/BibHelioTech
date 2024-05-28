@@ -182,23 +182,13 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
     """
     r_string = textwrap.dedent(r_string)
 
-    #
-    # TODO: rewrite with for i, c in enumerate(columns):
-    #
-
     # Print parameters header
-    #
-    p_index = 0
-    for k, v in hpevent_parameters.items():
-        if k not in columns:
-            continue
-        r_string += f'# Parameter {p_index}: id:column{p_index}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
-        p_index += 1
+    for i, c in enumerate(columns):
+        v = hpevent_parameters[c]
+        r_string += f'# Parameter {i}: id:column{i}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
 
-    for i, e in enumerate(events_list):
-        e = dict_to_dict(e)
-        e = {k: e[k] for k in columns}
-        events_list[i] = e
+    # Rewrite every dict in list
+    events_list = [dict_to_dict(e) for e in events_list]
 
     # store max lengths in a dictionnary with same keys as events
     values_lengths = {k: [] for k in events_list[0].keys()}
