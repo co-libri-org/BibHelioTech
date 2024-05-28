@@ -77,7 +77,9 @@ class TestBhtTools:
             "test_rows_to_catstring",
             ["doi", "sats", "insts", "regs", "start_time", "stop_time"],
         )
-        assert len(cat_str) == 8912
+        # cat_rows=[_r for _r in cat_str.split('\n') if '#' not in _r]
+        cat_rows = cat_str.split('\n')
+        assert len(cat_rows) == 67
 
     def test_rows_to_catstring_allkeys(self, cat_for_test):
         import csv

@@ -197,6 +197,7 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
     r_string = textwrap.dedent(r_string)
 
     # Print parameters header
+    #
     p_index = 0
     for k, v in hpevent_parameters.items():
         if k not in columns:
@@ -218,6 +219,8 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
 
     # Dump dicts as rows after converting
     for e in events_list:
+        # reduce dict to given columns
+        e = {k:e[k] for k in columns}
         r_string += dict_to_string(e, values_lengths) + "\n"
     return r_string
 
