@@ -52,14 +52,19 @@ def row_to_dict(event_row):
     return _r_dict
 
 
-def dict_to_dict(event_dict):
+def dict_to_dict(event_dict, columns=None):
     """
     Sometimes, an incoming hpevent dictionnary needs tweaking to fullfill our standards:
         - rewriting some keys
         - converting keys string to lower case
+    @param columns:
     @param event_dict:
     @return:
     """
+
+    if columns is None:
+        columns = list(hpevent_parameters.keys())
+
     # translate keys
     key_matrix = {
         "start_time": ["START_TIME", "start_date"],
@@ -75,6 +80,7 @@ def dict_to_dict(event_dict):
         "nb_durations": ["NB_DURATIONS"],
         "conf": ["CONF"],
     }
+
     # replace any synonym key with the proper one
     _proper_dict = {}
     for proper_key, syn_keys in key_matrix.items():
@@ -94,7 +100,10 @@ def dict_to_dict(event_dict):
     for k, v in _proper_dict.items():
         lowered_dict[k.lower()] = v
 
-    return lowered_dict
+    # keep only given columns
+    _r_dict = {k: lowered_dict[k] for k in columns}
+
+    return _r_dict
 
 
 def dict_to_string(event_dict, values_lengths=None):
@@ -110,7 +119,7 @@ def dict_to_string(event_dict, values_lengths=None):
     # make a list of keys:
     #   - ordered as expected
     #   - with the same length as incoming dict
-    hpevent_keys = hpevent_keys_ordered[0: len(event_dict.keys())]
+    hpevent_keys = hpevent_keys_ordered[0 : len(event_dict.keys())]
 
     _r_str = ""
     # transform to row of values, concatenation on oneline by ordered keys
