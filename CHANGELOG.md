@@ -28,7 +28,12 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
-## [0.11.0-dev] - 2024-05-28 Fix mission detection
+## [0.12.0-dev] - 2024-06-xx ---------------------
+### Fixed
+### Changed
+### New
+
+## [0.11.0] - 2024-05-28 Fix mission detection
 ### Fixed
 - Detect mission into parenthesis
 ### Changed
