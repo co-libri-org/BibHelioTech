@@ -280,15 +280,15 @@ def sat_recognition(content_as_str, sats_dict):
         synonyms.extend(_s)
     for syn in synonyms:
         test = re.finditer("[;( \n]" + syn + "[;)., ]", content_as_str)
-        # test = re.finditer(syn, content_as_str)
-        sat_dict_list += [
+        for matches in test:
+            _text  = re.sub("[(\n.,)]", "", matches.group()).strip()
+            sat_dict_list += [
             {
                 "start": matches.start(),
                 "end": matches.end(),
-                "text": re.sub("(\n|\.|,)", "", matches.group()).strip(),
+                "text": _text,
                 "type": "sat",
             }
-            for matches in test
         ]
     sat_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
     return sat_dict_list
