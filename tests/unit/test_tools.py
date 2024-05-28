@@ -1,5 +1,3 @@
-from pprint import pprint
-
 import pytest
 
 from bht.catalog_tools import (
@@ -7,7 +5,7 @@ from bht.catalog_tools import (
     rows_to_catstring,
     row_to_dict,
     hpevent_keys_ordered,
-    dict_to_row,
+    dict_to_string,
     dict_to_dict,
 )
 from tools import StepLighter
@@ -42,23 +40,11 @@ class TestBhtTools:
         _dict = row_to_dict(event_as_row[:10])
         assert set(_dict.keys()).issubset(hpevent_keys_ordered[:10])
 
-    def test_dict_to_row(self, small_event_dict, long_event_dict):
-        small_row = dict_to_row(small_event_dict)
-        assert len(small_row) == len(small_event_dict.keys())
-        long_row = dict_to_row(long_event_dict)
-        assert len(long_row) == len(long_event_dict.keys())
-
-    def test_upper_dict_to_row(self, wrong_keys_dict):
-        """
-        GIVEN an event dict with upper case keys
-        WHEN dict_to_row is called
-        THEN check no exception were raised
-        """
-        _row_from_upper = dict_to_row(wrong_keys_dict)
-        try:
-            _row_from_upper = dict_to_row(wrong_keys_dict)
-        except KeyError:
-            pytest.fail("Upper key should have been lowered")
+    def test_dict_to_string(self, small_event_dict, long_event_dict):
+        small_string = dict_to_string(small_event_dict)
+        assert len(small_string.split(" ")) == len(small_event_dict.keys())
+        long_string = dict_to_string(long_event_dict)
+        assert len(long_string.split(" ")) == len(long_event_dict.keys())
 
     def test_dict_to_dict(self, wrong_keys_dict):
         """
@@ -69,7 +55,6 @@ class TestBhtTools:
         """
         _converted_dict = dict_to_dict(wrong_keys_dict)
         assert set(_converted_dict.keys()).issubset(hpevent_keys_ordered)
-        assert True
 
     def test_rows_to_catstring(self, cat_for_test):
         hp_events = catfile_to_rows(cat_for_test)
@@ -78,7 +63,9 @@ class TestBhtTools:
             "test_rows_to_catstring",
             ["doi", "sats", "insts", "regs", "start_time", "stop_time"],
         )
-        assert len(cat_str) == 8650
+        # cat_rows=[_r for _r in cat_str.split('\n') if '#' not in _r]
+        cat_rows = cat_str.split('\n')
+        assert len(cat_rows) == 67
 
     def test_rows_to_catstring_allkeys(self, cat_for_test):
         import csv

@@ -52,14 +52,19 @@ def row_to_dict(event_row):
     return _r_dict
 
 
-def dict_to_dict(event_dict):
+def dict_to_dict(event_dict, columns=None):
     """
     Sometimes, an incoming hpevent dictionnary needs tweaking to fullfill our standards:
         - rewriting some keys
         - converting keys string to lower case
+    @param columns:
     @param event_dict:
     @return:
     """
+
+    if columns is None:
+        columns = list(hpevent_parameters.keys())
+
     # translate keys
     key_matrix = {
         "start_time": ["START_TIME", "start_date"],
@@ -75,6 +80,7 @@ def dict_to_dict(event_dict):
         "nb_durations": ["NB_DURATIONS"],
         "conf": ["CONF"],
     }
+
     # replace any synonym key with the proper one
     _proper_dict = {}
     for proper_key, syn_keys in key_matrix.items():
@@ -94,28 +100,50 @@ def dict_to_dict(event_dict):
     for k, v in _proper_dict.items():
         lowered_dict[k.lower()] = v
 
-    return lowered_dict
+    # keep only given columns
+    _r_dict = {k: lowered_dict[k] for k in columns}
+
+    return _r_dict
 
 
-def dict_to_row(event_dict):
+def dict_to_string(event_dict, values_lengths=None):
     """
-    From an event dict, transform to a right ordered row values 'space' separated.
+    From an event dict, transform to a string as expected in catalog line
 
+    @param values_lengths:
     @param event_dict:  hpevent dictionnary with variable number of keys
-    @return:  row of the event's values
+    @return:  row as a string for catalog
     """
+
+    _value_separator = " "
     # make a list of keys:
     #   - ordered as expected
     #   - with the same length as incoming dict
-    hpevent_keys = hpevent_keys_ordered[0:len(event_dict.keys())]
+    hpevent_keys = hpevent_keys_ordered[0 : len(event_dict.keys())]
 
-    _converted_dict = dict_to_dict(event_dict)
-
-    # transform to row of values
-    _r_row = []
+    _r_str = ""
+    # transform to row of values, concatenation on oneline by ordered keys
     for _k in hpevent_keys:
-        _r_row.append(str(_converted_dict[_k]))
-    return _r_row
+        _key_length = 0 if values_lengths is None else values_lengths[_k]
+        _key_type = hpevent_parameters[_k]["type"]
+        _key_value = event_dict[_k]
+        if _key_type == "date" or _k == "doi":
+            _r_str += f"{_key_value}"
+        elif _key_type == "char":
+            _key_value = f'"{_key_value}"'
+            _r_str += f"{_key_value:<{_key_length+2}}"
+        elif _key_type == "int":
+            _key_value = int(_key_value)
+            _r_str += f"{_key_value:>{_key_length}}"
+        elif _key_type == "float":
+            _key_value = float(_key_value)
+            _r_str += f"{_key_value:.5f}"
+        else:
+            raise Exception(f"No Such Type <{_key_type}>")
+        _r_str += _value_separator
+
+    # remove leading/trailing slashes
+    return _r_str.strip()
 
 
 def rows_to_catstring(events_list, catalog_name, columns=None):
@@ -155,18 +183,28 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
     r_string = textwrap.dedent(r_string)
 
     # Print parameters header
-    p_index = 0
-    for k, v in hpevent_parameters.items():
-        if k not in columns:
-            continue
-        r_string += f'# Parameter {p_index}: id:column{p_index}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
-        p_index += 1
+    for i, c in enumerate(columns):
+        v = hpevent_parameters[c]
+        r_string += f'# Parameter {i}: id:column{i}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
+
+    # Rewrite every dict in list
+    events_list = [dict_to_dict(e) for e in events_list]
+
+    # store max lengths in a dictionnary with same keys as events
+    values_lengths = {k: [] for k in events_list[0].keys()}
+    # first, fill keys with a table of all length
+    for e in events_list:
+        for k, v in e.items():
+            vl = len(str(v))
+            values_lengths[k].append(vl)
+    # then get max only
+    for k, v in values_lengths.items():
+        max_length = max(values_lengths[k])
+        values_lengths[k] = max_length
 
     # Dump dicts as rows after converting
     for e in events_list:
-        _row = dict_to_row(e)
-        _row_as_string = " ".join(_row)
-        r_string += _row_as_string
+        r_string += dict_to_string(e, values_lengths) + "\n"
     return r_string
 
 

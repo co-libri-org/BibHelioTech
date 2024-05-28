@@ -28,6 +28,15 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.11.0-dev] - 2024-05-28 Fix mission detection
+### Fixed
+- Detect mission into parenthesis
+### Changed
+- Refactor catalogs generation methods again
+### New
+- Catalog lines formating now align
+- Show PipelineVersion on page
+
 ## [0.10.0] - 2024-05-27 Insert and show PipelineVersionNum
 ### Changed
 - Refactor catalogs generation code into rewritten methods

@@ -27,7 +27,7 @@
 <a title="analysed json" class="btn btn-warning {{analysed_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='analysed')}}"> Analysed {{curr_step}}</a>
 {% endif %}
 <a title="raw json" class="btn btn-warning {{raw_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='raw')}}"> Raw Json {{curr_step}}</a>
-<h2 id="pipeline_title" > {{pipeline_mode | upper}} pipeline steps - {{step_lighter.caption["pipeline_version"]}}</h2>
+<h2 id="pipeline_title" > {{pipeline_mode | upper}} pipeline steps - V{{step_lighter.caption["pipeline_version"]}}</h2>
 <br>
 <br>
 {% if curr_step == 0 %}

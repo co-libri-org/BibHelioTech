@@ -275,18 +275,21 @@ def sat_recognition(content_as_str, sats_dict):
     @return: dict of satellites found in the article
     """
     sat_dict_list = []
-    for SATs, Synonymes in sats_dict.items():
-        for syns in Synonymes:
-            test = re.finditer("( |\n)" + syns + "(\.|,| )", content_as_str)
+    synonyms = []
+    for _s in sats_dict.values():
+        synonyms.extend(_s)
+    for syn in synonyms:
+        test = re.finditer("[;( \n]" + syn + "[;)., ]", content_as_str)
+        for matches in test:
+            _text  = re.sub("[(\n.,)]", "", matches.group()).strip()
             sat_dict_list += [
-                {
-                    "start": matches.start(),
-                    "end": matches.end(),
-                    "text": re.sub("(\n|\.|,)", "", matches.group()).strip(),
-                    "type": "sat",
-                }
-                for matches in test
-            ]
+            {
+                "start": matches.start(),
+                "end": matches.end(),
+                "text": _text,
+                "type": "sat",
+            }
+        ]
     sat_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
     return sat_dict_list
 
