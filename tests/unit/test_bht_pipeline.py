@@ -37,7 +37,7 @@ class TestBhtPipelineSteps:
         catalog_file = run_step_entities(ocr_dir_test, doc_meta_info={"doi": doi})
         with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
-            assert len(_r_content) == 52
+            assert len(_r_content) == 67
 
     def test_run_step_entities_with_no_metadoc(self, tmp_path):
         with pytest.raises(BhtPipelineError):

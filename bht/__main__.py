@@ -94,7 +94,7 @@ if __name__ == "__main__":
             print("Include GROBID pipe-stop, or use --doi ")
             sys.exit()
         done_steps = run_pipeline(
-            doi=args.doi,
+            doc_meta_info={"doi":args.doi},
             # TODO: pub_date=args.pub_date,
             dest_file_dir=args.pipe_dir,
             file_path=None,
@@ -122,7 +122,7 @@ if __name__ == "__main__":
                 PipeStep.ENTITIES,
             ]
         done_steps = run_pipeline(
-            doi=istex_struct["doi"],
+            doc_meta_info={"doi":istex_struct["doi"]},
             file_path=filepath,
             doc_type=doc_type,
             pipe_steps=pipe_steps,
