@@ -281,7 +281,7 @@ def sat_recognition(content_as_str, sats_dict):
     for syn in synonyms:
         test = re.finditer("[;( \n]" + syn + "[;)., ]", content_as_str)
         for matches in test:
-            _text  = re.sub("[(\n.,)]", "", matches.group()).strip()
+            _text  = re.sub("[(\n.,);]", "", matches.group()).strip()
             sat_dict_list += [
             {
                 "start": matches.start(),
