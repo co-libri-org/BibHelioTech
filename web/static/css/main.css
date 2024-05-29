@@ -149,6 +149,9 @@ input.success{
     font-weight: 500;
 }
 
+.btn.paper-id {
+width: 35px !important;
+}
 
 /* PAPER SHOW */
 
