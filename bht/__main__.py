@@ -87,14 +87,18 @@ if __name__ == "__main__":
         if not args.pub_date:
             print("Set Publication_Date with --pub-date opt")
             sys.exit()
-        doc_meta_info = {"doi":args.doi, "pub_date":args.pub_date}
-        bht_run_file(args.txt_file, papers_dir, BhtFileType.TXT, doc_meta_info)
+        done_steps = run_pipeline(
+            doc_meta_info={"doi": args.doi, "pub_date": args.pub_date},
+            file_path=args.txt_file,
+            doc_type=BhtFileType.TXT,
+            pipe_steps=pipe_steps,
+        )
     elif args.pipe_dir:
         if PipeStep.GROBID in pipe_steps and not args.doi:
-            print("Include GROBID pipe-stop, or use --doi ")
+            print("Include GROBID pipe_step, or use --doi ")
             sys.exit()
         done_steps = run_pipeline(
-            doc_meta_info={"doi":args.doi},
+            doc_meta_info={"doi": args.doi},
             # TODO: pub_date=args.pub_date,
             dest_file_dir=args.pipe_dir,
             file_path=None,
@@ -122,7 +126,7 @@ if __name__ == "__main__":
                 PipeStep.ENTITIES,
             ]
         done_steps = run_pipeline(
-            doc_meta_info={"doi":istex_struct["doi"]},
+            doc_meta_info={"doi": istex_struct["doi"]},
             file_path=filepath,
             doc_type=doc_type,
             pipe_steps=pipe_steps,
