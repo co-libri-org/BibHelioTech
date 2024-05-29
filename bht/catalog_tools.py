@@ -187,6 +187,9 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
         v = hpevent_parameters[c]
         r_string += f'# Parameter {i}: id:column{i}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
 
+    if len(events_list) == 0:
+        return r_string
+
     # Rewrite every dict in list
     events_list = [dict_to_dict(e) for e in events_list]
 

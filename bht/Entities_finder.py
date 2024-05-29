@@ -20,6 +20,19 @@ dump_step = 0
 raw_dumper = RawDumper("entities")
 
 
+def show_final(fal):
+    """Final_Amda_List structure displayer for debugging"""
+    from pprint import pprint
+    if len(fal) > 0:
+        opening = ">"*50
+        ending = "<"*50
+        msg = f"{opening} {len(fal)} {ending}"
+        print(msg)
+        pprint(fal)
+    else:
+        print( "0"*100 )
+
+
 def keys_exists(element, *keys):
     """
     Check if *keys (nested) exists in `element` (dict).
@@ -281,15 +294,15 @@ def sat_recognition(content_as_str, sats_dict):
     for syn in synonyms:
         test = re.finditer("[;( \n]" + syn + "[;)., ]", content_as_str)
         for matches in test:
-            _text  = re.sub("[(\n.,);]", "", matches.group()).strip()
+            _text = re.sub("[(\n.,);]", "", matches.group()).strip()
             sat_dict_list += [
-            {
-                "start": matches.start(),
-                "end": matches.end(),
-                "text": _text,
-                "type": "sat",
-            }
-        ]
+                {
+                    "start": matches.start(),
+                    "end": matches.end(),
+                    "text": _text,
+                    "type": "sat",
+                }
+            ]
     sat_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
     return sat_dict_list
 
@@ -680,7 +693,9 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     # sanity checks
     DOI = doc_meta_info.get("doi") if doc_meta_info is not None else None
-    publication_date = doc_meta_info.get("pub_date") if doc_meta_info is not None else None
+    publication_date = (
+        doc_meta_info.get("pub_date") if doc_meta_info is not None else None
+    )
     if DOI is None:
         # try to find in tei file
         import glob
@@ -1106,16 +1121,18 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     for elems in final_links:
         # Initialize dict
-        final_amda_dict = {"start_time": "",
-                           "stop_time": "",
-                           "DOI": "",
-                           "sat": elems[0]["text"],
-                           "inst": ",".join(elems[1]["text"]),
-                           "reg": "",
-                           "D": elems[0]["D"],
-                           "R": elems[0]["R"],
-                           "SO": elems[0]["SO"],
-                           "conf": elems[0]["conf"]}
+        final_amda_dict = {
+            "start_time": "",
+            "stop_time": "",
+            "DOI": "",
+            "sat": elems[0]["text"],
+            "inst": ",".join(elems[1]["text"]),
+            "reg": "",
+            "D": elems[0]["D"],
+            "R": elems[0]["R"],
+            "SO": elems[0]["SO"],
+            "conf": elems[0]["conf"],
+        }
         if len(elems) >= 5:
             final_amda_dict["start_time"] = elems[4]["begin"]
             final_amda_dict["stop_time"] = elems[4]["end"]
@@ -1226,14 +1243,19 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     catalog_name = f"{translated_doi}_bibheliotech_V{bht_pipeline_version}.txt"
 
     # add two more elements in hpevent dict:
-    tso_dict = {"occur_sat": str(TSO["occur_sat"]),
-                "nb_durations": str(TSO["nb_durations"])}
+    tso_dict = {
+        "occur_sat": str(TSO["occur_sat"]),
+        "nb_durations": str(TSO["nb_durations"]),
+    }
     final_amda_list = [{**tso_dict, **hpevent_dict} for hpevent_dict in final_amda_list]
 
     cat_as_txt = rows_to_catstring(final_amda_list, catalog_name)
 
     catalog_path = os.path.join(current_OCR_folder, catalog_name)
-    with open(catalog_path, "w", ) as f:
+    with open(
+        catalog_path,
+        "w",
+    ) as f:
         f.write(cat_as_txt)
 
     return catalog_path
