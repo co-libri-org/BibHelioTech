@@ -1102,34 +1102,28 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     # 17- Now create events list according to the formatting below
 
-    final_amda_dict = {
-        "start_time": "",
-        "stop_time": "",
-        "DOI": "",
-        "sat": "",
-        "inst": "",
-        "reg": "",
-        "D": "",
-        "R": "",
-        "SO": "",
-    }
     final_amda_list = []
 
     for elems in final_links:
-        final_amda_dict["sat"] = elems[0]["text"]
-        final_amda_dict["inst"] = ",".join(elems[1]["text"])
-        final_amda_dict["D"] = elems[0]["D"]
-        final_amda_dict["R"] = elems[0]["R"]
-        final_amda_dict["SO"] = elems[0]["SO"]
-        final_amda_dict["conf"] = elems[0]["conf"]
+        # Initialize dict
+        final_amda_dict = {"start_time": "",
+                           "stop_time": "",
+                           "DOI": "",
+                           "sat": elems[0]["text"],
+                           "inst": ",".join(elems[1]["text"]),
+                           "reg": "",
+                           "D": elems[0]["D"],
+                           "R": elems[0]["R"],
+                           "SO": elems[0]["SO"],
+                           "conf": elems[0]["conf"]}
         if len(elems) >= 5:
             final_amda_dict["start_time"] = elems[4]["begin"]
             final_amda_dict["stop_time"] = elems[4]["end"]
+
         # search in the tree structure
-        result = []
+        result = [elems[2]["text"]]
 
-        result.append(elems[2]["text"])
-
+        # TODO: fix this expression
         find_path(
             REG_dict[elems[2]["text"][0].upper() + elems[2]["text"][1:]],
             elems[3]["text"][0].upper() + elems[3]["text"][1:],
@@ -1147,17 +1141,6 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         result = []
         final_amda_dict["reg"] = final_path
         final_amda_list.append(final_amda_dict)
-        final_amda_dict = {
-            "start_time": "",
-            "stop_time": "",
-            "DOI": "",
-            "sat": "",
-            "inst": "",
-            "reg": "",
-            "D": "",
-            "R": "",
-            "SO": "",
-        }
 
     for dicts in final_amda_list:
         dicts["inst"] = ",".join(list(set(dicts["inst"].split(",")))).replace(" ", "-")
