@@ -128,9 +128,26 @@ class StepLighter:
 
     def analyse_json(self, with_header=False):
         """
+        Wrapper for json convert to text from sutime or entities output
+        """
+        if self.enlight_mode == "entities":
+            return self.analyse_entities_json(with_header)
+        elif self.enlight_mode == "sutime":
+            return self.analyse_sutime_json(with_header)
+
+    def analyse_entities_json(self, with_header=False):
+        """
+        @param with_header:
+        @return:
+        """
+        return "not available"
+
+    def analyse_sutime_json(self, with_header=False):
+        """
         Given a json file from Sutime output, analyse entities, output as text
         @return: String with sutime dict's keys [text, timex-value, value]
         """
+
         with open(self.json_filepath, "r") as json_df:
             dicts_list = json.load(json_df)
         # remove step message at end of json
