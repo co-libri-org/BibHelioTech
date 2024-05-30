@@ -1209,33 +1209,18 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
             final_file.write("\n")
 
     # =============================================================================================================================================================
-    # For displaying results, comment for disable.
-    start_time = "start_time"
-    stop_time = "stop_time"
-    DOI_2 = "DOI"
-    sat = "sat"
-    inst = "inst"
-    reg = "reg"
-    print(
-        f"{start_time:30}",
-        f"{stop_time:30}",
-        f"{DOI_2:30}",
-        f"{sat:30}",
-        f"{inst:50}" f"{reg:30}",
-    )
-    for elements in final_amda_list:
-        temp = [value for key, value in elements.items()]
-        print(
-            f"{temp[0]:30}",
-            f"{temp[1]:30}",
-            f"{temp[2]:30}",
-            f"{temp[3]:30}",
-            f"{temp[4]:50}" f"{temp[5]:30}",
-        )
-        print(
-            "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        )
-    print("\n")
+    # display results if debug mode
+    columns_to_display = [
+        "start_time",
+        "stop_time",
+        "doi",
+        "sats",
+        "insts",
+        "regs",
+        "d",
+    ]
+    cat = rows_to_catstring(final_amda_list, catalog_name=None, columns=columns_to_display)
+    _logger.debug(cat)
     # =============================================================================================================================================================
 
     translated_doi = DOI.translate(str.maketrans("", "", string.punctuation))
