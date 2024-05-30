@@ -27,10 +27,12 @@ def show_final(fal):
         opening = ">"*50
         ending = "<"*50
         msg = f"{opening} {len(fal)} {ending}"
-        print(msg)
-        pprint(fal)
     else:
-        print( "0"*100 )
+        msg = "0"*100
+    print('-'*len(msg))
+    print(msg)
+    print('-'*len(msg))
+    pprint(fal)
 
 
 def keys_exists(element, *keys):
