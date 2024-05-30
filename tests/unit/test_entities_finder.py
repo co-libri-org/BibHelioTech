@@ -21,7 +21,7 @@ from bht.databank_reader import DataBank, DataBankSheet
 
 class TestEntitiesFinder:
     def test_entities_finder_method(self, ocr_dir_test):
-        catalog_file = entities_finder(ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052"})
+        catalog_file = entities_finder(ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052", "pub_date":"2022"})
         recognition_file = os.path.join(ocr_dir_test, "reg_recognition_res.txt")
         assert os.path.isfile(recognition_file)
         assert os.path.isfile(catalog_file)
