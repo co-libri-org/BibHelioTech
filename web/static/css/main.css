@@ -153,6 +153,16 @@ input.success{
 width: 35px !important;
 }
 
+.btn.btn-version,
+.btn.btn-version:hover {
+    cursor: help;
+    margin: 3pt;
+    border: solid 1pt black;
+    font-weight: 600 !important;
+    display: inline !important;
+    vertical-align: middle !important;
+}
+
 /* PAPER SHOW */
 
 .paper_attr_yes {
