@@ -4,6 +4,7 @@ import copy
 import os
 import pprint
 import re
+from textwrap import dedent
 
 from bht_config import yml_settings
 from tools.tools_errors import ToolsValueError, ToolsFileError
@@ -26,7 +27,7 @@ class RawDumper:
             {"pipeline_version": yml_settings["BHT_PIPELINE_VERSION"], "message": f"{self.dump_step}- {message}"}
         )
         with open(
-            os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
+                os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
         ) as raw_file:
             raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
         self.dump_step = self.dump_step + 1
@@ -130,37 +131,59 @@ class StepLighter:
         """
         Wrapper for json convert to text from sutime or entities output
         """
+        with open(self.json_filepath, "r") as json_df:
+            structs_list = json.load(json_df)
         if self.enlight_mode == "entities":
-            return self.analyse_entities_json(with_header)
+            return self.analyse_entities_json(structs_list, with_header)
         elif self.enlight_mode == "sutime":
-            return self.analyse_sutime_json(with_header)
+            return self.analyse_sutime_json(structs_list, with_header)
 
-    def analyse_entities_json(self, with_header=False):
+    def analyse_entities_json(self, structs_list, with_header=False):
         """
+        @param structs_list:
         @param with_header:
         @return:
         """
-        return "not available"
+        _r_str = "\n------------------------\n"
+        _r_str += f'{"sat_name":20} {"sat_start":>10} {"sut_start":>15} {"sutime_begin":25} {"sutime_end":25}\n'
+        _r_str += "--\n"
+        for _s in structs_list:
+            if type(_s) is list:
+                _sutime, _sat = (dict(), dict())
+                for _e in _s:
+                    if "type" not in _e.keys():
+                        continue
+                    if _e["type"] == "DURATION":
+                        _sutime = _e
+                    elif _e["type"] == "sat":
+                        _sat = _e
+                    else:
+                        continue
+                try:
+                    _r_str += f'''{_sat["text"]:20} {_sat["start"]:10} {_sutime["start"]:15} {_sutime["value"]["begin"]:25} {_sutime["value"]["end"]}\n'''
 
-    def analyse_sutime_json(self, with_header=False):
+                except KeyError:
+                    continue
+
+        return _r_str
+
+    def analyse_sutime_json(self, structs_list, with_header=False):
         """
         Given a json file from Sutime output, analyse entities, output as text
         @return: String with sutime dict's keys [text, timex-value, value]
         """
 
-        with open(self.json_filepath, "r") as json_df:
-            dicts_list = json.load(json_df)
         # remove step message at end of json
-        msg = dicts_list.pop()
+        msg = structs_list.pop()
 
         # compute types
-        all_types = [elmt["type"] for elmt in dicts_list]
+        all_types = [elmt["type"] for elmt in structs_list]
         uniq_types = sorted(set(all_types))
         count_types = {_t: all_types.count(_t) for _t in uniq_types}
         _res_str = "\n"
 
         if with_header:
-            msg = f"{msg}: {len(dicts_list)} elmnts"
+            msg = f"{msg}: {len(structs_list)} elmnts"
             msg_sub = len(msg) * "-"
             _res_str += f"{msg_sub:^50}\n"
             _res_str += f"{msg:^50}\n"
@@ -180,28 +203,28 @@ class StepLighter:
         _res_str += more_cr * "\n"
 
         # convert all dict values to string
-        for _elmnt in dicts_list:
+        for _elmnt in structs_list:
             if type(_elmnt["value"]) is dict:
                 _elmnt["value"] = _elmnt["value"].__repr__()
 
         # get fields lengths
-        _type_max_lgth = max([len(elmt["type"]) for elmt in dicts_list]) + 2
-        _text_max_lgth = max([len(elmt["text"]) for elmt in dicts_list]) + 2
-        _value_max_lgth = max([len(elmt["value"]) for elmt in dicts_list])
+        _type_max_lgth = max([len(elmt["type"]) for elmt in structs_list]) + 2
+        _text_max_lgth = max([len(elmt["text"]) for elmt in structs_list]) + 2
+        _value_max_lgth = max([len(elmt["value"]) for elmt in structs_list])
 
         title_str = f'{"type":{_type_max_lgth}}|{"value":{_value_max_lgth}}|{"text":{_text_max_lgth}}\n'
         _res_str += title_str
         # _res_str += len(title_str) * "-" + "\n"
         _res_str += (
-            "-" * _type_max_lgth
-            + "+"
-            + "-" * _value_max_lgth
-            + "+"
-            + "-" * _text_max_lgth
-            + "\n"
+                "-" * _type_max_lgth
+                + "+"
+                + "-" * _value_max_lgth
+                + "+"
+                + "-" * _text_max_lgth
+                + "\n"
         )
 
-        for elmt in dicts_list:
+        for elmt in structs_list:
             if type(elmt) is not dict:
                 continue
             if "timex-value" not in elmt:
