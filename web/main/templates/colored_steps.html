@@ -22,7 +22,7 @@
 {% endif %}
 
 
-<h3 class="d-flex justify-content-center align-items-center p-3 ">#{{paper.id}}- &laquo;{{paper.title}}&raquo;
+<h3 class="d-flex p-3 ">#{{paper.id}}- &laquo;{{paper.title}}&raquo;
     <span id="pipeline_title" > {{pipeline_mode | upper}} pipeline steps - V{{step_lighter.caption["pipeline_version"]}}</span>
 </h3>
 <a title="show paper page" class="btn btn-warning" href="{{url_for('main.paper_show', paper_id=paper_id)}}"> Back to paper</a>
