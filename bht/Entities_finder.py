@@ -23,15 +23,16 @@ raw_dumper = RawDumper("entities")
 def show_final(fal):
     """Final_Amda_List structure displayer for debugging"""
     from pprint import pprint
+
     if len(fal) > 0:
-        opening = ">"*50
-        ending = "<"*50
+        opening = ">" * 50
+        ending = "<" * 50
         msg = f"{opening} {len(fal)} {ending}"
     else:
-        msg = "0"*100
-    print('-'*len(msg))
+        msg = "0" * 100
+    print("-" * len(msg))
     print(msg)
-    print('-'*len(msg))
+    print("-" * len(msg))
     pprint(fal)
 
 
@@ -538,10 +539,10 @@ def closest_mission_to_duration(_temp, _final_links, data_frames, published_date
     previous_sat = None
     _final_links = []
     for _t in _temp:
-        if _t["type"] == 'sat':
+        if _t["type"] == "sat":
             previous_sat = _t
         elif _t["type"] == "DURATION":
-            _final_links.append([previous_sat,_t])
+            _final_links.append([previous_sat, _t])
 
     return _temp, _final_links
 
@@ -779,8 +780,8 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     # 8- Association of the closest duration of a satellite.
     # temp, final_links = closest_duration(
-    temp, final_links=closest_mission_to_duration(
-            temp, final_links, data_frames, publication_date
+    temp, final_links = closest_mission_to_duration(
+        temp, final_links, data_frames, publication_date
     )
     raw_dumper.dump_to_raw(
         final_links, "Add closest duration from sutime files", current_OCR_folder
@@ -1234,7 +1235,9 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         "regs",
         "d",
     ]
-    cat = rows_to_catstring(final_amda_list, catalog_name=None, columns=columns_to_display)
+    cat = rows_to_catstring(
+        final_amda_list, catalog_name=None, columns=columns_to_display
+    )
     _logger.debug(cat)
     # =============================================================================================================================================================
 
