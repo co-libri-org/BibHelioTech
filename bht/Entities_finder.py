@@ -534,6 +534,18 @@ def add_sat_occurrence(_final_links, _sutime_json):
     return _temp, _fl_to_return
 
 
+def closest_mission_to_duration(_temp, _final_links, data_frames, published_date):
+    previous_sat = None
+    _final_links = []
+    for _t in _temp:
+        if _t["type"] == 'sat':
+            previous_sat = _t
+        elif _t["type"] == "DURATION":
+            _final_links.append([previous_sat,_t])
+
+    return _temp, _final_links
+
+
 def closest_duration(_temp, _final_links, data_frames, published_date):
     """
     8th Entities Finder step:
@@ -766,8 +778,9 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     )
 
     # 8- Association of the closest duration of a satellite.
-    temp, final_links = closest_duration(
-        temp, final_links, data_frames, publication_date
+    # temp, final_links = closest_duration(
+    temp, final_links=closest_mission_to_duration(
+            temp, final_links, data_frames, publication_date
     )
     raw_dumper.dump_to_raw(
         final_links, "Add closest duration from sutime files", current_OCR_folder
