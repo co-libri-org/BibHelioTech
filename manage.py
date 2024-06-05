@@ -146,6 +146,14 @@ def list_papers():
         print(p)
 
 
+@cli.command("update_paper")
+@click.option("-c", "--cat-path", "cat_path")
+@click.argument("paper_id", required=True)
+def update_paper(paper_id, cat_path):
+    p = db.session.get(Paper, paper_id)
+    p.set_cat_path(cat_path)
+
+
 @cli.command("show_paper")
 @click.argument("paper_id", required=True)
 def show_paper(paper_id):
