@@ -24,7 +24,7 @@ class RawDumper:
         # append version and message to struct for later reading
         entitled_struct = copy.deepcopy(struct_to_dump)
         entitled_struct.append(
-            {"pipeline_version": yml_settings["BHT_PIPELINE_VERSION"], "message": f"{self.dump_step}- {message}"}
+            {"step": f"{self.dump_step}", "pipeline_version": yml_settings["BHT_PIPELINE_VERSION"], "message": f"{self.dump_step}- {message}"}
         )
         with open(
                 os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
@@ -144,26 +144,43 @@ class StepLighter:
         @param with_header:
         @return:
         """
-        _r_str = "\n------------------------\n"
-        _r_str += f'{"sat_name":20} {"sat_start":>10} {"sut_start":>15} {"sutime_begin":25} {"sutime_end":25}\n'
-        _r_str += "--\n"
-        for _s in structs_list:
-            if type(_s) is list:
-                _sutime, _sat = (dict(), dict())
-                for _e in _s:
-                    if "type" not in _e.keys():
-                        continue
-                    if _e["type"] == "DURATION":
-                        _sutime = _e
-                    elif _e["type"] == "sat":
-                        _sat = _e
-                    else:
-                        continue
-                try:
-                    _r_str += f'''{_sat["text"]:20} {_sat["start"]:10} {_sutime["start"]:15} {_sutime["value"]["begin"]:25} {_sutime["value"]["end"]}\n'''
+        def dump_sat2duration(structs_list):
+            _str="\n"
+            for _s in structs_list:
+                if type(_s) is list:
+                    _sutime, _sat = (dict(), dict())
+                    for _e in _s:
+                        if "type" not in _e.keys():
+                            continue
+                        if _e["type"] == "DURATION":
+                            _sutime = _e
+                        elif _e["type"] == "sat":
+                            _sat = _e
+                        else:
+                            continue
+                    try:
+                        _str += f'''{_sat["text"]:20} {_sat["start"]:10} {_sutime["start"]:15} {_sutime["value"]["begin"]:25} {_sutime["value"]["end"]}\n'''
 
-                except KeyError:
-                    continue
+                    except KeyError:
+                        continue
+            return _str
+
+        col_title = f'{"sat_name":20} {"sat_start":>10} {"sut_start":>15} {"sutime_begin":25} {"sutime_end":25}\n'
+        _r_str = f"\n{'-'*len(col_title)}\n"
+        _r_str += col_title
+        _r_str += f"{'-'*len(col_title)}\n"
+        caption = structs_list.pop()
+        try:
+            step = caption["step"]
+        except KeyError:
+            step = None
+        if step is None:
+            return ""
+        if step == '7':
+            _r_str += dump_sat2duration(structs_list)
+        else:
+            _r_str += step
+
 
         return _r_str
 
