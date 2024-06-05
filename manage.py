@@ -157,14 +157,14 @@ def update_paper(paper_id, cat_path):
 @cli.command("show_paper")
 @click.argument("paper_id", required=True)
 def show_paper(paper_id):
-    p = Paper.query.get(paper_id)
+    p = db.session.get(Paper, paper_id)
     print(p)
 
 
 @cli.command("del_paper")
 @click.argument("paper_id", required=True)
 def del_paper(paper_id):
-    p = Paper.query.get(paper_id)
+    p = db.session.get(Paper, paper_id)
     db.session.delete(p)
     db.session.commit()
 
@@ -180,7 +180,7 @@ def clone_paper(paper_id):
         shutil.copy(orig_path, _cloned_path)
         return _cloned_path
 
-    p_orig = Paper.query.get(paper_id)
+    p_orig = db.session.get(Paper, paper_id)
     cloned_pdf_path = None
     cloned_txt_path = None
     if p_orig.has_pdf:
