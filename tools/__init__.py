@@ -166,14 +166,18 @@ class StepLighter:
             ]
             # get the maximum lengths of it
             i_l = max(_inst_lengths)
-            col_title = f'{"start":>6} {"end":>6} {"satellite":{s_l}} {"instruments":{i_l}}\n'
+            col_title = f'{"start":>6} {"end":>6} {"occ.":5} {"satellite":{s_l}} {"instruments":{i_l}}\n'
             _str = f"\n{'-' * len(col_title)}\n"
             _str += col_title
             _str += f"{'-' * len(col_title)}\n"
             for _s in _structs:
                 _sat = _s[0]
+                try:
+                    so = _sat["SO"]
+                except KeyError:
+                    so = ""
                 _insts = ",".join(_s[1]["text"])
-                _str += f'{_sat["start"]:6} {_sat["end"]:6} {_sat["text"]:{s_l}} {_insts:{i_l}}\n'
+                _str += f'{_sat["start"]:6} {_sat["end"]:6} {so:5} {_sat["text"]:{s_l}} {_insts:{i_l}}\n'
 
             return _str
 
@@ -246,8 +250,7 @@ class StepLighter:
             _r_str = dump_rawentities(structs_list, _type="instr")
         elif step == "2":
             _r_str = dump_rawentities(structs_list)
-        elif step == "3":
-            print("YEST STEP 3")
+        elif step in ["3", "4", "5", "6"]:
             _r_str = dump_sats_instruments(structs_list)
         elif step == "7":
             _r_str = dump_sat2duration(structs_list)
