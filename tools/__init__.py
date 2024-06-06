@@ -150,7 +150,25 @@ class StepLighter:
         """
 
         def dump_rawentities(_structs):
-            pass
+            """
+            Show first json output of entities pipeline
+            Contains Satellites
+            """
+            sat_names_lengths = [
+                len(_s["text"])
+                for _s in _structs
+                if "type" in _s.keys() and _s["type"] == "sat"
+            ]
+            nm_l = max(sat_names_lengths)
+            col_title = f'{"start":>6} {"end":>6} {"sat-name":{nm_l}}\n'
+            _str = f"\n{'-' * len(col_title)}\n"
+            _str += col_title
+            _str += f"{'-' * len(col_title)}\n"
+            for _s in _structs:
+                if "type" not in _s.keys() or _s["type"] != "sat":
+                    continue
+                _str += f'{_s["start"]:6} {_s["end"]:6} {_s["text"]:{nm_l}}\n'
+            return _str
 
         def dump_sat2duration(_structs):
             (nm_l, sat_l, sut_l, beg_l, end_l) = (20, 10, 15, 25, 25)
@@ -188,16 +206,18 @@ class StepLighter:
         # 2- or from guessed from message
         if step is None:
             try:
-                step = caption["message"].split('-')[0]
+                step = caption["message"].split("-")[0]
             except KeyError:
                 step = None
 
         # Run dumping method depending on step level
-        if step == "7":
+        if step == "0":
+            _r_str = dump_rawentities(structs_list)
+        elif step == "7":
             _r_str = dump_sat2duration(structs_list)
         else:
             _title = f"No json dump for step {step} of pipeline  V{caption["pipeline_version"]}"
-            _line = "-"*len(_title)
+            _line = "-" * len(_title)
             _r_str = f"\n{_line}\n{_title}\n{_line}"
         return _r_str
 
@@ -249,7 +269,9 @@ class StepLighter:
         title_str = f'{"type":{_type_max_lgth}}|{"value":{_value_max_lgth}}|{"text":{_text_max_lgth}}\n'
         _res_str += title_str
         # _res_str += len(title_str) * "-" + "\n"
-        _res_str += f"{"-" * _type_max_lgth}+{ "-" * _value_max_lgth}+ {"-" * _text_max_lgth}\n"
+        _res_str += (
+            f"{"-" * _type_max_lgth}+{ "-" * _value_max_lgth}+ {"-" * _text_max_lgth}\n"
+        )
 
         for elmt in structs_list:
             if type(elmt) is not dict:
