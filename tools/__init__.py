@@ -24,10 +24,14 @@ class RawDumper:
         # append version and message to struct for later reading
         entitled_struct = copy.deepcopy(struct_to_dump)
         entitled_struct.append(
-            {"step": f"{self.dump_step}", "pipeline_version": yml_settings["BHT_PIPELINE_VERSION"], "message": f"{self.dump_step}- {message}"}
+            {
+                "step": f"{self.dump_step}",
+                "pipeline_version": yml_settings["BHT_PIPELINE_VERSION"],
+                "message": f"{self.dump_step}- {message}",
+            }
         )
         with open(
-                os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
+            os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
         ) as raw_file:
             raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
         self.dump_step = self.dump_step + 1
@@ -144,44 +148,57 @@ class StepLighter:
         @param with_header:
         @return:
         """
-        def dump_sat2duration(structs_list):
-            _str="\n"
-            for _s in structs_list:
-                if type(_s) is list:
-                    _sutime, _sat = (dict(), dict())
-                    for _e in _s:
-                        if "type" not in _e.keys():
-                            continue
-                        if _e["type"] == "DURATION":
-                            _sutime = _e
-                        elif _e["type"] == "sat":
-                            _sat = _e
-                        else:
-                            continue
-                    try:
-                        _str += f'''{_sat["text"]:20} {_sat["start"]:10} {_sutime["start"]:15} {_sutime["value"]["begin"]:25} {_sutime["value"]["end"]}\n'''
 
-                    except KeyError:
+        def dump_rawentities(_structs):
+            pass
+
+        def dump_sat2duration(_structs):
+            (nm_l, sat_l, sut_l, beg_l, end_l) = (20, 10, 15, 25, 25)
+            col_title = f'{"sat_name":{nm_l}} {"sat_start":>{sat_l}} {"sut_start":>{sut_l}} {"sutime_begin":{beg_l}} {"sutime_end":{end_l}}\n'
+            _str = f"\n{'-' * len(col_title)}\n"
+            _str += col_title
+            _str += f"{'-' * len(col_title)}\n"
+            for _s in _structs:
+                if type(_s) is not list:
+                    raise Exception("Wrong struct list")
+                _sutime, _sat = (dict(), dict())
+                for _e in _s:
+                    if "type" not in _e.keys():
                         continue
+                    if _e["type"] == "DURATION":
+                        _sutime = _e
+                    elif _e["type"] == "sat":
+                        _sat = _e
+                    else:
+                        continue
+                try:
+                    _str += f"""{_sat["text"]:{nm_l}} {_sat["start"]:{sat_l}} {_sutime["start"]:{sut_l}} {_sutime["value"]["begin"]:{beg_l}} {_sutime["value"]["end"]:{end_l}}\n"""
+
+                except KeyError:
+                    continue
             return _str
 
-        col_title = f'{"sat_name":20} {"sat_start":>10} {"sut_start":>15} {"sutime_begin":25} {"sutime_end":25}\n'
-        _r_str = f"\n{'-'*len(col_title)}\n"
-        _r_str += col_title
-        _r_str += f"{'-'*len(col_title)}\n"
+        #  Get step number and choose which json 2 table dumper to use
         caption = structs_list.pop()
+        # 1- from caption key
         try:
             step = caption["step"]
         except KeyError:
             step = None
+        # 2- or from guessed from message
         if step is None:
-            return ""
-        if step == '7':
-            _r_str += dump_sat2duration(structs_list)
+            try:
+                step = caption["message"].split('-')[0]
+            except KeyError:
+                step = None
+
+        # Run dumping method depending on step level
+        if step == "7":
+            _r_str = dump_sat2duration(structs_list)
         else:
-            _r_str += step
-
-
+            _title = f"No json dump for step {step} of pipeline  V{caption["pipeline_version"]}"
+            _line = "-"*len(_title)
+            _r_str = f"\n{_line}\n{_title}\n{_line}"
         return _r_str
 
     def analyse_sutime_json(self, structs_list, with_header=False):
@@ -232,14 +249,7 @@ class StepLighter:
         title_str = f'{"type":{_type_max_lgth}}|{"value":{_value_max_lgth}}|{"text":{_text_max_lgth}}\n'
         _res_str += title_str
         # _res_str += len(title_str) * "-" + "\n"
-        _res_str += (
-                "-" * _type_max_lgth
-                + "+"
-                + "-" * _value_max_lgth
-                + "+"
-                + "-" * _text_max_lgth
-                + "\n"
-        )
+        _res_str += f"{"-" * _type_max_lgth}+{ "-" * _value_max_lgth}+ {"-" * _text_max_lgth}\n"
 
         for elmt in structs_list:
             if type(elmt) is not dict:
