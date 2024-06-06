@@ -149,6 +149,34 @@ class StepLighter:
         @return:
         """
 
+        def dump_sats_instruments(_structs):
+            """"
+            Show satellites with their instruments
+            """
+            # make a list of satellites and get the max length
+            _sat_lengths = [
+                len(str(_s[0]["text"]))
+                for _s in _structs
+            ]
+            s_l = max(_sat_lengths)
+            # make a list of concatenated instruments list as string
+            _inst_lengths = [
+                len(str(_s[1]["text"]))
+                for _s in _structs
+            ]
+            # get the maximum lengths of it
+            i_l = max(_inst_lengths)
+            col_title = f'{"start":>6} {"end":>6} {"satellite":{s_l}} {"instruments":{i_l}}\n'
+            _str = f"\n{'-' * len(col_title)}\n"
+            _str += col_title
+            _str += f"{'-' * len(col_title)}\n"
+            for _s in _structs:
+                _sat = _s[0]
+                _insts = ",".join(_s[1]["text"])
+                _str += f'{_sat["start"]:6} {_sat["end"]:6} {_sat["text"]:{s_l}} {_insts:{i_l}}\n'
+
+            return _str
+
         def dump_rawentities(_structs, _type="sat"):
             """
             Show first json output of entities pipeline
@@ -160,7 +188,7 @@ class StepLighter:
                 if "type" in _s.keys() and _s["type"] == _type
             ]
             nm_l = max(_names_lengths)
-            col_names = {"sat": "Satellite" , "instr": "Instrument"}
+            col_names = {"sat": "Satellite", "instr": "Instrument"}
             col_title = f'{"start":>6} {"end":>6} {col_names[_type]:{nm_l}}\n'
             _str = f"\n{'-' * len(col_title)}\n"
             _str += col_title
@@ -214,8 +242,13 @@ class StepLighter:
         # Run dumping method depending on step level
         if step == "0":
             _r_str = dump_rawentities(structs_list)
-        if step == "1":
+        elif step == "1":
             _r_str = dump_rawentities(structs_list, _type="instr")
+        elif step == "2":
+            _r_str = dump_rawentities(structs_list)
+        elif step == "3":
+            print("YEST STEP 3")
+            _r_str = dump_sats_instruments(structs_list)
         elif step == "7":
             _r_str = dump_sat2duration(structs_list)
         else:
