@@ -149,23 +149,24 @@ class StepLighter:
         @return:
         """
 
-        def dump_rawentities(_structs):
+        def dump_rawentities(_structs, _type="sat"):
             """
             Show first json output of entities pipeline
             Contains Satellites
             """
-            sat_names_lengths = [
+            _names_lengths = [
                 len(_s["text"])
                 for _s in _structs
-                if "type" in _s.keys() and _s["type"] == "sat"
+                if "type" in _s.keys() and _s["type"] == _type
             ]
-            nm_l = max(sat_names_lengths)
-            col_title = f'{"start":>6} {"end":>6} {"sat-name":{nm_l}}\n'
+            nm_l = max(_names_lengths)
+            col_names = {"sat": "Satellite" , "instr": "Instrument"}
+            col_title = f'{"start":>6} {"end":>6} {col_names[_type]:{nm_l}}\n'
             _str = f"\n{'-' * len(col_title)}\n"
             _str += col_title
             _str += f"{'-' * len(col_title)}\n"
             for _s in _structs:
-                if "type" not in _s.keys() or _s["type"] != "sat":
+                if "type" not in _s.keys() or _s["type"] != _type:
                     continue
                 _str += f'{_s["start"]:6} {_s["end"]:6} {_s["text"]:{nm_l}}\n'
             return _str
@@ -213,6 +214,8 @@ class StepLighter:
         # Run dumping method depending on step level
         if step == "0":
             _r_str = dump_rawentities(structs_list)
+        if step == "1":
+            _r_str = dump_rawentities(structs_list, _type="instr")
         elif step == "7":
             _r_str = dump_sat2duration(structs_list)
         else:
