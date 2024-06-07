@@ -223,28 +223,47 @@ class StepLighter:
                     continue
             return _str
 
-        def dump_linedumper(_structs):
+        def dump_normalized(_structs):
             """
+            Step 8
 
             @param _structs:
             @return:
             """
+            # get the max sat name length
+            sat_names_lgths = []
+            for _ls in _structs:
+                for _s in _ls:
+                    if "type" not in _s.keys():
+                        continue
+                    if _s["type"] == 'sat':
+                        sat_names_lgths.append(len(_s["text"]))
+            max_sat_lgth = max(sat_names_lgths)
             line_format = [
                 {"name": "event begin", "format": "24"},
                 {"name": "event end", "format": "24"},
-                {"name": "event start", "format": ">11"},
-                {"name": "sat start", "format": ">10"},
-                {"name": "sat name", "format": "10"},
+                {"name": "ev idx", "format": ">7"},
+                {"name": "st idx", "format": ">7"},
+                {"name": "sat name", "format": max_sat_lgth},
                 # {"name": "D", "format": ">2"},
                 # {"name": "R", "format": ">2"},
                 # {"name": "SO", "format": ">4"},
-                {"name": "conf", "format": ">4"},
+                {"name": "conf", "format": ">6"},
             ]
 
             _str = line_dumper(line_format, header=True)
-            for _s in _structs:
-                _sat = _s[0]
-                _dur = _s[1]
+            # _structs is a list of lists of structs
+            for _l in _structs:
+                # lets look inside this _l list of structs which one we want
+                # either type 'sat' or type 'DURATION'
+                _sat, _dur = None, None
+                for _s in _l:
+                    if "type" not in _s.keys():
+                        continue
+                    if _s["type"] == "sat":
+                        _sat = _s
+                    elif _s["type"] == "DURATION":
+                        _dur = _s
                 _values = [
                     _dur["value"]["begin"],
                     _dur["value"]["end"],
@@ -254,7 +273,7 @@ class StepLighter:
                     # _sat["D"],
                     # _sat["R"],
                     # _sat["SO"],
-                    _sat["conf"],
+                    f"{_sat["conf"]:.4f}",
                 ]
                 _str += line_dumper(line_format, _values=_values)
             return _str
@@ -276,8 +295,10 @@ class StepLighter:
                 for _d in _format:
                     col_titles.append(f'{_d["name"]:{_d["format"]}}')
                 title_line = " | ".join(col_titles)
-                title_decoration = "-" * len(title_line)
-                _str += f"{title_decoration}\n{title_line}\n{title_decoration}"
+                title_top = "-" * len(title_line)
+                title_bots = ['-'*len(_t) for _t in col_titles]
+                title_bottom = "-+-".join(title_bots)
+                _str += f"{title_top}\n{title_line}\n{title_bottom}"
             elif _values:
                 col_values = []
                 for i, _v in enumerate(_values):
@@ -310,7 +331,7 @@ class StepLighter:
         elif step == "7":
             _r_str = dump_sat2duration(structs_list)
         elif step == "8":
-            _r_str = dump_linedumper(structs_list)
+            _r_str = dump_normalized(structs_list)
         elif step == "9":
             _r_str = dump_rawentities(structs_list, _type="region")
         else:
