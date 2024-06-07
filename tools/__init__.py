@@ -236,19 +236,19 @@ class StepLighter:
                 for _s in _ls:
                     if "type" not in _s.keys():
                         continue
-                    if _s["type"] == 'sat':
+                    if _s["type"] == "sat":
                         sat_names_lgths.append(len(_s["text"]))
             max_sat_lgth = max(sat_names_lgths)
             line_format = [
                 {"name": "event begin", "format": "24"},
                 {"name": "event end", "format": "24"},
-                {"name": "ev idx", "format": ">7"},
-                {"name": "st idx", "format": ">7"},
+                {"name": "evt idx", "format": ">7"},
+                {"name": "sat idx", "format": ">7"},
                 {"name": "sat name", "format": max_sat_lgth},
                 # {"name": "D", "format": ">2"},
                 # {"name": "R", "format": ">2"},
                 # {"name": "SO", "format": ">4"},
-                {"name": "conf", "format": ">6"},
+                {"name": "conf", "format": "<6"},
             ]
 
             _str = line_dumper(line_format, header=True)
@@ -278,6 +278,34 @@ class StepLighter:
                 _str += line_dumper(line_format, _values=_values)
             return _str
 
+        def dump_regions_links(_structs):
+            """
+            Data structure reflects the regions associations,
+
+            @param _structs: it is a list of lists of 2 regions structs
+            @return: dumped data structure as string
+            """
+            line_format = [
+                {"name": "first reg.", "format": "15"},
+                {"name": "f idx", "format": ">7"},
+                {"name": "s idx", "format": ">7"},
+                {"name": "secnd reg.", "format": "15"},
+            ]
+
+            _str = line_dumper(line_format, header=True)
+
+            for _ls in _structs:
+                _first_reg = _ls[0]
+                _scnd_reg = _ls[1]
+                line_values = [
+                    _first_reg["text"],
+                    _first_reg["start"],
+                    _scnd_reg["start"],
+                    _scnd_reg["text"],
+                ]
+                _str += line_dumper(line_format, _values=line_values)
+            return _str
+
         def line_dumper(_format, _values=None, header=False):
             """
             Will return a values line formatted as described in the _format dict argument
@@ -296,7 +324,7 @@ class StepLighter:
                     col_titles.append(f'{_d["name"]:{_d["format"]}}')
                 title_line = " | ".join(col_titles)
                 title_top = "-" * len(title_line)
-                title_bots = ['-'*len(_t) for _t in col_titles]
+                title_bots = ["-" * len(_t) for _t in col_titles]
                 title_bottom = "-+-".join(title_bots)
                 _str += f"{title_top}\n{title_line}\n{title_bottom}"
             elif _values:
@@ -334,6 +362,8 @@ class StepLighter:
             _r_str = dump_normalized(structs_list)
         elif step == "9":
             _r_str = dump_rawentities(structs_list, _type="region")
+        elif step in ["10", "11", "12", "13", "14", "15"]:
+            _r_str = dump_regions_links(structs_list)
         else:
             _title = f"No json dump for step {step} of pipeline  V{caption["pipeline_version"]}"
             _line = "-" * len(_title)
