@@ -186,7 +186,7 @@ class StepLighter:
                 if "type" in _s.keys() and _s["type"] == _type
             ]
             nm_l = max(_names_lengths)
-            col_names = {"sat": "Satellite", "instr": "Instrument"}
+            col_names = {"sat": "Satellite", "instr": "Instrument", "region": "Region"}
             col_title = f'{"start":>6} {"end":>6} {col_names[_type]:{nm_l}}\n'
             _str = f"\n{'-' * len(col_title)}\n"
             _str += col_title
@@ -301,18 +301,18 @@ class StepLighter:
                 step = None
 
         # Run dumping method depending on step level
-        if step == "0":
+        if step in ["0", "2"]:
             _r_str = dump_rawentities(structs_list)
         elif step == "1":
             _r_str = dump_rawentities(structs_list, _type="instr")
-        elif step == "2":
-            _r_str = dump_rawentities(structs_list)
         elif step in ["3", "4", "5", "6"]:
             _r_str = dump_sats_instruments(structs_list)
         elif step == "7":
             _r_str = dump_sat2duration(structs_list)
         elif step == "8":
             _r_str = dump_linedumper(structs_list)
+        elif step == "9":
+            _r_str = dump_rawentities(structs_list, _type="region")
         else:
             _title = f"No json dump for step {step} of pipeline  V{caption["pipeline_version"]}"
             _line = "-" * len(_title)
