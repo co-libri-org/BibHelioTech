@@ -209,7 +209,6 @@ class StepLighter:
             @param _structs:
             @return:
             """
-            (nm_l, sat_l, sut_l, beg_l, end_l) = (20, 10, 15, 25, 25)
             line_format = [
                 {"name": "sat_name reg.", "format": "20"},
                 {"name": "sat_start", "format": ">10"},
@@ -229,6 +228,62 @@ class StepLighter:
                     _sutime["start"],
                     _sutime["value"]["begin"],
                     _sutime["value"]["end"],
+                ]
+                _str += line_dumper(line_format, _values=line_values)
+            return _str
+
+        def dump_sat_regions(_structs):
+            """
+            Structs reflects link between sats, durations and regions.
+            looks like a lists:
+            [
+             [ {sat}, {unknown}, {region}, {region}, {duration}]
+              ....
+            ]
+             {
+                 "sat":{ "conf": 0.018560994257641565, "text": "Mariner 10",
+                 },
+                 "unknown":{ 'pass': None },
+                 "reg1": {
+                     "end": 1763,
+                     "start": 1756,
+                     "text": "Venus",
+                     "type": "region"
+                 },
+                 "reg2": {
+                     "end": 1091,
+                     "start": 1084,
+                     "text": "Venus",
+                     "type": "region"
+                 },
+                 "duration": { "begin": "2018-10-03T00:00:00.000", "end": "2019-12-26T23:59:59.000"
+                 }
+             }
+            @param _structs:
+            @return:
+            """
+
+            line_format = [
+                {"name": "sutime_begin", "format": "25"},
+                {"name": "sutime_end", "format": "25"},
+                {"name": "sat_name", "format": "20"},
+                {"name": "regions", "format": "<20"},
+                {"name": "conf", "format": "<6"},
+            ]
+
+            _str = line_dumper(line_format, header=True)
+
+            for _ls in _structs:
+                _sat = _ls[0]
+                _reg1 = _ls[2]
+                _reg2 = _ls[3]
+                _sutime = _ls[4]
+                line_values = [
+                    _sutime["begin"],
+                    _sutime["end"],
+                    _sat["text"],
+                    f"{_reg1["text"]}.{_reg2["text"]}"[:19],
+                    f"{_sat["conf"]:.4f}",
                 ]
                 _str += line_dumper(line_format, _values=line_values)
             return _str
@@ -264,7 +319,7 @@ class StepLighter:
             _str = line_dumper(line_format, header=True)
             # _structs is a list of lists of structs
             for _l in _structs:
-                # lets look inside this _l list of structs which one we want
+                # let's look inside this _l list of structs which one we want
                 # either type 'sat' or type 'DURATION'
                 _sat, _dur = None, None
                 for _s in _l:
@@ -332,17 +387,17 @@ class StepLighter:
                 col_titles = []
                 for _d in _format:
                     col_titles.append(f'{_d["name"]:{_d["format"]}}')
-                title_line = " | ".join(col_titles)
+                title_line = "| ".join(col_titles)
                 title_top = "-" * len(title_line)
                 title_bots = ["-" * len(_t) for _t in col_titles]
-                title_bottom = "-+-".join(title_bots)
+                title_bottom = "+-".join(title_bots)
                 _str += f"{title_top}\n{title_line}\n{title_bottom}"
             elif _values:
                 col_values = []
                 for i, _v in enumerate(_values):
                     _f = _format[i]["format"]
                     col_values.append(f"{_v:{_f}}")
-                _str += " | ".join(col_values)
+                _str += "| ".join(col_values)
             return _str
 
         #  Get step number and choose which json 2 table dumper to use
@@ -374,6 +429,8 @@ class StepLighter:
             _r_str = dump_rawentities(structs_list, _type="region")
         elif step in ["10", "11", "12", "13", "14", "15"]:
             _r_str = dump_regions_links(structs_list)
+        elif step in ["16"]:
+            _r_str = dump_sat_regions(structs_list)
         else:
             _title = f"No json dump for step {step} of pipeline  V{caption["pipeline_version"]}"
             _line = "-" * len(_title)
