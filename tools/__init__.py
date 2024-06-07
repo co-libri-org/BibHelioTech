@@ -371,6 +371,48 @@ class StepLighter:
                 _str += line_dumper(line_format, _values=line_values)
             return _str
 
+        def dump_final(_structs):
+            """
+            Final structs list,  looking like
+              {
+                "D": 1141,
+                "DOI": "10.1051/0004-6361/202140910",
+                "R": 1,
+                "SO": 3,
+                "conf": 0.018560994257641565,
+                "inst": "",
+                "reg": "Venus",
+                "sat": "Mariner-10",
+                "start_time": "2018-10-03T00:00:00.000",
+                "stop_time": "2019-12-26T23:59:59.000"
+            },
+
+            @param _structs:
+            @return:
+            """
+            line_format = [
+                {"name": "start_time", "format":"25"},
+                {"name": "stop_time", "format":"25"},
+                {"name": "sat", "format":"20"},
+                {"name": "inst", "format":"10"},
+                {"name": "reg", "format":"20"},
+                {"name": "conf", "format":"<6"},
+            ]
+
+            _str = line_dumper(line_format, header=True)
+
+            for _s in _structs:
+                line_values = [
+                    _s["start_time"],
+                    _s["stop_time"],
+                    _s["sat"],
+                    _s["inst"],
+                    _s["reg"],
+                    f"{_s["conf"]:.4f}",
+                ]
+                _str += line_dumper(line_format, _values=line_values)
+            return _str
+
         def line_dumper(_format, _values=None, header=False):
             """
             Will return a values line formatted as described in the _format dict argument
@@ -431,6 +473,8 @@ class StepLighter:
             _r_str = dump_regions_links(structs_list)
         elif step in ["16"]:
             _r_str = dump_sat_regions(structs_list)
+        elif step in ["17", "18"]:
+            _r_str = dump_final(structs_list)
         else:
             _title = f"No json dump for step {step} of pipeline  V{caption["pipeline_version"]}"
             _line = "-" * len(_title)
