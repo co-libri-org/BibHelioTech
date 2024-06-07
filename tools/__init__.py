@@ -198,29 +198,39 @@ class StepLighter:
             return _str
 
         def dump_sat2duration(_structs):
-            (nm_l, sat_l, sut_l, beg_l, end_l) = (20, 10, 15, 25, 25)
-            col_title = f'{"sat_name":{nm_l}} {"sat_start":>{sat_l}} {"sut_start":>{sut_l}} {"sutime_begin":{beg_l}} {"sutime_end":{end_l}}\n'
-            _str = f"\n{'-' * len(col_title)}\n"
-            _str += col_title
-            _str += f"{'-' * len(col_title)}\n"
-            for _s in _structs:
-                if type(_s) is not list:
-                    raise Exception("Wrong struct list")
-                _sutime, _sat = (dict(), dict())
-                for _e in _s:
-                    if "type" not in _e.keys():
-                        continue
-                    if _e["type"] == "DURATION":
-                        _sutime = _e
-                    elif _e["type"] == "sat":
-                        _sat = _e
-                    else:
-                        continue
-                try:
-                    _str += f"""{_sat["text"]:{nm_l}} {_sat["start"]:{sat_l}} {_sutime["start"]:{sut_l}} {_sutime["value"]["begin"]:{beg_l}} {_sutime["value"]["end"]:{end_l}}\n"""
+            """
+            Data structure is the link between durations and satellites
+            as a list of lists of structures :
+            [
+                [ {sat_struct},{unknown}, {event}],
+                ...
+            ]
 
-                except KeyError:
-                    continue
+            @param _structs:
+            @return:
+            """
+            (nm_l, sat_l, sut_l, beg_l, end_l) = (20, 10, 15, 25, 25)
+            line_format = [
+                {"name": "sat_name reg.", "format": "20"},
+                {"name": "sat_start", "format": ">10"},
+                {"name": "sut_start", "format": ">15"},
+                {"name": "sutime_begin", "format": "25"},
+                {"name": "sutime_end", "format": "25"},
+            ]
+
+            _str = line_dumper(line_format, header=True)
+
+            for _ls in _structs:
+                _sat = _ls[0]
+                _sutime = _ls[2]
+                line_values = [
+                    _sat["text"],
+                    _sat["start"],
+                    _sutime["start"],
+                    _sutime["value"]["begin"],
+                    _sutime["value"]["end"],
+                ]
+                _str += line_dumper(line_format, _values=line_values)
             return _str
 
         def dump_normalized(_structs):
