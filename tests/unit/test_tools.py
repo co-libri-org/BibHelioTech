@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from bht.catalog_tools import (
@@ -43,6 +45,18 @@ class TestStepLighter:
         assert step_lighter.caption["step"] == "0"
         assert step_lighter.caption["pipeline_version"] == "4.0"
         assert step_lighter.caption["message"] == "0- Satellites Recognition"
+
+    def test_initialize(self, ocr_dir_v4):
+        """
+        GIVEN an ocr dir
+        WHEN StepLigther is instantiated
+        THEN check initialization runs ok
+        """
+
+        step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        step_lighter.initialize()
+        assert os.path.isfile(step_lighter._txt_filepath)
+        assert len(step_lighter._txt_raw.split("\n")) == 170
 
 
 class TestBhtTools:

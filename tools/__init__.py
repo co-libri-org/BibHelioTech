@@ -44,27 +44,34 @@ class StepLighter:
         self.step = int(step_num)
         self.ocr_dir = ocr_dir
         self.enlight_mode = enlight_mode
-        self.enlighted_txt_content = ""
-        self.caption_content = ""
-        self.raw_json_text = ""
-        self.analysed_json_text = ""
+        self._txt_filepath = ""
+        self._txt_raw = ""
+        self._txt_enlighted = ""
+        self._json_filepath = ""
+        self._json_raw = ""
+        self._json_struct = ""
+        self._json_caption = ""
+        self._json_string = ""
+        self._json_analysed = ""
+
+    def initialize(self):
+        txtfile_pattern = os.path.join(self.ocr_dir, "out_filtered_text.txt")
+        self._txt_filepath = glob.glob(txtfile_pattern, recursive=True)[0]
+        with open(self._txt_filepath) as txt_fd:
+            self._txt_raw = txt_fd.read()
 
     @property
     def caption(self):
-        if not self.caption_content:
-            self.caption_content, self.enlighted_txt_content = self.enlight_step()
-        return self.caption_content
+        return self._caption
 
     @property
-    def enlighted_txt(self):
-        if not self.enlighted_txt_content:
-            self.caption_content, self.enlighted_txt_content = self.enlight_step()
-        return self.enlighted_txt_content
+    def txt_enlighted(self):
+        return self._txt_enlighted
 
     @property
-    def raw_json(self):
-        if not self.raw_json_text:
-            self.raw_json_text = self.dump_json()
+    def raw_json_text(self):
+        if not self._raw_json_text:
+            self._raw_json_text = self.dump_json()
         return self.raw_json_text
 
     @property
@@ -109,6 +116,18 @@ class StepLighter:
             raise ToolsFileError(f"No such file {_json_filepath}")
         return _json_filepath
 
+    def split_json(self):
+        """
+        The original json has an additional structure appended: the caption.
+        We want to split  the raw json and that caption structure
+        @return:
+        """
+
+        with open(self.json_filepath) as json_fd:
+            json_content = json.load(json_fd)
+        self._caption = json_content.pop()
+        self._raw_json = json_content
+
     def enlight_step(self):
         """
         Given a directory, and a step, build the enlighted text for the given mode
@@ -118,10 +137,6 @@ class StepLighter:
         with open(self.json_filepath) as json_fd:
             json_content = json.load(json_fd)
         step_caption = json_content.pop()
-        txtfile_pattern = os.path.join(self.ocr_dir, "out_filtered_text.txt")
-        txtfilename = glob.glob(txtfile_pattern, recursive=True)[0]
-        with open(txtfilename) as txt_fd:
-            txt_content = txt_fd.read()
 
         return step_caption, enlight_txt(txt_content, json_content)
 
