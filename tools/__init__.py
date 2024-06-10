@@ -39,7 +39,7 @@ class RawDumper:
 
 # TODO: shall we move this to models.paper ?
 class StepLighter:
-    _all_captions = []
+    all_steps = []
     txt_filepath = ""
     txt_content = ""
     txt_enlighted = ""
@@ -83,15 +83,25 @@ class StepLighter:
         # Enlight raw text as html marked
         self.txt_enlighted = enlight_txt(self.txt_content, self.json_struct)
 
-    @property
-    def all_steps(self):
+        # Finally, set the captions list for this directory
+        self.all_steps = self.list_steps()
+
+    def list_steps(self):
         """
         Given a directory, and a mode, get the number of raw steps found
 
         @return: number of steps in the directory
         """
-        if self._all_captions:
-            return self._all_captions
+        _all_captions = []
+        # if _all_captions:
+        #     print("-"*90)
+        #     print("_all_captions allready set")
+        #     print("-"*90)
+        #     return _all_captions
+        # else:
+        #     print("+" * 90)
+        #     print("_all_captions NOT set")
+        #     print("+" * 90)
         jsonfiles_pattern = os.path.join(self.ocr_dir, f"raw*_{self.enlight_mode}.json")
         all_files = glob.glob(jsonfiles_pattern)
         # sort list by step number extracted from file name
@@ -103,9 +113,9 @@ class StepLighter:
             with open(f) as json_fd:
                 json_content = json.load(json_fd)
                 step_caption = json_content.pop()
-                self._all_captions.append(step_caption)
+                _all_captions.append(step_caption)
 
-        return self._all_captions
+        return _all_captions
 
     def analyse_json(self, with_header=False):
         """

@@ -75,6 +75,12 @@ class TestStepLighter:
         assert type(step_lighter.caption) is dict
         assert type(step_lighter.json_struct) is list
 
+    def test_all_steps(self, ocr_dir_v4):
+        sutime_step_lighter = StepLighter(ocr_dir_v4, 0, "sutime")
+        assert len(sutime_step_lighter.all_steps) == 12
+        entities_step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        assert len(entities_step_lighter.all_steps) == 19
+
     def test_jinja_calls(self, ocr_dir_v4):
         """
         GIVEN a stepligther
