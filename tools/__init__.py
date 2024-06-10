@@ -39,26 +39,36 @@ class RawDumper:
 
 # TODO: shall we move this to models.paper ?
 class StepLighter:
+    _all_captions = []
+    _txt_filepath = ""
+    _txt_raw = ""
+    _txt_enlighted = ""
+    _json_filepath = ""
+    _json_raw = ""
+    _json_struct = ""
+    _json_caption = ""
+    _json_string = ""
+    _json_analysed = ""
+
     def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
-        self._all_captions = []
         self.step = int(step_num)
         self.ocr_dir = ocr_dir
         self.enlight_mode = enlight_mode
-        self._txt_filepath = ""
-        self._txt_raw = ""
-        self._txt_enlighted = ""
-        self._json_filepath = ""
-        self._json_raw = ""
-        self._json_struct = ""
-        self._json_caption = ""
-        self._json_string = ""
-        self._json_analysed = ""
+
+        self.initialize()
 
     def initialize(self):
-        txtfile_pattern = os.path.join(self.ocr_dir, "out_filtered_text.txt")
-        self._txt_filepath = glob.glob(txtfile_pattern, recursive=True)[0]
+        self._txt_filepath = os.path.join(self.ocr_dir, "out_filtered_text.txt")
         with open(self._txt_filepath) as txt_fd:
             self._txt_raw = txt_fd.read()
+
+        self._json_filepath = os.path.join(
+            self.ocr_dir, f"raw{self.step}_{self.enlight_mode}.json"
+        )
+        if not os.path.isfile(self._json_filepath):
+            raise ToolsFileError(f"No such file {self._json_filepath}")
+        with open(self._json_filepath) as json_fd:
+            self._json_raw = json.load(json_fd)
 
     @property
     def caption(self):
@@ -107,14 +117,7 @@ class StepLighter:
     @property
     def json_filepath(self):
         """Given a pipeline mode and a step num, return the json filepath"""
-        jsonfile_pattern = os.path.join(
-            self.ocr_dir, f"raw{self.step}_{self.enlight_mode}.json"
-        )
-        print(jsonfile_pattern)
-        _json_filepath = glob.glob(jsonfile_pattern, recursive=True)[0]
-        if not os.path.isfile(_json_filepath):
-            raise ToolsFileError(f"No such file {_json_filepath}")
-        return _json_filepath
+        return self._json_filepath
 
     def split_json(self):
         """
@@ -123,8 +126,6 @@ class StepLighter:
         @return:
         """
 
-        with open(self.json_filepath) as json_fd:
-            json_content = json.load(json_fd)
         self._caption = json_content.pop()
         self._raw_json = json_content
 
@@ -406,12 +407,12 @@ class StepLighter:
             @return:
             """
             line_format = [
-                {"name": "start_time", "format":"25"},
-                {"name": "stop_time", "format":"25"},
-                {"name": "sat", "format":"20"},
-                {"name": "inst", "format":"10"},
-                {"name": "reg", "format":"20"},
-                {"name": "conf", "format":"<6"},
+                {"name": "start_time", "format": "25"},
+                {"name": "stop_time", "format": "25"},
+                {"name": "sat", "format": "20"},
+                {"name": "inst", "format": "10"},
+                {"name": "reg", "format": "20"},
+                {"name": "conf", "format": "<6"},
             ]
 
             _str = line_dumper(line_format, header=True)
