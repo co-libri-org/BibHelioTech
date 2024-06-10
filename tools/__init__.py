@@ -93,15 +93,6 @@ class StepLighter:
         @return: number of steps in the directory
         """
         _all_captions = []
-        # if _all_captions:
-        #     print("-"*90)
-        #     print("_all_captions allready set")
-        #     print("-"*90)
-        #     return _all_captions
-        # else:
-        #     print("+" * 90)
-        #     print("_all_captions NOT set")
-        #     print("+" * 90)
         jsonfiles_pattern = os.path.join(self.ocr_dir, f"raw*_{self.enlight_mode}.json")
         all_files = glob.glob(jsonfiles_pattern)
         # sort list by step number extracted from file name
@@ -206,8 +197,13 @@ class StepLighter:
             _str = line_dumper(line_format, header=True)
 
             for _ls in _structs:
-                _sat = _ls[0]
-                _sutime = _ls[2]
+                # identify struct
+                try:
+                    _sat = _ls[0]
+                    _sutime = _ls[2]
+                except IndexError:
+                    continue
+
                 line_values = [
                     _sat["text"],
                     _sat["start"],

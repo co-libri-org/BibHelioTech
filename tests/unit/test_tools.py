@@ -93,6 +93,15 @@ class TestStepLighter:
         assert len(step_lighter.json_string.split("\n")) == 350
         assert len(step_lighter.json_analysed.split("\n")) == 63
 
+    def test_entities_7(self, ocr_dir_v4):
+        """
+        GIVEN a on ocr dir v4
+        WHEN stepligther is instanciated at step 7
+        THEN check no Exception is raised
+        """
+        step_lighter = StepLighter(ocr_dir_v4, 7, "entities")
+        assert True
+
 
 class TestBhtTools:
     def test_row_to_dict(self, event_as_row):
