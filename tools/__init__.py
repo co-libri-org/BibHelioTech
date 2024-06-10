@@ -443,18 +443,18 @@ class StepLighter:
             return _str
 
         #  Get step number and choose which json 2 table dumper to use
-        caption = structs_list.pop()
-        # 1- from caption key
-        try:
-            step = caption["step"]
-        except KeyError:
-            step = None
-        # 2- or from guessed from message
-        if step is None:
-            try:
-                step = caption["message"].split("-")[0]
-            except KeyError:
-                step = None
+        step = None
+        _caption = structs_list.pop()
+        if type(_caption) is str:
+            # 0- from caption string
+            step = _caption.split("-")[0]
+        elif type(_caption) is dict:
+            if "step" in _caption.keys():
+                # 1- from caption key
+                step = _caption["step"]
+            elif "message" in _caption.keys():
+                # 2- or from guessed from message
+                step = _caption["message"].split("-")[0]
 
         # Run dumping method depending on step level
         if step in ["0", "2"]:
@@ -476,7 +476,7 @@ class StepLighter:
         elif step in ["17", "18"]:
             _r_str = dump_final(structs_list)
         else:
-            _title = f"No json dump for step {step} of pipeline  V{caption["pipeline_version"]}"
+            _title = f"No json dump for step {step} of pipeline  V{_caption["pipeline_version"]}"
             _line = "-" * len(_title)
             _r_str = f"\n{_line}\n{_title}\n{_line}"
         return _r_str
