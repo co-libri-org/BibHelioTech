@@ -53,7 +53,7 @@ class TestStepLighter:
         THEN check initialization runs ok
         """
         step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
-        assert os.path.isfile(step_lighter._txt_filepath)
+        assert os.path.isfile(step_lighter.txt_filepath)
         assert len(step_lighter.txt_content.split("\n")) == 170
 
     def test_initialize_json_path(self, ocr_dir_v4):
@@ -63,7 +63,6 @@ class TestStepLighter:
         THEN check json path is ok
         """
         step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
-        assert os.path.isfile(step_lighter._json_filepath)
         assert os.path.isfile(step_lighter.json_filepath)
 
     def test_initialize_json_params(self, ocr_dir_v4):

@@ -40,14 +40,12 @@ class RawDumper:
 # TODO: shall we move this to models.paper ?
 class StepLighter:
     _all_captions = []
-    _txt_filepath = ""
+    txt_filepath = ""
     txt_content = ""
-    _txt_enlighted = ""
-    _json_filepath = ""
-    _json_caption = ""
-    _json_struct = ""
-    _json_string = ""
-    _json_analysed = ""
+    json_filepath = ""
+    caption = ""
+    json_struct = ""
+    json_string = ""
 
     def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
         self.step = int(step_num)
@@ -59,61 +57,27 @@ class StepLighter:
     def initialize(self):
 
         # Read the cleaned text version of the article
-        self._txt_filepath = os.path.join(self.ocr_dir, "out_filtered_text.txt")
-        with open(self._txt_filepath) as txt_fd:
+        self.txt_filepath = os.path.join(self.ocr_dir, "out_filtered_text.txt")
+        with open(self.txt_filepath) as txt_fd:
             self.txt_content = txt_fd.read()
 
         # Read the json file corresponding to step_number/enlight_mode
-        self._json_filepath = os.path.join(
+        self.json_filepath = os.path.join(
             self.ocr_dir, f"raw{self.step}_{self.enlight_mode}.json"
         )
-        if not os.path.isfile(self._json_filepath):
-            raise ToolsFileError(f"No such file {self._json_filepath}")
-        with open(self._json_filepath) as json_fd:
+        if not os.path.isfile(self.json_filepath):
+            raise ToolsFileError(f"No such file {self.json_filepath}")
+        with open(self.json_filepath) as json_fd:
             _json_raw = json.load(json_fd)
 
         # Initialize json attributes
-        self._json_caption = _json_raw.pop()
-        self._json_struct = _json_raw.copy()
-        self._json_string = json.dumps(self._json_struct, indent=4)
+        self.caption = _json_raw.pop()
+        self.json_struct = _json_raw.copy()
+        self.json_string = json.dumps(self.json_struct, indent=4)
 
         # Create the json table dump
 
-    @property
-    def caption(self):
-        return self._json_caption
-
-    @property
-    def json_struct(self):
-        return self._json_struct
-
-    @property
-    def json_string(self):
-        return self._json_string
-
-    @property
-    def json_analysed(self):
-        return self._json_analysed
-
-    @property
-    def json_filepath(self):
-        """Given a pipeline mode and a step num, return the json filepath"""
-        return self._json_filepath
-
-    def analyse_json(self, with_header=False):
-        """
-        Wrapper for json convert to text from sutime or entities output
-        """
-        with open(self.json_filepath, "r") as json_df:
-            structs_list = json.load(json_df)
-        if self.enlight_mode == "entities":
-            return self.analyse_entities_json(structs_list, with_header)
-        elif self.enlight_mode == "sutime":
-            return self.analyse_sutime_json(structs_list, with_header)
-
-    @property
-    def txt_enlighted(self):
-        return self._txt_enlighted
+        # Enlight raw text as html marked
 
     @property
     def all_steps(self):
@@ -139,13 +103,16 @@ class StepLighter:
 
         return self._all_captions
 
-    def enlight_step(self):
+    def analyse_json(self, with_header=False):
         """
-        Given a directory, and a step, build the enlighted text for the given mode
-
-        @return: the out_filtered_txt with <div> colored from json
+        Wrapper for json convert to text from sutime or entities output
         """
-        return enlight_txt(self.txt_content, self.json_struct)
+        with open(self.json_filepath, "r") as json_df:
+            structs_list = json.load(json_df)
+        if self.enlight_mode == "entities":
+            return self.analyse_entities_json(structs_list, with_header)
+        elif self.enlight_mode == "sutime":
+            return self.analyse_sutime_json(structs_list, with_header)
 
     def analyse_entities_json(self, structs_list, with_header=False):
         """
