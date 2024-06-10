@@ -30,14 +30,14 @@ class TestStepLighter:
             _type = _l.split("|")[0].strip()
             if _type in ["DATE", "DURATION", "TIME"]:
                 filtered_lines.append(_type)
-        json_struct = json.loads(step_lighter.dump_json())
+        json_struct = json.loads(step_lighter.json_string)
         # Compare analysed list length with json structs number
         assert len(json_struct) == len(filtered_lines)
 
     def test_caption(self, ocr_dir_v4):
         """
         GIVEN an ocr dir
-        WHEN StepLigther is instantiated
+        WHEN StepLighter is instantiated
         THEN check caption is ok
         """
         step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
@@ -49,26 +49,32 @@ class TestStepLighter:
     def test_initialize_txt(self, ocr_dir_v4):
         """
         GIVEN an ocr dir
-        WHEN StepLigther is instantiated
+        WHEN StepLighter is instantiated
         THEN check initialization runs ok
         """
-
         step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
-
         assert os.path.isfile(step_lighter._txt_filepath)
-        assert len(step_lighter._txt_raw.split("\n")) == 170
+        assert len(step_lighter.txt_content.split("\n")) == 170
 
-    def test_initialize_json(self, ocr_dir_v4):
+    def test_initialize_json_path(self, ocr_dir_v4):
         """
         GIVEN an ocr dir
-        WHEN StepLigther is instantiated
-        THEN check initialization runs ok
+        WHEN StepLighter is instantiated
+        THEN check json path is ok
         """
-
         step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
-
         assert os.path.isfile(step_lighter._json_filepath)
         assert os.path.isfile(step_lighter.json_filepath)
+
+    def test_initialize_json_params(self, ocr_dir_v4):
+        """
+        GIVEN an ocr dir
+        WHEN StepLighter is instantiated
+        THEN check json vars are ok
+        """
+        step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        assert type(step_lighter.caption) is dict
+        assert type(step_lighter.json_struct) is list
 
 
 class TestBhtTools:

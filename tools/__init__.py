@@ -41,12 +41,11 @@ class RawDumper:
 class StepLighter:
     _all_captions = []
     _txt_filepath = ""
-    _txt_raw = ""
+    txt_content = ""
     _txt_enlighted = ""
     _json_filepath = ""
-    _json_raw = ""
-    _json_struct = ""
     _json_caption = ""
+    _json_struct = ""
     _json_string = ""
     _json_analysed = ""
 
@@ -58,37 +57,63 @@ class StepLighter:
         self.initialize()
 
     def initialize(self):
+
+        # Read the cleaned text version of the article
         self._txt_filepath = os.path.join(self.ocr_dir, "out_filtered_text.txt")
         with open(self._txt_filepath) as txt_fd:
-            self._txt_raw = txt_fd.read()
+            self.txt_content = txt_fd.read()
 
+        # Read the json file corresponding to step_number/enlight_mode
         self._json_filepath = os.path.join(
             self.ocr_dir, f"raw{self.step}_{self.enlight_mode}.json"
         )
         if not os.path.isfile(self._json_filepath):
             raise ToolsFileError(f"No such file {self._json_filepath}")
         with open(self._json_filepath) as json_fd:
-            self._json_raw = json.load(json_fd)
+            _json_raw = json.load(json_fd)
+
+        # Initialize json attributes
+        self._json_caption = _json_raw.pop()
+        self._json_struct = _json_raw.copy()
+        self._json_string = json.dumps(self._json_struct, indent=4)
+
+        # Create the json table dump
 
     @property
     def caption(self):
-        return self._caption
+        return self._json_caption
+
+    @property
+    def json_struct(self):
+        return self._json_struct
+
+    @property
+    def json_string(self):
+        return self._json_string
+
+    @property
+    def json_analysed(self):
+        return self._json_analysed
+
+    @property
+    def json_filepath(self):
+        """Given a pipeline mode and a step num, return the json filepath"""
+        return self._json_filepath
+
+    def analyse_json(self, with_header=False):
+        """
+        Wrapper for json convert to text from sutime or entities output
+        """
+        with open(self.json_filepath, "r") as json_df:
+            structs_list = json.load(json_df)
+        if self.enlight_mode == "entities":
+            return self.analyse_entities_json(structs_list, with_header)
+        elif self.enlight_mode == "sutime":
+            return self.analyse_sutime_json(structs_list, with_header)
 
     @property
     def txt_enlighted(self):
         return self._txt_enlighted
-
-    @property
-    def raw_json_text(self):
-        if not self._raw_json_text:
-            self._raw_json_text = self.dump_json()
-        return self.raw_json_text
-
-    @property
-    def analysed_json(self):
-        if not self.analysed_json_text:
-            self.analysed_json_text = self.analyse_json()
-        return self.analysed_json_text
 
     @property
     def all_steps(self):
@@ -114,49 +139,13 @@ class StepLighter:
 
         return self._all_captions
 
-    @property
-    def json_filepath(self):
-        """Given a pipeline mode and a step num, return the json filepath"""
-        return self._json_filepath
-
-    def split_json(self):
-        """
-        The original json has an additional structure appended: the caption.
-        We want to split  the raw json and that caption structure
-        @return:
-        """
-
-        self._caption = json_content.pop()
-        self._raw_json = json_content
-
     def enlight_step(self):
         """
         Given a directory, and a step, build the enlighted text for the given mode
 
         @return: the out_filtered_txt with <div> colored from json
         """
-        with open(self.json_filepath) as json_fd:
-            json_content = json.load(json_fd)
-        step_caption = json_content.pop()
-
-        return step_caption, enlight_txt(txt_content, json_content)
-
-    def dump_json(self):
-        with open(self.json_filepath, "r") as json_df:
-            dicts_list = json.load(json_df)
-        dicts_list.pop()
-        return json.dumps(dicts_list, indent=4)
-
-    def analyse_json(self, with_header=False):
-        """
-        Wrapper for json convert to text from sutime or entities output
-        """
-        with open(self.json_filepath, "r") as json_df:
-            structs_list = json.load(json_df)
-        if self.enlight_mode == "entities":
-            return self.analyse_entities_json(structs_list, with_header)
-        elif self.enlight_mode == "sutime":
-            return self.analyse_sutime_json(structs_list, with_header)
+        return enlight_txt(self.txt_content, self.json_struct)
 
     def analyse_entities_json(self, structs_list, with_header=False):
         """
