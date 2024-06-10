@@ -32,6 +32,18 @@ class TestStepLighter:
         # Compare analysed list length with json structs number
         assert len(json_struct) == len(filtered_lines)
 
+    def test_caption(self, ocr_dir_v4):
+        """
+        GIVEN an ocr dir
+        WHEN StepLigther is instantiated
+        THEN check caption is ok
+        """
+        step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        assert type(step_lighter.caption) is dict
+        assert step_lighter.caption["step"] == "0"
+        assert step_lighter.caption["pipeline_version"] == "4.0"
+        assert step_lighter.caption["message"] == "0- Satellites Recognition"
+
 
 class TestBhtTools:
     def test_row_to_dict(self, event_as_row):
@@ -64,7 +76,7 @@ class TestBhtTools:
             ["doi", "sats", "insts", "regs", "start_time", "stop_time"],
         )
         # cat_rows=[_r for _r in cat_str.split('\n') if '#' not in _r]
-        cat_rows = cat_str.split('\n')
+        cat_rows = cat_str.split("\n")
         assert len(cat_rows) == 67
 
     def test_rows_to_catstring_allkeys(self, cat_for_test):

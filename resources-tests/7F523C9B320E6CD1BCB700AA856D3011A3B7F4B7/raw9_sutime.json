@@ -1,0 +1,16 @@
+[
+    {
+        "end": 6244,
+        "start": 6205,
+        "text": "from March 26 1998 to September 23 1998",
+        "type": "DURATION",
+        "value": {
+            "begin": "1998-03-26T00:00:00.000",
+            "end": "1998-09-23T23:59:59.000"
+        }
+    },
+    {
+        "message": "9- Do some :59:59.999 magic ",
+        "pipeline_version": "4.0"
+    }
+]

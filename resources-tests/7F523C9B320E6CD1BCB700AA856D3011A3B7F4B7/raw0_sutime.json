@@ -1,0 +1,192 @@
+[
+    {
+        "end": 956,
+        "start": 949,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 1497,
+        "start": 1493,
+        "text": "once",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 1510,
+        "start": 1506,
+        "text": "year",
+        "timex-value": "P1Y",
+        "type": "DURATION",
+        "value": "P1Y"
+    },
+    {
+        "end": 4942,
+        "start": 4936,
+        "text": "future",
+        "timex-value": "FUTURE_REF",
+        "type": "DATE",
+        "value": "FUTURE_REF"
+    },
+    {
+        "end": 4987,
+        "start": 4981,
+        "text": "future",
+        "timex-value": "FUTURE_REF",
+        "type": "DATE",
+        "value": "FUTURE_REF"
+    },
+    {
+        "end": 6197,
+        "start": 6184,
+        "text": "several-month",
+        "timex-value": "PXM",
+        "type": "DURATION",
+        "value": "PXM"
+    },
+    {
+        "end": 6244,
+        "start": 6205,
+        "text": "from March 26 1998 to September 23 1998",
+        "type": "DURATION",
+        "value": {
+            "begin": "1998-03-26",
+            "end": "1998-09-23"
+        }
+    },
+    {
+        "end": 6427,
+        "start": 6424,
+        "text": "day",
+        "timex-value": "P1D",
+        "type": "DURATION",
+        "value": "P1D"
+    },
+    {
+        "end": 8237,
+        "start": 8230,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 8303,
+        "start": 8296,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 11059,
+        "start": 11052,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 11952,
+        "start": 11945,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 12685,
+        "start": 12682,
+        "text": "day",
+        "timex-value": "P1D",
+        "type": "DURATION",
+        "value": "P1D"
+    },
+    {
+        "end": 12700,
+        "start": 12696,
+        "text": "1998",
+        "timex-value": "1998",
+        "type": "DATE",
+        "value": "1998"
+    },
+    {
+        "end": 13001,
+        "start": 12997,
+        "text": "year",
+        "timex-value": "P1Y",
+        "type": "DURATION",
+        "value": "P1Y"
+    },
+    {
+        "end": 16798,
+        "start": 16791,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 20935,
+        "start": 20928,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 21433,
+        "start": 21429,
+        "text": "1600",
+        "timex-value": "1600",
+        "type": "DATE",
+        "value": "1600"
+    },
+    {
+        "end": 22687,
+        "start": 22683,
+        "text": "2001",
+        "timex-value": "2001",
+        "type": "DATE",
+        "value": "2001"
+    },
+    {
+        "end": 26696,
+        "start": 26688,
+        "text": "a second",
+        "timex-value": "PT1S",
+        "type": "DURATION",
+        "value": "PT1S"
+    },
+    {
+        "end": 27404,
+        "start": 27400,
+        "text": "noon",
+        "timex-value": "2024-06-05T12:00",
+        "type": "TIME",
+        "value": "2024-06-05T12:00"
+    },
+    {
+        "end": 28827,
+        "start": 28820,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 29373,
+        "start": 29366,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "message": "0- Raw sutime output",
+        "pipeline_version": "4.0"
+    }
+]
