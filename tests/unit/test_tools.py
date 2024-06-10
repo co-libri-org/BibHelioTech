@@ -75,6 +75,18 @@ class TestStepLighter:
         assert type(step_lighter.caption) is dict
         assert type(step_lighter.json_struct) is list
 
+    def test_jinja_calls(self, ocr_dir_v4):
+        """
+        GIVEN a stepligther
+        WHEN html methods called
+        THEN check content is ok
+        """
+        step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        assert type(step_lighter.txt_enlighted) is str
+        assert len(step_lighter.txt_enlighted) == 35732
+        assert len(step_lighter.json_string.split("\n")) == 350
+        assert len(step_lighter.json_analysed.split("\n")) == 63
+
 
 class TestBhtTools:
     def test_row_to_dict(self, event_as_row):

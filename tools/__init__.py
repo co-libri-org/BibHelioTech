@@ -42,10 +42,12 @@ class StepLighter:
     _all_captions = []
     txt_filepath = ""
     txt_content = ""
+    txt_enlighted = ""
     json_filepath = ""
     caption = ""
     json_struct = ""
     json_string = ""
+    json_analysed = ""
 
     def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
         self.step = int(step_num)
@@ -76,8 +78,10 @@ class StepLighter:
         self.json_string = json.dumps(self.json_struct, indent=4)
 
         # Create the json table dump
+        self.json_analysed = self.analyse_json()
 
         # Enlight raw text as html marked
+        self.txt_enlighted = enlight_txt(self.txt_content, self.json_struct)
 
     @property
     def all_steps(self):

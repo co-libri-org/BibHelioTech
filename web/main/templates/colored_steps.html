@@ -68,14 +68,14 @@
 {% endif %}
 <div id="colored_content">
 {% if disp_mode == "enlighted" %}
-    {{step_lighter.enlighted_txt|safe}}
+    {{step_lighter.txt_enlighted|safe}}
 {% elif disp_mode == "raw" %}
     <pre>
-    {{step_lighter.raw_json|safe}}
+    {{step_lighter.json_string|safe}}
     </pre>
 {% elif disp_mode == "analysed" %}
     <pre>
-    {{step_lighter.analysed_json|safe}}
+    {{step_lighter.json_analysed|safe}}
     </pre>
 {% endif %}
 </div>
