@@ -15,25 +15,26 @@ import json
 
 
 class TestStepLighter:
-    def test_analyse_length(self, ocr_dir_sutime):
+    def test_analysed_sutime(self, ocr_dir_v4):
         """
         GIVEN a json struct
         WHEN analysed is run
         THEN check both length are equal
         """
-        step_lighter = StepLighter(ocr_dir_sutime, 0, "sutime")
-        # get  the whole output as a list
+        step_lighter = StepLighter(ocr_dir_v4, 0, "sutime")
+        # From that the json analysis as txt table, only keep lines from json struct (not header)
         analysed_lines = step_lighter.analyse_json().split("\n")
-        # only keep lines from json struct
         filtered_lines = []
         for _l in analysed_lines:
             _type = _l.split("|")[0].strip()
             if _type in ["DATE", "DURATION", "TIME"]:
                 filtered_lines.append(_type)
+
+        # Now, get the raw json struct
         json_struct = json.loads(step_lighter.json_string)
-        # Compare analysed list length with json structs number
+
+        #  Both lists lengths should be equal
         assert len(json_struct) == len(filtered_lines)
-        # assert True
 
     def test_caption(self, ocr_dir_v4):
         """
