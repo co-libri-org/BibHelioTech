@@ -33,6 +33,7 @@ class TestStepLighter:
         json_struct = json.loads(step_lighter.json_string)
         # Compare analysed list length with json structs number
         assert len(json_struct) == len(filtered_lines)
+        # assert True
 
     def test_caption(self, ocr_dir_v4):
         """
