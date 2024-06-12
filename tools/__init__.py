@@ -576,8 +576,6 @@ class JsonAnalyser:
         @return: String with sutime dict's keys [text, timex-value, value]
         """
 
-        # remove step message at end of json
-        msg = self._structs.pop()
 
         # compute types
         all_types = [elmt["type"] for elmt in self._structs]
@@ -585,15 +583,11 @@ class JsonAnalyser:
         count_types = {_t: all_types.count(_t) for _t in uniq_types}
         _res_str = "\n"
 
-        if with_header:
-            msg = f"{msg}: {len(self._structs)} elmnts"
-            msg_sub = len(msg) * "-"
-            _res_str += f"{msg_sub:^50}\n"
-            _res_str += f"{msg:^50}\n"
-            _res_str += f"{msg_sub:^50}\n"
-            _res_str += "\n"
-
-        # Show types report
+        # Show types report, id the number of each types like this:
+        #
+        #            13 DATE
+        #            7 DURATION
+        #            1 TIME
         written_types = 0
         for k, v in count_types.items():
             written_types += 1
