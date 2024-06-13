@@ -1,0 +1,1033 @@
+[
+    {
+        "end": 1675,
+        "start": 1660,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 1823,
+        "start": 1808,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 2005,
+        "start": 1990,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 2056,
+        "start": 2041,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 2243,
+        "start": 2228,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 2289,
+        "start": 2274,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 2426,
+        "start": 2411,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 2586,
+        "start": 2571,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 2655,
+        "start": 2640,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 2719,
+        "start": 2704,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 2887,
+        "start": 2872,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 3096,
+        "start": 3081,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 3214,
+        "start": 3199,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 3376,
+        "start": 3361,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 3838,
+        "start": 3823,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 4069,
+        "start": 4054,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 4258,
+        "start": 4243,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 4323,
+        "start": 4308,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 4483,
+        "start": 4468,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 5251,
+        "start": 5236,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 5919,
+        "start": 5904,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 6772,
+        "start": 6757,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 7076,
+        "start": 7061,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 7247,
+        "start": 7232,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 7787,
+        "start": 7772,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 7949,
+        "start": 7934,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 8443,
+        "start": 8428,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 8539,
+        "start": 8524,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 9043,
+        "start": 9028,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 9811,
+        "start": 9796,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 9865,
+        "start": 9850,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 9967,
+        "start": 9952,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 10147,
+        "start": 10132,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 11278,
+        "start": 11263,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 11551,
+        "start": 11536,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 11907,
+        "start": 11892,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 12356,
+        "start": 12341,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 12474,
+        "start": 12459,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 12519,
+        "start": 12504,
+        "text": "Magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 12600,
+        "start": 12585,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 13033,
+        "start": 13018,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 13235,
+        "start": 13220,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 13454,
+        "start": 13439,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 13827,
+        "start": 13812,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 14296,
+        "start": 14281,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 15379,
+        "start": 15364,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 16072,
+        "start": 16057,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 16473,
+        "start": 16458,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 16516,
+        "start": 16501,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 16579,
+        "start": 16564,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 16762,
+        "start": 16747,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 17089,
+        "start": 17074,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 17898,
+        "start": 17883,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 18058,
+        "start": 18043,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 18214,
+        "start": 18199,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 18336,
+        "start": 18321,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 18556,
+        "start": 18541,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 19560,
+        "start": 19545,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 19702,
+        "start": 19687,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 19952,
+        "start": 19937,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 19998,
+        "start": 19983,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 20324,
+        "start": 20309,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 20860,
+        "start": 20845,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 21066,
+        "start": 21051,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 21494,
+        "start": 21479,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 21863,
+        "start": 21848,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 22017,
+        "start": 22002,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 22201,
+        "start": 22186,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 22326,
+        "start": 22311,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 22835,
+        "start": 22820,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 23056,
+        "start": 23041,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 24665,
+        "start": 24650,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 25896,
+        "start": 25881,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 26934,
+        "start": 26919,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 27140,
+        "start": 27125,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 27242,
+        "start": 27227,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 27318,
+        "start": 27303,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 27358,
+        "start": 27343,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 27648,
+        "start": 27633,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 27852,
+        "start": 27837,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 28354,
+        "start": 28339,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 28890,
+        "start": 28875,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 29215,
+        "start": 29200,
+        "text": "magnetosheath",
+        "type": "region"
+    },
+    {
+        "end": 8372,
+        "start": 8357,
+        "text": "magnetosphere",
+        "type": "region"
+    },
+    {
+        "end": 22308,
+        "start": 22293,
+        "text": "magnetosphere",
+        "type": "region"
+    },
+    {
+        "end": 23313,
+        "start": 23298,
+        "text": "magnetosphere",
+        "type": "region"
+    },
+    {
+        "end": 2614,
+        "start": 2601,
+        "text": "magnetotail",
+        "type": "region"
+    },
+    {
+        "end": 3404,
+        "start": 3391,
+        "text": "magnetotail",
+        "type": "region"
+    },
+    {
+        "end": 4017,
+        "start": 4011,
+        "text": "main",
+        "type": "region"
+    },
+    {
+        "end": 6491,
+        "start": 6484,
+        "text": "polar",
+        "type": "region"
+    },
+    {
+        "end": 7271,
+        "start": 7264,
+        "text": "polar",
+        "type": "region"
+    },
+    {
+        "end": 11988,
+        "start": 11981,
+        "text": "polar",
+        "type": "region"
+    },
+    {
+        "end": 12269,
+        "start": 12262,
+        "text": "polar",
+        "type": "region"
+    },
+    {
+        "end": 8886,
+        "start": 8874,
+        "text": "atmosphere",
+        "type": "region"
+    },
+    {
+        "end": 24634,
+        "start": 24622,
+        "text": "atmosphere",
+        "type": "region"
+    },
+    {
+        "end": 753,
+        "start": 741,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 1024,
+        "start": 1012,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 2517,
+        "start": 2505,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 8961,
+        "start": 8949,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 9080,
+        "start": 9068,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 9501,
+        "start": 9489,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 11380,
+        "start": 11368,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 14508,
+        "start": 14496,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 17030,
+        "start": 17018,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 19794,
+        "start": 19782,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 23104,
+        "start": 23092,
+        "text": "ionosphere",
+        "type": "region"
+    },
+    {
+        "end": 20753,
+        "start": 20744,
+        "text": "surface",
+        "type": "region"
+    },
+    {
+        "end": 59,
+        "start": 53,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 2845,
+        "start": 2839,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 3506,
+        "start": 3500,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 3772,
+        "start": 3766,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 3918,
+        "start": 3912,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 5464,
+        "start": 5458,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 7633,
+        "start": 7627,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 8296,
+        "start": 8290,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 8606,
+        "start": 8600,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 10057,
+        "start": 10051,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 10734,
+        "start": 10728,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 13864,
+        "start": 13858,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 14999,
+        "start": 14993,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 18066,
+        "start": 18060,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 19134,
+        "start": 19128,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 20109,
+        "start": 20103,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 20517,
+        "start": 20511,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 22083,
+        "start": 22077,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 22505,
+        "start": 22499,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 23551,
+        "start": 23545,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 26557,
+        "start": 26551,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 26681,
+        "start": 26675,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 26902,
+        "start": 26896,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 27279,
+        "start": 27273,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 27413,
+        "start": 27407,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 28745,
+        "start": 28739,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 29284,
+        "start": 29278,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 29344,
+        "start": 29338,
+        "text": "Mars",
+        "type": "region"
+    },
+    {
+        "end": 17336,
+        "start": 17331,
+        "text": "Sun",
+        "type": "region"
+    },
+    {
+        "end": 23564,
+        "start": 23559,
+        "text": "Sun",
+        "type": "region"
+    },
+    {
+        "end": 26409,
+        "start": 26404,
+        "text": "Sun",
+        "type": "region"
+    },
+    {
+        "end": 50,
+        "start": 43,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 274,
+        "start": 267,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 350,
+        "start": 343,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 1506,
+        "start": 1499,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 2938,
+        "start": 2931,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 3476,
+        "start": 3469,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 4523,
+        "start": 4516,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 4589,
+        "start": 4582,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 4761,
+        "start": 4754,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 5641,
+        "start": 5634,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 8287,
+        "start": 8280,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 8597,
+        "start": 8590,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 10036,
+        "start": 10029,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 10686,
+        "start": 10679,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 12997,
+        "start": 12990,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 13813,
+        "start": 13806,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 13977,
+        "start": 13970,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 19367,
+        "start": 19360,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 19546,
+        "start": 19539,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 22103,
+        "start": 22096,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 29224,
+        "start": 29217,
+        "text": "Venus",
+        "type": "region"
+    },
+    {
+        "end": 1809,
+        "start": 1802,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 3346,
+        "start": 3339,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 4244,
+        "start": 4237,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 13019,
+        "start": 13012,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 16748,
+        "start": 16741,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 17075,
+        "start": 17068,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 19938,
+        "start": 19931,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 20310,
+        "start": 20303,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 20846,
+        "start": 20839,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 27228,
+        "start": 27221,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 27304,
+        "start": 27297,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "end": 28868,
+        "start": 28861,
+        "text": "inner",
+        "type": "region"
+    },
+    {
+        "message": "9- Find Region",
+        "pipeline_version": "4.0",
+        "step": "9"
+    }
+]

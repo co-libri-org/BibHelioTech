@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from bht.catalog_tools import (
@@ -13,24 +15,94 @@ import json
 
 
 class TestStepLighter:
-    def test_analyse_length(self, ocr_dir_sutime):
+    def test_analysed_sutime(self, ocr_dir_v4):
         """
         GIVEN a json struct
         WHEN analysed is run
         THEN check both length are equal
         """
-        step_lighter = StepLighter(ocr_dir_sutime, 0, "sutime")
-        # get  the whole output as a list
+        step_lighter = StepLighter(ocr_dir_v4, 0, "sutime")
+        # From that the json analysis as txt table, only keep lines from json struct (not header)
         analysed_lines = step_lighter.analyse_json().split("\n")
-        # only keep lines from json struct
         filtered_lines = []
         for _l in analysed_lines:
             _type = _l.split("|")[0].strip()
             if _type in ["DATE", "DURATION", "TIME"]:
                 filtered_lines.append(_type)
-        json_struct = json.loads(step_lighter.dump_json())
-        # Compare analysed list length with json structs number
+
+        # Now, get the raw json struct
+        json_struct = json.loads(step_lighter.json_string)
+
+        #  Both lists lengths should be equal
         assert len(json_struct) == len(filtered_lines)
+
+    def test_caption(self, ocr_dir_v4):
+        """
+        GIVEN an ocr dir
+        WHEN StepLighter is instantiated
+        THEN check caption is ok
+        """
+        step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        assert type(step_lighter.caption) is dict
+        assert step_lighter.caption["step"] == "0"
+        assert step_lighter.caption["pipeline_version"] == "4.0"
+        assert step_lighter.caption["message"] == "0- Satellites Recognition"
+
+    def test_initialize_txt(self, ocr_dir_v4):
+        """
+        GIVEN an ocr dir
+        WHEN StepLighter is instantiated
+        THEN check initialization runs ok
+        """
+        step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        assert os.path.isfile(step_lighter.txt_filepath)
+        assert len(step_lighter.txt_content.split("\n")) == 170
+
+    def test_initialize_json_path(self, ocr_dir_v4):
+        """
+        GIVEN an ocr dir
+        WHEN StepLighter is instantiated
+        THEN check json path is ok
+        """
+        step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        assert os.path.isfile(step_lighter.json_filepath)
+
+    def test_initialize_json_params(self, ocr_dir_v4):
+        """
+        GIVEN an ocr dir
+        WHEN StepLighter is instantiated
+        THEN check json vars are ok
+        """
+        step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        assert type(step_lighter.caption) is dict
+        assert type(step_lighter.json_struct) is list
+
+    def test_all_steps(self, ocr_dir_v4):
+        sutime_step_lighter = StepLighter(ocr_dir_v4, 0, "sutime")
+        assert len(sutime_step_lighter.all_steps) == 12
+        entities_step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        assert len(entities_step_lighter.all_steps) == 19
+
+    def test_jinja_calls(self, ocr_dir_v4):
+        """
+        GIVEN a stepligther
+        WHEN html methods called
+        THEN check content is ok
+        """
+        step_lighter = StepLighter(ocr_dir_v4, 0, "entities")
+        assert type(step_lighter.txt_enlighted) is str
+        assert len(step_lighter.txt_enlighted) == 35732
+        assert len(step_lighter.json_string.split("\n")) == 350
+        assert len(step_lighter.json_analysed.split("\n")) == 63
+
+    def test_entities_7(self, ocr_dir_v4):
+        """
+        GIVEN a on ocr dir v4
+        WHEN stepligther is instanciated at step 7
+        THEN check no Exception is raised
+        """
+        step_lighter = StepLighter(ocr_dir_v4, 7, "entities")
+        assert True
 
 
 class TestBhtTools:
@@ -64,7 +136,7 @@ class TestBhtTools:
             ["doi", "sats", "insts", "regs", "start_time", "stop_time"],
         )
         # cat_rows=[_r for _r in cat_str.split('\n') if '#' not in _r]
-        cat_rows = cat_str.split('\n')
+        cat_rows = cat_str.split("\n")
         assert len(cat_rows) == 67
 
     def test_rows_to_catstring_allkeys(self, cat_for_test):

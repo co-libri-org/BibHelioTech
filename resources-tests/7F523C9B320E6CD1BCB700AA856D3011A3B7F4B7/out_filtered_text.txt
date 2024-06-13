@@ -1,0 +1,169 @@
+Introduction The solar wind interactions of Venus and Mars are dominated by their magnetosheaths.
+These weakly magnetized planets thus call special attention to the regions of disturbed interplanetary plasma flow and magnetic field surrounding planetary obstacles.
+At Venus, most of the plasma and magnetic field observations along the Pioneer Venus Orbiter (PVO) elliptical orbit are remarkably well-described by a gas-dynamic model of fluid flow around an impenetrable blunt body with a convected, frozen-in magnetic field (e.g.
+; and references therein).
+This simple picture was particularly appropriate around the solar maximum period of PVO's primary mission.
+Under such conditions of high solar EUV flux, the thermal pressure of Venus’ ionosphere is generally sufficient to balance the incident solar wind pressure at an altitude where inter-particle collisions are infrequent ( _placeholder_formula_ subsolar).
+The resulting narrow ionopause current layer forms a sharp boundary between the solar wind and ionosphere (e.g.
+), providing a natural laboratory for testing the fluid picture of planetary magnetosheaths without the complications of interactions with planetary magnetic fields.
+Using the large PVO data set, including the solar wind plasma measurements (e.g.
+), magnetic field measurements ( ), and ionospheric thermal plasma measurements ( ), along a highly inclined, elliptical orbit whose _placeholder_formula_ altitude periapsis circled the planet at ∼15° North latitude once a Venus year, it was possible to select steady solar wind conditions from the over 5000 orbits for statistical global studies.
+For example, the average, global 3D magnetosheath field draping was reconstructed and compared to models ( ).
+Analysis of the transition to the magnetohydrodynamic regime in the inner magnetosheath, the ‘magnetic barrier’ adjacent to the ionopause, revealed the thickness of the layer where the magnetic pressure of the compressed interplanetary field dominates the magnetosheath pressure ( ).
+The asymmetries in the magnetosheath cross section due to magnetohydrodynamic (MHD) forces could be demonstrated ( ), as could the effects of subsolar quasiparallel bow shock-generated waves convected into the magnetosheath ( ).
+Departures from the simple magnetosheath picture due to in situ planetary ion production, predicted by some models, could be tested ( ; ).
+Collisional diffusion of magnetosheath magnetic field through the boundary, known to produce the occasional magnetized ionosphere, could be examined (e.g.
+).
+The connection between the magnetosheath and the induced magnetotail, the wake extension of the magnetosheath, could be studied in some detail ( ).
+The Martian magnetosheath, in contrast, has thus far escaped similar close scrutiny.
+A few early flybys well above the obstacle boundary by Soviet Mars 3 and 5 spacecraft provided magnetosheath plasma and field measurements that, like the Venus observations, compared favorably to the gas dynamic/frozen field model ( ).
+However, the elliptical transfer orbits of Phobos-2 that probed the magnetosheath to the lowest altitude yet of _placeholder_formula_ altitude, followed by over 50 crossings of the wake magnetosheath in a circular orbit at _placeholder_formula_ radii, suggested complications.
+In particular, the average inferred width of the inner boundary of the magnetosheath in the wake, or magnetotail boundary, had a larger diameter than expected from scaling of the Venus case (noticed in earlier Mars data by ; see for Phobos-2 results, and also ).
+Another difference was the variability of the measured bow shock and magnetosheath/magnetotail boundary locations (e.g.
+).
+While these could arguably have resulted from finite solar wind ion gyroradius effects at Mars, which local solar wind parameters and the subsolar magnetosheath thickness indicate should play a role ( ; ), the first measurements by the Mars Global Surveyor (MGS) at altitudes below several hundred kilometers ( ; ) revealed the likely main cause of departures from a Venus-like magnetosheath.
+The observed Martian crustal magnetic fields should both contribute to the pressure balance in the solar wind interaction, making a bumpy magnetopause/ionopause hybrid inner magnetosheath boundary, and produce cusp-like features where the magnetosheath plasma can penetrate to lower altitudes as happens in the region of the Earth's magnetospheric cusps ( ).
+These will affect the appearance of the magnetosheath in complicated ways that like the Venus case depend on solar wind pressure and EUV flux, but unlike Venus will also depend on the subsolar planetary longitude and interplanetary magnetic field orientation.
+Here we consider some of the Martian magnetosheath's contrasts to Venus as observed by the MGS MAG/ER magnetometer during the elliptical science phasing orbits.
+Our goal is to both identify a subset of well-behaved MGS passes that can be used for future modeling efforts, and to suggest what future sophisticated numerical simulations might find in light of the observations.
+Description of the data set used The MGS MAG/ER data from the science phasing orbits constitute the largest data base obtained to date on the magnetic field in the Martian magnetosheath.
+The data used here are available in the Planetary Data System Planetary Plasma Interactions node archive ( ; ).
+They consist of _placeholder_formula_ time resolution magnetic field vector components in both Mars Solar Orbital (MSO) coordinates (equivalent to GSE at Earth), and planetary or geographical coordinates.
+The PVO data consist of _placeholder_formula_ measurements in the Venus Solar Orbital (VSO) system, comparable to the MSO system.
+Here we average both data sets to _placeholder_formula_ in order to focus on gross characteristics, and use the magnetic field data in the comparable MSO and VSO coordinate systems that are appropriate for magnetosheath analyses.
+Spacecraft orbit information is also included in the MGS MAG/ER archive, with separate tables giving the subsolar planetary latitude and longitude at periapsis as well as the periapsis latitude and longitude.
+The archived science phasing orbits cover the several-month period from March 26 1998 to September 23 1998.
+During this time interval, MGS was in a near-polar orbit with its periapsis between ∼60–85° North latitude.
+The MGS orbital period of _placeholder_formula_ and the ∼24-h Martian day (Sol) combine to produce periapsis sampling of the north polar region about 180° of longitude apart on sequential orbits.
+The periapsis altitudes range between ∼170 and _placeholder_formula_ for this MGS orbit phase.
+summarizes the planetary latitude, longitude, altitude and solar zenith angle coverage.
+Along the MGS orbit, the magnetosheath is typically entered and exited within ∼60– _placeholder_formula_ of periapsis.
+As shown by the sample orbit histories in , the high inclination orbit scans latitudes relatively smoothly, but is confined to a rather narrow longitude range on a single pass.
+Limitations of this data set for magnetosheath studies include a lack of solar wind bulk plasma measurements, and the restricted latitude and local time coverage at low altitudes.
+The MGS sampling of the magnetosheath gives a primarily polar, near-terminator view.
+Nevertheless, the planet's rotation and interplanetary magnetic field (IMF) rotations produce a range of solar wind interaction perspectives.
+There is also some difficulty in determining the prevailing IMF orientation because of the combination of ∼nT spacecraft fields, comparable in strength to the ∼3– _placeholder_formula_ IMF at Mars, and the restricted near-planet data acquisition periods.
+In these cases, the IMF orientation can be inferred from the stronger, compressed magnetosheath field if the field draping is taken into account.
+For our analyses below, we examine a selected subset of orbits that exhibit approximately classic magnetosheath field draping, both with and without strong crustal fields near periapsis.
+As our goal is to illustrate the first-order effects of the crustal fields, we avoid orbits where interplanetary field variations or waves from either the foreshock or other physical processes appear to be present.
+Models for comparisons and interpretation Venus and Mars present smaller obstacles to the solar wind flow than Earth's magnetosphere, allowing a spacecraft to make a complete transit of the magnetosheath while the IMF is effectively steady.
+As mentioned above, gas dynamic frozen field magnetosheath model has been compared with observations from both Venus and Mars.
+Since that early model was developed, progress has been made on more physically complete simulations.
+In particular, 3D MHD treatments of the solar wind interaction with a conducting sphere, with some models including the mass loading from the ionization of the upper atmosphere ( ; ; ; ; ; ), and a sphere surrounded by a realistic planetary ionosphere ( ; ., in press) have appeared.
+In the latter, demonstrated how the magnetosheath field penetrates into the ionosphere when solar wind dynamic pressure pushes the ionopause down to collisional altitudes, as envisioned from earlier 1D and 2D MHD models (e.g.
+see ).
+(in press) introduced a crustal magnetic bipole into their MHD simulation and found that it introduced new asymmetries into the solar wind interaction.
+However, such simulations do not yet exist for an obstacle with the complexity of the Martian crustal field and ionosphere, in part because of the necessary spatial resolution.
+The many options for scenarios offered by the changing planet/Sun aspect, together with the variety of possible solar wind conditions, add to this daunting modeling challenge.
+As a first step we take the simple approach of comparing separate magnetosheath and crustal field models to the Martian magnetosheath observed on MGS during the science phasing orbits.
+Toward this end, we adopt the 3D MHD magnetosheath model of flow around a conducting sphere developed by Lyon for Venus ( ), scaled for Mars, together with the convenient MGS MAG/ER-based crustal field model of .
+The magnetosheath model consists of a nominal case for an IMF perpendicular to the solar wind flow that can be rotated around the Mars–Sun line to approximate most quasi-steady cases.
+(The Bx or Mars–Sun component of the IMF is generally small, given the larger Parker Spiral angle of ∼56° at _placeholder_formula_ , compared to ∼45° at _placeholder_formula_ .) The Lyon model also includes a version with atmospheric mass-loading, where the mass-loading is by a photoionized atomic oxygen exosphere source with an ion production rate appropriate for Venus.
+It is thus only a rough approximation for Mars which has a similar exospheric oxygen ion production rate (e.g.
+), but a larger scale height exosphere ( ).
+The model was designed to produce an altitude-normalized crustal field map at _placeholder_formula_ altitude, consistent with the MGS observations, from a large collection of small crustal bipoles.
+(It is thus current-free.) This model was generalized for other altitudes, assuming that it represents a first-order description of the Martian crustal fields over the altitude range of interest.
+We consider the crustal and magnetosheath fields separately because the perturbations related to the solar wind interaction with the ionosphere and crustal fields together are complicated, and in part what we seek to identify in the observations.
+shows plasma streamlines and field lines for the Lyon magnetosheath model used here.
+These lines, started from the same points on uniformly spaced grids in the interplanetary medium, represent 2D projections of 3D field and streamlines.
+The most notable difference between the model with (bottom panels) and without (top panels) mass-loading is that the field lines are more strongly draped in the mass-loaded magnetosheath.
+Both of these models are used in the present study.
+shows north and south polar views of the (hereafter referred to as Purucker) crustal field model, with the north–south dichotomy associated with the southern hemisphere old terrain clearly visible.
+Because the science phasing orbit sampling of this crustal field near periapsis was limited to the north polar region, this orbit phase missed the largest crustal field effects on the magnetosheath, but on the other hand allows interpretation of the observations in terms of separate crustal field and magnetosheath models as will be shown below.
+Magnetosheath passes compared to models illustrates the different characteristic magnetosheath sampling geometries of MGS and PVO orbits.
+The MGS orbits are designated by their day number of 1998, and periapsis number, while the PVO orbits are given their assigned orbit numbers.
+The orthogonal views of the orbits in the solar orbital coordinate system show the basic differences between the MGS and PVO perspectives.
+The PVO periapsis at ∼15° North latitude circles the planet over a Venus year, providing inner magnetosheath sampling in a near-equatorial band including the subsolar region.
+Because the IMF at low heliographic latitudes typically lies close to the solar equatorial plane, PVO usually crosses the magnetosheath draped field on an almost perpendicular trajectory in both subsolar and terminator regions unless the IMF is highly inclined.
+In contrast, MGS repeatedly observes the most-draped, or ‘polar’ region of the magnetosheath where mass-loading appears to have considerable influence on the field orientation (see ).
+Of the three PVO orbits included in , the more subsolar periapsis examples (orbits 432,438) were chosen because they represent the cases that so successfully fit the gas-dynamic frozen field model in early studies, and represent the prototypical PVO view of the Venus magnetosheath in a region not well-sampled at Mars.
+The third, near-terminator orbit 801, was selected because it occurred at an unusual time when the IMF at Venus was inclined almost 90° to the ecliptic, providing a good analogy to the usual MGS perspective for comparison.
+show the measured time series of the magnetic field vector components from the PVO magnetometer, at a time resolution of _placeholder_formula_ .
+Corresponding simulated flights through the Lyon magnetosheath model were carried out by experimenting with the scaling and IMF direction until a reasonable fit was found.
+The drop in field magnitude around periapsis in these cases represents PVO's entry into the ionosphere, or into the conducting sphere obstacle in the case of the model.
+Both mass-loaded and unloaded models were examined, but only the best fitting model is plotted.
+Models without mass loading were found to best fit the more subsolar periapsis orbits 432 and 438, while the mass-loaded model best fit the terminator periapsis, high inclination IMF orbit 801.
+Overall, the Lyon models show good agreement with these examples from PVO.
+The question is whether such agreement can be found at Mars where the obstacle is so much more complicated.
+shows a set of five MGS orbits including the three examples in , but plotted in the planetary coordinate system, and superposed on the Purucker model of the crustal fields.
+These five orbits were selected because they appeared to occur during steady solar wind conditions for which an IMF might be determined from the magnetosheath data, and included a combination of periapses where the strongest northern hemisphere crustal fields were either directly beneath the spacecraft, or largely avoided.
+Another view of the crustal field sampling, shown by projection of the same orbit segments on the Purucker _placeholder_formula_ model field map, is shown in .
+In this plot, the spacecraft position is shown with a time resolution of _placeholder_formula_ .
+Comparison with the information in gives a sense of the rate at which altitude is increasing away from periapsis.
+show the results of attempts to replicate the higher altitude MGS data with simulated flights through the scaled and rotated mass-loaded Lyon magnetosheath model, and with flights through the Purucker crustal model for the low altitude portion.
+(A check using the unloaded Lyon model was carried out to confirm the better agreement with the mass-loaded model.) The passes labeled DOY 208 Peri 2 ( ) and DOY 181 Peri 1 ( ) are most analogous to the PVO orbit 801 case in that the near-periapsis crustal field contributions were weak, while the magnetosheath exhibited a fairly classical magnetosheath draping behavior.
+As can be seen from and b, the magnetosheath model approximates the MGS observations away from periapsis, but in spite of the absence of strong magnetic anomalies beneath the spacecraft at periapsis, a thick inner magnetosheath boundary layer appears to be present.
+This layer is probably the same as the magnetic pile-up boundary layer reported in both Phobos-2 transfer orbit observations ( ) and MGS observations ( ).
+Its properties may result from the induced magnetization of the ionosphere at high altitudes (e.g.
+), from strong inner magnetosheath mass-loading (e.g.
+), or from a complicated boundary layer formation process involving both local planetary ion production and the solar wind interaction with the crustal fields.
+Indeed, the strong southern hemisphere features were facing the Sun during the times of these passes, favoring a direct solar wind interaction with the southern hemisphere crustal fields.
+Unfortunately, it is difficult to make observational comparisons with corresponding passes with the southern hemisphere fields in the wake because, under those circumstances, MGS always flies over the northern hemisphere crustal fields during the science phasing orbits.
+The three MGS orbits in represent fairly well-behaved passes when the northern hemisphere crustal fields were crossed at periapsis.
+The comparisons with the magnetosheath and crustal field models suggest that one can roughly approximate the observed signature with a linear combination of the two in this part of the magnetosheath of Mars.
+The departures from a good fit to the combination indicate either a problem from neglect of the Sun–Mars component of the IMF in the magnetosheath model, time-dependent solar wind features that were not accounted for, or perturbations introduced into the magnetosheath by the solar wind interaction with the crustal fields.
+These comparisons nevertheless illustrate the fair quality of agreement with the classical picture for at least the northern hemisphere of the Martian magnetosheath.
+As mentioned above, the strong southern hemisphere crustal fields are generally in the terminator to wake local time sector when the northern hemisphere fields are directly below the spacecraft at periapsis.
+If our conjecture that the boundary layer is strongest when the southern hemisphere anomalies are subsolar is correct, it would be consistent with the presence of a less apparent boundary layer at the times of these observations.
+The last MGS orbits selected, DOY 209 Peri 2 in and DOY 218 Peri 2 in , are of special interest because they occurred when the IMF at Mars was unusually large.
+This circumstance, coupled with only weak to moderate crustal fields at periapsis, suggests these passes should again be comparable to the PVO orbit 801 case in .
+MGS pass 209 Peri 2 was also used by for a Venus comparison, but those authors believed crustal fields contributed to what was observed near periapsis, and compared the observations to a more subsolar PVO pass through the Venus magnetosheath akin to the PVO orbits 432 and 438 shown earlier (see ,b).
+The draping signature in the MGS observations is consistent with the magnetosheath model, but the field pile-up must be due to either enhanced induced field in the ionosphere, and/or some extraordinary mass-loading effect or nonlocal crustal field interaction effect.
+As during the passes shown in and b, when an inner magnetosheath boundary layer in excess of the magnetosheath and crustal models was observed, the strong southern hemisphere crustal fields were on the sunlit face of Mars during pass 209 Peri 2.
+However, this was not the case during pass 218 Peri 2.
+Thus the orientation of the planet with respect to the incident solar wind is not a unique predictor of an enhanced inner magnetosheath field.
+Large IMF, and/or its related solar wind conditions, also alter the appearance of the solar wind interaction.
+These individual MGS orbit analyses raise the question of how far from Mars one can detect the effects of the crustal fields.
+To investigate this from the science phasing orbit perspective, statistics were compiled on the strength of radial fields observed in various altitude intervals over the Martian surface.
+Radial fields are a good indicator of features of planetary origin because the draped inner magnetosheath fields are largely horizontal, except in the wake region.
+While the present analysis is limited to the field behavior in the terminator region, it gives a sense of where one expects classical magnetosheath models to best fit observations.
+The contour plots in show the statistics of the radial field in selected altitude intervals.
+These illustrate that the effects of the crustal fields in the northern hemisphere are clear in the 200– _placeholder_formula_ altitude range, but by 400– _placeholder_formula_ the effects are largely absent.
+A higher altitude interval (1600– _placeholder_formula_ ) that is still in the magnetosheath is included because as the altitude increases, the region sampled by MGS moves southward where the stronger southern hemisphere crustal fields might produce high altitude perturbations.
+In the science phasing orbits, the spacecraft rose rapidly away from the planet so that the southern crustal fields effects were not seen before the spacecraft left the magnetosheath.
+Other MGS orbit phases will be useful for determining the extent of the strong southern crustal fields’ effects in the southern hemisphere magnetosheath.
+Discussion A possible interpretation of what is observed at Mars as opposed to Venus on MGS pass 98-208 Peri 2 is based on the idea that reconnection between the draped magnetosheath field and crustal magnetic fields produces a boundary layer akin to that between the Earth's magnetosphere and magnetosheath.
+This boundary layer is in part made up of transient remnants of reconnected flux tubes and magnetopause flux tubes adjusting to the latter (e.g.
+and references therein).
+At Mars such a layer should be more disorganized because of the relatively complicated magnetic field merging geometries that must exist with the patchy crustal fields (Mitchell et al., 2001) and the presence of substantial ionospheric effects.
+Nevertheless, the basic concept of a layer containing a mixture of reconnected magnetosheath and planetary field flux tubes is similar.
+To demonstrate the variety of possible merging scenarios between the Martian crustal fields and the interplanetary field, one can add a uniform ‘IMF’, representing magnetosheath fields that might penetrate into the ionosphere, to the Purucker model.
+This pedagogical device is often used with a dipole field to illustrate how IMF merging with Earth's magnetic field produces different topological connections between the magnetosphere and the IMF, depending on the IMF orientation.
+Field line projections were calculated for the case where 90° planetary longitude is at the subsolar point (here referred to as the Central Meridian or CM), and the viewer is looking at Mars from the Sun.
+displays the crustal field alone from this perspective, which places the strong southern hemisphere fields on the lower right.
+With the addition of the IMF, the merging geometry over the highly magnetized southern hemisphere and the weaker magnetized northern hemisphere regions can then be compared in one view.
+shows the results of vacuum superposition of northward, southward, eastward and westward external fields of _placeholder_formula_ magnitude and the Purucker model.
+The field lines were initiated from uniformly spaced grids of points at the right and left sides of the box for the east _placeholder_formula_ and west _placeholder_formula_ IMF cases, and from the top and bottom for the north _placeholder_formula_ and south _placeholder_formula_ cases.
+As for the global dipolar magnetospheres, there are regions of open (to interplanetary space) and closed magnetic field that depend on the IMF orientation.
+The dotted regions on the planet show the overall pattern of open regions for each case.
+These areas, which represent where in the upper atmosphere one might detect magnetosheath particles entering from above, become larger if a stronger penetrating external field is assumed, and smaller if it is weaker.
+The pattern details also depend on the externally imposed field strength, and of course on the crustal field distribution with which the external field merges.
+An interesting aspect of these diagrams is that the field line geometry resembles what would be obtained by adding the uniform fields to a weak global dipolar field aligned along Mars’ spin axis, as shown by .
+The meaning of this resemblance is not clear.
+It is apparently a property of the extrapolated model that at large distances where the higher order moments cease to dominate, an approximately rotation axis-aligned dipole persists.
+If real, it could be an underlying signature of the original magnetizing Martian dynamo field that left its strongest imprint on the southern hemisphere crust, and is still weakly affecting the solar wind interaction.
+These simple superpositions of course neglect the external field draping from the diverging flow of the shocked solar wind plasma around the crustal magnetic field/ionosphere obstacle.
+In a rudimentary attempt to illustrate the draping effect, we can instead add the Lyon magnetosheath model field to the Purucker model.
+Although realistic distortions of the field due to the dynamics and plasma physics of the interaction require at the very least a global MHD simulation approach, this is an interesting exercise for training one's intuition in interpreting the data and for motivating more rigorous numerical treatments.
+Two cases are shown in .
+Both assume the IMF is northward and _placeholder_formula_ magnitude, but one places the strong crustal fields in the central meridian facing the Sun, while the other places them in the solar wind wake.
+The accuracy of the field line tracing is limited close to the planet because of the 0.01 Mars radius step size used in the integration.
+Some field lines are started on a spherical grid _placeholder_formula_ above Mars, while a second (interplanetary) set originates on a rectangular grid that lies perpendicular to the IMF in the equatorial plane.
+Perhaps the most important point made by these displays is that field lines rooted in Mars contribute to the magnetosheath in numbers that depend on the planetary longitude at the subsolar point.
+Not surprisingly, when the strong southern hemisphere fields are in the subsolar region, more implied merging with the magnetosheath draped fields occurs.
+This more extensive merging creates a broader region in the inner magnetosheath where flux tubes originating on Mars become part of the inner magnetosheath.
+Thus the strength of the magnetosheath boundary layer must depend on where it is noon on Mars.
+There is also certainly dependence on the IMF orientation, but we do not explore that aspect here because of the limitations of this simplified description.
+Concluding remarks It should be noted that the examples of MGS magnetosheath data discussed in this paper are a small sample of what is available from the archived science phasing orbits, and represent the best-behaved subset.
+There are many passes where the Martian magnetosheath field appears to be tremendously variable, and it is unlikely, based on statistics of IMF orientation behavior, that these are all cases of upstream wave convection from a quasiparallel subsolar bow shock.
+More likely, the typically disturbed-looking magnetosheaths result from the combination of solar wind and IMF variations during a pass, solar wind ion kinetic effects, and the fact that the Martian obstacle to the solar wind is neither smooth and symmetric nor impenetrable as most magnetosheath models assume.
+It will require some extremely sophisticated numerical modeling with both 3D MHD and/or global hybrid simulations to obtain a better sense of the dominating factors under various conditions.
+Moreover, it will require unusually large amounts of computer time to consider the different combinations of solar wind/IMF conditions and planet/Sun aspects that can occur in the Mars solar wind interaction.
+If these models confirm what was inferred from the present limited study, they will find the inner Martian magnetosheath includes a variable strength boundary layer containing remnants from IMF merging with the crustal magnetic fields on the subsolar hemisphere.
+The strength of that boundary layer will be greatest when it is daytime over the strong southern hemisphere crustal fields.
+It is indeed fortunate that the almost ideal magnetosheath at Venus was studied first.
+A much more extensive survey of the Mars solar wind interaction is expected from the NOZOMI and Mars Express missions.
+The present results suggest how important it will be to have a good numerical simulation of the plasma interaction with the crustal fields in order to interpret the observations.
+Acknowledgements This study could not have occurred without the provision of the MGS magnetometer data by the MGS MAG/ER team to the PDS, and the assistance of Drs.
+Steve Joy and Ray Walker at the UCLA PPI node of the Planetary Data System.
+Support for the work was provided by NASA's Planetary Atmospheres Program through grant NAG5-6895 to the principal author..

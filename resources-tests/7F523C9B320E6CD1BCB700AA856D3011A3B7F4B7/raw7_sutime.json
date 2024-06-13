@@ -1,0 +1,16 @@
+[
+    {
+        "end": 6244,
+        "start": 6205,
+        "text": "from March 26 1998 to September 23 1998",
+        "type": "DURATION",
+        "value": {
+            "begin": "1998-03-26",
+            "end": "1998-09-23"
+        }
+    },
+    {
+        "message": "7- Change type DATE to DURATION",
+        "pipeline_version": "4.0"
+    }
+]

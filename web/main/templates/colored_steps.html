@@ -21,13 +21,14 @@
     {% set analysed_active = "" %}
 {% endif %}
 
+
+<h3 class="d-flex p-3 ">#{{paper.id}}- &laquo;{{paper.title}}&raquo;
+    <span id="pipeline_title" > {{pipeline_mode | upper}} pipeline steps - V{{paper.pipeline_version}}</span>
+</h3>
 <a title="show paper page" class="btn btn-warning" href="{{url_for('main.paper_show', paper_id=paper_id)}}"> Back to paper</a>
 <a title="paper texte colored" class="btn btn-warning {{enlighted_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='enlighted')}}"> Enlighted {{curr_step}}</a>
-{% if pipeline_mode == 'sutime' %}
 <a title="analysed json" class="btn btn-warning {{analysed_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='analysed')}}"> Analysed {{curr_step}}</a>
-{% endif %}
 <a title="raw json" class="btn btn-warning {{raw_active}}" href="{{url_for('main.paper_pipeline', pipeline_mode=pipeline_mode, paper_id=paper_id, step_num=curr_step, disp_mode='raw')}}"> Raw Json {{curr_step}}</a>
-<h2 id="pipeline_title" > {{pipeline_mode | upper}} pipeline steps - V{{step_lighter.caption["pipeline_version"]}}</h2>
 <br>
 <br>
 {% if curr_step == 0 %}
@@ -67,14 +68,14 @@
 {% endif %}
 <div id="colored_content">
 {% if disp_mode == "enlighted" %}
-    {{step_lighter.enlighted_txt|safe}}
+    {{step_lighter.txt_enlighted|safe}}
 {% elif disp_mode == "raw" %}
     <pre>
-    {{step_lighter.raw_json|safe}}
+    {{step_lighter.json_string|safe}}
     </pre>
 {% elif disp_mode == "analysed" %}
     <pre>
-    {{step_lighter.analysed_json|safe}}
+    {{step_lighter.json_analysed|safe}}
     </pre>
 {% endif %}
 </div>

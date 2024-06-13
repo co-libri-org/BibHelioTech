@@ -28,7 +28,17 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
-## [0.11.0-dev] - 2024-05-28 Fix mission detection
+## [0.12.0] - 2024-06-13 Enhance Pipeline Analysis
+### Fixed
+- Empty catalog bug
+### Changed
+- Mission to Event detection
+- Pipeline analysis refactoring (json dumping)
+### New
+- Cli papers tools (clone, change)
+- Show all Entities Steps in analysis
+
+## [0.11.0] - 2024-05-28 Fix mission detection
 ### Fixed
 - Detect mission into parenthesis
 ### Changed

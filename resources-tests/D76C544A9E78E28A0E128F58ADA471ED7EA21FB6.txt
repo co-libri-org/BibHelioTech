@@ -1,0 +1,668 @@
+Advances in Space Research 39 (2007) 1502–1509
+www.elsevier.com/locate/asr
+
+Low-frequency electric ﬁeld and density ﬂuctuation measurements
+on (Solar Orbiter) SolarOrbiter
+A. Vaivads
+b
+
+a,*
+
+, A.I. Eriksson a, M. André a, L.G. Blomberg b, J.-E. Wahlund a, S.D. Bale
+
+c
+
+a
+Swedish Institute of Space Physics, Box 537, SE-75121, Uppsala, Sweden
+Space and Plasma Physics, School of Electrical Engineering, Royal Institute of Technology (KTH), Teknikringen 31, SE-100 44, Stockholm, Sweden
+c
+Department of Physics and Space Sciences Laboratory, University of California, Berkeley, CA 94720, USA
+
+Received 13 October 2006; received in revised form 19 October 2006; accepted 19 October 2006
+
+Abstract
+Solar Orbiter will orbit the Sun down to a distance of 0.22 AU allowing detailed in situ studies of important but unexplored regions of
+the solar wind in combination with coordinated remote sensing of the Sun. In-situ measurements require high quality measurements of
+particle distributions and electric and magnetic ﬁelds. We show that such important scientiﬁc topics as the identiﬁcation of coronal heating remnants, solar wind turbulence, magnetic reconnection and shock formation within coronal mass ejections all require electric ﬁeld
+and plasma density measurements in the frequency range from DC up to about 100 Hz. We discuss how such measurements can be
+achieved using the double-probe technique. We sketch a few possible antenna design solutions.
+ 2006 COSPAR. Published by Elsevier Ltd. All rights reserved.
+Keywords: Electric ﬁeld; Solar Orbiter; Solar wind; Plasma density
+
+1. Introduction
+Solar Orbiter is an ESA mission planned for launch
+after 2015 that is going to produce images of the Sun at
+an unprecedented resolution and simultaneously perform
+the closest ever in situ measurements. This combination
+will allow us to address many important science questions
+as outlined in the Solar Orbiter science requirement document. Marsch et al. (2005) presents a short summary of the
+main goals and the mission proﬁle of the Solar Orbiter. The
+Solar Orbiter will have a 150-day orbit with the perihelion
+at 0.22 AU  47 Rx  33 · 106 m. At perihelion the orbital diﬀerential motion relative to the Sun becomes as low as
+2.5/day allowing investigations of the temporal evolution
+of solar phenomena both remotely and in situ. The orbit
+is in 3:2 resonance with Venus and the inclination of the
+orbit is increased at each Venus passage, and at the end
+of the nominal mission the inclination will exceed 30.
+*
+
+Corresponding author.
+E-mail address: andris@irfu.se (A. Vaivads).
+
+Thus, the Solar Orbiter will cover a wide range of latitudes
+allowing studies of diﬀerent solar phenomena.
+The Solar Orbiter is planned to have two suites of
+instruments, one for remote observations of the Sun and
+another for in situ observations. Details are described in
+the Solar Orbiter payload deﬁnition document. The
+in situ instruments can be divided into two main packages:
+the Field Package and the Particle Package. When selecting
+speciﬁc instruments for the mission diﬀerent compromises
+must be made regarding the design, the measurement
+range, the resolution, the quality, etc. All these compromises and trade-oﬀs are weighted one against the other, based
+on the scientiﬁc objectives, constraints of power, mass,
+design, etc. In the case of the Fields Package, the major
+compromises are related to the number, type, design and
+location of antennas. Here we argue that many important
+science questions require that the Fields Package can measure low-frequency electric ﬁeld and density ﬂuctuations.
+By low-frequency here we mean DC up to 100 Hz, thus
+covering MHD scales and frequencies up to characteristic
+ion and ion/electron scales. Measurements of electric ﬁeld
+
+0273-1177/$30  2006 COSPAR. Published by Elsevier Ltd. All rights reserved.
+doi:10.1016/j.asr.2006.10.011
+
+A. Vaivads et al. / Advances in Space Research 39 (2007) 1502–1509
+
+and density ﬂuctuations at these frequencies is a very challenging task and so far heliosphere missions have not been
+able to supply reliable data in this frequency range, see discussion in the Introduction section of Kellogg et al. (2006).
+We believe that Solar Orbiter can be the ﬁrst such mission
+that provides good quality electric ﬁeld and density ﬂuctuation measurements in this frequency range. This puts
+some signiﬁcant constraints on the possible antenna design.
+In the Science section we present a few examples of important science questions that require low-frequency electric
+ﬁeld and density ﬂuctuation measurements. In the Context
+section we discuss the available low-frequency electric ﬁeld
+and density measurements from other spacecraft missions
+in past as well as upcoming missions. Particularly we stress
+the advantages of carrying out such measurements by the
+Solar Orbiter. In the Instrumentation section we suggest a
+few possible technical solutions and discuss their advantages
+and disadvantages. The results are summarized in Section 5.
+2. Science
+One of the top-level scientiﬁc goals of the Solar Orbiter
+mission is to ‘‘Determine the properties, dynamics and
+interactions of plasma, ﬁelds and particles in the nearSun heliosphere’’ (Solar Orbiter science requirements
+document). Under this goal there are many more speciﬁc
+questions, some examples of which we will address below.
+However, we note directly the importance of obtaining
+electric ﬁeld (E) and density ﬂuctuation (dn) measurements.
+ Simultaneous measurements of magnetic ﬁeld (B), E and
+dn allow us to distinguish among the slow, fast, and
+intermediate MHD wave modes which are of fundamental importance.
+ Much of the local wave-particle interaction is due to
+electrostatic waves that can be often observed only in
+E and dn data.
+ Many fundamental quantities such as Poynting ﬂux and
+wave energy require knowledge of B, E, and/or dn.
+ Of particular interest are E and dn measurements at
+MHD scales and scales covering characteristic ion scales
+where MHD starts to break down as these are the scales
+where ions can be energized.
+
+2.1. Plasma parameters at the Solar Orbiter perihelion
+Before discussing some of the scientiﬁc topics in more
+details we characterize the plasma at perihelion of the Solar
+Orbiter where most of the science operations will be carried
+out. Typical plasma parameters that can be expected at
+0.22 AU distance are given in Table 1. The wide range of
+parameters gives a correspondingly wide range of characteristic scales that are involved in physical processes. Some
+typical values of these scales are given in Table 2. As a
+rough rule of thumb we can see that characteristic frequencies involving ions – proton gyrofrequency fcp, lower
+
+1503
+
+Table 1
+Typical plasma parameters that can be expected at 0.22 AU distance
+Quantity
+
+Fast solar wind
+
+Slow solar
+wind
+
+CME
+
+Total
+variation
+
+B [nT]
+n [cm 3]
+v [km/s]
+
+40–80
+60–100
+600
+
+40–80
+200–400
+350
+
+5–500
+20–1000
+300–1000
+
+Tp [eV]
+Te [eV]
+
+20–80
+8–30
+
+2–20
+1–8
+
+40–130
+50–500
+300–
+1000
+3–50
+1–30
+
+2–100
+1–50
+
+The parameters are B, magnetic ﬁeld; n, plasma density; v, plasma velocity;
+Tp, proton temperature and Te, electrons temperature. Table is partially
+based on Burlaga (2001); Wang et al., 2005.
+
+Table 2
+Typical plasma scales at 0.22 AU distance for plasma parameters B = 50
+nT, n = 100 cm 3, T = 20 eV, v = 500 km/s
+Frequencies
+
+[Hz]
+
+Lengths scales
+
+[km]
+
+Velocities
+
+[km/s]
+
+fpe
+fce
+flh
+fcp
+VSW/qp
+
+90,000
+1400
+30
+0.75
+40
+
+kD
+qp
+c/xpi
+qe
+
+0.007
+13
+23
+0.3
+
+Vte
+VSW
+VA
+Vtp
+
+3000
+500
+100
+60
+
+The parameters are fpe, plasma frequency; fce, electron gyrofrequency; flh,
+lower hybrid frequency; fcp, proton gyrofrequency; kD, Debye length; qp,
+proton gyroradius; c/xpi, ion inertial length; qe, electron gyroradius; Vte,
+electron thermal velocity; VSW, solar wind velocity; VA, Alfvén velocity;
+Vtp, proton thermal velocity.
+
+hybrid frequency flh and ion gyroradius scales doppler
+shifted by solar wind velocity – are all in the interval from
+zero to about 100 Hz. Frequencies depending only on electrons – electron gyrofrequency fce and plasma frequency fp
+– are typically at 1 kHz and above.
+2.2. Solar wind turbulence
+The understanding of physical processes that lead to
+solar wind turbulence and its role in coronal heating and
+solar wind acceleration are major topics in coronal studies
+(Leamon et al., 2000 Bruno et al., 2006). As an example,
+Cranmer (2004) states that ‘‘Much what has been done
+until now is to work backwards, from the measured plasma
+parameters deduce the properties of the kinetic-scale ﬂuctuations that would provide the energy’’ [for extended coronal heating]. They suggest that it is important to look at
+large scale energy input to the turbulence as a constraint
+on possible dissipation at smaller scales. At the same time
+there is a large gap in our knowledge of the kinetic ﬂuctuations, particularly at dissipation scales where the energy
+from the turbulence leads to the dissipation in form of
+coronal heating. Characteristic dissipation scales are comparable to ion scales, can be both spatial and temporal,
+and from Table 2 we see that they correspond to frequencies from DC up to about 100 Hz. In situ measurements of
+these kinetic ﬂuctuation scales are crucial for the understanding of turbulence dissipation mechanisms.
+
+1504
+
+A. Vaivads et al. / Advances in Space Research 39 (2007) 1502–1509
+
+Fig. 1. Density ﬂuctuation spectra as estimated from radio sounding of
+solar corona during the Galileo spacecraft solar conjunction Eﬁmov et al.,
+2005. The spectra show two spectral breakpoints where spectra ﬂattens at
+low and high frequencies. If we look at the high frequency spectral
+breakpoint as measured at two diﬀerent distances, 6.3 and 9.0 Rx, one can
+see that the spectral breakpoint moves to higher frequencies with
+increasing distance from the Sun, from 0.2 to 0.3 Hz, respectively, when
+comparing 6.3 and 9.0 Rx distances. The authors conclude that the high
+frequency spectral breakpoint at which the density spectra ﬂatten out
+moves to higher frequencies with increasing distance from the Sun. To
+measure both the low and high frequency breakpoints at 0.22 AU
+distance, density ﬂuctuations should be measured in the frequency range
+0.001–10 Hz. Figure adopted from Fig. 2 in Eﬁmov et al. (2005).
+
+2.2.1. Density ﬂuctuations
+Density ﬂuctuations in the solar wind have been studied
+both in situ and remotely. Density ﬂuctuations at very low
+frequencies have been measured in situ by the Helios spacecraft (Marsch and Tu, 1990). Using the ion instrument and
+studying the frequency range 6 · 10 6 6 · 10 3 Hz, it is
+shown that turbulence intensity and development are different in slow and fast solar winds. Similar conclusions
+have been reached looking at even higher frequency density
+ﬂuctuations (f < 0.6 Hz) as estimated using remote coronal
+sounding experiments (Eﬁmov et al., 2005). In addition,
+those observations show spectral breakpoints where density ﬂuctuation spectra ﬂatten out at both low and high frequencies (in the frequency range 0.01–1 Hz). There is a
+clear dependence of the frequency of spectral breakpoints
+on the distance from the Sun. This dependence is illustrated
+in Fig. 1. The spectral breakpoints are of particular interest
+in the turbulence studies as they indicate a change in the
+turbulence regime and their in situ observations would be
+crucial to understanding the ways density ﬂuctuations are
+injected and dissipated in the solar wind. Fig. 1 suggests
+that to cover both spectral breakpoints at the Solar Orbiter
+distance density ﬂuctuations should be measured at least in
+the frequency range 0.001–10 Hz.
+2.2.2. Electric and magnetic ﬁeld ﬂuctuations
+Solar wind turbulence has mainly been studied in situ by
+analyzing magnetic ﬁeld ﬂuctuations. A major question is
+how this turbulence leads to heating of the corona. Two
+major mechanisms that have been proposed are ion cyclo-
+
+tron heating and spectral cascade. In both cases wave electric ﬁelds seen in the frame of moving ions should have
+signiﬁcant amplitude at the ion gyrofrequency. In the ﬁrst
+case waves at the ion gyrofrequency energize the ions while
+in the second case spectral cascade leads to the generation
+of waves with ever smaller wavelengths while at some limit
+eﬃcient damping sets in. A breakpoint in the magnetic ﬁeld
+spectra has been used as an indicator when turbulence goes
+into the dissipative regime. Detailed analysis of 33 turbulent spectra observed by the Wind spacecraft have shown
+that the breakpoint is located somewhere between 0.05–
+0.2 Hz which corresponds to 2–3 fcp or 0.5–0.7 VSW(c/
+xpi) 1 (Leamon et al., 2000). The main conclusion from
+this is that understanding of the turbulence dissipation is
+not possible without having observations covering frequencies around the ion gyrofrequency and covering spatial
+lengths comparable to the ion inertial lengths scales.
+An important question is what kind of measurements
+would allow us to distinguish which of several turbulence
+models best describes the solar wind. A recent study by Bale
+et al. (2005) shows that electric ﬁeld data are crucial for this
+task. Using Cluster spacecraft data, Bale et al. (2005)
+obtained the ﬁrst detailed observations of a breakpoint in
+spectra from solar wind turbulence using both electric ﬁeld
+and magnetic ﬁeld data. Fig. 2 shows the resulting spectra.
+By combined usage of E and B spectra, Bale et al. (2005)
+could distinguish that at the breakpoint spacecraft were
+observing wave modes of kinetic Alfvén type, thus supporting the idea of spectral cascade. This was a single measurement that requires further conﬁrmation by spacecraft at
+1 AU distance. A major question is if similar mechanisms
+are operating close to the Sun where the turbulence can still
+signiﬁcantly contribute to the extended heating of corona.
+2.3. Interplanetary Coronal Mass Ejections (CME)
+Interplanetary shocks driven by CMEs are a source of
+Type II solar bursts. Understanding CMEs and Type II solar
+bursts is important for being able to predict CMEs that are a
+major cause of geomagnetic storms. Theoretically predicted
+behaviour of emissions depends on shock parameters
+(Knock et al., 2003). The exact generation mechanisms of
+the electromagnetic radiation are not clear. Mechanisms
+such as Langmuir wave interaction with ion acoustic waves
+or Langmuir wave conversion at density gradients have been
+suggested. In addition, the bursts can have complicated
+internal structure suggesting that most probably diﬀerent
+generation mechanisms can be at play in parallel. Shocks
+involve fast changes in density, and localized electric ﬁelds
+on ion scales. Also ion acoustic waves are on ion scales. Thus,
+high time resolution E, B and density ﬂuctuation measurements are needed to study these phenomena.
+2.4. Reconnection
+Magnetic reconnection is one of the fundamental
+processes that needs to be better understood to make
+
+A. Vaivads et al. / Advances in Space Research 39 (2007) 1502–1509
+
+1505
+
+Fig. 2. The ﬁgure shows turbulence spectra of B and E ﬂuctuations measured by Cluster s/c in the solar wind. Spectral breakpoint can be seen at
+wavelength kqi 6 1, at shorter wavelengths spectra becomes more electrostatic. Adopted from Fig. 3 in Bale et al. (2005).
+
+signiﬁcant progress in explaining energy conversion, transport and other processes in the solar atmosphere. It is
+involved on all scales, starting from CMEs where it is
+believed to be crucial for allowing CMEs to escape the
+Sun and ending with the smallest scales where microreconnection can be one of the ways energy is dissipated in solar
+wind turbulence.
+Recently several studies have been presented analyzing
+local magnetic reconnection events in the solar wind from
+0.31 AU out to 5.4 AU distance (Gosling et al., 2005; Gosling et al., 2006b; Gosling et al., 2006a). Most of these
+events were associated with narrow current sheets forming
+behind CMEs, see Fig. 3. Similar remote observations of
+reconnection have been made using SOHO spacecraft
+observations at distances close to the Sun (Lin et al.,
+2005). The SOHO observations show that narrow extended
+current sheets form behind the CMEs and reconnection is
+ongoing within those current sheets starting a few solar
+radii from the Sun. The Solar Orbiter would be optimally
+located to observe the temporal evolution of the reconnection processes within these current sheets. The reconnection process can be identiﬁed using only particle
+instruments, however, E ﬁeld measurements are needed
+for understanding the reconnection process as is well
+known from the studies in the terrestrial magnetosphere
+(Vaivads et al., 2006). For example, to understand how
+
+diﬀerent particle species are energized during the reconnection process, one needs to have information on ﬁelds on
+characteristic scales of those particles, particularly E
+because particles are energized by the E ﬁeld. Also when
+slow shocks or other discontinuities are involved one needs
+to have E measurements to be able to estimate potential
+jumps across the discontinuities.
+
+3. The Solar Orbiter in the context of other missions
+Several satellites have performed plasma measurements
+in the solar wind. However, few missions with comprehensive plasma instrumentation have been dedicated for solar
+and/or solar wind science and have had instruments to
+measure electric ﬁeld and/or density ﬂuctuations in the frequency range from DC to about 100 Hz. Notable exceptions include Ulysses and Wind.
+Ulysses was launched in 1990 on a trajectory toward
+Jupiter, whose gravity was used to put the spacecraft in a
+polar orbit around the Sun. To date the Sun has been circled twice. Ulysses included a 72-m tip-to-tip dipole antenna and a 7.5 m spin-axis monopole for electric ﬁeld
+measurements. In addition the spacecraft carried a ﬂuxgate magnetometer. Both the electric ﬁeld and the magnetic
+ﬁeld signals were fed into a Wave Form Analyzer that
+
+1506
+
+A. Vaivads et al. / Advances in Space Research 39 (2007) 1502–1509
+
+a
+
+b
+
+c
+
+Fig. 3. In situ reconnection jet observations in the solar wind. (a) a sketch
+of narrow current sheet formation behind CMEs, adopted from Fig. 1 in
+Lin et al. (2005). (b and c) In situ observations by ACE, (b) shows the
+reconnecting component of magnetic ﬁeld and (c) shows the presence of a
+reconnection jet in both protons and alphas, adopted from Fig. 3 in
+Gosling et al. (2005).
+
+performed spectral analysis in the range 0.08–448 Hz, in
+addition to measurements at higher frequencies.
+Wind was launched in 1994 and has spent most of its
+time since launch in the near-Earth solar wind. Wind measures the electric ﬁeld using two pairs of wire dipole antennas in the spin plane and one pair of rigid antennas along
+the spin axis. A low-frequency FFT receiver covers the frequency range DC – 10 kHz. There are also higher frequency receivers.
+In addition to spacecraft dedicated to solar wind studies,
+there have been many spacecraft that have had the terrestrial magnetosphere as the primary objective, but the
+instrumentation of which have allowed detailed studies of
+electric ﬁeld and density ﬂuctuations in the solar wind.
+Examples are Cluster, Geotail, Polar, etc. Particularly the
+multi-spacecraft capabilities of Cluster have proven very
+valuable as shown by the turbulence example in the previous section.
+Measurements of electric ﬁeld and density ﬂuctuations
+in solar wind at distances less than 1 AU are lacking. While
+Helios spacecraft had a possibility to measure electric ﬁeld
+spectra at low frequencies, the data under 500 Hz were
+unusable due to the interference from the spacecraft solar
+array (Schwenn and Marsch, 1991). In principle, spacecraft
+bound for Venus should be usable for exploring the solar
+
+wind in the inner heliosphere. However, from a plasma
+point of view these spacecraft are usually not very well
+instrumented.
+Among future solar missions, Stereo (launch 2006) and
+Solar Wind Sentinels (AO 2006) are the ones planned to
+carry the most comprehensive plasma instrumentation. Stereo is focused on solar radio bursts. It does have the capability to measure waves also at lower frequencies, but the
+extent to which this will be pursued is unclear. Solar Wind
+Sentinels is a comprehensive multi-spacecraft mission to ﬂy
+inside of Earth’s orbit, focusing on providing some capability of space weather predictions.
+BepiColombo will have a comprehensive plasma payload including low-frequency wave measurements. The
+spacecraft will only spend part of its orbit around Mercury
+in the solar wind and thus will not oﬀer the opportunity of
+continuous monitoring of solar wave emissions in the lowfrequency domain. However, assuming the two missions
+coincide in time, BepiColombo may be a nice complement
+to Solar Orbiter, oﬀ and on providing a vantage point at a
+diﬀerent heliospheric longitude.
+Past and planned missions taken into account, Solar
+Orbiter will provide a unique opportunity for continuous
+in situ measurements of low-frequency wave activity in
+the solar wind, at solar distances where the observed waves
+may be remnants of the coronal heating processes. Furthermore, Solar Orbiter will at times co-rotate with the solar
+surface. Finally, in addition to the plasma measurements,
+Solar Orbiter will perform optical measurements in a wide
+range of wavelengths, thus providing context for the interpretation of the wave measurements regardless of the
+spacecraft’s location relative to Earth and terrestrial solar
+observatories.
+4. Instrumentation
+As demonstrated in the previous Sections, information
+on electric ﬁeld and plasma density ﬂuctuations at high
+time resolution is needed for proper understanding of
+important dynamical processes in the corona and solar
+wind. To obtain such measurements, we here propose a
+double-probe instrument, with electronics for the measurement of electric ﬁelds from DC up to 1 kHz and sharing
+antennas with an instrument measuring waves at higher
+frequencies. As a by-product, such an instrument also gives
+information on plasma density ﬂuctuations at high time
+resolution, by use of the spacecraft potential. Additional
+plasma diagnostics could also be obtained from use in
+Langmuir probe mode.
+Double-probe instruments are widely used for measurement of electric ﬁelds in the terrestrial environment. In
+denser ionospheric plasmas, the probe potential is often
+ﬂoating (Maynard, 1998), while instruments operating in
+the tenuous plasmas in the magnetosphere and solar wind
+typically use a technique based on sending a ﬁxed bias current to the probes (Pedersen et al., 1998). To minimize perturbations from the spacecraft carrying the instrument, one
+
+A. Vaivads et al. / Advances in Space Research 39 (2007) 1502–1509
+
+usually measures the voltage between two identical probes
+mounted at the tips of long booms protruding from the
+spacecraft. In the ideal case, the boom length should exceed
+the Debye length, to ensure small inﬂuence of any electrical
+perturbations from the spacecraft. In practice, useful measurements can be obtained also in more tenuous plasmas,
+for reasonably symmetric spacecraft and a carefully
+designed electrical neighbourhood of the probes. The latter
+neighbourhood usually consists of elements bootstrapped
+to the probe potential plus or minus some oﬀset value,
+ensuring that the potential at the probe is not just determined by the boom potential.
+To optimize the use of scarce spacecraft resources, it is
+likely desirable to use the same booms for LF and HF measurements. This can be achieved in several ways. One way
+is to use the LF probes also as monopole antenna elements
+for the HF instrument, as is very successfully done on for
+example the Cluster satellites (Gustafsson et al., 1997; Gurnett et al., 1997). However, the frequency range that can be
+achieved in this way without having preampliﬁers located
+on the boom, close to the probes, is likely insuﬃcient for
+an HF instrument. Another way is to use the outer shield
+of the booms themselves as antennas for the HF instru-
+
+1507
+
+ment, while the probes are mounted on the tip of the
+booms (or actually constituted by the boom tips, see
+below).
+For solar wind measurements, booms much in excess of
+the Debye length (5–10 m, see Table 2) can be achieved
+only as wire booms on spinning spacecraft. However, solid
+booms with lengths of order 5 m are certainly feasible, and
+given a reasonably symmetric spacecraft with a conductive
+surface and a careful design of probe and adjacent biased
+parts, good electric ﬁeld measurements can be obtained
+with such booms. In order to investigate polarization properties of waves and obtain a reasonably complete picture of
+the electric ﬁeld, measurements in two dimensions are
+needed. This means a minimum of three booms, which
+could be arranged as suggested in Fig. 4a. From the diﬀerences between two pairs of probes, for example 1–2 and
+1–3, a 2-D E-ﬁeld can be constructed. However, a more
+symmetric arrangement would be obtained using four
+booms as illustrated in Fig. 4b. This also brings all probes
+away from any wake and Mach cone structures forming
+around the spacecraft. The higher degree of symmetry
+and longer baseline as compared to Fig. 4a should also
+oﬀer advantages for an HF instrument, though at the cost
+
+Fig. 4. Some possible Solar Orbiter boom conﬁgurations. In each case, the outermost parts of the booms are used as electric ﬁeld probes.
+
+1508
+
+A. Vaivads et al. / Advances in Space Research 39 (2007) 1502–1509
+
+of the loss of the possibility of obtaining three-dimensional
+measurements using each boom as a monopole antenna
+oﬀered by the arrangement in Fig. 4a. The 3D capability
+is restored using the conﬁguration Fig. 4c, with one boom
+pair angled towards the Sun at around 45. Other possibilities may also be considered, and the ﬁnal choice of boom
+conﬁguration will need to take into consideration how to
+minimize inﬂuence of wake eﬀects, asymmetries and spacecraft photoelectrons on the LF measurements under the
+constraints posed by the needs of the HF instrumentation
+and the spacecraft resource budget.
+On a non-spinning spacecraft with a well deﬁned symmetry direction for photoemission caused by UV radiation
+as well as for plasma ﬂow, as both come from the Sun,
+cylindrical probes could be used. This amounts to using
+the outermost part of the boom as a probe. Depending
+on boom thickness, a probe length of 10–20 cm could be
+considered, with some adjacent biased (bootstrapped) elements. Probe arrangements of this kind, including the
+cylindrical geometry, will be used on the EFI instrument
+on the upcoming THEMIS mission, and are planned also
+for the MMS FIELDS instrument. The EFI instrument
+on the POLAR satellite (Harvey et al., 1995) has stiﬀ axial
+booms of similar size, but uses spherical probes, which
+would be an unnecessary mechanical complication in our
+case. Nevertheless, the axial booms of POLAR EFI are a
+close analogue of one pair of booms in Fig. 4b.
+5. Conclusions
+Solar Orbiter is an ESA mission planned to take high
+resolution images of the Sun and perform the closest ever
+in situ observations of solar wind. Several major scientiﬁc
+questions can be addressed by observing electric ﬁeld and
+density ﬂuctuations from low frequencies up to around
+100 Hz. This frequency range includes waves essential for
+wave-particle interaction involving ions (the ion gyrofrequency and the lower hybrid frequency) and also ion scales
+(the ion gyroradius) Doppler shifted by the solar wind
+motion as seen in the spacecraft frame.
+One important question is what models best describe
+the ﬂuctuations on ion temporal and spatial scales in
+the solar wind, and how these ﬂuctuations are dissipated
+to heat ions and electrons. Clearly observations of density
+and electric ﬁeld ﬂuctuations are needed, together with
+measurements of the magnetic ﬁeld at the same frequencies, to obtain scientiﬁc closure. Another example is the
+generation of electromagnetic waves such as Type II solar
+bursts from interplanetary shocks. These waves are interesting since they can be used for remote sensing once their
+generation is understood. This generation most likely
+involves rapid density variations and localized electric
+ﬁeld which can be detected in situ by Solar Orbiter. Magnetic reconnection is a phenomenon believed to be important for the escape of CMEs, and at much smaller scales
+may be important for local energy dissipation. As is
+known from studies in the terrestrial magnetosphere,
+
+observations of small scale density and electric ﬁeld structures are essential for understanding reconnection in a
+new parameter regime.
+As any exploratory spacecraft, Solar Orbiter will have
+limited resources for the payload. To optimize the use of
+resources, one must seriously consider using the same
+antennas over the whole frequency range of interest. We
+ﬁnd that by using reasonable compromises it is possible
+to use the same payload to detect small scale and low-frequency density and electric ﬁeld ﬂuctuations, and to
+observe electric ﬁelds at frequencies of several MHz.
+Acknowledgements
+A.V. research was supported by the Swedish Research
+Council. Work at the Royal Institute of Technology was
+partially supported by the Swedish National Space Board
+and the Alfvén Laboratory Centre for Space and Fusion
+Plasma Physics.
+References
+Bale, S.D., Kellogg, P.J., Mozer, F.S., Horbury, T.S., Reme, H.
+Measurement of the electric ﬂuctuation spectrum of magnetohydrodynamic turbulence. Phys. Rev. Lett. 94 (21), 215002, 2005.
+Bruno, R., Bavassano, B., D’Amicis, R., Carbone, V., Sorriso-Valvo, L.,
+Pietropaolo, E. On the radial evolution of Alfvénic turbulence in the
+solar wind. Space Sci. Rev. 122, 321–328, 2006.
+Burlaga, L.F. Magnetic ﬁelds and plasmas in the inner heliosphere: helios
+results. Planet. Space Sci. 49, 1619–1627, 2001.
+Cranmer, S.R. Coronal Heating Versus Solar Wind Acceleration. In:
+Proceedings of the SOHO 15 Workshop – Coronal Heating. 6–9
+September 2004, St. Andrews, Scotland, UK (ESA SP-575). pp. 154,
+2004.
+Eﬁmov, A.I., Chashei, I.V., Bird, M.K., Plettemeier, D., Edenhofer, P.,
+Wohlmuth, R., Samoznaev, L.N., Lukanina, L.A. Turbulence of the
+inner solar wind at solar maximum: Coronal radio sounding with
+Galileo in 1999/2000. Adv. Space Res. 36, 1448–1453, 2005.
+Gosling, J.T., Skoug, R.M., McComas, D.J., Smith, C.W. Direct evidence
+for magnetic reconnection in the solar wind near 1 AU. J. Geophys.
+Res. 110, 1107, 2005.
+Gosling, J.T., Eriksson, S., Schwenn, R. Petschek-type magnetic reconnection exhausts in the solar wind well inside 1 AU: helios. J. Geophys.
+Res. 111, A10102, 2006a.
+Gosling, J.T., Eriksson, S., Skoug, R.M., McComas, D.J., Forsyth, R.J.
+Petschek-type reconnection exhausts in the solar wind well beyond
+1 AU: Ulysses. ApJ 644, 613–621, 2006b.
+Gurnett, D.A., Huﬀ, R.L., Kirchner, D.L. The wide-band plasma wave
+investigation. Space Sci. Rev. 79, 195–208, 1997.
+Gustafsson, G., Bostrom, R., Holback, B., Holmgren, G., Lundgren,
+A., Stasiewicz, K., Ahlen, L., Mozer, F.S., Pankow, D., Harvey,
+P., Berg, P., Ulrich, R., Pedersen, A., Schmidt, R., Butler, A.,
+Fransen, A.W.C., Klinge, D., Thomsen, M., Falthammar, C.-G.,
+Lindqvist, P.-A., Christenson, S., Holtet, J., Lybekk, B., Sten,
+T.A., Tanskanen, P., Lappalainen, K., Wygant, J. The electric ﬁeld
+and wave experiment for the cluster mission. Space Sci. Rev. 79,
+137–156, 1997.
+Harvey, P., Mozer, F.S., Pankow, D., Wygant, J., Maynard, N.C., Singer,
+H., Sullivan, W., Anderson, P.B., Pfaﬀ, R., Aggson, T., Pedersen, A.,
+Falthammar, C.-G., Tanskannen, P. The electric ﬁeld instrument on
+the polar satellite. Space Sci. Rev. 71, 583–596, 1995.
+Kellogg, P.J., Bale, S.D., Mozer, F.S., Horbury, T.S., Reme, H. Solar
+wind electric ﬁelds in the ion cyclotron frequency range. ApJ 645,
+704–710, 2006.
+
+A. Vaivads et al. / Advances in Space Research 39 (2007) 1502–1509
+Knock, S.A., Cairns, I.H., Robinson, P.A., Kuncic, Z. Theoretically
+predicted properties of type II radio emission from an interplanetary
+foreshock. J. Geophys. Res. 108, 1–6, 2003.
+Leamon, R.J., Matthaeus, W.H., Smith, C.W., Zank, G.P., Mullan, D.J.,
+Oughton, S. MHD-driven kinetic dissipation in the solar wind and
+corona. ApJ 537, 1054–1062, 2000.
+Lin, J., Ko, Y.-K., Sui, L., Raymond, J.C., Stenborg, G.A., Jiang, Y.,
+Zhao, S., Mancuso, S. Direct observations of the magnetic reconnection site of an eruption on 2003 November 18. ApJ622, 1251–1264,
+2005.
+Marsch, E., Tu, C.-Y. Spectral and spatial evolution of compressible
+turbulence in the inner solar wind. J. Geophys. Res. 95, 11945–11956,
+1990.
+Marsch, E., Marsden, R., Harrison, R., Wimmer-Schweingruber, R.,
+Fleck, B. Solar Orbiter – mission proﬁle, main goals and present
+status. Adv. Space Res. 36, 1360–1366, 2005.
+Maynard, N.C. Electric Field Measurements in Moderate to High Density
+Space Plasmas with Passive Double Probes. In: Measurement Techniques in Space Plasmas – Fields (Geophysical Monograph 103).
+American Geophysical Union, p. 13, 1998.
+Pedersen, A., Mozer, F., Gustafsson, G. Electric Field Measurements in a
+Tenuous Plasma with Spherical Double Probes. In: Robert F. Pfaﬀ,
+
+1509
+
+J.E.B., Young., D.T. (Eds.), Measurement Techniques in Space
+Plasmas – Fields (Geophysical Monograph 103). American Geophysical Union, p. 1, 1998.
+Schwenn, R., Marsch, E. Physics of the Inner Heliosphere II. Particles,
+Waves and Turbulence, XI, 352 pp. Springer-Verlag Berlin Heidelberg
+New York. Also Physics and Chemistry in Space, 152 ﬁgs. Volume 21;
+2, 1991.
+Vaivads, A., Retinò, A., André, M. Microphysics of magnetic reconnection. Space Sci. Rev. 122, 19–27, 2006.
+Wang, C., Du, D., Richardson, J.D. Characteristics of the interplanetary
+coronal mass ejections in the heliosphere between 0.3 and 5.4 AU. J.
+Geophys. Res. 110, 10107, 2005.
+
+Further readings
+Solar Orbiter payload deﬁnition document (PDD), ESA SCI-A/2004/175/
+AO, Issue 5, 31 March 2006, ESA-ESTEC, Noordwijk, The Netherlands, 2006.
+Solar Orbiter science requirements document (SRD), ESA SCI-SH/2005/
+100/RGM, Issue 1, 31 March 2005, ESA-ESTEC, Noordwijk, The
+Netherlands, 2005.
+

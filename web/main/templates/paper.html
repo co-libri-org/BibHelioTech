@@ -4,7 +4,8 @@
 {%  endblock %}
 {% block content %}
 
-<h1>&laquo;{{paper.title}}&raquo;</h1>
+
+<h3 class="d-flex justify-content-center align-items-center p-3 ">#{{paper.id}}- &laquo;{{paper.title}}&raquo;</h3>
 <a class="btn btn-warning"
    href="{{url_for('main.paper_update', paper_id=paper.id)}}"
    title="reload from istex">Reload From ISTEX</a>

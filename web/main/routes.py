@@ -319,6 +319,7 @@ def paper_pipeline(pipeline_mode, paper_id, step_num, disp_mode):
 
     return render_template(
         "colored_steps.html",
+        paper=paper,
         curr_step=int(step_num),
         paper_id=paper_id,
         pipeline_mode=pipeline_mode,

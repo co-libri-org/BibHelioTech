@@ -20,6 +20,22 @@ dump_step = 0
 raw_dumper = RawDumper("entities")
 
 
+def show_final(fal):
+    """Final_Amda_List structure displayer for debugging"""
+    from pprint import pprint
+
+    if len(fal) > 0:
+        opening = ">" * 50
+        ending = "<" * 50
+        msg = f"{opening} {len(fal)} {ending}"
+    else:
+        msg = "0" * 100
+    print("-" * len(msg))
+    print(msg)
+    print("-" * len(msg))
+    pprint(fal)
+
+
 def keys_exists(element, *keys):
     """
     Check if *keys (nested) exists in `element` (dict).
@@ -281,15 +297,15 @@ def sat_recognition(content_as_str, sats_dict):
     for syn in synonyms:
         test = re.finditer("[;( \n]" + syn + "[;)., ]", content_as_str)
         for matches in test:
-            _text  = re.sub("[(\n.,)]", "", matches.group()).strip()
+            _text = re.sub("[(\n.,);]", "", matches.group()).strip()
             sat_dict_list += [
-            {
-                "start": matches.start(),
-                "end": matches.end(),
-                "text": _text,
-                "type": "sat",
-            }
-        ]
+                {
+                    "start": matches.start(),
+                    "end": matches.end(),
+                    "text": _text,
+                    "type": "sat",
+                }
+            ]
     sat_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
     return sat_dict_list
 
@@ -519,6 +535,18 @@ def add_sat_occurrence(_final_links, _sutime_json):
     return _temp, _fl_to_return
 
 
+def closest_mission_to_duration(_temp, _final_links, data_frames, published_date):
+    previous_sat = None
+    _final_links = []
+    for _t in _temp:
+        if _t["type"] == "sat":
+            previous_sat = _t
+        elif _t["type"] == "DURATION":
+            _final_links.append([previous_sat, _t])
+
+    return _temp, _final_links
+
+
 def closest_duration(_temp, _final_links, data_frames, published_date):
     """
     8th Entities Finder step:
@@ -680,7 +708,9 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     # sanity checks
     DOI = doc_meta_info.get("doi") if doc_meta_info is not None else None
-    publication_date = doc_meta_info.get("pub_date") if doc_meta_info is not None else None
+    publication_date = (
+        doc_meta_info.get("pub_date") if doc_meta_info is not None else None
+    )
     if DOI is None:
         # try to find in tei file
         import glob
@@ -749,7 +779,8 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     )
 
     # 8- Association of the closest duration of a satellite.
-    temp, final_links = closest_duration(
+    # temp, final_links = closest_duration(
+    temp, final_links = closest_mission_to_duration(
         temp, final_links, data_frames, publication_date
     )
     raw_dumper.dump_to_raw(
@@ -1102,34 +1133,30 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     # 17- Now create events list according to the formatting below
 
-    final_amda_dict = {
-        "start_time": "",
-        "stop_time": "",
-        "DOI": "",
-        "sat": "",
-        "inst": "",
-        "reg": "",
-        "D": "",
-        "R": "",
-        "SO": "",
-    }
     final_amda_list = []
 
     for elems in final_links:
-        final_amda_dict["sat"] = elems[0]["text"]
-        final_amda_dict["inst"] = ",".join(elems[1]["text"])
-        final_amda_dict["D"] = elems[0]["D"]
-        final_amda_dict["R"] = elems[0]["R"]
-        final_amda_dict["SO"] = elems[0]["SO"]
-        final_amda_dict["conf"] = elems[0]["conf"]
+        # Initialize dict
+        final_amda_dict = {
+            "start_time": "",
+            "stop_time": "",
+            "DOI": "",
+            "sat": elems[0]["text"],
+            "inst": ",".join(elems[1]["text"]),
+            "reg": "",
+            "D": elems[0]["D"],
+            "R": elems[0]["R"],
+            "SO": elems[0]["SO"],
+            "conf": elems[0]["conf"],
+        }
         if len(elems) >= 5:
             final_amda_dict["start_time"] = elems[4]["begin"]
             final_amda_dict["stop_time"] = elems[4]["end"]
+
         # search in the tree structure
-        result = []
+        result = [elems[2]["text"]]
 
-        result.append(elems[2]["text"])
-
+        # TODO: fix this expression
         find_path(
             REG_dict[elems[2]["text"][0].upper() + elems[2]["text"][1:]],
             elems[3]["text"][0].upper() + elems[3]["text"][1:],
@@ -1147,17 +1174,6 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         result = []
         final_amda_dict["reg"] = final_path
         final_amda_list.append(final_amda_dict)
-        final_amda_dict = {
-            "start_time": "",
-            "stop_time": "",
-            "DOI": "",
-            "sat": "",
-            "inst": "",
-            "reg": "",
-            "D": "",
-            "R": "",
-            "SO": "",
-        }
 
     for dicts in final_amda_list:
         dicts["inst"] = ",".join(list(set(dicts["inst"].split(",")))).replace(" ", "-")
@@ -1209,33 +1225,20 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
             final_file.write("\n")
 
     # =============================================================================================================================================================
-    # For displaying results, comment for disable.
-    start_time = "start_time"
-    stop_time = "stop_time"
-    DOI_2 = "DOI"
-    sat = "sat"
-    inst = "inst"
-    reg = "reg"
-    print(
-        f"{start_time:30}",
-        f"{stop_time:30}",
-        f"{DOI_2:30}",
-        f"{sat:30}",
-        f"{inst:50}" f"{reg:30}",
+    # display results if debug mode
+    columns_to_display = [
+        "start_time",
+        "stop_time",
+        "doi",
+        "sats",
+        "insts",
+        "regs",
+        "d",
+    ]
+    cat = rows_to_catstring(
+        final_amda_list, catalog_name=None, columns=columns_to_display
     )
-    for elements in final_amda_list:
-        temp = [value for key, value in elements.items()]
-        print(
-            f"{temp[0]:30}",
-            f"{temp[1]:30}",
-            f"{temp[2]:30}",
-            f"{temp[3]:30}",
-            f"{temp[4]:50}" f"{temp[5]:30}",
-        )
-        print(
-            "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------"
-        )
-    print("\n")
+    _logger.debug(cat)
     # =============================================================================================================================================================
 
     translated_doi = DOI.translate(str.maketrans("", "", string.punctuation))
@@ -1243,14 +1246,19 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     catalog_name = f"{translated_doi}_bibheliotech_V{bht_pipeline_version}.txt"
 
     # add two more elements in hpevent dict:
-    tso_dict = {"occur_sat": str(TSO["occur_sat"]),
-                "nb_durations": str(TSO["nb_durations"])}
+    tso_dict = {
+        "occur_sat": str(TSO["occur_sat"]),
+        "nb_durations": str(TSO["nb_durations"]),
+    }
     final_amda_list = [{**tso_dict, **hpevent_dict} for hpevent_dict in final_amda_list]
 
     cat_as_txt = rows_to_catstring(final_amda_list, catalog_name)
 
     catalog_path = os.path.join(current_OCR_folder, catalog_name)
-    with open(catalog_path, "w", ) as f:
+    with open(
+        catalog_path,
+        "w",
+    ) as f:
         f.write(cat_as_txt)
 
     return catalog_path

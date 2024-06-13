@@ -1,0 +1,19 @@
+[
+    {
+        "D": 1,
+        "DOI": "10.1016/S0032-0633(02)00028-4",
+        "R": 1,
+        "SO": 35,
+        "conf": 1.0,
+        "inst": "b,M,a,r,S,c,6,8,o,9,p,f,e,m,3,-,h,2,1,t",
+        "reg": "Heliosphere.Outer",
+        "sat": "MGS",
+        "start_time": "",
+        "stop_time": ""
+    },
+    {
+        "message": "17- Found 1 events (see json)",
+        "pipeline_version": "4.0",
+        "step": "17"
+    }
+]

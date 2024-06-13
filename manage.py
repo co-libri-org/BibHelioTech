@@ -1,4 +1,5 @@
 import os
+import shutil
 
 import click
 import redis
@@ -143,6 +144,61 @@ def mock_papers():
 def list_papers():
     for p in Paper.query.all():
         print(p)
+
+
+@cli.command("update_paper")
+@click.option("-c", "--cat-path", "cat_path")
+@click.argument("paper_id", required=True)
+def update_paper(paper_id, cat_path):
+    p = db.session.get(Paper, paper_id)
+    p.set_cat_path(cat_path)
+
+
+@cli.command("show_paper")
+@click.argument("paper_id", required=True)
+def show_paper(paper_id):
+    p = db.session.get(Paper, paper_id)
+    print(p)
+
+
+@cli.command("del_paper")
+@click.argument("paper_id", required=True)
+def del_paper(paper_id):
+    p = db.session.get(Paper, paper_id)
+    db.session.delete(p)
+    db.session.commit()
+
+
+@cli.command("clone_paper")
+@click.argument("paper_id", required=True)
+def clone_paper(paper_id):
+    def clone_copy(orig_path):
+        _dirname = os.path.dirname(orig_path)
+        _basename = os.path.basename(orig_path)
+        _filename, _extension = os.path.splitext(_basename)
+        _cloned_path = os.path.join(_dirname, f"{_filename}-copy{_extension}")
+        shutil.copy(orig_path, _cloned_path)
+        return _cloned_path
+
+    p_orig = db.session.get(Paper, paper_id)
+    cloned_pdf_path = None
+    cloned_txt_path = None
+    if p_orig.has_pdf:
+        cloned_pdf_path = clone_copy(p_orig.pdf_path)
+    if p_orig.has_txt:
+        cloned_txt_path = clone_copy(p_orig.txt_path)
+    p_cloned = Paper(
+        title=f"COPY-{p_orig.title}",
+        doi=f"COPY-{p_orig.doi}",
+        ark=f"COPY-{p_orig.ark}",
+        istex_id=f"COPY-{p_orig.istex_id}",
+        publication_date=p_orig.publication_date,
+        pdf_path=cloned_pdf_path,
+        txt_path=cloned_txt_path,
+    )
+    db.session.add(p_cloned)
+    db.session.commit()
+    print(p_cloned)
 
 
 @cli.command("list_events")

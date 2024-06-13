@@ -1,0 +1,204 @@
+Introduction Magnetic reconnection is a process that occurs in plasmas and is capable of converting large amounts of energy stored in magnetic fields into kinetic energy of particles.
+It occurs in solar system plasmas like the solar corona [e.g., Kopp and Pneuman , ; Innes et al.
+, ] or the solar wind [e.g., Gosling et al.
+, ; Phan et al.
+, ] and in planetary magnetospheres [e.g., Nagai et al.
+, ; Retinò et al.
+, ; Phan et al.
+, ; Jackman et al.
+, ; Slavin et al.
+, ].
+In addition, magnetic reconnection plays an important role in many astrophysical and laboratory plasmas [e.g., Hoshino and Lyubarsky , ; Yamada et al.
+, ].
+Reconnection occurs at the Earth's magnetopause between the solar wind and the magnetospheric plasmas.
+In the magnetosphere, cold (few eV) ions of ionospheric origin are difficult to observe with particle detectors on board a spacecraft in a low‐density plasma.
+The spacecraft emits photoelectrons and in steady state often charges to several tens of volts positive, preventing positive low‐energy ions from reaching the onboard detectors.
+Using a new technique, based on the detection of the wake behind a charged spacecraft in a supersonic ion flow, it has been shown that cold ions dominate 60–70% of the time in the magnetotail [ Engwall et al.
+, ; André et al.
+, ].
+At the low‐latitude magnetopause, “plumes” and a “wind” of cold ions from the plasmasphere are observed [ Darrouzet et al.
+, ; Dandouras , ; Walsh et al.
+, ].
+A statistical study, including the new “wake” technique mentioned above, shows that cold ions are present about 80% of the time just inside the subsolar magnetopause [ André and Cully , ].
+Thus, for magnetopause reconnection a mixture of hot (keV) and cold ions is common [ Lee et al.
+, ; Wang et al.
+, ].
+However, most of the previous studies of reconnection at the Earth's magnetopause, including simulation studies, do not account for the cold population [e.g., Cassak and Shay , ; Birn et al.
+, ; Pritchett and Mozer , ].
+A recent study points out the role of cold ion plumes at the magnetopause increasing the density and decreasing the Alfvén velocity, and hence decreasing the reconnection rate [ Walsh et al.
+, ].
+In addition to this large‐scale influence on reconnection, we show that also the microphysics of reconnection is modified by the presence of cold ions.
+Strong electric fields and currents due to the Hall effect are set up in the reconnection region.
+They are formed in regions narrower than the ion scale where the ions become demagnetized, but the electrons remain magnetized and carry the so‐called Hall currents.
+The cold ions have a smaller gyroradius, so they remain magnetized down to smaller spatial scales than the hot ions.
+Therefore, they can E × B drift inside regions where the hot ions cannot [ André et al.
+, ].
+The cold ions introduce a new length‐scale between the normally considered ion and electron length scales, in a similar manner that heavy ion species introduce a larger scale [ Shay and Swisdak , ; Wygant et al.
+, ; Markidis et al.
+, ].
+Earlier studies have shown that the Hall effect is important for significant particle energization [ Witalis , ; Yamada et al.
+, ] and discussed its effects on the reconnection rate [ Birn et al.
+, ; Shay et al.
+, ; Drake et al.
+, ; Liu et al.
+, ].
+However, earlier studies related to the Hall effect have considered a situation where the plasmas consist of single ion and electron temperatures, while the recent observations indicate that this is not the common situation at the Earth's magnetopause.
+Numerical simulations (single ion component) predict a layer of enhanced perpendicular electric field in the magnetospheric separatrix region [ Tanaka et al.
+, ; Pritchett and Mozer , ; Pritchett , ].
+Such a layer has been detected by in situ measurements at the high‐latitude magnetopause, and it has been shown that the electric field is mainly balanced by the Hall term j × B / e n [ André et al.
+, ; Retinò et al.
+, ; Khotyaintsev et al.
+, ].
+However, cold ions are not so common at the high‐latitude magnetopause, while they are abundant at low latitudes [ André and Cully , ].
+In this paper, we introduce a generalized Ohm's law modified due to cold ions and discuss the importance of ions of different temperature in reconnection physics.
+We present a detailed Cluster spacecraft [ Escoubet et al.
+, ] double crossing of the subsolar magnetopause when cold ions are present and show how they reduce the Hall currents and modify the balance of the Hall electric field.
+Finally, we perform the analysis to 13 magnetopause crossings with cold ions where the new physics is present.
+Electric Field Balance Consider a plasma composed of electrons, and hot and cold ions, where n , n h , and n c are their respective densities and n = n h + n c to maintain quasi‐neutrality.
+The current can be expressed as j = e ( n h v h + n c v c − n v e ), where v h , v c , and v e are the velocities of the plasma components.
+We can write the electron momentum equation in the form of a generalized Ohm's law, neglecting time variations and the electron inertial term (valid for scales above c / ω p e ), as _placeholder_formula_ where P e is the electron pressure tensor and E and B are the electric and magnetic fields.
+At large (MHD) scales, the three fluids move together, and equation reduces to the plasma frozen‐in condition.
+At scales below the cold ion gyroradius, ρ c , both ion populations become demagnetized and localized electric fields have to be supported by the first two terms on the right side of equation .
+The new effect introduced by cold ions occurs at scales ( L ), ρ c < L < ρ h , where only cold ions and electrons remain magnetized and the Hall term j × B / e n is partially canceled by the cold ion term v c × B n c / n .
+Observations Between February and April 2008, the Cluster orbit multiple times crossed the low‐latitude magnetopause near the subsolar point (Figure a).
+We analyze crossings of the magnetopause when Cluster operates in a high‐resolution mode, allowing detailed studies of fields and particles.
+Cluster 1 (C1) and C2 are several thousands of kilometers away from the other spacecraft, but the distance between C3 and C4 is less than 50 km (Figure b), i.e., below the hot ion scale (few hundreds of kilometers).
+Figure c illustrates C3 and C4 crossing the separatrix region.
+Their close separation allows estimates of distances from the time delay between observations of magnetic field gradients at the two spacecraft and also allows to measure currents from a two‐spacecraft method, based on μ 0 j =∇× B (Figure d), by assuming a planar magnetopause at the scale of C3‐C4 separation.
+The relative motion between Cluster and the magnetopause for each individual crossing is obtained by timing the B and E field gradients observed by C3 and C4 and validated by comparing the currents measured with a two‐spacecraft method (velocity independent) and a one‐spacecraft method (velocity dependent).
+We identify the layer of strong electric field in the separatrix region of each crossing and perform in situ measurements to test if cold ions remain magnetized inside the thin layer (Figure e).
+Two Cluster magnetopause crossings where cold ions modify reconnection are shown in Figure .
+The crossings can be seen as a rotation of the magnetic field (Figure a, green).
+The magnetic field has a large southward component before the first magnetopause crossing, is essentially northward inside the magnetosphere, and turns southward again after the second crossing.
+The plasma density measured by the ion instrument, Cluster Ion Spectrometry (CIS), is plotted in Figure b for different energy ranges (blue, magenta, and red), showing that cold ions are abundant in the magnetospheric side of the magnetopause.
+The total density estimated from CIS (black, n CIS ) and from the spacecraft potential (green, n EFW = n ), calibrated with the plasma frequency measured by the wave instrument (WHISPER), is also plotted.
+CIS shows lower values for the total density in the magnetosphere, consistent with cold ions not reaching the detector for a large portion of the spacecraft spin.
+The total density, n , in the vicinity of the crossings is ∼15 cm −3 for the magnetosheath and ∼3 cm −3 for the magnetosphere.
+CIS shows that at least ∼2.5 cm −3 of the magnetospheric ions correspond to cold ions ( n c / n ≥0.80).
+The jets, the highest ion velocities in Figure c (light blue), are consistent with the outflow velocity estimated from the scaling in Cassak and Shay [ ] (∼135 km/s), indicating ongoing reconnection.
+In addition, electrons of magnetosheath origin are present in the magnetosphere‐like region (not shown), indicating that the regions have been reconnected.
+Localized regions of strong electric field are observed on the magnetospheric side of magnetopause (Figure d, yellow).
+These regions coincide with boundaries separating magnetospheric and magnetosheath ion populations (Figure e) and correspond to the separatrix regions.
+In the interval 12:25:40 – 12:26:00 there are also strong E fields, but these measurements are affected by an ion wake (shadowed in gray in Figure d) caused by the interaction of drifting cold ions and the charged spacecraft, and therefore, E n does not correspond to the geophysical field [ André et al.
+, ].
+To study in detail the region of strong electric fields, the direction normal to the magnetopause _placeholder_formula_ is estimated from Minimum Variance Analysis (MVA) applied to B (Figure a, green).
+In both regions with strong electric fields (Figure d, yellow), the obtained _placeholder_formula_ directions are roughly aligned with GSE X , consistent with the subsolar magnetopause region.
+The _placeholder_formula_ direction is defined to be as close as possible to GSE Z and _placeholder_formula_ closes the system being roughly GSE Y .
+The _placeholder_formula_ components of the terms in equation are shown in Figure d.
+The term _placeholder_formula_ , E n , (black), is the electric field measured by the EFW electric field instrument.
+Near the reconnection region, the cold ions become energized and have large drift velocities owing to the strong fields set by reconnection, and therefore, the population can be detected by the particle instrument (Figure e).
+In the term − n c / n ( v c × B ) n , (blue), v c is the bulk velocity of cold (5 eV to 1 keV of total energy) ions observed by the CIS ion instrument, and B is obtained from the Flux Gate Magnetometer (FGM).
+The total energy, i.e., bulk motion plus thermal motion, of cold ions is below 100 eV, in general, except inside the strong E field region (Figure d, shaded in yellow) where the drift velocity is large and the total energy of the cold population can reach few hundreds of eV.
+The term − n h / n ( v h × B ) n is calculated in analogous manner for hot ions (1 keV to 32 keV).
+Only the _placeholder_formula_ , i.e., roughly GSE X , components of the different terms in equation are plotted in Figure d.
+Since CIS measurements rely on the spacecraft spin, the time resolution of these terms is ∼4 s.
+The electron pressure is measured by the Plasma Electron And Current Experiment.
+In general, the pressure is a tensor; however, we estimate only a scalar pressure, p e .
+To obtain the gradient requires knowledge of the distances, which are obtained from the estimated velocity of the magnetopause passing C3 and C4, using timing of the current sheet observed by both spacecraft.
+Therefore, the estimations of ∇ p e / e n are restricted to the vicinity of the current sheet.
+The _placeholder_formula_ component of the scalar pressure gradient is shown in Figure d (green), and its contribution is below 10% of the E n field (∇ p e / e n < 1.5 mV/m).
+To obtain the _placeholder_formula_ term, ( j × B / e n ) n , j is obtained by calculating ∇× B from measurements on two spacecraft, C3 and C4 (Figures c and d).
+This method is independent of the velocity of magnetopause but again assumes a planar and stationary current sheet.
+The plasma density is inferred from the spacecraft potential (EFW).
+The different term estimations balance the generalized Ohm's law during the interval presented in Figure d, except between 12:25:40 and 12:26:00 UT, when E n measurements are affected by an ion wake caused by the interaction of drifting cold ions and the charged spacecraft, as commented above.
+In the first crossing (Figure d, left yellow interval), the region of enhanced E n lasts for ∼7 s, corresponding to a width L ∼ 100 km, (magnetopause normal velocity ∼15 km/s, obtained from timing between C3 and C4).
+The ( j × B / e n ) n Hall term is significant and shows that ion and electron bulk motions are decoupled.
+However, it does not fully balance E n .
+The − n c / n ( v c × B ) n term is also significant and shows that drifting cold ions balance part of the E n term and therefore follow the electron motion.
+On the other hand, the hot ions are demagnetized inside the layer, and they do not follow the drift motion, i.e., − n h / n ( v h × B ) n ≃0.
+Figures f and g show 2‐D projections on the velocity planes of ion differential energy flux for four consecutive spins of C3 during the first magnetopause crossing.
+Each spin clearly shows the hot and cold populations, and it can be observed how the cold ions gain both bulk velocity and temperature (velocity spread) as they approach the separatrix layer.
+The bulk velocity of cold and hot ions is plotted on top with blue and red circles, and the E × B velocity from the field instruments is plotted in black circles.
+For spins 1 and 2, both sheath and magnetospheric ions are present, and therefore, the v c calculations are affected by sheath ions.
+We recalculated v c after reducing the CIS data to the vicinity of the drifting cold magnetospheric ions, i.e., roughly − Y direction (plotted in cyan circles), and found even better agreement between v c and v E × B .
+For spins 3 and 4, where there is no contamination of sheath ions, the blue and cyan circles overlap.
+Only the cold ions follow the E × B velocity inside the region of enhanced Hall electric field, and we can conclude that hot ions are demagnetized but cold ions are not.
+The main direction of the E × B drift is − Y , but the hot demagnetized ions exhibit a + Y velocity component, consistent with a finite gyroradius effect caused by partial gyrations inside the layer.
+The cold ions of magnetospheric origin have temperatures of 10–100 eV ( ρ c ∼ 10–35 km < L ) and drift energies up to a few hundreds of eV; the observed drift is consistent with the E × B drift measured by the field instruments (Figure e, black line).
+These ions can drift inside the layer and contribute to the fourth term − v c × B n c / n in equation .
+Hot magnetospheric and magnetosheath ions (2–20 keV; ρ h ∼ 150–450 km > L ) cannot drift inside the layer, and the third term in equation , − v h × B n h / n , does not contribute to E n .
+Since the maximum values of E n (∼20 mV/m) are measured only for a period of 2–3 s, and the CIS instrument is not designed to resolve drifts at such time scales, it is natural to assume that the −( v i × B ) n term is underestimated, and hence, the sum of −( v i × B ) n , ( j × B / e n ) n , and ∇ p e / e n cannot fully balance E n .
+Comparing observations of the terms in equation at the peak of the electric field, we find that at least 40% of E n is balanced by − v c × B n c / n , and hence, n c / n > 0.4 at this point inside the layer.
+In summary, one part of the normal E field is balanced by the Hall j × B / e n term while the other part of E is balanced by − v c × B n c / n .
+The second crossing lasts several seconds and corresponds to a thicker region, L ∼ 750 km (the magnetopause velocity is ∼50 km/s obtained from timing between C3 and C4, the upper limit for frame‐dependent E field is ∼2.5 mV/m).
+During the first seconds of the crossing, the abundant cold magnetospheric ions dominate and E n ≈−( v c × B n c / n ) n .
+In the last part of the crossing the cold ion population has been heated and starts to mix with the magnetosheath ions.
+The abundant magnetosheath ions cannot drift inside the layer, so the current becomes larger and the Hall term becomes noticeable, providing the most significant part of the balancing in the last part of the crossing (12:26:45 – 12:26:48 UT).
+Figures h– k provide similar data for the same time interval but for C1, which is at ∼8000 km distance from C3 to C4 (Figure b).
+C1 crosses the separatrix up to 4 times during the interval (Figure i).
+With only one spacecraft, the magnetopause velocity and currents cannot be estimated in the way discussed above.
+The ion energy distribution indicates that the magnetopause velocity is low when C1 crosses the magnetopause during the interval 12:25:40 – 12:26:00 UT, and it is supported by the low ion velocity measured by CIS in the _placeholder_formula_ direction (below 30 km/s).
+Here two ion populations coexist, roughly 0.1–1 keV (cold) and 1–10 keV (hot), Figure i.
+The velocity of the cold population is consistent with the E × B drift, while the velocity of the hot population is consistent with a finite gyroradius effect of hot ions performing only partial gyrations inside the layer.
+This is shown in Figures j and k, where v c (blue circle) is roughly equal to v E × B (black circle), but v h (red circle) does not follow the drift motion and exhibits a strong component in the positive GSE Y direction, consistent with a finite gyroradius effect.
+Owing to the small velocity of the crossing, the effect can be observed during several spins, and Figures h and i provide strong evidence of a mixture of drifting cold ions together with nondrifting hot ions.
+Next, we analyze 3 months of Cluster data with short C3‐C4 separation.
+We use magnetopause crossings in the subsolar region when Cluster is in high‐resolution mode.
+Altogether six orbits with several crossings each are identified.
+We apply MVA to all the B z rotations (positive to negative) of the six candidate orbits and consider the ones with reliable (eigenvalues ratio medium to minimum larger than 10) normal directions in GSE X , as expected for the subsolar magnetopause.
+Sixteen crossings fulfill these requirements, and at least 13 of them present clear signatures of reconnection, i.e., outflow regions with velocities consistent with the predictions made by Cassak and Shay [ ], plus a region with a mixture of magnetosheath and magnetospheric plasmas.
+These events with ongoing reconnection are detailed in Table , and events 6 and 7 correspond to the events in Figure .
+CIS detects cold ions on the magnetospheric side of the separatrix in all the 13 crossings, confirming that cold ions are common at the magnetospheric side of the subsolar magnetopause.
+In addition, the electric field instrument often observes wake signatures caused by drifting cold ions [ André and Cully , ; André et al.
+, ].
+We observe cold ions drifting inside the layers of strong E n ( v c ≈ v E × B ) in all the crossings.
+However, we never observe cold ions on the magnetosheath side, and therefore, the cold ions are heated as they cross the layer.
+This can be observed in Figures e– g.
+In 9 of the 13 crossings, our estimations are consistent with the generalized Ohm's law and show that the Hall E field is balanced by a combination of − v c × B n c / n and j × B / e n .
+The estimated ratios n c / n in the magnetospheric side are provided in Table , showing that n c and n h are roughly of the same order of magnitude although cold ions tend to be dominant, consistent with findings in André and Cully [ ].
+A lower limit for the ratio n c v c × B / n E n inside the layer, at the peak of E n , is also given, indicating the n c / n ratio at this point.
+Estimates of n c / n on the magnetospheric side, as well as inside the separatrix layer, clearly show the presence of cold ions and the importance of the cold ion term in the generalized Ohm's law.
+The estimations n c v c × B / n E n and n c / n are consistent, although the lower limit provided for the cold ion term ratio inside the layer is too low for events 6 and 9.
+This deviation can be explained based on the 4 s resolution of v c , while the E n peak is shorter in these events (e.g., Figure d for event 6).
+The width of the layer L and the associated potential drop are also provided in Table when we could obtain a consistent estimation of the magnetopause velocity from timing between C3 and C4.
+These potentials are on the order of few kV, and therefore, these regions can be responsible for significant particle energization [ Lindstedt et al.
+, ; Yamada et al.
+, ].
+Discussion The data presented show that cold ions introduce a new length scale related to their gyroradius in the separatrix region of enhanced Hall E field and that the microphysics of the Hall effect are different below and above this spatial scale.
+Specifically, at scales ρ c < L < ρ h the perpendicular currents are reduced by a factor n h / n .
+If the out of plane Hall or guide B field are not negligible compared to the in‐plane reconnecting B field, the in‐plane Hall currents have a significant perpendicular component that is affected by the cold ions.
+For instance, in the case study in Figure , the parallel and perpendicular components of j are of the same order of magnitude, ∼200 nA/m 2 .
+A direct implication is a modification of the magnetic field structure at this intermediate scale, owing to the reduction of the current.
+Therefore, the spatial geometry of the separatrix layer magnetic fields is modified according to the proportion of cold to hot ions present.
+It is natural to expect that the scale introduced by cold ions will not only modify the separatrices but will also change the diffusion region.
+In particular, the ion diffusion region will be split into cold and hot ion diffusion regions.
+Inside the inner cold diffusion region, at the cold ion length scale, all the ions are demagnetized and the region exhibits the typical Hall physics.
+The outer hot diffusion region will show the new microphysics, with only part of the ions being demagnetized.
+This can be compared with the multistep diffusion region in the case of heavy species [ Shay and Swisdak , ; Markidis et al.
+, ].
+Therefore, the particle acceleration mechanisms, which depend on the microphysics near the diffusion region [ Hoshino et al.
+, ], will be modified in the presence of cold ions, as occurs with heavy ions [ Wygant et al.
+, ].
+Another important point to discuss is whether the magnitude of the Hall E field is diminished by the presence of cold ions.
+Previous studies without cold ions, at the high‐latitude magnetopause, report peak values of ∼50–60 V/m [ André et al.
+, ; Khotyaintsev et al.
+, ; Lindstedt et al.
+, ], but in our study in the subsolar region we never found normal E fields larger than 25 mV/m.
+In addition, Lindstedt et al.
+[ ] reported potential drops of up to 5.4 kV at high‐latitude magnetopause crossings, in contrast to a maximum of 3 kV in our study.
+If the magnitude of the E field is reduced, the associated potential drop of the layer may be also diminished, and particle acceleration mechanisms related to the Hall E field [e.g., Drake et al.
+, ] would be less effective.
+Previous studies [ André and Cully , ; André et al.
+, ], together with our results, show that cold ions are common at the equatorial magnetopause.
+The recently launched Magnetospheric Multiscale Mission (MMS) mission [ Goldstein et al.
+, ] has an equatorial orbit, and therefore, the results of our study are important for analyzing the upcoming reconnection events.
+New simulations varying the ratio of cold and hot ion densities and temperatures are also required to understand the implications of these microphysical changes to the global reconnection parameters, for instance the reconnection rate.
+Summary and Conclusion We investigate in situ observations of a reconnection separatrix layer with a strong Hall electric field when a significant cold ion population is present on one of the sides of the asymmetric reconnection layer.
+Inside this layer, of width L ( ρ c < L < ρ h ), cold ions remain frozen‐in together with the electrons.
+Thus, the cold ions reduce the Hall current carried by the electrons.
+In a situation without cold ions, the normal electric field is to a large extent balanced by the j × B / e n term in the generalized Ohm's law, equation [ André et al.
+, ; Vaivads et al.
+, ; Khotyaintsev et al.
+, ; Birn et al.
+, ; Zhou et al.
+, ].
+In the presence of cold ions, and a reduced Hall current, a significant part of the electric field is balanced by the cold ion term v c × B n c / n .
+We conclude that the introduction of a significant amount of cold ions not only affects the reconnection rate by reducing the Alfvén velocity due to an increase of the plasma density [ Walsh et al.
+, ].
+In addition, cold ions also affect the microphysics of reconnection.
+The cold ions introduce a new length scale related to their gyroradius, and the Hall physics is modified at scales between the gyroradii of the hot and the cold ions.
+Acknowledgments The authors thank ESA Cluster Active Archive and Cluster Science Archive for providing the data.
+We also thank H.
+Nilsson for the help provided with data analysis.
+This work was supported by the Swedish Research Council, grant 621‐2012‐3280.
+The Editor thanks two anonymous reviewers for their assistance in evaluating this paper..
