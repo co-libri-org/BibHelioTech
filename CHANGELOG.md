@@ -28,6 +28,11 @@ or major refactoring improvements.
 ### New
 
 --------------------------------------------------------------------------------
+## [0.13.0-dev] - 2024-06-xx Jeudi 2024 06 20
+### Fixed
+### Changed
+### New
+
 ## [0.12.0] - 2024-06-13 Enhance Pipeline Analysis
 ### Fixed
 - Empty catalog bug
