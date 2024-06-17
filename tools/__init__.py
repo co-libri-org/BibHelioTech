@@ -554,6 +554,8 @@ class JsonAnalyser:
         @return: String with sutime dict's keys [text, timex-value, value]
         """
 
+        if len(self._structs) == 0:
+            return "Empty list"
         # compute types
         all_types = [elmt["type"] for elmt in self._structs]
         uniq_types = sorted(set(all_types))
