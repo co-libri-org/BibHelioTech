@@ -355,8 +355,8 @@ class JsonAnalyser:
                     _sutime["begin"],
                     _sutime["end"],
                     _sat["text"],
-                    f"{_reg1["text"]}.{_reg2["text"]}"[:19],
-                    f"{_sat["conf"]:.4f}",
+                    f'{_reg1["text"]}.{_reg2["text"]}'[:19],
+                    f'{_sat["conf"]:.4f}',
                 ]
                 _str += self.line_dumper(line_format, _values=line_values)
             except (IndexError, KeyError):
@@ -413,7 +413,7 @@ class JsonAnalyser:
                 # _sat["D"],
                 # _sat["R"],
                 # _sat["SO"],
-                f"{_sat["conf"]:.4f}",
+                f'{_sat["conf"]:.4f}',
             ]
             _str += self.line_dumper(line_format, _values=_values)
         return _str
@@ -483,7 +483,7 @@ class JsonAnalyser:
                 _s["sat"],
                 _s["inst"],
                 _s["reg"],
-                f"{_s["conf"]:.4f}",
+                f'{_s["conf"]:.4f}',
             ]
             _str += self.line_dumper(line_format, _values=line_values)
         return _str
@@ -592,7 +592,7 @@ class JsonAnalyser:
         _res_str += title_str
         # _res_str += len(title_str) * "-" + "\n"
         _res_str += (
-            f"{"-" * _type_max_lgth}+{"-" * _value_max_lgth}+ {"-" * _text_max_lgth}\n"
+            f'{"-" * _type_max_lgth}+{"-" * _value_max_lgth}+ {"-" * _text_max_lgth}\n'
         )
 
         for elmt in self._structs:
