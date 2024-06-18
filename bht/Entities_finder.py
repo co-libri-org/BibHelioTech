@@ -256,7 +256,7 @@ def operating_span_checker(sat, durations, SAT_dict, SPAN_dict, published_date):
 
 def get_sat_syn(sat_name: str, _data_frames: dict):
     """
-    From string, look for main misison synonymous
+    From string, look for main mission synonymous
 
     @param sat_name:  sat name to search for
     @param _data_frames:  give access to sat_dict and amda_dict
@@ -273,7 +273,7 @@ def get_sat_syn(sat_name: str, _data_frames: dict):
     if sat_name in main_names:
         return sat_name
 
-    # Now look for mais synonymous in the sat_dict
+    # Now look for main synonymous in the sat_dict
     for main_syn, syns_list in sat_dict.items():
         if sat_name in syns_list:
             return main_syn
