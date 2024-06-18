@@ -135,12 +135,23 @@ def article_as_str():
 @pytest.fixture(scope="module")
 def so_article():
     """Article with 'solar orbiter' occurences"""
-    data_dir = "ark_67375_WNG-HPV609C7-D"
     article_name = "89F0BCBFFBEA0751EECFDBF93D2496624C4F99BA.cleaned"
     article_as_txt_path = os.path.join(
         current_app.config["BHT_RESOURCES_DIR"], article_name
     )
     with open(article_as_txt_path, "r") as file:
+        _article_as_str = file.read()
+    yield _article_as_str
+
+
+@pytest.fixture(scope="module")
+def pvo_article():
+    """Article with Pioneer Venus Orbiter inside"""
+    pvo_article_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"],
+        "7F523C9B320E6CD1BCB700AA856D3011A3B7F4B7/out_text.txt",
+    )
+    with open(pvo_article_path, "r") as file:
         _article_as_str = file.read()
     yield _article_as_str
 

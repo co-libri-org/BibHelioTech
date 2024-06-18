@@ -2,6 +2,7 @@ import string
 import collections
 import copy
 from datetime import *
+from pprint import pprint
 
 from bht_config import yml_settings
 from bht.DOI_finder import *
@@ -290,12 +291,14 @@ def sat_recognition(content_as_str, sats_dict):
     @param sats_dict:  dict of satellites synonymous
     @return: dict of satellites found in the article
     """
-    sat_dict_list = []
-    synonyms = []
+    # Build a flatten list of all missions and their synonyms
+    all_missions_names = []
     for _s in sats_dict.values():
-        synonyms.extend(_s)
-    for syn in synonyms:
-        test = re.finditer("[;( \n]" + syn + "[;)., ]", content_as_str)
+        all_missions_names.extend(_s)
+    # Detect mission names in text, and build a list of structs
+    sat_dict_list = []
+    for mission_name in all_missions_names:
+        test = re.finditer("[;( \n]" + mission_name + "[;)., ]", content_as_str)
         for matches in test:
             _text = re.sub("[(\n.,);]", "", matches.group()).strip()
             sat_dict_list += [
@@ -306,8 +309,32 @@ def sat_recognition(content_as_str, sats_dict):
                     "type": "sat",
                 }
             ]
-    sat_dict_list.sort(key=lambda matched_dict: matched_dict["start"])
-    return sat_dict_list
+
+    # Sort by text indexes
+    sat_dict_list.sort(
+        key=lambda matched_dict: (matched_dict["start"], matched_dict["end"])
+    )
+
+    # Remove duplicated start_indexes by keeping the longest found string
+    # ( the latest, as it was sorted before)
+    #
+    # For example, when the text contains "Pioneer Venus Orbiter", it will detect
+    #
+    #   {'start': 335, 'end': 344, 'text': 'Pioneer', 'type': 'sat'}
+    #   {'start': 335, 'end': 350, 'text': 'Pioneer Venus', 'type': 'sat'}
+    #   {'start': 335, 'end': 358, 'text': 'Pioneer Venus Orbiter', 'type': 'sat'}
+    #
+    # we want to keep the longest string, "Pioneer Venus Orbiter"
+    _r_dict_list = []
+    prev_dict = sat_dict_list.pop(0)
+    for sat_dict in sat_dict_list:
+        if sat_dict["start"] != prev_dict["start"]:
+            _r_dict_list.append(prev_dict)
+        prev_dict = sat_dict
+    # add latest occurrence
+    _r_dict_list.append(prev_dict)
+
+    return _r_dict_list
 
 
 # SAT recognition

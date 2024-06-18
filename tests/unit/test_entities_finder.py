@@ -43,6 +43,12 @@ class TestEntitiesFinder:
         sat_dict_list = sat_recognition(article_as_str, sat_dict)
         assert len(sat_dict_list) == 41
 
+    def test_sat_recognition_pvo(self, pvo_article, data_frames):
+        sat_dict = data_frames[DataBankSheet.SATS]
+        sat_dict_list = sat_recognition(pvo_article, sat_dict)
+        # pprint(sat_dict_list)
+        assert len(sat_dict_list) == 57
+
     def test_sat_recognition_with_chars(self, so_article, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
         sat_dict_list = sat_recognition(so_article, sat_dict)
