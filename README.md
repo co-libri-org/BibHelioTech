@@ -26,7 +26,7 @@ AMDA (http://amda.cdpp.eu/).
 ### Install sutime dependencies and update language file
 
     mvn dependency:copy-dependencies -DoutputDirectory=./jars -f $(python -c 'import importlib.util; import pathlib; print(pathlib.Path(importlib.util.find_spec("sutime").origin).parent / "pom.xml")')
-    jar uf ./venv/lib/python3.11/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar   ./resources/edu/stanford/nlp/models/sutime/english.sutime.txt
+    jar uf ./venv/lib/python3.12/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar   ./resources/edu/stanford/nlp/models/sutime/english.sutime.txt
 
 ## Docker image building
 
