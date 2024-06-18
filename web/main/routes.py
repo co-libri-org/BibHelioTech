@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+from pprint import pprint
 
 import redis
 import filetype
@@ -219,6 +220,15 @@ def basename_filter(filename):
 def index():
     # return render_template("index.html")
     return redirect(url_for("main.catalogs"))
+
+
+@bp.route("/changelog")
+def changelog():
+    import markdown
+    changelog_path = os.path.join(current_app.config["BHT_ROOT_DIR"], "CHANGELOG.md")
+    with open(changelog_path) as changelog_file:
+        changelog_html = markdown.markdown(changelog_file.read())
+    return render_template("changelog.html", changelog_html=changelog_html)
 
 
 @bp.route("/about")
