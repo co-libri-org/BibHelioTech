@@ -28,7 +28,8 @@ Only major refactoring improvements or functional changes should be noted.
 
 ## [0.13.0-dev] - 2024-06-xx Thursday_2024-06-20
 #### Fixed
-- empty sutime struct bug
+- fix empty sutime struct bug
+- overlapped missions becomes uniq
 #### Changed
 #### New
 - show changelog
