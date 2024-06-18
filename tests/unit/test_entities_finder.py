@@ -92,6 +92,10 @@ class TestEntitiesFinder:
         beijing_syn_is_ground = get_sat_syn("Beijing", data_frames)
         assert beijing_syn_is_ground == "Ground"
 
+    def test_get_sat_syn_pvo(self, data_frames):
+        pvo_syn_is_pioneervenusorbiter = get_sat_syn("PVO", data_frames)
+        assert pvo_syn_is_pioneervenusorbiter == "PioneerVenusOrbiter"
+
     def test_update_final_syns(self, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)
         final_with_syns = update_final_synonyms(final_links, data_frames)
@@ -100,6 +104,14 @@ class TestEntitiesFinder:
         assert "Beijing" in sat_names and "Ground" not in sat_names
         syn_names = [_s[0]["text"] for _s in final_with_syns]
         assert "Beijing" not in syn_names and "Ground" in syn_names
+
+    def test_update_final_syns_pvo(self, final_links_pvo, data_frames):
+        _final_links_pvo = update_final_instruments(final_links_pvo, data_frames)
+        _final_with_syns = update_final_synonyms(_final_links_pvo, data_frames)
+        # pprint([f'{a[0]["text"]:-<20} {b[0]["text"]}' for (a,b) in zip(_final_links_pvo, _final_with_syns)])
+        assert len(_final_with_syns) == len(_final_links_pvo)
+        assert 'PVO' in [_s[0]["text"] for _s in _final_links_pvo]
+        # assert 'PVO' not in [_s[0]["text"] for _s in _final_with_syns]
 
     def test_satellite_occurrence(self, sutime_json, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)

@@ -100,6 +100,18 @@ def final_links(data_frames, article_as_str):
 
 
 @pytest.fixture(scope="module")
+def final_links_pvo(data_frames, pvo_article):
+    sat_dict = data_frames[DataBankSheet.SATS]
+    sat_dict_list = sat_recognition(pvo_article, sat_dict)
+    inst_dict = data_frames[DataBankSheet.INSTR]
+    inst_dict_list = inst_recognition(pvo_article, inst_dict)
+    inst_list = list(set([inst["text"] for inst in inst_dict_list]))
+    new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
+    _final_links = make_final_links(new_sat_dict_list, inst_list, pvo_article)
+    yield _final_links
+
+
+@pytest.fixture(scope="module")
 def data_frames():
     data_frames = load_dataframes()
     yield data_frames
