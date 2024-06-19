@@ -298,9 +298,10 @@ def sat_recognition(content_as_str, sats_dict):
     # Detect mission names in text, and build a list of structs
     sat_dict_list = []
     for mission_name in all_missions_names:
-        test = re.finditer("[;( \n]" + mission_name + "[;)., ]", content_as_str)
+
+        test = re.finditer("[;( \n]" + mission_name + "[’`';)., ]", content_as_str)
         for matches in test:
-            _text = re.sub("[(\n.,);]", "", matches.group()).strip()
+            _text = re.sub("[(\n.,);’`']", "", matches.group()).strip()
             sat_dict_list += [
                 {
                     "start": matches.start(),
@@ -318,7 +319,7 @@ def sat_recognition(content_as_str, sats_dict):
     # Remove duplicated start_indexes by keeping the longest found string
     # ( the latest, as it was sorted before)
     #
-    # For example, when the text contains "Pioneer Venus Orbiter", it will detect
+    # For example, when the text contains "Pioneer Venus Orbiter", pipeline will detect
     #
     #   {'start': 335, 'end': 344, 'text': 'Pioneer', 'type': 'sat'}
     #   {'start': 335, 'end': 350, 'text': 'Pioneer Venus', 'type': 'sat'}

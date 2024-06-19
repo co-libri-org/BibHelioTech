@@ -145,6 +145,16 @@ def article_as_str():
 
 
 @pytest.fixture(scope="module")
+def article_with_quote():
+    article_as_txt_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "article_with_quote.txt"
+    )
+    with open(article_as_txt_path, "r") as file:
+        _article_as_str = file.read()
+    yield _article_as_str
+
+
+@pytest.fixture(scope="module")
 def so_article():
     """Article with 'solar orbiter' occurences"""
     article_name = "89F0BCBFFBEA0751EECFDBF93D2496624C4F99BA.cleaned"
