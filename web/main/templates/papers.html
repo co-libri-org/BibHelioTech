@@ -21,7 +21,10 @@
 </div>
 <hr class="mt-4 mb-4">
 <h5 class="d-flex justify-content-center align-items-center p-3 ">
-    bht pipeline <span class="btn btn-warning btn-version" title="Please see CHANGELOG for changes">V{{config.BHT_PIPELINE_VERSION}}</span> available </h5>
+    bht pipeline
+    <a class="btn btn-warning btn-version" href="{{url_for('main.changelog')}}" title="Please see CHANGELOG for changes">
+    V{{config.BHT_PIPELINE_VERSION}}</a>
+    available </h5>
 
 <table class="table-hover table">
     <thead>

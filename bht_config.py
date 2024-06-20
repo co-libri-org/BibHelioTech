@@ -9,13 +9,14 @@ __all__ = [
 
 BHT_ROOT_DIR = os.path.dirname(__file__)
 
-config_file = os.path.join(BHT_ROOT_DIR, "bht-config.yml")
-if not os.path.isfile(config_file):
-    print(f"Please set {config_file} config file.")
+config_filepath = os.path.join(BHT_ROOT_DIR, "bht-config.yml")
+if not os.path.isfile(config_filepath):
+    print(f"Please set {config_filepath} config file.")
     sys.exit()
-with open(config_file) as f:
+with open(config_filepath) as f:
     yml_settings = yaml.safe_load(f)
 
+yml_settings["BHT_ROOT_DIR"] = BHT_ROOT_DIR
 yml_settings["BHT_LOGFILE_PATH"] = os.path.join(BHT_ROOT_DIR, yml_settings["BHT_LOGFILE_NAME"])
 
 with open(os.path.join(BHT_ROOT_DIR, "VERSION.txt")) as version_file:

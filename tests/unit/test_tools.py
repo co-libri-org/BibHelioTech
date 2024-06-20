@@ -1,7 +1,5 @@
 import os
 
-import pytest
-
 from bht.catalog_tools import (
     catfile_to_rows,
     rows_to_catstring,

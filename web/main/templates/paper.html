@@ -12,10 +12,12 @@
 <table id="paper_keys" class="table table-striped">
     <tbody>
     <tr>
-        <th>pipeline version:</th>
+        <th>pipeline status:</th>
         {% if paper.has_cat %}
         <td class="paper_attr_yes">
-            {{ paper.pipeline_version}}
+
+            {% set task_started = paper.task_started |string %}
+            Version <b>{{ paper.pipeline_version}}</b> ran on {{task_started[:19]}}
         </td>
         {% else %}
         <td class="paper_attr_no">No pipeline run yet</td>

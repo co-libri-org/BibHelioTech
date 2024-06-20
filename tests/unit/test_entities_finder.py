@@ -21,19 +21,26 @@ from bht.databank_reader import DataBank, DataBankSheet
 
 class TestEntitiesFinder:
     def test_entities_finder_method(self, ocr_dir_test):
-        catalog_file = entities_finder(ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052", "pub_date":"2022"})
+        catalog_file = entities_finder(
+            ocr_dir_test,
+            doc_meta_info={"doi": "10.1002/2015GL064052", "pub_date": "2022"},
+        )
         recognition_file = os.path.join(ocr_dir_test, "reg_recognition_res.txt")
         assert os.path.isfile(recognition_file)
         assert os.path.isfile(catalog_file)
 
     def test_catalog_not_empty(self, ocr_dir_test):
-        catalog_file = entities_finder(ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052"})
+        catalog_file = entities_finder(
+            ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052"}
+        )
         with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
             assert len(_r_content) == 67
 
     def test_no_image_as_syn(self, ocr_dir_test):
-        catalog_file = entities_finder(ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052"})
+        catalog_file = entities_finder(
+            ocr_dir_test, doc_meta_info={"doi": "10.1002/2015GL064052"}
+        )
         with open(catalog_file) as _cat_f:
             for l in _cat_f:
                 assert "IMAGE" not in l
@@ -42,6 +49,18 @@ class TestEntitiesFinder:
         sat_dict = data_frames[DataBankSheet.SATS]
         sat_dict_list = sat_recognition(article_as_str, sat_dict)
         assert len(sat_dict_list) == 41
+
+    def test_sat_recog_trailing_quote(self, article_with_quote, data_frames):
+        sat_dict = data_frames[DataBankSheet.SATS]
+        sat_dict_list = sat_recognition(article_with_quote, sat_dict)
+        bepi_list = [_s for _s in sat_dict_list if _s["text"] == "BepiColombo"]
+        assert len(bepi_list) == 5
+
+    def test_sat_recognition_pvo(self, pvo_article, data_frames):
+        sat_dict = data_frames[DataBankSheet.SATS]
+        sat_dict_list = sat_recognition(pvo_article, sat_dict)
+        # pprint(sat_dict_list)
+        assert len(sat_dict_list) == 57
 
     def test_sat_recognition_with_chars(self, so_article, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
@@ -86,6 +105,10 @@ class TestEntitiesFinder:
         beijing_syn_is_ground = get_sat_syn("Beijing", data_frames)
         assert beijing_syn_is_ground == "Ground"
 
+    def test_get_sat_syn_pvo(self, data_frames):
+        pvo_syn_is_pioneervenusorbiter = get_sat_syn("PVO", data_frames)
+        assert pvo_syn_is_pioneervenusorbiter == "PioneerVenusOrbiter"
+
     def test_update_final_syns(self, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)
         final_with_syns = update_final_synonyms(final_links, data_frames)
@@ -94,6 +117,14 @@ class TestEntitiesFinder:
         assert "Beijing" in sat_names and "Ground" not in sat_names
         syn_names = [_s[0]["text"] for _s in final_with_syns]
         assert "Beijing" not in syn_names and "Ground" in syn_names
+
+    def test_update_final_syns_pvo(self, final_links_pvo, data_frames):
+        _final_links_pvo = update_final_instruments(final_links_pvo, data_frames)
+        _final_with_syns = update_final_synonyms(_final_links_pvo, data_frames)
+        # pprint([f'{a[0]["text"]:-<20} {b[0]["text"]}' for (a,b) in zip(_final_links_pvo, _final_with_syns)])
+        assert len(_final_with_syns) == len(_final_links_pvo)
+        assert "PVO" in [_s[0]["text"] for _s in _final_links_pvo]
+        # assert 'PVO' not in [_s[0]["text"] for _s in _final_with_syns]
 
     def test_satellite_occurrence(self, sutime_json, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)

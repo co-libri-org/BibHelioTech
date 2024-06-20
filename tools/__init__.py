@@ -38,15 +38,6 @@ class RawDumper:
 
 # TODO: shall we move this to models.paper ?
 class StepLighter:
-    # all_steps = [jj]
-    # txt_filepath = ""
-    # txt_content = ""
-    # txt_enlighted = ""
-    # json_filepath = ""
-    # caption = ""
-    # json_struct = ""
-    # json_string = ""
-    # json_analysed = ""
 
     def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
         self.all_steps = None
@@ -83,7 +74,7 @@ class StepLighter:
             _json_raw = json.load(json_fd)
 
         # Initialize json attributes
-        self.caption = _json_raw.pop()
+        self.caption = _json_raw.pop()  # meta info in the last dict of the list
         self.json_struct = _json_raw.copy()
         self.json_string = json.dumps(self.json_struct, indent=4)
 
@@ -125,19 +116,6 @@ class StepLighter:
         """
         Wrapper for json convert to text from sutime or entities output
         """
-        #  Get step number and choose which json 2 table dumper to use
-        # step = None
-        # _caption = structs_list.pop()
-        # if type(_caption) is str:
-        #     # 0- from caption string
-        #     step = _caption.split("-")[0]
-        # elif type(_caption) is dict:
-        #     if "step" in _caption.keys():
-        #         # 1- from caption key
-        #         step = _caption["step"]
-        #     elif "message" in _caption.keys():
-        #         # 2- or from guessed from message
-        #         step = _caption["message"].split("-")[0]
 
         if self.enlight_mode == "entities":
             return self.json_dumper.analyse_entities_json(with_header)
@@ -377,8 +355,8 @@ class JsonAnalyser:
                     _sutime["begin"],
                     _sutime["end"],
                     _sat["text"],
-                    f"{_reg1["text"]}.{_reg2["text"]}"[:19],
-                    f"{_sat["conf"]:.4f}",
+                    f'{_reg1["text"]}.{_reg2["text"]}'[:19],
+                    f'{_sat["conf"]:.4f}',
                 ]
                 _str += self.line_dumper(line_format, _values=line_values)
             except (IndexError, KeyError):
@@ -435,7 +413,7 @@ class JsonAnalyser:
                 # _sat["D"],
                 # _sat["R"],
                 # _sat["SO"],
-                f"{_sat["conf"]:.4f}",
+                f'{_sat["conf"]:.4f}',
             ]
             _str += self.line_dumper(line_format, _values=_values)
         return _str
@@ -505,7 +483,7 @@ class JsonAnalyser:
                 _s["sat"],
                 _s["inst"],
                 _s["reg"],
-                f"{_s["conf"]:.4f}",
+                f'{_s["conf"]:.4f}',
             ]
             _str += self.line_dumper(line_format, _values=line_values)
         return _str
@@ -576,7 +554,8 @@ class JsonAnalyser:
         @return: String with sutime dict's keys [text, timex-value, value]
         """
 
-
+        if len(self._structs) == 0:
+            return "Empty list"
         # compute types
         all_types = [elmt["type"] for elmt in self._structs]
         uniq_types = sorted(set(all_types))
@@ -613,7 +592,7 @@ class JsonAnalyser:
         _res_str += title_str
         # _res_str += len(title_str) * "-" + "\n"
         _res_str += (
-            f"{"-" * _type_max_lgth}+{"-" * _value_max_lgth}+ {"-" * _text_max_lgth}\n"
+            f'{"-" * _type_max_lgth}+{"-" * _value_max_lgth}+ {"-" * _text_max_lgth}\n'
         )
 
         for elmt in self._structs:

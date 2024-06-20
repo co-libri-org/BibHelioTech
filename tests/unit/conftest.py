@@ -18,6 +18,7 @@ from bht.Entities_finder import (
 from bht.databank_reader import DataBankSheet
 
 
+
 @pytest.fixture(scope="module")
 def event_as_row():
     _row = [
@@ -100,6 +101,18 @@ def final_links(data_frames, article_as_str):
 
 
 @pytest.fixture(scope="module")
+def final_links_pvo(data_frames, pvo_article):
+    sat_dict = data_frames[DataBankSheet.SATS]
+    sat_dict_list = sat_recognition(pvo_article, sat_dict)
+    inst_dict = data_frames[DataBankSheet.INSTR]
+    inst_dict_list = inst_recognition(pvo_article, inst_dict)
+    inst_list = list(set([inst["text"] for inst in inst_dict_list]))
+    new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
+    _final_links = make_final_links(new_sat_dict_list, inst_list, pvo_article)
+    yield _final_links
+
+
+@pytest.fixture(scope="module")
 def data_frames():
     data_frames = load_dataframes()
     yield data_frames
@@ -111,6 +124,13 @@ def hpevents_in_db(hpevents_list, db):
         db.session.add(event)
         db.session.commit()
 
+
+@pytest.fixture(scope="module")
+def json_step_4():
+    json4_path = os.path.join(current_app.config["BHT_RESOURCES_DIR"], "raw4_sutime.json")
+    with open(json4_path, "r") as json_file:
+        _json_step_4 = json.load(json_file)
+    yield _json_step_4
 
 @pytest.fixture(scope="module")
 def sutime_json():
@@ -133,14 +153,35 @@ def article_as_str():
 
 
 @pytest.fixture(scope="module")
+def article_with_quote():
+    article_as_txt_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "article_with_quote.txt"
+    )
+    with open(article_as_txt_path, "r") as file:
+        _article_as_str = file.read()
+    yield _article_as_str
+
+
+@pytest.fixture(scope="module")
 def so_article():
     """Article with 'solar orbiter' occurences"""
-    data_dir = "ark_67375_WNG-HPV609C7-D"
     article_name = "89F0BCBFFBEA0751EECFDBF93D2496624C4F99BA.cleaned"
     article_as_txt_path = os.path.join(
         current_app.config["BHT_RESOURCES_DIR"], article_name
     )
     with open(article_as_txt_path, "r") as file:
+        _article_as_str = file.read()
+    yield _article_as_str
+
+
+@pytest.fixture(scope="module")
+def pvo_article():
+    """Article with Pioneer Venus Orbiter inside"""
+    pvo_article_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"],
+        "7F523C9B320E6CD1BCB700AA856D3011A3B7F4B7/out_text.txt",
+    )
+    with open(pvo_article_path, "r") as file:
         _article_as_str = file.read()
     yield _article_as_str
 
