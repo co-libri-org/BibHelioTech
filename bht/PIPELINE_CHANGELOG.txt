@@ -25,13 +25,14 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [0.4.2-dev] - 2024-06-xx ___________________________
+## [0.4.3] - 2024-06-20 -
 #### Fixed
 - recognise trailing quotes
+- remove PVO
 #### Changed
-#### New
+- set duration to previous date
 
-## [0.4.1] - 2024-06-18 Remove overlapping missions
+## [0.4.1] - 2024-06-18 - Remove overlapping missions
 #### Fixed
 - fix empty sutime struct bug
 #### Changed
