@@ -25,6 +25,12 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [4.4-dev] - 2024-06-28 -
+#### Fixed
+- no previous date bug
+#### Changed
+#### New
+
 ## [4.3] - 2024-06-20 -
 #### Fixed
 - recognise trailing quotes

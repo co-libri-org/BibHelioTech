@@ -25,9 +25,10 @@ class TestSutimeProcessing:
 
     def test_durations_to_prevdate_2(self, json_step_4_2):
         json_step_5 = durations_to_prevdate(json_step_4_2)
-        from pprint import pprint
-        pprint(json_step_5)
-        assert True
+        durations_5 = [
+            _s for _s in json_step_5 if "type" in _s.keys() and _s["type"] == "DURATION"
+        ]
+        assert get_struct_date(durations_5[0]).isoformat() == "2019-12-26T00:00:00"
 
     def test_set_duration_day_one_limit(self):
         duration = {

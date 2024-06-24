@@ -168,7 +168,8 @@ def durations_to_prevdate(json_list):
             # get the previous date in list
             prev_date = previous_date(json_list, i)
             # and set both begin and end to that found date
-            set_duration_day(_s, prev_date)
+            if prev_date is not None:
+                set_duration_day(_s, prev_date)
 
     return json_list
 
