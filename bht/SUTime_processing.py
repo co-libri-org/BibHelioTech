@@ -122,6 +122,24 @@ def SUTime_treatement(current_OCR_folder, sutime):
     res_file.close()
 
 
+def get_struct_date(_s):
+    """From a DATE , TIME or DURATION struct, get the date"""
+    if _s["type"] == "DATE":
+        return parser.parse(_s["value"])
+    elif _s["type"] == "DURATION":
+        begin_date = parser.parse(_s["value"]["begin"])
+        end_date = parser.parse(_s["value"]["end"])
+        # return end date of duration
+        if not date_is_today(end_date):
+            return end_date
+        # or the begin one
+        elif not date_is_today(begin_date):
+            return begin_date
+        # or nothing if both are today
+        else:
+            return None
+
+
 def set_duration_day(duration, day, keys=("begin", "end")):
     for _k in keys:
         k_date = parser.parse(duration["value"][_k])
@@ -131,7 +149,7 @@ def set_duration_day(duration, day, keys=("begin", "end")):
 
 def durations_to_prevdate(json_list):
     """
-        Browse all durations in a list and set the 'begin' and 'end' dates to the previous date in the list
+    Browse all durations in a list and set the 'begin' and 'end' dates to the previous date in the list
     """
     for i, _s in enumerate(json_list):
         if "type" not in _s.keys() or _s["type"] != "DURATION":
@@ -165,7 +183,6 @@ def date_is_today(_date):
 
 def previous_date(JSON_list, index):
     """ """
-    last_index = len(JSON_list) - 1
     # reverse search from index upwards
     start_idx = index - 1
     first_list_idx = -1
