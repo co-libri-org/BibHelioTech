@@ -11,7 +11,7 @@ from bht.catalog_tools import rows_to_catstring
 from bht.databank_reader import DataBank, DataBankSheet
 from bht.errors import BhtPipelineError
 from bht.published_date_finder import *
-from tools import RawDumper
+from tools import RawDumper, structs_from_list
 
 v = sys.version
 token = "IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m"  # API Key
@@ -1177,9 +1177,10 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
             "SO": elems[0]["SO"],
             "conf": elems[0]["conf"],
         }
-        if len(elems) >= 5:
-            final_amda_dict["start_time"] = elems[4]["begin"]
-            final_amda_dict["stop_time"] = elems[4]["end"]
+        duration = structs_from_list(elems, "DURATION")[0]
+        if duration:
+            final_amda_dict["start_time"] = duration["value"]["begin"]
+            final_amda_dict["stop_time"] = duration["value"]["end"]
 
         # search in the tree structure
         result = [elems[2]["text"]]
