@@ -1105,8 +1105,8 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
             if elems[0]["text"] in AMDA_dict:
                 temp = AMDA_dict[elems[0]["text"]][0].split(".")
                 nearest_region = [
-                    {"end": 10, "start": 0, "text": temp[0]},
-                    {"end": 30, "start": 20, "text": temp[-1]},
+                    {"end": 10, "start": 0, "text": temp[0], "type":"region"},
+                    {"end": 30, "start": 20, "text": temp[-1], "type":"region"},
                 ]
                 if len(final_links[compteur_sat]) == 3 and len(nearest_region) != 0:
                     final_links[compteur_sat] = [
