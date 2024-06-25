@@ -152,6 +152,23 @@ def struct_to_title_1(content_struct):
     return content_type, content_title
 
 
+def structs_from_list(structs_list, struct_type):
+    """
+    Return the list of structs in list that has the struct_type
+
+    returns [] if nothing found
+    """
+    if type(structs_list) is not list:
+        return []
+    _structs = []
+    for _s in structs_list:
+        if "type" not in _s.keys():
+            continue
+        if _s["type"] == struct_type:
+            _structs.append(_s)
+    return _structs
+
+
 def enlight_txt(txt_content, json_content):
     """
     Given a txt file and a json dicts list with keys 'begin', 'end' and 'type'
@@ -309,30 +326,11 @@ class JsonAnalyser:
         Structs reflects link between sats, durations and regions.
         looks like a lists:
         [
-         [ {sat}, {unknown}, {region}, {region}, {duration}]
+         [ {sat}, {duration}, {region}, {region}]
           ....
         ]
-         {
-             "sat":{ "conf": 0.018560994257641565, "text": "Mariner 10",
-             },
-             "unknown":{ 'pass': None },
-             "reg1": {
-                 "end": 1763,
-                 "start": 1756,
-                 "text": "Venus",
-                 "type": "region"
-             },
-             "reg2": {
-                 "end": 1091,
-                 "start": 1084,
-                 "text": "Venus",
-                 "type": "region"
-             },
-             "duration": { "begin": "2018-10-03T00:00:00.000", "end": "2019-12-26T23:59:59.000"
-             }
-         }
-        @param _structs:
-        @return:
+
+        @return: tabulated string
         """
 
         line_format = [
@@ -346,21 +344,23 @@ class JsonAnalyser:
         _str = self.line_dumper(line_format, header=True)
 
         for _ls in self._structs:
+            if type(_ls) is not list:
+                continue
             try:
-                _sat = _ls[0]
-                _reg1 = _ls[2]
-                _reg2 = _ls[3]
-                _sutime = _ls[4]
+                _sat = structs_from_list(_ls, "sat")[0]
+                _reg1 = structs_from_list(_ls, "region")[0]
+                _reg2 = structs_from_list(_ls, "region")[1]
+                _sutime = structs_from_list(_ls, "DURATION")[0]
                 line_values = [
-                    _sutime["begin"],
-                    _sutime["end"],
+                    _sutime["value"]["begin"],
+                    _sutime["value"]["end"],
                     _sat["text"],
                     f'{_reg1["text"]}.{_reg2["text"]}'[:19],
                     f'{_sat["conf"]:.4f}',
                 ]
                 _str += self.line_dumper(line_format, _values=line_values)
-            except (IndexError, KeyError):
-                _str += "JSON Syntax Error\n"
+            except (IndexError, KeyError) as e:
+                _str += f"{e} JSON Syntax Error\n"
         return _str
 
     def dump_normalized(self):
