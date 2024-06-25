@@ -8,8 +8,16 @@ from bht.catalog_tools import (
     dict_to_string,
     dict_to_dict,
 )
-from tools import StepLighter
+from tools import StepLighter, JsonAnalyser
 import json
+
+
+class TestJsonAnalyser:
+    def test_dump_sat_region(self, json_entities_16):
+        json_analyser = JsonAnalyser(json_entities_16, 16, "entities")
+        dumped = json_analyser.dump_sat_regions()
+        assert "JSON Syntax Error" not in dumped
+        assert len(dumped.split("\n")) == 41
 
 
 class TestStepLighter:

@@ -1,5 +1,5 @@
-# Changelog
-All notable changes to this project will be documented in this file.
+# Pipeline Changelog
+All changes to the pipeline will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
@@ -25,14 +25,26 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [0.4.3] - 2024-06-20 -
+## [4.5-dev] - 2024-06-xx - ___________
+#### Fixed
+#### Changed
+#### New
+
+## [4.4] - 2024-06-25 - Fix step 16
+#### Fixed
+- no previous date bug
+- missing region type
+#### New
+- tiny method to extract struct from list
+
+## [4.3] - 2024-06-20 -
 #### Fixed
 - recognise trailing quotes
 - remove PVO
 #### Changed
 - set duration to previous date
 
-## [0.4.1] - 2024-06-18 - Remove overlapping missions
+## [4.1] - 2024-06-18 - Remove overlapping missions
 #### Fixed
 - fix empty sutime struct bug
 #### Changed

@@ -61,14 +61,14 @@ class StatusResponse:
     }
 
     def __init__(
-            self,
-            status: str = "success",
-            paper_id: int = None,
-            task_status: str = None,
-            task_started: datetime = None,
-            cat_is_processed: bool = None,
-            message: str = None,
-            alt_message: str = None,
+        self,
+        status: str = "success",
+        paper_id: int = None,
+        task_status: str = None,
+        task_started: datetime = None,
+        cat_is_processed: bool = None,
+        message: str = None,
+        alt_message: str = None,
     ):
         if task_started is not None:
             task_started_str = task_started.strftime("%a, %b %d, %Y - %H:%M:%S")
@@ -99,9 +99,9 @@ class StatusResponse:
 def allowed_file(filename):
     # TODO: REFACTOR use models.FileType instead
     return (
-            "." in filename
-            and filename.rsplit(".", 1)[1].lower()
-            in current_app.config["ALLOWED_EXTENSIONS"]
+        "." in filename
+        and filename.rsplit(".", 1)[1].lower()
+        in current_app.config["ALLOWED_EXTENSIONS"]
     )
 
 
@@ -222,10 +222,23 @@ def index():
     return redirect(url_for("main.catalogs"))
 
 
-@bp.route("/changelog")
-def changelog():
+@bp.route("/changelog/<module>")
+@bp.route("/changelog", defaults={"module": "main"})
+def changelog(module):
     import markdown
-    changelog_path = os.path.join(current_app.config["BHT_ROOT_DIR"], "CHANGELOG.md")
+
+    if module == "main":
+        changelog_path = os.path.join(
+            current_app.config["BHT_ROOT_DIR"], "CHANGELOG.md"
+        )
+    elif module == "pipeline":
+        changelog_path = os.path.join(
+            current_app.config["BHT_ROOT_DIR"], "bht", "PIPELINE_CHANGELOG.md"
+        )
+    else:
+        flash(f"No such log for module {module}")
+        return redirect(url_for("main.papers"))
+
     with open(changelog_path) as changelog_file:
         changelog_html = markdown.markdown(changelog_file.read())
     return render_template("changelog.html", changelog_html=changelog_html)
@@ -307,7 +320,11 @@ def paper_show(paper_id):
     return render_template("paper.html", paper=paper)
 
 
-@bp.route("/paper/<pipeline_mode>/<paper_id>/<step_num>", defaults={'disp_mode': "enlighted"}, methods=["GET"])
+@bp.route(
+    "/paper/<pipeline_mode>/<paper_id>/<step_num>",
+    defaults={"disp_mode": "enlighted"},
+    methods=["GET"],
+)
 @bp.route("/paper/<pipeline_mode>/<paper_id>/<step_num>/<disp_mode>", methods=["GET"])
 def paper_pipeline(pipeline_mode, paper_id, step_num, disp_mode):
     if pipeline_mode not in ["sutime", "entities"]:
@@ -359,8 +376,11 @@ def enlighted_json():
             mimetype="application/json",
         )
     elif comp_type == "analysed":
-        response = Response(response=step_lighter.analysed_json, mimetype="text/plain",
-                            headers={'Content-disposition': 'inline'})
+        response = Response(
+            response=step_lighter.analysed_json,
+            mimetype="text/plain",
+            headers={"Content-disposition": "inline"},
+        )
         # headers={'Content-disposition': 'inline; filename=hello.txt'})
     else:
         flash(f"Wrong comp_type value", "warning")
@@ -561,7 +581,7 @@ def istex_test():
     from web.istex_proxy import json_to_hits
 
     with open(
-            os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
+        os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
     ) as fp:
         istex_list = json_to_hits(json.load(fp))
     return render_template("istex.html", istex_list=istex_list)
@@ -600,9 +620,9 @@ def istex():
         json_content = r.json()
         istex_list = json_to_hits(json_content)
     except (
-            requests.exceptions.MissingSchema,
-            requests.exceptions.InvalidURL,
-            requests.exceptions.ConnectionError,
+        requests.exceptions.MissingSchema,
+        requests.exceptions.InvalidURL,
+        requests.exceptions.ConnectionError,
     ):
         flash(f"Could not connect to <{istex_req_url}>", "error")
         return redirect(url_for("main.istex"))

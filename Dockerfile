@@ -1,4 +1,4 @@
-FROM ubuntu:23.10 as bht-prod
+FROM ubuntu:24.04 as bht-prod
 LABEL maintainer="Benjamin Renard <benjamin.renard@irap.omp.eu>,\
                   Richard Hitier <hitier.richard@gmail.com>"
 
@@ -51,7 +51,7 @@ RUN pip install wheel && pip install -r requirements.txt
 
 COPY ./resources ./resources
 WORKDIR /home/bibheliotech/BibHelioTech/resources
-RUN jar uf $VIRTUAL_ENV/lib/python3.11/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar \
+RUN jar uf $VIRTUAL_ENV/lib/python3.12/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar \
            edu/stanford/nlp/models/sutime/english.sutime.txt
 
 WORKDIR /home/bibheliotech/BibHelioTech

@@ -18,7 +18,6 @@ from bht.Entities_finder import (
 from bht.databank_reader import DataBankSheet
 
 
-
 @pytest.fixture(scope="module")
 def event_as_row():
     _row = [
@@ -126,11 +125,27 @@ def hpevents_in_db(hpevents_list, db):
 
 
 @pytest.fixture(scope="module")
+def json_entities_16():
+    entities16_path = os.path.join(current_app.config["BHT_RESOURCES_DIR"], "raw16_entities.json")
+    with open(entities16_path, "r") as json_file:
+        _entities_step_16 = json.load(json_file)
+    yield _entities_step_16
+
+@pytest.fixture(scope="module")
+def json_step_4_2():
+    json4_path = os.path.join(current_app.config["BHT_RESOURCES_DIR"], "first-is-duration.json")
+    with open(json4_path, "r") as json_file:
+        _json_step_4 = json.load(json_file)
+    yield _json_step_4
+
+
+@pytest.fixture(scope="module")
 def json_step_4():
     json4_path = os.path.join(current_app.config["BHT_RESOURCES_DIR"], "raw4_sutime.json")
     with open(json4_path, "r") as json_file:
         _json_step_4 = json.load(json_file)
     yield _json_step_4
+
 
 @pytest.fixture(scope="module")
 def sutime_json():
