@@ -25,11 +25,17 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [4.4-dev] - 2024-06-28 -
+## [4.5-dev] - 2024-06-xx - ___________
 #### Fixed
-- no previous date bug
 #### Changed
 #### New
+
+## [4.4] - 2024-06-25 - Fix step 16
+#### Fixed
+- no previous date bug
+- missing region type
+#### New
+- tiny method to extract struct from list
 
 ## [4.3] - 2024-06-20 -
 #### Fixed
