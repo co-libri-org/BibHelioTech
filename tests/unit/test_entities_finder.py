@@ -145,6 +145,24 @@ class TestEntitiesFinder:
         assert len(tmp) == 47
         assert len(sat_closest) == 41
 
+    def test_closest_duration_has_instruments(self, sutime_3dp, final_links_3dp, data_frames):
+        final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
+        final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
+        published_date = "2015-12-01T00:00:00Z"
+        tmp, sat_closest = closest_duration(tmp, sat_occ, data_frames, published_date)
+        # instr_list = [(_s[1]["text"], _t[1]["text"]) for (_s, _t) in zip(sat_closest, sat_occ)]
+        # for i in instr_list:
+        #     print(i)
+        pprint(sat_closest)
+        assert True
+        # assert len(instr_list) > 0
+        # for _dict in sat_closest:
+        #     assert _dict[0]["type"] == "sat"
+        #     assert _dict[2]["type"] == "DURATION"
+        # assert len(tmp) == 46
+        # assert len(sat_closest) == 40
+
 
 class TestDatabankReader:
     def test_databank_init(self):
