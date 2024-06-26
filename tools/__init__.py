@@ -9,223 +9,6 @@ from bht_config import yml_settings
 from tools.tools_errors import ToolsValueError, ToolsFileError
 
 
-class RawDumper:
-    """
-    Write a python structure to a json file with message for later use by StepLighter
-    """
-
-    dump_step = 0
-
-    def __init__(self, name):
-        self.name = name
-
-    def dump_to_raw(self, struct_to_dump, message, folder):
-        # append version and message to struct for later reading
-        entitled_struct = copy.deepcopy(struct_to_dump)
-        entitled_struct.append(
-            {
-                "step": f"{self.dump_step}",
-                "pipeline_version": yml_settings["BHT_PIPELINE_VERSION"],
-                "message": f"{self.dump_step}- {message}",
-            }
-        )
-        with open(
-            os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
-        ) as raw_file:
-            raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
-        self.dump_step = self.dump_step + 1
-
-
-# TODO: shall we move this to models.paper ?
-class StepLighter:
-
-    def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
-        self.all_steps = None
-        self.txt_enlighted = None
-        self.txt_content = None
-        self.txt_filepath = None
-        self.json_analysed = None
-        self.json_string = None
-        self.json_struct = None
-        self.caption = None
-        self.json_filepath = None
-        self.json_dumper = None
-
-        self.step = int(step_num)
-        self.ocr_dir = ocr_dir
-        self.enlight_mode = enlight_mode
-
-        self.initialize()
-
-    def initialize(self):
-
-        # Read the cleaned text version of the article
-        self.txt_filepath = os.path.join(self.ocr_dir, "out_filtered_text.txt")
-        with open(self.txt_filepath) as txt_fd:
-            self.txt_content = txt_fd.read()
-
-        # Read the json file corresponding to step_number/enlight_mode
-        self.json_filepath = os.path.join(
-            self.ocr_dir, f"raw{self.step}_{self.enlight_mode}.json"
-        )
-        if not os.path.isfile(self.json_filepath):
-            raise ToolsFileError(f"No such file {self.json_filepath}")
-        with open(self.json_filepath) as json_fd:
-            _json_raw = json.load(json_fd)
-
-        # Initialize json attributes
-        self.caption = _json_raw.pop()  # meta info in the last dict of the list
-        self.json_struct = _json_raw.copy()
-        self.json_string = json.dumps(self.json_struct, indent=4)
-
-        # Instantiate the JsonDumper
-        self.json_dumper = JsonAnalyser(self.json_struct, self.step, self.enlight_mode)
-
-        # Create the json table dump
-        self.json_analysed = self.analyse_json()
-
-        # Enlight raw text as html marked
-        self.txt_enlighted = enlight_txt(self.txt_content, self.json_struct)
-
-        # set the captions list for this directory
-        self.all_steps = self.list_steps()
-
-    def list_steps(self):
-        """
-        Given a directory, and a mode, get the number of raw steps found
-
-        @return: number of steps in the directory
-        """
-        _all_captions = []
-        jsonfiles_pattern = os.path.join(self.ocr_dir, f"raw*_{self.enlight_mode}.json")
-        all_files = glob.glob(jsonfiles_pattern)
-        # sort list by step number extracted from file name
-        all_files.sort(
-            key=lambda path: int(re.sub(r".*raw(\d+)_.*\.json", r"\1", path))
-        )
-        # now build the list of captions
-        for f in all_files:
-            with open(f) as json_fd:
-                json_content = json.load(json_fd)
-                step_caption = json_content.pop()
-                _all_captions.append(step_caption)
-
-        return _all_captions
-
-    def analyse_json(self, with_header=False):
-        """
-        Wrapper for json convert to text from sutime or entities output
-        """
-
-        if self.enlight_mode == "entities":
-            return self.json_dumper.analyse_entities_json(with_header)
-        elif self.enlight_mode == "sutime":
-            return self.json_dumper.analyse_sutime_json(with_header)
-
-
-def struct_to_title_0(content_struct):
-    content_type = content_struct["type"]
-    content_title = pprint.pformat(content_struct)
-    return content_type, content_title.replace("\n", "&#10;")
-
-
-def struct_to_title_1(content_struct):
-    """Convert a sutime struct to a html tooltip"""
-    content_type = content_struct["type"]
-    content_title = f'Text: {content_struct["text"]}'
-    if content_type == "DURATION":
-        if "value" in content_struct.keys():
-            if "begin" in content_struct["value"]:
-                content_title += f'&#10;Begin: {content_struct["value"]["begin"]}'
-            if "end" in content_struct["value"]:
-                content_title += f'&#10;End: {content_struct["value"]["end"]}'
-    elif content_type == "sat":
-        if "D" in content_struct.keys():
-            content_title += f'&#10;D: {content_struct["D"]}'
-        if "R" in content_struct.keys():
-            content_title += f'&#10;R: {content_struct["R"]}'
-        if "SO" in content_struct.keys():
-            content_title += f'&#10;SO: {content_struct["SO"]}'
-        if "conf" in content_struct.keys():
-            content_title += f'&#10;conf: {content_struct["conf"]}'
-        # pass
-    return content_type, content_title
-
-
-def structs_from_list(structs_list, struct_type):
-    """
-    Return the list of structs in list that has the struct_type
-
-    returns [] if nothing found
-    """
-    if type(structs_list) is not list:
-        return []
-    _structs = []
-    for _s in structs_list:
-        if "type" not in _s.keys():
-            continue
-        if _s["type"] == struct_type:
-            _structs.append(_s)
-    return _structs
-
-
-def enlight_txt(txt_content, json_content):
-    """
-    Given a txt file and a json dicts list with keys 'begin', 'end' and 'type'
-    enlight given [begin, end]  with <div style="type">
-
-    @return enlighten txt
-    """
-
-    # json content should be a list of dicts.
-    # if not, it is a list of lists of dicts.
-    # in any case, create a list of any dict containing the 'type' key
-
-    # flatten dict list
-    flattened_content = []
-    for elemnt in json_content:
-        if type(elemnt) is dict:
-            flattened_content.append(elemnt)
-        elif type(elemnt) is list:
-            for nested_elmnt in elemnt:
-                flattened_content.append(nested_elmnt)
-        else:
-            raise ToolsValueError(
-                f"No such type allowed in json struct: {type(elemnt)}"
-            )
-    # filter only dict with type key
-    filtered_content = [
-        elmnt
-        for elmnt in flattened_content
-        if type(elmnt) is dict and "type" in elmnt.keys()
-    ]
-
-    filtered_content.sort(key=lambda x: x["start"])
-
-    # remove duplicates
-    uniq_content = []
-    for elmnt in filtered_content:
-        if elmnt not in uniq_content:
-            uniq_content.append(elmnt)
-    res_txt = txt_content[:]
-    running_offset = 0
-    for i, content_struct in enumerate(uniq_content):
-        content_type, content_title = struct_to_title_0(content_struct)
-
-        opening_tag = f'<span class="highlight {content_type}" title="{content_title}">'
-        closing_tag = "</span>"
-        start = int(content_struct["start"]) + running_offset
-        end = int(content_struct["end"]) + running_offset
-        opener = res_txt[0:start]
-        inner = opening_tag[:] + res_txt[start:end] + closing_tag[:]
-        closer = res_txt[end:-1]
-        res_txt = opener + inner + closer
-        running_offset += len(opening_tag) + len(closing_tag)
-
-    res_txt = res_txt.replace("\n", "")
-    return res_txt
-
-
 class JsonAnalyser:
 
     def __init__(self, json_struct, step, mode):
@@ -607,3 +390,221 @@ class JsonAnalyser:
             _res_str += f"{_type:{_type_max_lgth}}|{_value:{_value_max_lgth}}|{_text:{_text_max_lgth}}\n"
 
         return _res_str
+
+
+class RawDumper:
+    """
+    Write a python structure to a json file with message for later use by StepLighter
+    """
+
+    dump_step = 0
+
+    def __init__(self, name):
+        self.name = name
+
+    def dump_to_raw(self, struct_to_dump, message, folder):
+        # append version and message to struct for later reading
+        entitled_struct = copy.deepcopy(struct_to_dump)
+        entitled_struct.append(
+            {
+                "step": f"{self.dump_step}",
+                "pipeline_version": yml_settings["BHT_PIPELINE_VERSION"],
+                "message": f"{self.dump_step}- {message}",
+            }
+        )
+        with open(
+            os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
+        ) as raw_file:
+            raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
+        self.dump_step = self.dump_step + 1
+
+
+# TODO: shall we move this to models.paper ?
+class StepLighter:
+
+    def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
+        self.all_steps = None
+        self.txt_enlighted = None
+        self.txt_content = None
+        self.txt_filepath = None
+        self.json_analysed = None
+        self.json_string = None
+        self.json_struct = None
+        self.caption = None
+        self.json_filepath = None
+        self.json_dumper = None
+
+        self.step = int(step_num)
+        self.ocr_dir = ocr_dir
+        self.enlight_mode = enlight_mode
+
+        self.initialize()
+
+    def initialize(self):
+
+        # Read the cleaned text version of the article
+        self.txt_filepath = os.path.join(self.ocr_dir, "out_filtered_text.txt")
+        with open(self.txt_filepath) as txt_fd:
+            self.txt_content = txt_fd.read()
+
+        # Read the json file corresponding to step_number/enlight_mode
+        self.json_filepath = os.path.join(
+            self.ocr_dir, f"raw{self.step}_{self.enlight_mode}.json"
+        )
+        if not os.path.isfile(self.json_filepath):
+            raise ToolsFileError(f"No such file {self.json_filepath}")
+        with open(self.json_filepath) as json_fd:
+            _json_raw = json.load(json_fd)
+
+        # Initialize json attributes
+        self.caption = _json_raw.pop()  # meta info in the last dict of the list
+        self.json_struct = _json_raw.copy()
+        self.json_string = json.dumps(self.json_struct, indent=4)
+
+        # Instantiate the JsonDumper
+        self.json_dumper = JsonAnalyser(self.json_struct, self.step, self.enlight_mode)
+
+        # Create the json table dump
+        self.json_analysed = self.analyse_json()
+
+        # Enlight raw text as html marked
+        self.txt_enlighted = enlight_txt(self.txt_content, self.json_struct)
+
+        # set the captions list for this directory
+        self.all_steps = self.list_steps()
+
+    def list_steps(self):
+        """
+        Given a directory, and a mode, get the number of raw steps found
+
+        @return: number of steps in the directory
+        """
+        _all_captions = []
+        jsonfiles_pattern = os.path.join(self.ocr_dir, f"raw*_{self.enlight_mode}.json")
+        all_files = glob.glob(jsonfiles_pattern)
+        # sort list by step number extracted from file name
+        all_files.sort(
+            key=lambda path: int(re.sub(r".*raw(\d+)_.*\.json", r"\1", path))
+        )
+        # now build the list of captions
+        for f in all_files:
+            with open(f) as json_fd:
+                json_content = json.load(json_fd)
+                step_caption = json_content.pop()
+                _all_captions.append(step_caption)
+
+        return _all_captions
+
+    def analyse_json(self, with_header=False):
+        """
+        Wrapper for json convert to text from sutime or entities output
+        """
+
+        if self.enlight_mode == "entities":
+            return self.json_dumper.analyse_entities_json(with_header)
+        elif self.enlight_mode == "sutime":
+            return self.json_dumper.analyse_sutime_json(with_header)
+
+
+def struct_to_title_0(content_struct):
+    content_type = content_struct["type"]
+    content_title = pprint.pformat(content_struct)
+    return content_type, content_title.replace("\n", "&#10;")
+
+
+def struct_to_title_1(content_struct):
+    """Convert a sutime struct to a html tooltip"""
+    content_type = content_struct["type"]
+    content_title = f'Text: {content_struct["text"]}'
+    if content_type == "DURATION":
+        if "value" in content_struct.keys():
+            if "begin" in content_struct["value"]:
+                content_title += f'&#10;Begin: {content_struct["value"]["begin"]}'
+            if "end" in content_struct["value"]:
+                content_title += f'&#10;End: {content_struct["value"]["end"]}'
+    elif content_type == "sat":
+        if "D" in content_struct.keys():
+            content_title += f'&#10;D: {content_struct["D"]}'
+        if "R" in content_struct.keys():
+            content_title += f'&#10;R: {content_struct["R"]}'
+        if "SO" in content_struct.keys():
+            content_title += f'&#10;SO: {content_struct["SO"]}'
+        if "conf" in content_struct.keys():
+            content_title += f'&#10;conf: {content_struct["conf"]}'
+        # pass
+    return content_type, content_title
+
+
+def structs_from_list(structs_list, struct_type):
+    """
+    Return the list of structs in list that has the struct_type
+
+    returns [] if nothing found
+    """
+    if type(structs_list) is not list:
+        return []
+    _structs = []
+    for _s in structs_list:
+        if "type" not in _s.keys():
+            continue
+        if _s["type"] == struct_type:
+            _structs.append(_s)
+    return _structs
+
+
+def enlight_txt(txt_content, json_content):
+    """
+    Given a txt file and a json dicts list with keys 'begin', 'end' and 'type'
+    enlight given [begin, end]  with <div style="type">
+
+    @return enlighten txt
+    """
+
+    # json content should be a list of dicts.
+    # if not, it is a list of lists of dicts.
+    # in any case, create a list of any dict containing the 'type' key
+
+    # flatten dict list
+    flattened_content = []
+    for elemnt in json_content:
+        if type(elemnt) is dict:
+            flattened_content.append(elemnt)
+        elif type(elemnt) is list:
+            for nested_elmnt in elemnt:
+                flattened_content.append(nested_elmnt)
+        else:
+            raise ToolsValueError(
+                f"No such type allowed in json struct: {type(elemnt)}"
+            )
+    # filter only dict with type key
+    filtered_content = [
+        elmnt
+        for elmnt in flattened_content
+        if type(elmnt) is dict and "type" in elmnt.keys()
+    ]
+
+    filtered_content.sort(key=lambda x: x["start"])
+
+    # remove duplicates
+    uniq_content = []
+    for elmnt in filtered_content:
+        if elmnt not in uniq_content:
+            uniq_content.append(elmnt)
+    res_txt = txt_content[:]
+    running_offset = 0
+    for i, content_struct in enumerate(uniq_content):
+        content_type, content_title = struct_to_title_0(content_struct)
+
+        opening_tag = f'<span class="highlight {content_type}" title="{content_title}">'
+        closing_tag = "</span>"
+        start = int(content_struct["start"]) + running_offset
+        end = int(content_struct["end"]) + running_offset
+        opener = res_txt[0:start]
+        inner = opening_tag[:] + res_txt[start:end] + closing_tag[:]
+        closer = res_txt[end:-1]
+        res_txt = opener + inner + closer
+        running_offset += len(opening_tag) + len(closing_tag)
+
+    res_txt = res_txt.replace("\n", "")
+    return res_txt
+
