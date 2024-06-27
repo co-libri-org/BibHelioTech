@@ -1,0 +1,1294 @@
+[
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 1,
+            "conf": 1.0,
+            "end": 2693,
+            "start": 2673,
+            "text": "PSP",
+            "type": "sat"
+        },
+        {
+            "end": 2859,
+            "start": 2824,
+            "text": "3 October 2018 and 26 December 2019",
+            "type": "DURATION",
+            "value": {
+                "begin": "2018-10-03T00:00:00.000",
+                "end": "2019-12-26T23:59:59.000"
+            }
+        },
+        {
+            "end": 4108,
+            "start": 4103,
+            "text": "Sun",
+            "type": "region"
+        },
+        {
+            "end": 4108,
+            "start": 4103,
+            "text": "Sun",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 5,
+            "conf": 0.19999999999999998,
+            "end": 3052,
+            "start": 3039,
+            "text": "BepiColombo",
+            "type": "sat"
+        },
+        {
+            "end": 3256,
+            "start": 3241,
+            "text": "15 October 2020",
+            "timex-value": "2020-10-15",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-10-15T00:00:00.000",
+                "end": "2020-10-15T23:59:59.999"
+            }
+        },
+        {
+            "end": 26247,
+            "start": 26238,
+            "text": "Mercury",
+            "type": "region"
+        },
+        {
+            "end": 3078,
+            "start": 3069,
+            "text": "Mercury",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 2,
+            "conf": 0.5,
+            "end": 3685,
+            "start": 3670,
+            "text": "VEX",
+            "type": "sat"
+        },
+        {
+            "end": 3847,
+            "start": 3833,
+            "text": "11 August 2021",
+            "timex-value": "2021-08-11",
+            "type": "DURATION",
+            "value": {
+                "begin": "2021-08-11T00:00:00.000",
+                "end": "2021-08-11T23:59:59.999"
+            }
+        },
+        {
+            "end": 1763,
+            "start": 1756,
+            "text": "Venus",
+            "type": "region"
+        },
+        {
+            "end": 1091,
+            "start": 1084,
+            "text": "Venus",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 0.0017825311942959,
+            "end": 3933,
+            "start": 3918,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 4184,
+            "start": 4175,
+            "text": "June 2029",
+            "timex-value": "2029-06",
+            "type": "DURATION",
+            "value": {
+                "begin": "2029-06-15T00:00:00.000",
+                "end": "2029-06-15T23:59:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 0.0017825311942959,
+            "end": 3933,
+            "start": 3918,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 4231,
+            "start": 4220,
+            "text": "August 2021",
+            "timex-value": "2021-08",
+            "type": "DURATION",
+            "value": {
+                "begin": "2021-08-15T00:00:00.000",
+                "end": "2021-08-15T23:59:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 0.0017825311942959,
+            "end": 4387,
+            "start": 4372,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 4489,
+            "start": 4473,
+            "text": "27 December 2020",
+            "timex-value": "2020-12-27",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T00:00:00.000",
+                "end": "2020-12-27T23:59:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 0.0017825311942959,
+            "end": 4387,
+            "start": 4372,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 4850,
+            "start": 4845,
+            "text": "12:40",
+            "timex-value": "T12:40",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T12:40:00.000",
+                "end": "2020-12-27T12:40:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 4.5547803603145114e-11,
+            "end": 5643,
+            "start": 5628,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 6779,
+            "start": 6758,
+            "text": "between 10:30 \u2013 15:00",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T10:30:00.000",
+                "end": "2020-12-27T15:00:00.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 4.5547803603145114e-11,
+            "end": 5643,
+            "start": 5628,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 6900,
+            "start": 6895,
+            "text": "08:00",
+            "timex-value": "T08:00",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T08:00:00.000",
+                "end": "2020-12-27T08:00:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 4.5547803603145114e-11,
+            "end": 5643,
+            "start": 5628,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 7218,
+            "start": 7213,
+            "text": "08:00",
+            "timex-value": "T08:00",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T08:00:00.000",
+                "end": "2020-12-27T08:00:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 4.5547803603145114e-11,
+            "end": 5643,
+            "start": 5628,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 7428,
+            "start": 7423,
+            "text": "09:10",
+            "timex-value": "T09:10",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T09:10:00.000",
+                "end": "2020-12-27T09:10:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 4.5547803603145114e-11,
+            "end": 5643,
+            "start": 5628,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 7501,
+            "start": 7496,
+            "text": "10:45",
+            "timex-value": "T10:45",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T10:45:00.000",
+                "end": "2020-12-27T10:45:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 4.5547803603145114e-11,
+            "end": 5643,
+            "start": 5628,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 7551,
+            "start": 7546,
+            "text": "11:30",
+            "timex-value": "T11:30",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T11:30:00.000",
+                "end": "2020-12-27T11:30:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 4.5547803603145114e-11,
+            "end": 5643,
+            "start": 5628,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 7663,
+            "start": 7658,
+            "text": "11:30",
+            "timex-value": "T11:30",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T11:30:00.000",
+                "end": "2020-12-27T11:30:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 1.636851418086226e-06,
+            "end": 7682,
+            "start": 7667,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 7929,
+            "start": 7924,
+            "text": "12:20",
+            "timex-value": "T12:20",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T12:20:00.000",
+                "end": "2020-12-27T12:20:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 1.636851418086226e-06,
+            "end": 7682,
+            "start": 7667,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 8069,
+            "start": 8064,
+            "text": "09:10",
+            "timex-value": "T09:10",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T09:10:00.000",
+                "end": "2020-12-27T09:10:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 1.636851418086226e-06,
+            "end": 7682,
+            "start": 7667,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 9647,
+            "start": 9642,
+            "text": "04:40",
+            "timex-value": "T04:40",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T04:40:00.000",
+                "end": "2020-12-27T04:40:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 1.636851418086226e-06,
+            "end": 7682,
+            "start": 7667,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 10665,
+            "start": 10660,
+            "text": "09:34",
+            "timex-value": "T09:34",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T09:34:00.000",
+                "end": "2020-12-27T09:34:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 0.0017825311942959,
+            "end": 10806,
+            "start": 10791,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 11747,
+            "start": 11742,
+            "text": "09:38",
+            "timex-value": "T09:38",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T09:38:00.000",
+                "end": "2020-12-27T09:38:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 0.0017825311942959,
+            "end": 10806,
+            "start": 10791,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 11999,
+            "start": 11994,
+            "text": "09:28",
+            "timex-value": "T09:28",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T09:28:00.000",
+                "end": "2020-12-27T09:28:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 0.058823529411764705,
+            "end": 12032,
+            "start": 12017,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 12221,
+            "start": 12216,
+            "text": "10:30",
+            "timex-value": "T10:30",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T10:30:00.000",
+                "end": "2020-12-27T10:30:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 15609,
+            "start": 15604,
+            "text": "12:40",
+            "timex-value": "T12:40",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T12:40:00.000",
+                "end": "2020-12-27T12:40:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 16252,
+            "start": 16233,
+            "text": "12:39:40 \u2013 12:39:46",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T12:39:40.000",
+                "end": "2020-12-27T12:39:46.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 16290,
+            "start": 16271,
+            "text": "12:39:54 \u2013 12:40:00",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T12:39:54.000",
+                "end": "2020-12-27T12:40:00.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 20067,
+            "start": 20062,
+            "text": "10:00",
+            "timex-value": "T10:00",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T10:00:00.000",
+                "end": "2020-12-27T10:00:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 20589,
+            "start": 20566,
+            "text": "between 10:00 and 13:00",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T10:00:00.000",
+                "end": "2020-12-27T13:00:00.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 21051,
+            "start": 21046,
+            "text": "08:20",
+            "timex-value": "T08:20",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T08:20:00.000",
+                "end": "2020-12-27T08:20:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 21062,
+            "start": 21057,
+            "text": "08:45",
+            "timex-value": "T08:45",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T08:45:00.000",
+                "end": "2020-12-27T08:45:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 22236,
+            "start": 22231,
+            "text": "13:00",
+            "timex-value": "T13:00",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T13:00:00.000",
+                "end": "2020-12-27T13:00:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 22244,
+            "start": 22239,
+            "text": "13:25",
+            "timex-value": "T13:25",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T13:25:00.000",
+                "end": "2020-12-27T13:25:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 22339,
+            "start": 22334,
+            "text": "13:29",
+            "timex-value": "T13:29",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T13:29:00.000",
+                "end": "2020-12-27T13:29:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 25855,
+            "start": 25826,
+            "text": "between 11:30:20 and 11:30:30",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T11:30:20.000",
+                "end": "2020-12-27T11:30:30.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 26017,
+            "start": 25998,
+            "text": "11:31:00 \u2013 11:31:10",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-12-27T11:31:00.000",
+                "end": "2020-12-27T11:31:10.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 3.5268241022201545e-20,
+            "end": 14472,
+            "start": 14457,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 26211,
+            "start": 26196,
+            "text": "5 February 1974",
+            "timex-value": "1974-02-05",
+            "type": "DURATION",
+            "value": {
+                "begin": "1974-02-05T00:00:00.000",
+                "end": "1974-02-05T23:59:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 4,
+            "conf": 0.25,
+            "end": 28091,
+            "start": 28076,
+            "text": "PioneerVenusOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 28180,
+            "start": 28171,
+            "text": "1981\u20131983",
+            "type": "DURATION",
+            "value": {
+                "begin": "1974-02-05T00:00:00.000",
+                "end": "1974-02-05T00:00:00.999"
+            }
+        },
+        {
+            "end": 31775,
+            "start": 31768,
+            "text": "Venus",
+            "type": "region"
+        },
+        {
+            "end": 31775,
+            "start": 31768,
+            "text": "Venus",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 17,
+            "conf": 0.058823529411764705,
+            "end": 30553,
+            "start": 30538,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 30649,
+            "start": 30636,
+            "text": "9 August 2021",
+            "timex-value": "2021-08-09",
+            "type": "DURATION",
+            "value": {
+                "begin": "2021-08-09T00:00:00.000",
+                "end": "2021-08-09T23:59:59.999"
+            }
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 5,
+            "conf": 0.19999999999999998,
+            "end": 30687,
+            "start": 30674,
+            "text": "BepiColombo",
+            "type": "sat"
+        },
+        {
+            "end": 30707,
+            "start": 30698,
+            "text": "10 August",
+            "timex-value": "2024-08-10",
+            "type": "DURATION",
+            "value": {
+                "begin": "2021-08-10T00:00:00.000",
+                "end": "2021-08-10T23:59:59.999"
+            }
+        },
+        {
+            "end": 26247,
+            "start": 26238,
+            "text": "Mercury",
+            "type": "region"
+        },
+        {
+            "end": 26247,
+            "start": 26238,
+            "text": "Mercury",
+            "type": "region"
+        }
+    ],
+    {
+        "message": "16- Sats / Region linker",
+        "pipeline_version": "4.4",
+        "step": "16"
+    }
+]
