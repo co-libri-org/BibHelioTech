@@ -1177,10 +1177,10 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
             "SO": elems[0]["SO"],
             "conf": elems[0]["conf"],
         }
-        duration = structs_from_list(elems, "DURATION")[0]
-        if duration:
-            final_amda_dict["start_time"] = duration["value"]["begin"]
-            final_amda_dict["stop_time"] = duration["value"]["end"]
+        duration = structs_from_list(elems, "DURATION")
+        if type(duration) is list and len(duration)>0:
+            final_amda_dict["start_time"] = duration[0]["value"]["begin"]
+            final_amda_dict["stop_time"] = duration[0]["value"]["end"]
 
         # search in the tree structure
         result = [elems[2]["text"]]
