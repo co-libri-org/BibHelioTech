@@ -563,7 +563,8 @@ def add_sat_occurrence(_final_links, _sutime_json):
     return _temp, _fl_to_return
 
 
-def closest_mission_to_duration(_temp, _final_links, data_frames, published_date):
+def previous_mission_to_duration(_temp, _final_links, data_frames, published_date):
+    """From a given duration, find the closest previous mission"""
     previous_sat = None
     _final_links = []
     for _t in _temp:
@@ -808,7 +809,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     # 8- Association of the closest duration of a satellite.
     # temp, final_links = closest_duration(
-    temp, final_links = closest_mission_to_duration(
+    temp, final_links = previous_mission_to_duration(
         temp, final_links, data_frames, publication_date
     )
     raw_dumper.dump_to_raw(
