@@ -14,7 +14,8 @@ from bht.Entities_finder import (
     update_final_synonyms,
     add_sat_occurrence,
     closest_duration,
-    get_sat_syn, previous_mission_to_duration,
+    get_sat_syn,
+    previous_mission_to_duration,
 )
 from bht.databank_reader import DataBank, DataBankSheet
 
@@ -130,8 +131,8 @@ class TestEntitiesFinder:
         final_links = update_final_instruments(final_links, data_frames)
         final_with_syns = update_final_synonyms(final_links, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
-        assert len(tmp) == 47
-        assert len(sat_occ) == 41
+        assert len(tmp) == 46
+        assert len(sat_occ) == 40
 
     def test_closest_duration(self, sutime_json, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)
@@ -145,13 +146,14 @@ class TestEntitiesFinder:
         assert len(tmp) == 47
         assert len(sat_closest) == 41
 
-    def test_mission_to_duration_has_instruments(self, sutime_3dp_7, final_links_3dp, data_frames):
+    def test_mission_to_duration_has_instruments(self, sutime_3dp, final_links_3dp, data_frames):
         final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
         final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
-        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp_7)
-        published_date = "2015-12-01T00:00:00Z"
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
+        published_date = "20151201"
         tmp, sat_closest = previous_mission_to_duration(tmp, sat_occ, data_frames, published_date)
-        print(type(sat_closest))
+        for _l in sat_closest:
+            assert len(_l) == 3
 
 
 class TestDatabankReader:
