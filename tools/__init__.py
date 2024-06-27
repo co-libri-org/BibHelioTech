@@ -91,7 +91,8 @@ class JsonAnalyser:
             try:
                 _sat = _ls[0]
                 _sutime = _ls[2]
-            except IndexError:
+            except (IndexError, KeyError) as e:
+                print(type(e), _ls)
                 continue
 
             line_values = [
@@ -607,4 +608,3 @@ def enlight_txt(txt_content, json_content):
 
     res_txt = res_txt.replace("\n", "")
     return res_txt
-
