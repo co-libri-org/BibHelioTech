@@ -145,10 +145,10 @@ class TestEntitiesFinder:
         assert len(tmp) == 47
         assert len(sat_closest) == 41
 
-    def test_closest_duration_has_instruments(self, sutime_3dp, final_links_3dp, data_frames):
+    def test_closest_duration_has_instruments(self, sutime_3dp_7, final_links_3dp, data_frames):
         final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
         final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
-        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp_7)
         published_date = "2015-12-01T00:00:00Z"
         tmp, sat_closest = closest_duration(tmp, sat_occ, data_frames, published_date)
         # instr_list = [(_s[1]["text"], _t[1]["text"]) for (_s, _t) in zip(sat_closest, sat_occ)]

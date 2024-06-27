@@ -177,9 +177,9 @@ def sutime_json():
 
 
 @pytest.fixture(scope="module")
-def sutime_3dp():
+def sutime_3dp_7():
     sutime_json_path = os.path.join(
-        current_app.config["BHT_RESOURCES_DIR"], "sutime_3dp.json"
+        current_app.config["BHT_RESOURCES_DIR"], "sutime_3dp_7.json"
     )
     with open(sutime_json_path, "r") as sutime_file:
         _sutime_json_3dp = json.load(sutime_file)
