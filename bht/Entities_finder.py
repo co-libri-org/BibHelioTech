@@ -565,15 +565,43 @@ def add_sat_occurrence(_final_links, _sutime_json):
 
 def previous_mission_to_duration(_temp, _final_links, data_frames, published_date):
     """From a given duration, find the closest previous mission"""
+
+    # 1st make sure both lists hold same satellites:
+    #
+    # - extract satellites structs from first list
+    all_temp_sats = [_s for _s in _temp if "type" in _s.keys() and _s["type"] == "sat"]
+    # - extract satellites structs from second list
+    all_final_sats = [_s[0] for _s in _final_links]
+    # - check equality
+    assert all_final_sats == all_temp_sats
+
+    # 2- Number the satellites struct in the _temp list:
+    #
+    i = 0
+    for _s in _temp:
+        if _s.get('type', None) == "sat":
+            _s["i"] = i
+            i += 1
+
+    # 3- Now, for each element in the temp list
+    #
+    #   . from the sat struct before each DURATION get the 'i'
+    #   . get the corresponding list in _final_links
+    #   . add duration
+
     previous_sat = None
-    _final_links = []
+    _res_links = []
     for _t in _temp:
         if _t["type"] == "sat":
             previous_sat = _t
         elif _t["type"] == "DURATION":
-            _final_links.append([previous_sat, _t])
+            i = previous_sat["i"]
+            _final_link = _final_links[i]
+            del _final_link[0]["i"]
+            _final_link.append(_t)
+            _res_links.append(_final_link)
 
-    return _temp, _final_links
+    return _temp, _res_links
 
 
 def closest_duration(_temp, _final_links, data_frames, published_date):

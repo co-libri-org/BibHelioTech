@@ -146,14 +146,19 @@ class TestEntitiesFinder:
         assert len(tmp) == 47
         assert len(sat_closest) == 41
 
-    def test_mission_to_duration_has_instruments(self, sutime_3dp, final_links_3dp, data_frames):
+    def test_mission_to_duration_has_instruments(
+        self, sutime_3dp, final_links_3dp, data_frames
+    ):
         final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
         final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
         published_date = "20151201"
-        tmp, sat_closest = previous_mission_to_duration(tmp, sat_occ, data_frames, published_date)
+        tmp, sat_closest = previous_mission_to_duration(
+            tmp, sat_occ, data_frames, published_date
+        )
         for _l in sat_closest:
             assert len(_l) == 3
+        assert len(sat_closest) == 11
 
 
 class TestDatabankReader:
