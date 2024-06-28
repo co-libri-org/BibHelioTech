@@ -595,7 +595,11 @@ def previous_mission_to_duration(_temp, _final_links, data_frames, published_dat
         if _t["type"] == "sat":
             previous_sat = _t
         elif _t["type"] == "DURATION":
-            i = previous_sat["i"]
+            try:
+                i = previous_sat["i"]
+            except KeyError:
+                print(previous_sat)
+                continue
             _final_link = _final_links[i]
             del _final_link[0]["i"]
             _final_link.append(_t)
