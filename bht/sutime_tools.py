@@ -3,10 +3,11 @@ from datetime import datetime, date
 
 
 def dt2date(_dt):
-    _date =date(_dt.year, _dt.month, _dt.day)
-    return _date
+    _r_date = date(_dt.year, _dt.month, _dt.day)
+    return _r_date
 
 
+# TODO: mix with SUTime_processing.py::get_struct_date()
 def date_from_struct(_sutime_struct):
     """Extract a date from any SUTIME structure
     May be a DATE or a DURATION;
@@ -34,7 +35,7 @@ def date_from_struct(_sutime_struct):
             _dt_end = dt2date(_dt)
         else:
             raise Exception("NOOOO")
-    except :
+    except:
         return None
 
     # now, get better guess if not today
@@ -53,6 +54,7 @@ def date_from_struct(_sutime_struct):
 if __name__ == "__main__":
     # TODO : move that to test case
     import json
+
     filename = '/home/richard/01DEV/bht2/DATA/web-upload/F0F66AF64F9A96EB6B8E36BD19F269229B48E29F/raw4_sutime.json'
     with open(filename) as _fd:
         json_structs = json.load(_fd)
@@ -66,4 +68,3 @@ if __name__ == "__main__":
             _date = _date.strftime("%Y-%m-%d")
         # print(f"<{type(_date.__repr__())}>")
         print(f"{_st['type']:9} {_date.__repr__():<15} {_st['value'].__repr__():<65} {_st['text']}")
-

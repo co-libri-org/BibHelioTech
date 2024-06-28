@@ -100,6 +100,18 @@ def final_links(data_frames, article_as_str):
 
 
 @pytest.fixture(scope="module")
+def final_links_3dp(data_frames, article_3dp):
+    sat_dict = data_frames[DataBankSheet.SATS]
+    sat_dict_list = sat_recognition(article_3dp, sat_dict)
+    inst_dict = data_frames[DataBankSheet.INSTR]
+    inst_dict_list = inst_recognition(article_3dp, inst_dict)
+    inst_list = list(set([inst["text"] for inst in inst_dict_list]))
+    new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
+    final_links_3dp = make_final_links(new_sat_dict_list, inst_list, article_3dp)
+    yield final_links_3dp
+
+
+@pytest.fixture(scope="module")
 def final_links_pvo(data_frames, pvo_article):
     sat_dict = data_frames[DataBankSheet.SATS]
     sat_dict_list = sat_recognition(pvo_article, sat_dict)
@@ -125,15 +137,30 @@ def hpevents_in_db(hpevents_list, db):
 
 
 @pytest.fixture(scope="module")
-def json_entities_16():
-    entities16_path = os.path.join(current_app.config["BHT_RESOURCES_DIR"], "raw16_entities.json")
+def json_entities_16_2():
+    entities16_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "raw16_entities_2.json"
+    )
     with open(entities16_path, "r") as json_file:
         _entities_step_16 = json.load(json_file)
     yield _entities_step_16
 
+
+@pytest.fixture(scope="module")
+def json_entities_16():
+    entities16_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "raw16_entities.json"
+    )
+    with open(entities16_path, "r") as json_file:
+        _entities_step_16 = json.load(json_file)
+    yield _entities_step_16
+
+
 @pytest.fixture(scope="module")
 def json_step_4_2():
-    json4_path = os.path.join(current_app.config["BHT_RESOURCES_DIR"], "first-is-duration.json")
+    json4_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "first-is-duration.json"
+    )
     with open(json4_path, "r") as json_file:
         _json_step_4 = json.load(json_file)
     yield _json_step_4
@@ -141,7 +168,9 @@ def json_step_4_2():
 
 @pytest.fixture(scope="module")
 def json_step_4():
-    json4_path = os.path.join(current_app.config["BHT_RESOURCES_DIR"], "raw4_sutime.json")
+    json4_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "raw4_sutime.json"
+    )
     with open(json4_path, "r") as json_file:
         _json_step_4 = json.load(json_file)
     yield _json_step_4
@@ -158,6 +187,16 @@ def sutime_json():
 
 
 @pytest.fixture(scope="module")
+def sutime_3dp():
+    sutime_json_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "sutime_3dp.json"
+    )
+    with open(sutime_json_path, "r") as sutime_file:
+        _sutime_json_3dp = json.load(sutime_file)
+    yield _sutime_json_3dp
+
+
+@pytest.fixture(scope="module")
 def article_as_str():
     data_dir = "ark_67375_WNG-HPV609C7-D"
     ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)
@@ -165,6 +204,16 @@ def article_as_str():
     with open(article_as_txt_path, "r") as file:
         _article_as_str = file.read()
     yield _article_as_str
+
+
+@pytest.fixture(scope="module")
+def article_3dp():
+    article_3dp_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "article_3dp.txt"
+    )
+    with open(article_3dp_path, "r") as file:
+        _article_3dp = file.read()
+    yield _article_3dp
 
 
 @pytest.fixture(scope="module")

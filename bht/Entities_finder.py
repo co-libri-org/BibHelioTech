@@ -11,7 +11,7 @@ from bht.catalog_tools import rows_to_catstring
 from bht.databank_reader import DataBank, DataBankSheet
 from bht.errors import BhtPipelineError
 from bht.published_date_finder import *
-from tools import RawDumper
+from tools import RawDumper, structs_from_list
 
 v = sys.version
 token = "IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m"  # API Key
@@ -563,16 +563,45 @@ def add_sat_occurrence(_final_links, _sutime_json):
     return _temp, _fl_to_return
 
 
-def closest_mission_to_duration(_temp, _final_links, data_frames, published_date):
+def previous_mission_to_duration(_temp, _final_links, data_frames, published_date):
+    """From a given duration, find the closest previous mission"""
+
+    # 1st make sure both lists hold same satellites:
+    #
+    # - extract satellites structs from first list
+    all_temp_sats = [_s for _s in _temp if "type" in _s.keys() and _s["type"] == "sat"]
+    # - extract satellites structs from second list
+    all_final_sats = [_s[0] for _s in _final_links]
+    # - check equality
+    assert all_final_sats == all_temp_sats
+
+    # 2- Number the satellites struct in the _temp list:
+    #
+    i = 0
+    for _s in _temp:
+        if _s.get('type', None) == "sat":
+            _s["i"] = i
+            i += 1
+
+    # 3- Now, for each element in the temp list
+    #
+    #   . from the sat struct before each DURATION get the 'i'
+    #   . get the corresponding list in _final_links
+    #   . add duration
+
     previous_sat = None
-    _final_links = []
+    _res_links = []
     for _t in _temp:
         if _t["type"] == "sat":
             previous_sat = _t
         elif _t["type"] == "DURATION":
-            _final_links.append([previous_sat, _t])
+            i = previous_sat["i"]
+            _final_link = _final_links[i]
+            del _final_link[0]["i"]
+            _final_link.append(_t)
+            _res_links.append(_final_link)
 
-    return _temp, _final_links
+    return _temp, _res_links
 
 
 def closest_duration(_temp, _final_links, data_frames, published_date):
@@ -808,7 +837,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     # 8- Association of the closest duration of a satellite.
     # temp, final_links = closest_duration(
-    temp, final_links = closest_mission_to_duration(
+    temp, final_links = previous_mission_to_duration(
         temp, final_links, data_frames, publication_date
     )
     raw_dumper.dump_to_raw(
@@ -1080,7 +1109,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
                             final_links[compteur_sat][1],
                             nearest_region[0],
                             nearest_region[1],
-                            final_links[compteur_sat][2]["value"],
+                            final_links[compteur_sat][2],
                         ]
                     elif len(nearest_region) != 0:
                         final_links[compteur_sat] = [
@@ -1105,8 +1134,8 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
             if elems[0]["text"] in AMDA_dict:
                 temp = AMDA_dict[elems[0]["text"]][0].split(".")
                 nearest_region = [
-                    {"end": 10, "start": 0, "text": temp[0], "type":"region"},
-                    {"end": 30, "start": 20, "text": temp[-1], "type":"region"},
+                    {"end": 10, "start": 0, "text": temp[0], "type": "region"},
+                    {"end": 30, "start": 20, "text": temp[-1], "type": "region"},
                 ]
                 if len(final_links[compteur_sat]) == 3 and len(nearest_region) != 0:
                     final_links[compteur_sat] = [
@@ -1114,7 +1143,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
                         final_links[compteur_sat][1],
                         nearest_region[0],
                         nearest_region[1],
-                        final_links[compteur_sat][2]["value"],
+                        final_links[compteur_sat][2],
                     ]
                 elif len(nearest_region) != 0:
                     final_links[compteur_sat] = [
@@ -1145,7 +1174,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
                         final_links[compteur_sat][1],
                         nearest_region[0],
                         nearest_region[1],
-                        final_links[compteur_sat][2]["value"],
+                        final_links[compteur_sat][2],
                     ]
                 elif len(nearest_region) != 0:
                     final_links[compteur_sat] = [
@@ -1177,9 +1206,10 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
             "SO": elems[0]["SO"],
             "conf": elems[0]["conf"],
         }
-        if len(elems) >= 5:
-            final_amda_dict["start_time"] = elems[4]["begin"]
-            final_amda_dict["stop_time"] = elems[4]["end"]
+        duration = structs_from_list(elems, "DURATION")
+        if type(duration) is list and len(duration) > 0:
+            final_amda_dict["start_time"] = duration[0]["value"]["begin"]
+            final_amda_dict["stop_time"] = duration[0]["value"]["end"]
 
         # search in the tree structure
         result = [elems[2]["text"]]

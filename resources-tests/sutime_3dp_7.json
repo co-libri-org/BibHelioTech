@@ -1,0 +1,226 @@
+[
+    [
+        {
+            "SO": 41,
+            "end": 2831,
+            "start": 2825,
+            "text": "Wind",
+            "type": "sat"
+        },
+        {
+            "end": 5630,
+            "start": 5619,
+            "text": "04 Mar 2020",
+            "timex-value": "2020-03-04",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T00:00:00.000",
+                "end": "2020-03-04T23:59:59.999"
+            }
+        }
+    ],
+    [
+        {
+            "SO": 55,
+            "end": 7170,
+            "start": 7155,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 7232,
+            "start": 7210,
+            "text": "10 February 2020 04:03",
+            "timex-value": "2020-02-10T04:03",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T04:03:00.000",
+                "end": "2020-03-04T04:03:59.999"
+            }
+        }
+    ],
+    [
+        {
+            "SO": 55,
+            "end": 8155,
+            "start": 8140,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 8258,
+            "start": 8246,
+            "text": "4 March 2020",
+            "timex-value": "2020-03-04",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T00:00:00.000",
+                "end": "2020-03-04T23:59:59.999"
+            }
+        }
+    ],
+    [
+        {
+            "SO": 55,
+            "end": 8936,
+            "start": 8921,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 8944,
+            "start": 8939,
+            "text": "04:58",
+            "timex-value": "T04:58",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T04:58:00.000",
+                "end": "2020-03-04T04:58:59.999"
+            }
+        }
+    ],
+    [
+        {
+            "SO": 55,
+            "end": 10879,
+            "start": 10864,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 14835,
+            "start": 14824,
+            "text": "04 Mar 2020",
+            "timex-value": "2020-03-04",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T00:00:00.000",
+                "end": "2020-03-04T23:59:59.999"
+            }
+        }
+    ],
+    [
+        {
+            "SO": 41,
+            "end": 20757,
+            "start": 20751,
+            "text": "Wind",
+            "type": "sat"
+        },
+        {
+            "end": 20786,
+            "start": 20757,
+            "text": "between 09:29:42 and 09:32:36",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T09:29:42.000",
+                "end": "2020-03-04T09:32:36.999"
+            }
+        }
+    ],
+    [
+        {
+            "SO": 41,
+            "end": 21893,
+            "start": 21887,
+            "text": "Wind",
+            "type": "sat"
+        },
+        {
+            "end": 22169,
+            "start": 22158,
+            "text": "04 Mar 2020",
+            "timex-value": "2020-03-04",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T00:00:00.000",
+                "end": "2020-03-04T23:59:59.999"
+            }
+        }
+    ],
+    [
+        {
+            "SO": 55,
+            "end": 23111,
+            "start": 23096,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 23513,
+            "start": 23508,
+            "text": "09:30",
+            "timex-value": "T09:30",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T09:30:00.000",
+                "end": "2020-03-04T09:30:59.999"
+            }
+        }
+    ],
+    [
+        {
+            "SO": 41,
+            "end": 23790,
+            "start": 23784,
+            "text": "Wind",
+            "type": "sat"
+        },
+        {
+            "end": 24097,
+            "start": 24092,
+            "text": "04:57",
+            "timex-value": "T04:57",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T04:57:00.000",
+                "end": "2020-03-04T04:57:59.999"
+            }
+        }
+    ],
+    [
+        {
+            "SO": 55,
+            "end": 24521,
+            "start": 24506,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 24530,
+            "start": 24525,
+            "text": "04:57",
+            "timex-value": "T04:57",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T04:57:00.000",
+                "end": "2020-03-04T04:57:59.999"
+            }
+        }
+    ],
+    [
+        {
+            "SO": 41,
+            "end": 25656,
+            "start": 25650,
+            "text": "Wind",
+            "type": "sat"
+        },
+        {
+            "end": 26022,
+            "start": 26017,
+            "text": "04:57",
+            "timex-value": "T04:57",
+            "type": "DURATION",
+            "value": {
+                "begin": "2020-03-04T04:57:00.000",
+                "end": "2020-03-04T04:57:59.999"
+            }
+        }
+    ],
+    {
+        "message": "7- Add closest duration from sutime files",
+        "pipeline_version": "4.4",
+        "step": "7"
+    }
+]

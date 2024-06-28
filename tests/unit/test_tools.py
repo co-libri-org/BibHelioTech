@@ -19,6 +19,13 @@ class TestJsonAnalyser:
         assert "JSON Syntax Error" not in dumped
         assert len(dumped.split("\n")) == 41
 
+    def test_dump_sat_region_2(self, json_entities_16_2):
+        json_analyser = JsonAnalyser(json_entities_16_2, 16, "entities")
+        dumped = json_analyser.dump_sat_regions()
+        print(dumped)
+        assert "JSON Syntax Error" not in dumped
+        assert len(dumped.split("\n")) == 41
+
 
 class TestStepLighter:
     def test_analysed_sutime(self, ocr_dir_v4):
