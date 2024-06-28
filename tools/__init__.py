@@ -110,7 +110,7 @@ class JsonAnalyser:
         Structs reflects link between sats, durations and regions.
         looks like a lists:
         [
-         [ {sat}, {duration}, {region}, {region}]
+         [ {sat}, {instruments}, {region}, {region}, {duration} ]
           ....
         ]
 

@@ -1109,7 +1109,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
                             final_links[compteur_sat][1],
                             nearest_region[0],
                             nearest_region[1],
-                            final_links[compteur_sat][2]["value"],
+                            final_links[compteur_sat][2],
                         ]
                     elif len(nearest_region) != 0:
                         final_links[compteur_sat] = [
@@ -1143,7 +1143,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
                         final_links[compteur_sat][1],
                         nearest_region[0],
                         nearest_region[1],
-                        final_links[compteur_sat][2]["value"],
+                        final_links[compteur_sat][2],
                     ]
                 elif len(nearest_region) != 0:
                     final_links[compteur_sat] = [
@@ -1174,7 +1174,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
                         final_links[compteur_sat][1],
                         nearest_region[0],
                         nearest_region[1],
-                        final_links[compteur_sat][2]["value"],
+                        final_links[compteur_sat][2],
                     ]
                 elif len(nearest_region) != 0:
                     final_links[compteur_sat] = [
