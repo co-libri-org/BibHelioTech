@@ -25,6 +25,10 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [0.14.0-dev] - 2024-07-04  - _______________
+#### Fixed
+#### Changed
+#### New
 
 ## [0.13.0] - 2024-07-01  - New Duration/Mission linking
 #### Fixed
