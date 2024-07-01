@@ -25,7 +25,7 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [4.5] - 2024-06-28 ___________
+## [4.5] - 2024-06-28 - Fix Duration/Mission linking
 #### Fixed
 - missing instruments at step 7
 - missing DURATION type at step 16
