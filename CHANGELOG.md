@@ -26,11 +26,13 @@ Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
 
-## [0.13.0-dev] - 2024-06-xx Thursday_2024-06-20
+## [0.13.0] - 2024-07-01 
 #### Fixed
 - fix empty sutime struct bug
 - overlapped missions becomes uniq
 #### Changed
+- new link from Duration to Mission
+- rewrite pipeline methods
 #### New
 - show changelog
 
