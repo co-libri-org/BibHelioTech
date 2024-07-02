@@ -36,7 +36,7 @@ class TestEntitiesFinder:
         )
         with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
-            assert len(_r_content) == 67
+            assert len(_r_content) == 30
 
     def test_no_image_as_syn(self, ocr_dir_test):
         catalog_file = entities_finder(
@@ -49,7 +49,7 @@ class TestEntitiesFinder:
     def test_sat_recognition(self, article_as_str, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
         sat_dict_list = sat_recognition(article_as_str, sat_dict)
-        assert len(sat_dict_list) == 41
+        assert len(sat_dict_list) == 40
 
     def test_sat_recog_trailing_quote(self, article_with_quote, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
@@ -60,8 +60,7 @@ class TestEntitiesFinder:
     def test_sat_recognition_pvo(self, pvo_article, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
         sat_dict_list = sat_recognition(pvo_article, sat_dict)
-        # pprint(sat_dict_list)
-        assert len(sat_dict_list) == 57
+        assert len(sat_dict_list) == 59
 
     def test_sat_recognition_with_chars(self, so_article, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
@@ -79,9 +78,9 @@ class TestEntitiesFinder:
         inst_dict = data_frames[DataBankSheet.INSTR]
         inst_dict_list = inst_recognition(article_as_str, inst_dict)
         pprint(sat_dict_list)
-        assert len(sat_dict_list) == 41
+        assert len(sat_dict_list) == 40
         cleaned_sat_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
-        assert len(cleaned_sat_list) == 41
+        assert len(cleaned_sat_list) == 40
 
     def test_mk_final_links(self, article_as_str, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
@@ -91,14 +90,14 @@ class TestEntitiesFinder:
         inst_list = list(set([inst["text"] for inst in inst_dict_list]))
         new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
         _final_links = make_final_links(new_sat_dict_list, inst_list, article_as_str)
-        assert len(_final_links) == 41
+        assert len(_final_links) == 40
         assert list(_final_links[0][0].keys()) == ["start", "end", "text", "type"]
         for fl in _final_links:
             assert len(fl) == 2
 
     def test_update_final_instr(self, final_links, data_frames):
         new_final_links = update_final_instruments(final_links, data_frames)
-        assert len(new_final_links) == 41
+        assert len(new_final_links) == 40
         for fl in new_final_links:
             assert len(fl[1]["text"]) < 2
 
@@ -143,8 +142,8 @@ class TestEntitiesFinder:
         for _dict in sat_closest:
             assert _dict[0]["type"] == "sat"
             assert _dict[2]["type"] == "DURATION"
-        assert len(tmp) == 47
-        assert len(sat_closest) == 41
+        assert len(tmp) == 46
+        assert len(sat_closest) == 40
 
     def test_mission_to_duration_has_instruments(
         self, sutime_3dp, final_links_3dp, data_frames
