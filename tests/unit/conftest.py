@@ -104,6 +104,16 @@ def final_links(data_frames, article_as_str):
 
 
 @pytest.fixture(scope="module")
+def final_links_so(data_frames, article_so):
+    yield mk_final_links(data_frames, article_so)
+
+
+@pytest.fixture(scope="module")
+def final_links_eui(data_frames, article_eui):
+    yield mk_final_links(data_frames, article_eui)
+
+
+@pytest.fixture(scope="module")
 def final_links_3dp(data_frames, article_3dp):
     yield mk_final_links(data_frames, article_3dp)
 
@@ -217,9 +227,21 @@ def article_with_quote():
 
 
 @pytest.fixture(scope="module")
-def so_article():
-    """Article with 'solar orbiter' occurences"""
-    article_name = "89F0BCBFFBEA0751EECFDBF93D2496624C4F99BA.cleaned"
+def article_eui():
+    """Article with 'solar orbiter' and 'eui' occurrences"""
+    article_name = "article_eui.txt"
+    article_as_txt_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], article_name
+    )
+    with open(article_as_txt_path, "r") as file:
+        _article_as_str = file.read()
+    yield _article_as_str
+
+
+@pytest.fixture(scope="module")
+def article_so():
+    """Article with 'solar orbiter' occurrences"""
+    article_name = "article_so.txt"
     article_as_txt_path = os.path.join(
         current_app.config["BHT_RESOURCES_DIR"], article_name
     )

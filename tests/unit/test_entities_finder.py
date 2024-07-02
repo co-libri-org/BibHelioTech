@@ -62,9 +62,9 @@ class TestEntitiesFinder:
         sat_dict_list = sat_recognition(article_pvo, sat_dict)
         assert len(sat_dict_list) == 59
 
-    def test_sat_recognition_with_chars(self, so_article, data_frames):
+    def test_sat_recognition_with_chars(self, article_so, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
-        sat_dict_list = sat_recognition(so_article, sat_dict)
+        sat_dict_list = sat_recognition(article_so, sat_dict)
         assert len(sat_dict_list) == 35
 
     def test_inst_recognition(self, article_as_str, data_frames):
@@ -98,6 +98,18 @@ class TestEntitiesFinder:
     def test_update_final_instr(self, final_links, data_frames):
         new_final_links = update_final_instruments(final_links, data_frames)
         assert len(new_final_links) == 40
+        for fl in new_final_links:
+            assert len(fl[1]["text"]) < 2
+
+    def test_update_final_instr_so(self, final_links_so, data_frames):
+        new_final_links = update_final_instruments(final_links_so, data_frames)
+        assert len(new_final_links) == 33
+        for fl in new_final_links:
+            assert len(fl[1]["text"]) < 2
+
+    def test_update_final_instr_eui(self, final_links_eui, data_frames):
+        new_final_links = update_final_instruments(final_links_eui, data_frames)
+        assert len(new_final_links) == 8
         for fl in new_final_links:
             assert len(fl[1]["text"]) < 2
 
