@@ -87,40 +87,30 @@ def long_event_dict():
     yield _long_dict
 
 
-@pytest.fixture(scope="module")
-def final_links(data_frames, article_as_str):
+def mk_final_links(data_frames, article):
     sat_dict = data_frames[DataBankSheet.SATS]
-    sat_dict_list = sat_recognition(article_as_str, sat_dict)
+    sat_dict_list = sat_recognition(article, sat_dict)
     inst_dict = data_frames[DataBankSheet.INSTR]
-    inst_dict_list = inst_recognition(article_as_str, inst_dict)
+    inst_dict_list = inst_recognition(article, inst_dict)
     inst_list = list(set([inst["text"] for inst in inst_dict_list]))
     new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
-    final_links = make_final_links(new_sat_dict_list, inst_list, article_as_str)
-    yield final_links
+    final_links = make_final_links(new_sat_dict_list, inst_list, article)
+    return final_links
+
+
+@pytest.fixture(scope="module")
+def final_links(data_frames, article_as_str):
+    yield mk_final_links(data_frames, article_as_str)
 
 
 @pytest.fixture(scope="module")
 def final_links_3dp(data_frames, article_3dp):
-    sat_dict = data_frames[DataBankSheet.SATS]
-    sat_dict_list = sat_recognition(article_3dp, sat_dict)
-    inst_dict = data_frames[DataBankSheet.INSTR]
-    inst_dict_list = inst_recognition(article_3dp, inst_dict)
-    inst_list = list(set([inst["text"] for inst in inst_dict_list]))
-    new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
-    final_links_3dp = make_final_links(new_sat_dict_list, inst_list, article_3dp)
-    yield final_links_3dp
+    yield mk_final_links(data_frames, article_3dp)
 
 
 @pytest.fixture(scope="module")
-def final_links_pvo(data_frames, pvo_article):
-    sat_dict = data_frames[DataBankSheet.SATS]
-    sat_dict_list = sat_recognition(pvo_article, sat_dict)
-    inst_dict = data_frames[DataBankSheet.INSTR]
-    inst_dict_list = inst_recognition(pvo_article, inst_dict)
-    inst_list = list(set([inst["text"] for inst in inst_dict_list]))
-    new_sat_dict_list = clean_sats_inside_insts(sat_dict_list, inst_dict_list)
-    _final_links = make_final_links(new_sat_dict_list, inst_list, pvo_article)
-    yield _final_links
+def final_links_pvo(data_frames, article_pvo):
+    yield mk_final_links(data_frames, article_pvo)
 
 
 @pytest.fixture(scope="module")
@@ -239,7 +229,7 @@ def so_article():
 
 
 @pytest.fixture(scope="module")
-def pvo_article():
+def article_pvo():
     """Article with Pioneer Venus Orbiter inside"""
     pvo_article_path = os.path.join(
         current_app.config["BHT_RESOURCES_DIR"],

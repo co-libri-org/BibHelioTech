@@ -57,9 +57,9 @@ class TestEntitiesFinder:
         bepi_list = [_s for _s in sat_dict_list if _s["text"] == "BepiColombo"]
         assert len(bepi_list) == 5
 
-    def test_sat_recognition_pvo(self, pvo_article, data_frames):
+    def test_sat_recognition_pvo(self, article_pvo, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
-        sat_dict_list = sat_recognition(pvo_article, sat_dict)
+        sat_dict_list = sat_recognition(article_pvo, sat_dict)
         assert len(sat_dict_list) == 59
 
     def test_sat_recognition_with_chars(self, so_article, data_frames):
