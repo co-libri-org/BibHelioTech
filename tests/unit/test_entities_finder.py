@@ -108,10 +108,13 @@ class TestEntitiesFinder:
             assert len(fl[1]["text"]) < 2
 
     def test_update_final_instr_eui(self, final_links_eui, data_frames):
-        new_final_links = update_final_instruments(final_links_eui, data_frames)
+        final_with_syns = update_final_synonyms(final_links_eui, data_frames)
+        new_final_links = update_final_instruments(final_with_syns, data_frames)
+        so_fl = [s for s in new_final_links if s[0]["text"] == "SolarOrbiter"]
         assert len(new_final_links) == 8
-        for fl in new_final_links:
-            assert len(fl[1]["text"]) < 2
+        assert len(so_fl) == 2
+        for fl in so_fl:
+            assert 'EUI' in fl[1]['text']
 
     def test_get_sat_syn(self, data_frames):
         beijing_syn_is_ground = get_sat_syn("Beijing", data_frames)

@@ -25,6 +25,10 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [4.6] - 2024-07-xx - ++++++++++++++++++++++++++++
+#### Fixed
+- swapped entities steps 5 and 6: syns before instr recog
+
 ## [4.5] - 2024-06-28 - Fix Duration/Mission linking
 #### Fixed
 - missing instruments at step 7

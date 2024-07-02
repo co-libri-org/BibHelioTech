@@ -510,7 +510,7 @@ def update_final_instruments(_final_links, data_frames):
                             INST_temp.append(key)
                 if inst in INST_temp:
                     temp.append(inst)
-        except:
+        except Exception as e:
             elements[1]["text"] = []
         elements[1]["text"] = temp
     return _fl
@@ -821,16 +821,16 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         final_links, "Cleaned sats with instr list", current_OCR_folder
     )
 
-    # 5- Update instruments list for each satellite in links list
-    final_links = update_final_instruments(final_links, data_frames)
-    raw_dumper.dump_to_raw(
-        final_links, "Remove instruments not in stats", current_OCR_folder
-    )
-
     # 6- Change the names of all found satellites by their main name
     final_links = update_final_synonyms(final_links, data_frames)
     raw_dumper.dump_to_raw(
         final_links, "Change sat name with base synonym", current_OCR_folder
+    )
+
+    # 5- Update instruments list for each satellite in links list
+    final_links = update_final_instruments(final_links, data_frames)
+    raw_dumper.dump_to_raw(
+        final_links, "Remove instruments not in stats", current_OCR_folder
     )
 
     # 7- Add satellites occurrences to the list
