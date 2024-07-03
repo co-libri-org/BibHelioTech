@@ -7,7 +7,7 @@ from pprint import pprint
 from bht_config import yml_settings
 from bht.DOI_finder import *
 from bht.bht_logging import init_logger
-from bht.catalog_tools import rows_to_catstring
+from bht.catalog_tools import rows_to_catstring, dicts_to_df, df_to_dicts
 from bht.databank_reader import DataBank, DataBankSheet
 from bht.errors import BhtPipelineError
 from bht.published_date_finder import *
@@ -579,7 +579,7 @@ def previous_mission_to_duration(_temp, _final_links, data_frames, published_dat
     #
     i = 0
     for _s in _temp:
-        if _s.get('type', None) == "sat":
+        if _s.get("type", None) == "sat":
             _s["i"] = i
             i += 1
 
@@ -729,6 +729,15 @@ def normalize_links(_final_links, TSO):
             elements[0]["conf"] / maxi
         )  # normalisation by the maximum confidence index
     return _final_links
+
+
+def remove_duplicated(_final_links):
+    """Filter lines to have uniq tuple start, stop, mission, instrument, region, conf"""
+    _fl = copy.deepcopy(_final_links)
+    _fl_df = dicts_to_df(_fl)
+    cols_for_dropping = ["conf", "inst", "reg", "sat", "start_time", "stop_time"]
+    _fl_uniq = _fl_df.drop_duplicates(subset=cols_for_dropping)
+    return df_to_dicts(_fl_uniq)
 
 
 def entities_finder(current_OCR_folder, doc_meta_info=None):
@@ -1274,7 +1283,14 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     raw_dumper.dump_to_raw(
         final_amda_list,
-        f"Final events list cleaned to {len(final_amda_list)} elements (see json)",
+        f"Events list cleaned to {len(final_amda_list)} elements (see json)",
+        current_OCR_folder,
+    )
+
+    final_amda_list = remove_duplicated(final_amda_list)
+    raw_dumper.dump_to_raw(
+        final_amda_list,
+        f"Remove duplicated events",
         current_OCR_folder,
     )
 
