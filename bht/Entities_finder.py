@@ -740,6 +740,35 @@ def remove_duplicated(_final_links):
     return df_to_dicts(_fl_uniq)
 
 
+def clean_by_timespan(_final_links, dataframes):
+    _fl = copy.deepcopy(_final_links)
+
+    def in_time_span(row):
+        from dateutil import parser
+
+        mission_name = row[3]
+        # may raise KeyError
+        mission_start, mission_stop = [
+            parser.parse(d) for d in dataframes["time_span"][mission_name]
+        ]
+
+        event_start, event_stop = parser.parse(row[0]), parser.parse(row[1])
+        if (
+            mission_start <= event_start <= mission_stop
+            or mission_start <= event_stop <= mission_stop
+        ):
+            return True
+        else:
+            return False
+
+    _fl_df = dicts_to_df(_fl)
+
+    _r_df = _fl_df[_fl_df.apply(in_time_span, axis=1)]
+    _r_fl = df_to_dicts(_r_df)
+    return  _r_fl
+
+
+
 def entities_finder(current_OCR_folder, doc_meta_info=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
@@ -1288,10 +1317,19 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         current_OCR_folder,
     )
 
+    # 19- Remove duplicated tuple (start, stop, mission)
     final_amda_list = remove_duplicated(final_amda_list)
     raw_dumper.dump_to_raw(
         final_amda_list,
         f"Remove duplicated events",
+        current_OCR_folder,
+    )
+
+    # 20- Clean by timespan
+    final_amda_list = clean_by_timespan(final_amda_list, data_frames)
+    raw_dumper.dump_to_raw(
+        final_amda_list,
+        f"Clean by timespan",
         current_OCR_folder,
     )
 

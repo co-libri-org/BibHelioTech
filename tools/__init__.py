@@ -324,7 +324,7 @@ class JsonAnalyser:
             _r_str = self.dump_regions_links()
         elif self.step in [16]:
             _r_str = self.dump_sat_regions()
-        elif self.step in [17, 18, 19]:
+        elif self.step in [17, 18, 19, 20]:
             _r_str = self.dump_final()
         else:
             _title = f"No json dump for step {self.step}"
