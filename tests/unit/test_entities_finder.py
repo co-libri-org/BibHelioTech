@@ -114,7 +114,7 @@ class TestEntitiesFinder:
         assert len(new_final_links) == 8
         assert len(so_fl) == 2
         for fl in so_fl:
-            assert 'EUI' in fl[1]['text']
+            assert "EUI" in fl[1]["text"]
 
     def test_get_sat_syn(self, data_frames):
         beijing_syn_is_ground = get_sat_syn("Beijing", data_frames)
@@ -123,6 +123,12 @@ class TestEntitiesFinder:
     def test_get_sat_syn_pvo(self, data_frames):
         pvo_syn_is_pioneervenusorbiter = get_sat_syn("PVO", data_frames)
         assert pvo_syn_is_pioneervenusorbiter == "PioneerVenusOrbiter"
+
+    def test_get_sat_syn_other(self, data_frames):
+        entry_syn_list = [("Voyager-1", "Voyager 1"),
+                          ("STEREO-A", "STEREO A")]
+        for (entry, syn) in entry_syn_list:
+            assert syn == get_sat_syn(entry, data_frames)
 
     def test_update_final_syns(self, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)

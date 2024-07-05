@@ -1246,9 +1246,10 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         final_amda_dict["reg"] = final_path
         final_amda_list.append(final_amda_dict)
 
-    for dicts in final_amda_list:
-        dicts["inst"] = ",".join(list(set(dicts["inst"].split(",")))).replace(" ", "-")
-        dicts["sat"] = dicts["sat"].strip().replace(" ", "-")
+    # rhi 20240604: disable " ", "-" substitution
+    # for dicts in final_amda_list:
+    #     dicts["inst"] = ",".join(list(set(dicts["inst"].split(",")))).replace(" ", "-")
+    #     dicts["sat"] = dicts["sat"].strip().replace(" ", "-")
 
     # insert DOI in the field provided.
     for elements in final_amda_list:
