@@ -25,7 +25,7 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [5.0] - 2024-07-xx - ++++++++++++++++++++++++++++
+## [5.1] - 2024-07-05 - Remove duplicated events, and timespan inconsistency
 #### Fixed
 - swapped entities steps 5 and 6: syns before instr recog
 #### Changed
