@@ -25,6 +25,14 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [5.1] - 2024-07-05 - Remove duplicated events, and timespan inconsistency
+#### Fixed
+- swapped entities steps 5 and 6: syns before instr recog
+#### Changed
+#### New
+- add one step to remove duplicated events 
+- add one step to clean events out of timespan
+
 ## [4.5] - 2024-06-28 - Fix Duration/Mission linking
 #### Fixed
 - missing instruments at step 7

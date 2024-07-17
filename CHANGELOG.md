@@ -25,6 +25,12 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [0.14.0] - 2024-07-17  - Post filter events
+#### Fixed
+- Swap steps 5 and 6
+#### Changed
+- Post filter events
+#### New
 
 ## [0.13.0] - 2024-07-01  - New Duration/Mission linking
 #### Fixed
@@ -36,7 +42,6 @@ Only major refactoring improvements or functional changes should be noted.
 #### New
 - show changelog
 
---------------------------------------------------------------------------------
 
 ## [0.12.0] - 2024-06-13 Enhance Pipeline Analysis
 #### Fixed

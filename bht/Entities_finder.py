@@ -7,7 +7,7 @@ from pprint import pprint
 from bht_config import yml_settings
 from bht.DOI_finder import *
 from bht.bht_logging import init_logger
-from bht.catalog_tools import rows_to_catstring
+from bht.catalog_tools import rows_to_catstring, dicts_to_df, df_to_dicts
 from bht.databank_reader import DataBank, DataBankSheet
 from bht.errors import BhtPipelineError
 from bht.published_date_finder import *
@@ -510,7 +510,7 @@ def update_final_instruments(_final_links, data_frames):
                             INST_temp.append(key)
                 if inst in INST_temp:
                     temp.append(inst)
-        except:
+        except Exception as e:
             elements[1]["text"] = []
         elements[1]["text"] = temp
     return _fl
@@ -579,7 +579,7 @@ def previous_mission_to_duration(_temp, _final_links, data_frames, published_dat
     #
     i = 0
     for _s in _temp:
-        if _s.get('type', None) == "sat":
+        if _s.get("type", None) == "sat":
             _s["i"] = i
             i += 1
 
@@ -597,7 +597,7 @@ def previous_mission_to_duration(_temp, _final_links, data_frames, published_dat
         elif _t["type"] == "DURATION":
             try:
                 i = previous_sat["i"]
-            except KeyError:
+            except (KeyError, TypeError):
                 print(previous_sat)
                 continue
             _final_link = _final_links[i]
@@ -731,6 +731,44 @@ def normalize_links(_final_links, TSO):
     return _final_links
 
 
+def remove_duplicated(_final_links):
+    """Filter lines to have uniq tuple start, stop, mission, instrument, region, conf"""
+    _fl = copy.deepcopy(_final_links)
+    _fl_df = dicts_to_df(_fl)
+    cols_for_dropping = ["conf", "inst", "reg", "sat", "start_time", "stop_time"]
+    _fl_uniq = _fl_df.drop_duplicates(subset=cols_for_dropping)
+    return df_to_dicts(_fl_uniq)
+
+
+def clean_by_timespan(_final_links, dataframes):
+    _fl = copy.deepcopy(_final_links)
+
+    def in_time_span(row):
+        from dateutil import parser
+
+        mission_name = row[3]
+        # may raise KeyError
+        mission_start, mission_stop = [
+            parser.parse(d) for d in dataframes["time_span"][mission_name]
+        ]
+
+        event_start, event_stop = parser.parse(row[0]), parser.parse(row[1])
+        if (
+            mission_start <= event_start <= mission_stop
+            or mission_start <= event_stop <= mission_stop
+        ):
+            return True
+        else:
+            return False
+
+    _fl_df = dicts_to_df(_fl)
+
+    _r_df = _fl_df[_fl_df.apply(in_time_span, axis=1)]
+    _r_fl = df_to_dicts(_r_df)
+    return  _r_fl
+
+
+
 def entities_finder(current_OCR_folder, doc_meta_info=None):
     _logger = init_logger()
     _logger.info("entities_finder ->   bibheliotech_V1.txt  ")
@@ -821,16 +859,16 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         final_links, "Cleaned sats with instr list", current_OCR_folder
     )
 
-    # 5- Update instruments list for each satellite in links list
-    final_links = update_final_instruments(final_links, data_frames)
-    raw_dumper.dump_to_raw(
-        final_links, "Remove instruments not in stats", current_OCR_folder
-    )
-
     # 6- Change the names of all found satellites by their main name
     final_links = update_final_synonyms(final_links, data_frames)
     raw_dumper.dump_to_raw(
         final_links, "Change sat name with base synonym", current_OCR_folder
+    )
+
+    # 5- Update instruments list for each satellite in links list
+    final_links = update_final_instruments(final_links, data_frames)
+    raw_dumper.dump_to_raw(
+        final_links, "Remove instruments not in stats", current_OCR_folder
     )
 
     # 7- Add satellites occurrences to the list
@@ -1237,9 +1275,10 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         final_amda_dict["reg"] = final_path
         final_amda_list.append(final_amda_dict)
 
-    for dicts in final_amda_list:
-        dicts["inst"] = ",".join(list(set(dicts["inst"].split(",")))).replace(" ", "-")
-        dicts["sat"] = dicts["sat"].strip().replace(" ", "-")
+    # rhi 20240604: disable " ", "-" substitution
+    # for dicts in final_amda_list:
+    #     dicts["inst"] = ",".join(list(set(dicts["inst"].split(",")))).replace(" ", "-")
+    #     dicts["sat"] = dicts["sat"].strip().replace(" ", "-")
 
     # insert DOI in the field provided.
     for elements in final_amda_list:
@@ -1274,7 +1313,23 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     raw_dumper.dump_to_raw(
         final_amda_list,
-        f"Final events list cleaned to {len(final_amda_list)} elements (see json)",
+        f"Events list cleaned to {len(final_amda_list)} elements (see json)",
+        current_OCR_folder,
+    )
+
+    # 19- Remove duplicated tuple (start, stop, mission)
+    final_amda_list = remove_duplicated(final_amda_list)
+    raw_dumper.dump_to_raw(
+        final_amda_list,
+        f"Remove duplicated events",
+        current_OCR_folder,
+    )
+
+    # 20- Clean by timespan
+    final_amda_list = clean_by_timespan(final_amda_list, data_frames)
+    raw_dumper.dump_to_raw(
+        final_amda_list,
+        f"Clean by timespan",
         current_OCR_folder,
     )
 

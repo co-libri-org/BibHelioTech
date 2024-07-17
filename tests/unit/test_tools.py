@@ -1,4 +1,7 @@
 import os
+from pprint import pprint
+
+import pandas as pd
 
 from bht.catalog_tools import (
     catfile_to_rows,
@@ -7,6 +10,7 @@ from bht.catalog_tools import (
     hpevent_keys_ordered,
     dict_to_string,
     dict_to_dict,
+    dicts_to_df, df_to_dicts,
 )
 from tools import StepLighter, JsonAnalyser
 import json
@@ -115,10 +119,24 @@ class TestStepLighter:
         THEN check no Exception is raised
         """
         step_lighter = StepLighter(ocr_dir_v4, 7, "entities")
-        assert True
 
 
 class TestBhtTools:
+    def test_dicts_to_df(self, json_entities_18):
+        _df = dicts_to_df(json_entities_18)
+        assert isinstance(_df, pd.DataFrame)
+        assert len(_df) == 13
+        assert list(_df.columns) == ['D', 'DOI', 'R', 'SO', 'conf', 'inst', 'reg', 'sat', 'start_time', 'stop_time']
+
+    def test_df_to_dicts(self, json_entities_18):
+        _df = dicts_to_df(json_entities_18)
+        _dicts = df_to_dicts(_df)
+        assert isinstance(_dicts, list)
+        assert len(_dicts) == 13
+        _awaited_dict_keys = ['D', 'DOI', 'R', 'SO', 'conf', 'inst', 'reg', 'sat', 'start_time', 'stop_time']
+        _returned_dict_keys = list(_dicts[0].keys())
+        assert _awaited_dict_keys == _returned_dict_keys
+
     def test_row_to_dict(self, event_as_row):
         _dict = row_to_dict(event_as_row[:7])
         assert set(_dict.keys()).issubset(hpevent_keys_ordered[:7])

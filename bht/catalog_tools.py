@@ -1,6 +1,9 @@
 import csv
 import datetime
+import json
 import textwrap
+
+import pandas as pd
 
 from bht_config import yml_settings
 
@@ -233,3 +236,14 @@ def catfile_to_rows(catfile):
             hpevent_dict = row_to_dict(row)
             hpeventdict_list.append(hpevent_dict)
     return hpeventdict_list
+
+
+def dicts_to_df(_final_links):
+    """ Convert a list of dicts to a pandas dataframe """
+    return pd.DataFrame.from_records(_final_links)
+
+
+def df_to_dicts(_fl_df):
+    """ Convert a a pandas dataframe to a list of dicts """
+    return json.loads(_fl_df.to_json(orient="records"))
+    pass
