@@ -9,6 +9,7 @@ from flask import current_app
 from flask_migrate import upgrade
 from flask.cli import FlaskGroup
 from web import create_app, db
+from web.bht_proxy import pipe_paper
 from web.models import catfile_to_db
 from web.models import Paper, HpEvent
 
@@ -19,7 +20,7 @@ cli = FlaskGroup(create_app=create_app)
 def show_config():
     """List all config variables values"""
 
-    for k,v in current_app.config.items():
+    for k, v in current_app.config.items():
         print(f"{k:30} {v}")
     print(db.engine)
 
@@ -97,6 +98,7 @@ def clone_paper(paper_id):
     Will create a new record in the database,
     prepending 'COPY-' string at the beginning of each class attribute.
     """
+
     def clone_copy(orig_path):
         _dirname = os.path.dirname(orig_path)
         _basename = os.path.basename(orig_path)
@@ -124,6 +126,25 @@ def clone_paper(paper_id):
     db.session.add(p_cloned)
     db.session.commit()
     print(p_cloned)
+
+
+@cli.command("run_paper")
+@click.argument("paper_id", required=True)
+def run_paper(paper_id):
+    """Run the latest pipeline on that paper's article"""
+    _p_id = pipe_paper(paper_id)
+    print(f"Pipeline run on paper: {_p_id}.")
+
+
+@cli.command("run_papers")
+def run_papers():
+    """Run the latest pipeline on all papers"""
+    for p in Paper.query.all():
+        print(f"Running pipeline on paper {p.id}")
+        try:
+            _p_id = pipe_paper(p.id)
+        except Exception as e:
+            print(f"Couldn't run on paper #{p.id}")
 
 
 @cli.command("refresh_papers")

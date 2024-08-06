@@ -25,10 +25,11 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [0.15.0-dev] - 2024-08-xx  - Cli Pipeline To Db
+## [0.15.0-dev] - 2024-08-xx  - Summer Tasks
 #### Fixed
 #### Changed
 #### New
+- Cli command runs pipeline
 
 ## [0.14.0] - 2024-07-17  - Post filter events
 #### Fixed
