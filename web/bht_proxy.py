@@ -1,3 +1,6 @@
+import os.path
+
+from bht.errors import BhtPathError
 from bht.pipeline import bht_run_file
 from web import db
 from web.errors import *
@@ -42,7 +45,7 @@ def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_sec
 
 
 # TODO: REFACTOR should this go to a models.paper.method() ?
-def pipe_paper(paper_id, basedir, file_type):
+def pipe_paper(paper_id, basedir=None, file_type=None):
     """From a paper id create the catalog
 
     - find the corresponding pdf file
@@ -52,6 +55,15 @@ def pipe_paper(paper_id, basedir, file_type):
 
     """
     _paper = db.session.get(Paper, paper_id)
+    # Set pipeline defaults if it has txt file only
+    if basedir is None or file_type is None:
+        if not _paper.has_txt:
+            raise BhtPathError("Set pipeline defaults only if paper has txt file ")
+    if basedir is None:
+        basedir = os.path.dirname(_paper.txt_path)
+    if file_type is None:
+        file_type = BhtFileType.TXT
+
     # TODO: REFACTOR better call models.paper.get_file()
     if file_type == BhtFileType.PDF and _paper.has_pdf:
         file_path = _paper.pdf_path
