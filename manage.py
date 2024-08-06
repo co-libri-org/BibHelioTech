@@ -17,14 +17,16 @@ cli = FlaskGroup(create_app=create_app)
 
 @cli.command("show_config")
 def show_config():
-    from pprint import pprint
+    """List all config variables values"""
 
-    pprint(current_app.config)
+    for k,v in current_app.config.items():
+        print(f"{k:30} {v}")
     print(db.engine)
 
 
 @cli.command("create_db")
 def create_db():
+    """Create db file if it doesn't exist"""
     db.create_all()
 
 
@@ -32,10 +34,11 @@ def create_db():
 def refresh_events():
     """Reparse catalogs txt files
 
+    \b
     - delete events
-    - readd
+    - read
 
-    Can be used in conjonction with refresh_papers() that has to be run first.
+    Can be used in conjunction with refresh_papers() that has to be run first.
 
     This method was first writen to fix the hpevent datetime value in db
     A db bug that was fixed in the commit '6b38c89 Fix the missing hours in hpevent bug'
@@ -119,6 +122,7 @@ def upgrade_db():
 
 @cli.command("mock_papers")
 def mock_papers():
+    """Create a false list of papers inserted in database for test purpose"""
     papers_list = [
         ["aa33199-18", "aa33199-18.pdf", None, None],
         [
@@ -142,6 +146,7 @@ def mock_papers():
 
 @cli.command("list_papers")
 def list_papers():
+    """Show all papers contained in database"""
     for p in Paper.query.all():
         print(p)
 
@@ -149,7 +154,8 @@ def list_papers():
 @cli.command("update_paper")
 @click.option("-c", "--cat-path", "cat_path")
 @click.argument("paper_id", required=True)
-def update_paper(paper_id, cat_path):
+def update_paper_catpath(paper_id, cat_path):
+    """Set new paper's catpath"""
     p = db.session.get(Paper, paper_id)
     p.set_cat_path(cat_path)
 
@@ -157,6 +163,7 @@ def update_paper(paper_id, cat_path):
 @cli.command("show_paper")
 @click.argument("paper_id", required=True)
 def show_paper(paper_id):
+    """Display paper's content by id"""
     p = db.session.get(Paper, paper_id)
     print(p)
 
@@ -164,6 +171,7 @@ def show_paper(paper_id):
 @cli.command("del_paper")
 @click.argument("paper_id", required=True)
 def del_paper(paper_id):
+    """Remove from database the record by id"""
     p = db.session.get(Paper, paper_id)
     db.session.delete(p)
     db.session.commit()
@@ -172,6 +180,11 @@ def del_paper(paper_id):
 @cli.command("clone_paper")
 @click.argument("paper_id", required=True)
 def clone_paper(paper_id):
+    """Copy an already existing paper
+
+    Will create a new record in the database,
+    prepending 'COPY-' string at the beginning of each class attribute.
+    """
     def clone_copy(orig_path):
         _dirname = os.path.dirname(orig_path)
         _basename = os.path.basename(orig_path)
@@ -204,6 +217,7 @@ def clone_paper(paper_id):
 @cli.command("list_events")
 @click.argument("mission_id", required=False)
 def list_events(mission_id=None):
+    """Show all events contained in database"""
     if mission_id:
         events = HpEvent.query.filter_by(mission_id=mission_id)
     else:
@@ -221,6 +235,15 @@ def feed_catalog(catalog_file):
 
 @cli.command("run_worker")
 def run_worker():
+    """Run a rq worker that will listen to incoming tasks
+
+    \b
+    It is necessary to run it through a Flask context as we use the sqlalchemy library.
+
+    \b
+    Will also be useful in a docker container. See in docker-compose.yml the 'worker' service.
+    """
+
     redis_url = current_app.config["REDIS_URL"]
     redis_connection = redis.from_url(redis_url)
     worker = Worker(current_app.config["QUEUES"], connection=redis_connection)
