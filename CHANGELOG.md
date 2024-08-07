@@ -28,6 +28,7 @@ Only major refactoring improvements or functional changes should be noted.
 ## [0.15.0-dev] - 2024-08-xx  - Summer Tasks
 #### Fixed
 #### Changed
+- Dynamically update pipeline version
 #### New
 - Cli command runs pipeline
 

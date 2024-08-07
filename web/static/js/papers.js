@@ -4,14 +4,17 @@
 
 // Change the catalog status depending on request response
 //
+
 function toggleCatalog(res, action) {
     const catElmtId = '#cat-link-' + res.data.paper_id;
     if (action == "enable") {
+        $(catElmtId).contents()[0].data = res.data.ppl_ver;
         $(catElmtId).removeAttr('disabled');
         if (res.data.cat_is_processed === false) {
             $(catElmtId).find('span').removeClass('invisible').addClass('visible');
         }
     } else if (action == "disable") {
+        $(catElmtId).contents()[0].data = '___';
         $(catElmtId).attr('disabled', 'disabled');
         $(catElmtId).find('span').removeClass('visible').addClass('invisible');
     }

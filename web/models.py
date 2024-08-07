@@ -256,7 +256,7 @@ class Paper(db.Model):
         Read from catalog file and grab pipeline version number
         """
         import re
-        version_number = "NaN"
+        version_number = "0.0"
         if not self.has_cat:
             return version_number
         p = re.compile("# BibHelioTechVersion: V(\d[\d.]*);")
