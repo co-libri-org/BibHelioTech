@@ -70,11 +70,7 @@
                title="Get txt file" {{disabled(not paper.has_txt)}}>txt</a>
         </td>
         <td>
-            {% if paper.pipeline_version == ""%}
-            {%set cat_txt = "cat"%}
-            {% else %}
             {%set cat_txt = paper.pipeline_version %}
-            {% endif %}
             <a class="btn btn-warning cat-link position-relative" id="cat-link-{{paper.id}}"
                href="{{url_for('main.cat', paper_id=paper.id)}}"
                title="Get catalog file {{paper.pipeline_version}} {{' (not in db)' if not paper.cat_in_db}}" {{disabled(not paper.has_cat)}}>{{cat_txt}}
