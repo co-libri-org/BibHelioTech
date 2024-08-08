@@ -81,6 +81,30 @@ def show_paper(paper_id):
     print(p)
 
 
+@cli.command("clean_paper")
+@click.argument("paper_id", required=True)
+def clean_paper(paper_id):
+    """Erase all paper's raw-dumper files
+
+    @see class RawDumper
+    """
+    p = db.session.get(Paper, paper_id)
+
+    # get paper basedir
+    if p.has_txt:
+        basedir = os.path.dirname(p.cat_path)
+    else:
+        print("Paper doesnt have catalog, quitting")
+        return
+
+    # remove all raw-dumper files
+    import glob
+    pattern = os.path.join(basedir, "raw*.json")
+    found = glob.glob(pattern)
+    for _f in found:
+        os.remove(_f)
+
+
 @cli.command("del_paper")
 @click.argument("paper_id", required=True)
 def del_paper(paper_id):

@@ -31,6 +31,7 @@ Only major refactoring improvements or functional changes should be noted.
 - Dynamically update pipeline version
 #### New
 - Cli command runs pipeline
+- Cli command cleans papers' raw files
 
 ## [0.14.0] - 2024-07-17  - Post filter events
 #### Fixed
