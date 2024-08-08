@@ -395,13 +395,12 @@ class JsonAnalyser:
 
 class RawDumper:
     """
-    Write a python structure to a json file with message for later use by StepLighter
+    Write a python structure to a json file with a message for later use by StepLighter
     """
-
-    dump_step = 0
 
     def __init__(self, name):
         self.name = name
+        self.dump_step = 0
 
     def dump_to_raw(self, struct_to_dump, message, folder):
         # append version and message to struct for later reading
