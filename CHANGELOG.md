@@ -25,8 +25,7 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [0.15.0-dev] - 2024-08-xx  - Summer Tasks
-#### Fixed
+## [0.15.0] - 2024-08-12  - Run pipeline through CLI 
 #### Changed
 - Dynamically update pipeline version
 #### New
