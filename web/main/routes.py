@@ -48,52 +48,55 @@ class StatusResponse:
     then return the jsonified dictionnary as expected by the request
     """
 
-    _response = {
-        "status": "success",
-        "data": {
-            "paper_id": None,
-            "task_status": None,
-            "task_started": None,
-            "cat_is_processed": None,
-            "message": None,
-            "alt_message": None,
-        },
-    }
-
     def __init__(
         self,
         status: str = "success",
         paper_id: int = None,
+        ppl_ver: str = None,
         task_status: str = None,
         task_started: datetime = None,
         cat_is_processed: bool = None,
         message: str = None,
         alt_message: str = None,
     ):
+        self.status = status
+        self.paper_id = paper_id
+        self.ppl_ver = ppl_ver
+        self.task_status = task_status
+        self.task_started = task_started
+        self.cat_is_processed = cat_is_processed
+        self.message = message
+        self.alt_message = alt_message
         if task_started is not None:
             task_started_str = task_started.strftime("%a, %b %d, %Y - %H:%M:%S")
         else:
             task_started_str = "(no time info)"
 
         if task_status in ["started", "finished", "failed"] and alt_message is None:
-            alt_message = f"Started {task_started_str}"
+            self.alt_message = f"Started {task_started_str}"
         elif task_status in ["queued"] and alt_message is None:
-            alt_message = f"Waiting since {task_started_str}"
+            self.alt_message = f"Waiting since {task_started_str}"
 
-        self._response = {
-            "status": status,
+    @property
+    def _response(self):
+        return {
+            "status": self.status,
             "data": {
-                "paper_id": paper_id,
-                "task_status": task_status,
-                "cat_is_processed": cat_is_processed,
-                "message": message,
-                "alt_message": alt_message,
+                "paper_id": self.paper_id,
+                "ppl_ver": self.ppl_ver,
+                "task_status": self.task_status,
+                "cat_is_processed": self.cat_is_processed,
+                "message": self.message,
+                "alt_message": self.alt_message,
             },
         }
 
     @property
     def json(self):
         return jsonify(self._response)
+
+    def set_ppl_ver(self, ppl_ver):
+        self.ppl_ver = ppl_ver
 
 
 def allowed_file(filename):
@@ -534,6 +537,7 @@ def bht_status(paper_id):
             return response_object.json, 503
 
         # TODO: END CUTTING
+    response_object.set_ppl_ver(paper.pipeline_version)
     return response_object.json, 200
 
 
