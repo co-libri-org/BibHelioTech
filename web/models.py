@@ -259,7 +259,7 @@ class Paper(db.Model):
         version_number = "0.0"
         if not self.has_cat:
             return version_number
-        p = re.compile("# BibHelioTechVersion: V(\d[\d.]*);")
+        p = re.compile(r"# BibHelioTechVersion: V(\d[\d.]*);")
         with open(self.cat_path) as f:
             lines = f.readlines()
             for _l in lines:
