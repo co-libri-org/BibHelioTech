@@ -4,7 +4,7 @@ import shutil
 import click
 import redis
 from pathlib import Path
-from rq import Connection, Worker
+from rq import Worker
 from flask import current_app
 from flask_migrate import upgrade
 from flask.cli import FlaskGroup
