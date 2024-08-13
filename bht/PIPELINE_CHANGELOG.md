@@ -25,7 +25,7 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [6.0] - 2024-08-xx - More changes
+## [5.2] - 2024-08-xx - More changes
 #### Fixed
 #### Changed
 - Inserted more synonyms and instruments
