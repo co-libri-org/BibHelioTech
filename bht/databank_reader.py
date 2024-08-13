@@ -22,15 +22,19 @@ class DataBank:
     dataframes = {}
 
     def __init__(self):
-        entities_path = os.path.join(
+        self._databank_path = os.path.join(
             yml_settings["BHT_WORKSHEET_DIR"], "Entities_DataBank.xls"
         )
-        sheets = [s.value for s in DataBankSheet]
-        self.dataframes = pd.read_excel(entities_path, sheet_name=sheets)
+        sheets = [s for s in DataBankSheet]
+        self.dataframes = pd.read_excel(self._databank_path, sheet_name=sheets)
         for sheet in sheets:
             _df = self.dataframes[sheet]
             _df = _df.map(lambda x: x.strip() if isinstance(x, str) else x)
             self.dataframes[sheet] = _df
+
+    @property
+    def databank_path(self):
+        return self._databank_path
 
     def get_sheet_as_df(self, dbk_sheet: DataBankSheet):
         df_sheet = None
@@ -84,8 +88,9 @@ if __name__ == "__main__":
 
     before_date = datetime.now()
     databank = DataBank()
+    print(databank.databank_path)
     after_date = datetime.now()
     # databank.show_df()
     databank.satellites_intersect("time_span")
     # databank.rename_from_satellites("time_span")
-    print(f"Loaded in {after_date -before_date}")
+    print(f"Loaded in {after_date - before_date}")
