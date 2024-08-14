@@ -3,6 +3,7 @@ venv
 *.swp
 *.pyc
 .env
+DATA
 DATA/web-upload
 DATA/Papers
 DATA/db/
