@@ -26,8 +26,9 @@ Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
 ## [0.16.0-dev] - 2024-08-xx  - august tasks
-### New
+#### Fixed
 #### Changed
+- Moved catalogs dir from docker mounted volume
 #### New
 
 ## [0.15.0] - 2024-08-12  - Run pipeline through CLI 
