@@ -506,6 +506,21 @@ class StepLighter:
             return self.json_dumper.analyse_sutime_json(with_header)
 
 
+def convert_long_chars(content=None):
+    """ "
+    Replace long chars with 2 1 octet char.
+
+    SUtime tends to offset the index when it encounters long utf8 characters (4 byes long).
+    In order to interpret properly those indexes ('start', 'end' in json) we replace those with 2 ascii chars ('AA')
+    """
+    _content = content[:]
+    for i in range(len(_content)):
+        c = _content[i]
+        if len(c.encode("utf-8")) >= 4:
+            _content = _content[:i] + "AA" + _content[i + 1:]
+    return _content
+
+
 def struct_to_title_0(content_struct):
     content_type = content_struct["type"]
     content_title = pprint.pformat(content_struct)
@@ -590,7 +605,7 @@ def enlight_txt(txt_content, json_content):
     for elmnt in filtered_content:
         if elmnt not in uniq_content:
             uniq_content.append(elmnt)
-    res_txt = txt_content[:]
+    res_txt = convert_long_chars(txt_content)
     running_offset = 0
     for i, content_struct in enumerate(uniq_content):
         content_type, content_title = struct_to_title_0(content_struct)
