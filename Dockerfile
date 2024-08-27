@@ -27,12 +27,7 @@ RUN apt-get update && \
 
 RUN update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 
-ARG USER_UID
-ARG USER_GID
 
-#RUN userdel -r ubuntu
-#RUN groupadd --gid $USER_GID bibheliotech && \
-#    useradd --uid $USER_UID --gid $USER_GID -ms /bin/bash bibheliotech
 
 WORKDIR /home/bibheliotech
 
@@ -58,11 +53,6 @@ WORKDIR /home/bibheliotech/BibHelioTech
 COPY . .
 RUN cp ./resources/grobid-client-config.json-dist ./grobid-client-config.json &&\
     cp ./resources/bht-config.yml-dist ./bht-config.yml
-
-#
-#RUN chown -R bibheliotech:bibheliotech /home/bibheliotech/
-#USER bibheliotech
-#
 
 
 FROM bht-prod AS bht-test
