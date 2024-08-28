@@ -4,16 +4,34 @@ import shutil
 import click
 import redis
 from pathlib import Path
-from rq import Connection, Worker
+from rq import Worker
 from flask import current_app
 from flask_migrate import upgrade
 from flask.cli import FlaskGroup
+
+from bht.databank_reader import DataBank, DataBankSheet
 from web import create_app, db
 from web.bht_proxy import pipe_paper
 from web.models import catfile_to_db
 from web.models import Paper, HpEvent
 
 cli = FlaskGroup(create_app=create_app)
+
+
+@cli.command("show_databank")
+def show_databank():
+    """For test purpose, show some entities_databank extracts"""
+    databank = DataBank()
+    message = f"Show databank from file {databank.databank_path}"
+    print(f"{'-'*len(message)}")
+    print(f"{message}")
+    print(f"{'-'*len(message)}")
+    sats_df = databank.get_sheet_as_df(DataBankSheet.SATS)
+    sats_df.set_index("NAME", inplace=True)
+    print(sats_df.loc["SolarOrbiter"])
+    # insts_df = databank.get_sheet_as_df(DataBankSheet.INSTR)
+    # insts_df.set_index("NAME", inplace=True)
+    # print(insts_df.loc["SolarOrbiter"])
 
 
 @cli.command("show_config")
@@ -99,6 +117,7 @@ def clean_paper(paper_id):
 
     # remove all raw-dumper files
     import glob
+
     pattern = os.path.join(basedir, "raw*.json")
     found = glob.glob(pattern)
     for _f in found:

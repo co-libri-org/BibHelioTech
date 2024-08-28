@@ -25,6 +25,11 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [5.2] - 2024-08-28 - August changes
+#### Changed
+- Inserted more synonyms and instruments
+- Keep '/' in text to keep 'EUI/HRI'
+
 ## [5.1] - 2024-07-05 - Remove duplicated events, and timespan inconsistency
 #### Fixed
 - swapped entities steps 5 and 6: syns before instr recog

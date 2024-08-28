@@ -25,6 +25,16 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [0.16.0] - 2024-08-28  - August tasks
+#### Fixed
+- Fix sutime indexes in web pipeline visu
+#### Changed
+- Moved catalogs dir from docker mounted volume
+- Ignore DATA/ and move databank files 
+- Docker files doesn't use USER_UID/GID anymore
+#### New
+- CLI shows databank content
+
 ## [0.15.0] - 2024-08-12  - Run pipeline through CLI 
 #### Changed
 - Dynamically update pipeline version

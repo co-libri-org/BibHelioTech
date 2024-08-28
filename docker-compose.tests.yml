@@ -4,9 +4,6 @@ services:
     build:
       context: .
       target: bht-test
-      args:
-        - USER_UID=1000
-        - USER_GID=1000
     command: python manage.py run_worker
     volumes:
       - ./DATA:/home/bibheliotech/BibHelioTech/DATA:rw

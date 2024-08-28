@@ -3,6 +3,7 @@ venv
 *.swp
 *.pyc
 .env
+DATA
 DATA/web-upload
 DATA/Papers
 DATA/db/
@@ -14,7 +15,6 @@ geckodriver.log
 .htpasswd
 dynamical-volume
 test-upload
-DATA
 bht2.log
 logs
 .ipynb_checkpoints

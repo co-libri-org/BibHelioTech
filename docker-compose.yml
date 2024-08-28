@@ -6,9 +6,6 @@ services:
         build:
             context: .
             target: bht-prod
-            args:
-                - USER_UID=1000
-                - USER_GID=1000
         command: gunicorn --bind 0.0.0.0:5000 bht_web:app
         volumes:
             - bht_data:/home/bibheliotech/BibHelioTech/DATA:rw

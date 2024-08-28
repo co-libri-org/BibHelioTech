@@ -1,6 +1,7 @@
 # Minimize the docker context size to only needed files
 .git/
 venv/
+DATA
 DATA/Papers
 DATA/Papers-dist
 DATA/web-upload

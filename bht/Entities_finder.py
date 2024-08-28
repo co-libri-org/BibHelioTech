@@ -20,6 +20,8 @@ dump_step = 0
 
 raw_dumper = RawDumper("entities")
 
+punctuation_with_slash = string.punctuation.replace("/", "")
+
 
 def show_final(fal):
     """Final_Amda_List structure displayer for debugging"""
@@ -369,7 +371,7 @@ def inst_recognition(content_as_str, inst_dict):
                     "end": matches.end(),
                     "text": matches.group()
                     .strip()
-                    .translate(str.maketrans("", "", string.punctuation)),
+                    .translate(str.maketrans("", "", punctuation_with_slash)),
                 }
                 for matches in test
             ]
@@ -383,7 +385,7 @@ def inst_recognition(content_as_str, inst_dict):
                         "end": matches.end(),
                         "text": matches.group()
                         .strip()
-                        .translate(str.maketrans("", "", string.punctuation)),
+                        .translate(str.maketrans("", "", punctuation_with_slash)),
                     }
                     for matches in test
                 ]
@@ -765,8 +767,7 @@ def clean_by_timespan(_final_links, dataframes):
 
     _r_df = _fl_df[_fl_df.apply(in_time_span, axis=1)]
     _r_fl = df_to_dicts(_r_df)
-    return  _r_fl
-
+    return _r_fl
 
 
 def entities_finder(current_OCR_folder, doc_meta_info=None):
