@@ -180,6 +180,20 @@ class TestEntitiesFinder:
             assert len(_l) == 3
         assert len(sat_closest) == 11
 
+    def test_mission_to_duration_has_D(
+            self, sutime_3dp, final_links_3dp, data_frames
+    ):
+        final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
+        final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
+        published_date = "20151201"
+        tmp, sat_closest = previous_mission_to_duration(
+            tmp, sat_occ, data_frames, published_date
+        )
+        for _l in sat_closest:
+            assert "D" in _l[0].keys()
+            assert "R" in _l[0].keys()
+
 
 class TestDatabankReader:
     def test_databank_init(self):

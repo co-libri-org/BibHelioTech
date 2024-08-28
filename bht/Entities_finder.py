@@ -2,7 +2,6 @@ import string
 import collections
 import copy
 from datetime import *
-from pprint import pprint
 
 from bht_config import yml_settings
 from bht.DOI_finder import *
@@ -566,9 +565,15 @@ def add_sat_occurrence(_final_links, _sutime_json):
 
 
 def previous_mission_to_duration(_temp, _final_links, data_frames, published_date):
-    """From a given duration, find the closest previous mission"""
+    """
+    From a given duration, find the closest previous mission
 
-    # 1st make sure both lists hold same satellites:
+    FIXME:  _temps structs and _final_links struct have same  memory address
+            Thus, modifying the previous, changes the second.
+            This is why we have to delete "i" prop from _final_link
+    """
+
+    # 1st make sure both lists hold same satellites in same order:
     #
     # - extract satellites structs from first list
     all_temp_sats = [_s for _s in _temp if "type" in _s.keys() and _s["type"] == "sat"]
@@ -577,7 +582,7 @@ def previous_mission_to_duration(_temp, _final_links, data_frames, published_dat
     # - check equality
     assert all_final_sats == all_temp_sats
 
-    # 2- Number the satellites struct in the _temp list:
+    # 2- Set an index for the satellites structs in the _temp list:
     #
     i = 0
     for _s in _temp:
@@ -587,23 +592,34 @@ def previous_mission_to_duration(_temp, _final_links, data_frames, published_dat
 
     # 3- Now, for each element in the temp list
     #
-    #   . from the sat struct before each DURATION get the 'i'
-    #   . get the corresponding list in _final_links
-    #   . add duration
+    #   a. get the latest sat struct before each DURATION (by the index/'i' property)
+    #   b. get the corresponding list in _final_links
+    #   c. add duration
+    #
+    # (hoping DURATION is not the first item)
 
-    previous_sat = None
+    latest_sat = None
     _res_links = []
     for _t in _temp:
         if _t["type"] == "sat":
-            previous_sat = _t
+            # a. record the latest sat before DURATION struct
+            latest_sat = _t
         elif _t["type"] == "DURATION":
             try:
-                i = previous_sat["i"]
+                i = latest_sat["i"]
             except (KeyError, TypeError):
-                print(previous_sat)
+                print("ERROR WITH ", latest_sat)
                 continue
+            # b. retrieve the corresponding sat item in final_links list
             _final_link = _final_links[i]
+            # remove previously added 'i' prop to _temp struct
             del _final_link[0]["i"]
+            # add distance from
+            _d = abs(_final_link[0]["start"] - _t["start"])
+            _final_link[0]['D'] = _d
+            # there is no more rank as we just get previous mission closest to DURATION
+            _final_link[0]['R'] = 1
+            # c. add the current DURATION struct to that item
             _final_link.append(_t)
             _res_links.append(_final_link)
 

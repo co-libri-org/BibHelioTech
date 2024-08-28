@@ -27,7 +27,9 @@ Only major refactoring improvements or functional changes should be noted.
 --------------------------------------------------------------------------------
 ## [6.0-dev] - 2024-09-xx - Confidence Index
 #### Fixed
+- added 'D' to struct: "conf" is fixed
 #### Changed
+- added DEMETER instruments and region
 #### New
 
 ## [5.2] - 2024-08-28 - August changes
