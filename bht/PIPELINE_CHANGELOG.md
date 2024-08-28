@@ -25,11 +25,10 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [5.2] - 2024-08-xx - More changes
-#### Fixed
+## [5.2] - 2024-08-28 - August changes
 #### Changed
 - Inserted more synonyms and instruments
-#### New
+- Keep '/' in text to keep 'EUI/HRI'
 
 ## [5.1] - 2024-07-05 - Remove duplicated events, and timespan inconsistency
 #### Fixed
