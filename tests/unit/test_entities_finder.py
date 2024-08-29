@@ -15,7 +15,7 @@ from bht.Entities_finder import (
     add_sat_occurrence,
     closest_duration,
     get_sat_syn,
-    previous_mission_to_duration,
+    duration_to_mission,
 )
 from bht.databank_reader import DataBank, DataBankSheet
 
@@ -125,9 +125,8 @@ class TestEntitiesFinder:
         assert pvo_syn_is_pioneervenusorbiter == "PioneerVenusOrbiter"
 
     def test_get_sat_syn_other(self, data_frames):
-        entry_syn_list = [("Voyager-1", "Voyager 1"),
-                          ("STEREO-A", "STEREO A")]
-        for (entry, syn) in entry_syn_list:
+        entry_syn_list = [("Voyager-1", "Voyager 1"), ("STEREO-A", "STEREO A")]
+        for entry, syn in entry_syn_list:
             assert syn == get_sat_syn(entry, data_frames)
 
     def test_update_final_syns(self, final_links, data_frames):
@@ -166,28 +165,41 @@ class TestEntitiesFinder:
         assert len(tmp) == 46
         assert len(sat_closest) == 40
 
-    def test_mission_to_duration_has_instruments(
+    def test_duration_to_mission(self, sutime_json, final_links, data_frames):
+        final_links = update_final_instruments(final_links, data_frames)
+        final_with_syns = update_final_synonyms(final_links, data_frames)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
+        for _t in tmp:
+            print(_t)
+        published_date = "2015-12-01T00:00:00Z"
+        # tmp, sat_closest = duration_to_mission(tmp, sat_occ, data_frames, published_date)
+        # for _dict in sat_closest:
+        #     print(_dict)
+        #     assert _dict[0]["type"] == "sat"
+        #     assert _dict[2]["type"] == "DURATION"
+        # assert len(tmp) == 46
+        # assert len(sat_closest) == 40
+
+    def test_duration_to_mission_has_instruments(
         self, sutime_3dp, final_links_3dp, data_frames
     ):
         final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
         final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
         published_date = "20151201"
-        tmp, sat_closest = previous_mission_to_duration(
+        tmp, sat_closest = duration_to_mission(
             tmp, sat_occ, data_frames, published_date
         )
         for _l in sat_closest:
             assert len(_l) == 3
         assert len(sat_closest) == 11
 
-    def test_mission_to_duration_has_D(
-            self, sutime_3dp, final_links_3dp, data_frames
-    ):
+    def test_duration_to_mission_has_D(self, sutime_3dp, final_links_3dp, data_frames):
         final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
         final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
         published_date = "20151201"
-        tmp, sat_closest = previous_mission_to_duration(
+        tmp, sat_closest = duration_to_mission(
             tmp, sat_occ, data_frames, published_date
         )
         for _l in sat_closest:

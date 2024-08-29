@@ -564,11 +564,11 @@ def add_sat_occurrence(_final_links, _sutime_json):
     return _temp, _fl_to_return
 
 
-def previous_mission_to_duration(_temp, _final_links, data_frames, published_date):
+def duration_to_mission(_temp, _final_links, data_frames, published_date):
     """
     From a given duration, find the closest previous mission
 
-    FIXME:  _temps structs and _final_links struct have same  memory address
+    FIXME:  _temps structs and _final_links structs have same  memory address
             Thus, modifying the previous, changes the second.
             This is why we have to delete "i" prop from _final_link
     """
@@ -616,9 +616,9 @@ def previous_mission_to_duration(_temp, _final_links, data_frames, published_dat
             del _final_link[0]["i"]
             # add distance from
             _d = abs(_final_link[0]["start"] - _t["start"])
-            _final_link[0]['D'] = _d
+            _final_link[0]["D"] = _d
             # there is no more rank as we just get previous mission closest to DURATION
-            _final_link[0]['R'] = 1
+            _final_link[0]["R"] = 1
             # c. add the current DURATION struct to that item
             _final_link.append(_t)
             _res_links.append(_final_link)
@@ -895,8 +895,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     )
 
     # 8- Association of the closest duration of a satellite.
-    # temp, final_links = closest_duration(
-    temp, final_links = previous_mission_to_duration(
+    temp, final_links = duration_to_mission(
         temp, final_links, data_frames, publication_date
     )
     raw_dumper.dump_to_raw(
