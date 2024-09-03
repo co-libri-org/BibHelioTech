@@ -30,6 +30,7 @@ Only major refactoring improvements or functional changes should be noted.
 - added 'D' to struct: "conf" is fixed
 #### Changed
 - added DEMETER instruments and region
+- find closest mission from duration changed
 #### New
 
 ## [5.2] - 2024-08-28 - August changes

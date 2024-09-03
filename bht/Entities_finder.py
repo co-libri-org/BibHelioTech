@@ -2,6 +2,7 @@ import string
 import collections
 import copy
 from datetime import *
+from pprint import pprint
 
 from bht_config import yml_settings
 from bht.DOI_finder import *
@@ -564,64 +565,72 @@ def add_sat_occurrence(_final_links, _sutime_json):
     return _temp, _fl_to_return
 
 
-def duration_to_mission(_temp, _final_links, data_frames, published_date):
+def in_time_span(row, dataframes):
+    from dateutil import parser
+
+    mission_name = row[3]
+    # may raise KeyError
+    mission_start, mission_stop = [
+        parser.parse(d) for d in dataframes["time_span"][mission_name]
+    ]
+
+    event_start, event_stop = parser.parse(row[0]), parser.parse(row[1])
+    if (
+        mission_start <= event_start <= mission_stop
+        or mission_start <= event_stop <= mission_stop
+    ):
+        return True
+    else:
+        return False
+
+
+def get_prev_mission(_final_links, start_stop, data_frames):
+    prev_mission = None
+    for _fl in _final_links[::-1]:
+        if _fl[0]["type"] == "sat":
+            prev_mission = copy.deepcopy(_fl)
+            break
+    return prev_mission
+
+
+def duration_to_mission(_temp, _final_links, data_frames):
     """
-    From a given duration, find the closest previous mission
+    From a given duration, find the closest previous mission with proper time_span
 
     FIXME:  _temps structs and _final_links structs have same  memory address
-            Thus, modifying the previous, changes the second.
-            This is why we have to delete "i" prop from _final_link
+            Thus, modifying the first one, changes the other.
     """
-
-    # 1st make sure both lists hold same satellites in same order:
-    #
-    # - extract satellites structs from first list
-    all_temp_sats = [_s for _s in _temp if "type" in _s.keys() and _s["type"] == "sat"]
-    # - extract satellites structs from second list
-    all_final_sats = [_s[0] for _s in _final_links]
-    # - check equality
-    assert all_final_sats == all_temp_sats
-
-    # 2- Set an index for the satellites structs in the _temp list:
-    #
-    i = 0
-    for _s in _temp:
-        if _s.get("type", None) == "sat":
-            _s["i"] = i
-            i += 1
-
-    # 3- Now, for each element in the temp list
-    #
-    #   a. get the latest sat struct before each DURATION (by the index/'i' property)
-    #   b. get the corresponding list in _final_links
-    #   c. add duration
-    #
-    # (hoping DURATION is not the first item)
-
-    latest_sat = None
     _res_links = []
-    for _t in _temp:
-        if _t["type"] == "sat":
-            # a. record the latest sat before DURATION struct
-            latest_sat = _t
-        elif _t["type"] == "DURATION":
-            try:
-                i = latest_sat["i"]
-            except (KeyError, TypeError):
-                print("ERROR WITH ", latest_sat)
-                continue
-            # b. retrieve the corresponding sat item in final_links list
-            _final_link = _final_links[i]
-            # remove previously added 'i' prop to _temp struct
-            del _final_link[0]["i"]
-            # add distance from
-            _d = abs(_final_link[0]["start"] - _t["start"])
-            _final_link[0]["D"] = _d
-            # there is no more rank as we just get previous mission closest to DURATION
-            _final_link[0]["R"] = 1
-            # c. add the current DURATION struct to that item
-            _final_link.append(_t)
-            _res_links.append(_final_link)
+
+    # Merge DURATIONS  from _temp and 'sats' from _final_links
+    # sort by 'start' field
+    #
+    # _final_links is of the form
+    # [ [{sat}, {instr}], [{s},{i}], .... [{s},{i}]]
+    #
+    # it ends with durations inserted among [sat,instr] list
+    # [ [{sat}, {instr}], [{s},{i}], [{duration}], [{s},{i}] ...., [{duration}], ..., [{s},{i}]]
+    #
+
+    # 1- build a list of 1 duration tables
+    _durations = [[_t] for _t in _temp if _t["type"] == "DURATION"]
+    # 2- add to final links
+    _final_links.extend(_durations)
+    # 3- sort by char 'start' field
+    _final_links = sorted(_final_links, key=lambda d: d[0]["start"])
+
+    # Go to first DURATION,
+    # get the previous mission,
+    # build a [{sat}, {instr}, {duration}]
+    # add to result list
+    for i, _fl in enumerate(_final_links):
+        _fl0 = _fl[0]  # either 'duration' or 'sat'
+        if _fl0["type"] != "DURATION":
+            continue
+        start_stop = [_fl0["value"]["begin"], _fl0["value"]["end"]]
+        _mission = get_prev_mission(_final_links[:i], start_stop, data_frames)
+        _mission.append(_fl0)
+        _res_links.append(_mission)
 
     return _temp, _res_links
 
@@ -896,7 +905,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     # 8- Association of the closest duration of a satellite.
     temp, final_links = duration_to_mission(
-        temp, final_links, data_frames, publication_date
+        temp, final_links, data_frames
     )
     raw_dumper.dump_to_raw(
         final_links, "Add closest duration from sutime files", current_OCR_folder

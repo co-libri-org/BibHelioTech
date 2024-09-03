@@ -166,19 +166,19 @@ class TestEntitiesFinder:
         assert len(sat_closest) == 40
 
     def test_duration_to_mission(self, sutime_json, final_links, data_frames):
+
         final_links = update_final_instruments(final_links, data_frames)
         final_with_syns = update_final_synonyms(final_links, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
-        for _t in tmp:
-            print(_t)
-        published_date = "2015-12-01T00:00:00Z"
-        # tmp, sat_closest = duration_to_mission(tmp, sat_occ, data_frames, published_date)
-        # for _dict in sat_closest:
-        #     print(_dict)
-        #     assert _dict[0]["type"] == "sat"
-        #     assert _dict[2]["type"] == "DURATION"
-        # assert len(tmp) == 46
-        # assert len(sat_closest) == 40
+        _ld = [_d for _d in tmp if _d["type"] == "DURATION"]
+        tmp, sat_closest = duration_to_mission(
+            tmp, sat_occ, data_frames
+        )
+        for _dict in sat_closest:
+            assert _dict[0]["type"] == "sat"
+            assert _dict[2]["type"] == "DURATION"
+        assert len(tmp) == 46
+        assert len(sat_closest) == 6
 
     def test_duration_to_mission_has_instruments(
         self, sutime_3dp, final_links_3dp, data_frames
@@ -186,9 +186,8 @@ class TestEntitiesFinder:
         final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
         final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
-        published_date = "20151201"
         tmp, sat_closest = duration_to_mission(
-            tmp, sat_occ, data_frames, published_date
+            tmp, sat_occ, data_frames
         )
         for _l in sat_closest:
             assert len(_l) == 3
@@ -198,9 +197,8 @@ class TestEntitiesFinder:
         final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
         final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
-        published_date = "20151201"
         tmp, sat_closest = duration_to_mission(
-            tmp, sat_occ, data_frames, published_date
+            tmp, sat_occ, data_frames
         )
         for _l in sat_closest:
             assert "D" in _l[0].keys()
