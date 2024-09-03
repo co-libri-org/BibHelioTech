@@ -1340,14 +1340,6 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         current_OCR_folder,
     )
 
-    # # 20- Clean by timespan
-    # final_amda_list = clean_by_timespan(final_amda_list, data_frames)
-    # raw_dumper.dump_to_raw(
-    #     final_amda_list,
-    #     f"Clean by timespan",
-    #     current_OCR_folder,
-    # )
-
     # write in file
     with open(
         os.path.join(current_OCR_folder, "reg_recognition_res.txt"), "w"
