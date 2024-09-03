@@ -590,6 +590,7 @@ def get_prev_mission(_final_links, start_stop, data_frames):
         if _fl[0]["type"] == "sat":
             prev_mission = copy.deepcopy(_fl)
             break
+    prev_mission[0]['R'] = 1
     return prev_mission
 
 
@@ -612,9 +613,9 @@ def duration_to_mission(_temp, _final_links, data_frames):
     # [ [{sat}, {instr}], [{s},{i}], [{duration}], [{s},{i}] ...., [{duration}], ..., [{s},{i}]]
     #
 
-    # 1- build a list of 1 duration tables
+    # 1- extract a list of duration as list of 1 element lists
     _durations = [[_t] for _t in _temp if _t["type"] == "DURATION"]
-    # 2- add to final links
+    # 2- add to final links list
     _final_links.extend(_durations)
     # 3- sort by char 'start' field
     _final_links = sorted(_final_links, key=lambda d: d[0]["start"])
@@ -622,14 +623,19 @@ def duration_to_mission(_temp, _final_links, data_frames):
     # Go to first DURATION,
     # get the previous mission,
     # build a [{sat}, {instr}, {duration}]
-    # add to result list
+    # add to the result list
     for i, _fl in enumerate(_final_links):
         _fl0 = _fl[0]  # either 'duration' or 'sat'
         if _fl0["type"] != "DURATION":
             continue
-        start_stop = [_fl0["value"]["begin"], _fl0["value"]["end"]]
-        _mission = get_prev_mission(_final_links[:i], start_stop, data_frames)
+        duration_start_stop = [_fl0["value"]["begin"], _fl0["value"]["end"]]
+        _mission = get_prev_mission(_final_links[:i], duration_start_stop, data_frames)
         _mission.append(_fl0)
+        # now compute D
+        _satellite = _mission[0]
+        _duration = _mission[2]  # which is in fact _fl0
+        _d = abs(_satellite["start"] - _duration["start"])
+        _satellite["D"] = _d
         _res_links.append(_mission)
 
     return _temp, _res_links
@@ -904,9 +910,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     )
 
     # 8- Association of the closest duration of a satellite.
-    temp, final_links = duration_to_mission(
-        temp, final_links, data_frames
-    )
+    temp, final_links = duration_to_mission(temp, final_links, data_frames)
     raw_dumper.dump_to_raw(
         final_links, "Add closest duration from sutime files", current_OCR_folder
     )
