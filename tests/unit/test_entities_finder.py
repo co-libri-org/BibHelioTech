@@ -15,7 +15,7 @@ from bht.Entities_finder import (
     add_sat_occurrence,
     closest_duration,
     get_sat_syn,
-    previous_mission_to_duration,
+    duration_to_mission,
 )
 from bht.databank_reader import DataBank, DataBankSheet
 
@@ -36,7 +36,7 @@ class TestEntitiesFinder:
         )
         with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
-            assert len(_r_content) == 30
+            assert len(_r_content) == 32
 
     def test_no_image_as_syn(self, ocr_dir_test):
         catalog_file = entities_finder(
@@ -65,7 +65,7 @@ class TestEntitiesFinder:
     def test_sat_recognition_with_chars(self, article_so, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
         sat_dict_list = sat_recognition(article_so, sat_dict)
-        assert len(sat_dict_list) == 35
+        assert len(sat_dict_list) == 34
 
     def test_inst_recognition(self, article_as_str, data_frames):
         inst_dict = data_frames[DataBankSheet.INSTR]
@@ -125,9 +125,8 @@ class TestEntitiesFinder:
         assert pvo_syn_is_pioneervenusorbiter == "PioneerVenusOrbiter"
 
     def test_get_sat_syn_other(self, data_frames):
-        entry_syn_list = [("Voyager-1", "Voyager 1"),
-                          ("STEREO-A", "STEREO A")]
-        for (entry, syn) in entry_syn_list:
+        entry_syn_list = [("Voyager-1", "Voyager 1"), ("STEREO-A", "STEREO A")]
+        for entry, syn in entry_syn_list:
             assert syn == get_sat_syn(entry, data_frames)
 
     def test_update_final_syns(self, final_links, data_frames):
@@ -166,19 +165,44 @@ class TestEntitiesFinder:
         assert len(tmp) == 46
         assert len(sat_closest) == 40
 
-    def test_mission_to_duration_has_instruments(
+    def test_duration_to_mission(self, sutime_json, final_links, data_frames):
+
+        final_links = update_final_instruments(final_links, data_frames)
+        final_with_syns = update_final_synonyms(final_links, data_frames)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
+        _ld = [_d for _d in tmp if _d["type"] == "DURATION"]
+        tmp, sat_closest = duration_to_mission(
+            tmp, sat_occ, data_frames
+        )
+        for _dict in sat_closest:
+            assert _dict[0]["type"] == "sat"
+            assert _dict[2]["type"] == "DURATION"
+        assert len(tmp) == 46
+        assert len(sat_closest) == 6
+
+    def test_duration_to_mission_has_instruments(
         self, sutime_3dp, final_links_3dp, data_frames
     ):
         final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
         final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
-        published_date = "20151201"
-        tmp, sat_closest = previous_mission_to_duration(
-            tmp, sat_occ, data_frames, published_date
+        tmp, sat_closest = duration_to_mission(
+            tmp, sat_occ, data_frames
         )
         for _l in sat_closest:
             assert len(_l) == 3
         assert len(sat_closest) == 11
+
+    def test_duration_to_mission_has_D(self, sutime_3dp, final_links_3dp, data_frames):
+        final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
+        final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
+        tmp, sat_closest = duration_to_mission(
+            tmp, sat_occ, data_frames
+        )
+        for _l in sat_closest:
+            assert "D" in _l[0].keys()
+            assert "R" in _l[0].keys()
 
 
 class TestDatabankReader:

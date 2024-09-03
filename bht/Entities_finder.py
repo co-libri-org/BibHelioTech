@@ -565,47 +565,82 @@ def add_sat_occurrence(_final_links, _sutime_json):
     return _temp, _fl_to_return
 
 
-def previous_mission_to_duration(_temp, _final_links, data_frames, published_date):
-    """From a given duration, find the closest previous mission"""
+def in_time_span(mission_name, start_stop, dataframes):
+    from dateutil import parser
+    # may raise KeyError
+    mission_start, mission_stop = [
+        parser.parse(d) for d in dataframes["time_span"][mission_name]
+    ]
 
-    # 1st make sure both lists hold same satellites:
-    #
-    # - extract satellites structs from first list
-    all_temp_sats = [_s for _s in _temp if "type" in _s.keys() and _s["type"] == "sat"]
-    # - extract satellites structs from second list
-    all_final_sats = [_s[0] for _s in _final_links]
-    # - check equality
-    assert all_final_sats == all_temp_sats
+    event_start, event_stop = parser.parse(start_stop[0]), parser.parse(start_stop[1])
+    if (
+        mission_start <= event_start <= mission_stop
+        or mission_start <= event_stop <= mission_stop
+    ):
+        return True
+    else:
+        return False
 
-    # 2- Number the satellites struct in the _temp list:
-    #
-    i = 0
-    for _s in _temp:
-        if _s.get("type", None) == "sat":
-            _s["i"] = i
-            i += 1
 
-    # 3- Now, for each element in the temp list
-    #
-    #   . from the sat struct before each DURATION get the 'i'
-    #   . get the corresponding list in _final_links
-    #   . add duration
+def get_prev_mission(_final_links, start_stop, data_frames):
+    prev_mission = None
+    _r = 0
+    for _fl in _final_links[::-1]:
+        if _fl[0]["type"] == "sat":
+            _r = _r + 1
+            mission_name = _fl[0]["text"]
+            if in_time_span(mission_name, start_stop, data_frames):
+                prev_mission = copy.deepcopy(_fl)
+                prev_mission[0]['R'] = _r
+                break
+    return prev_mission
 
-    previous_sat = None
+
+def duration_to_mission(_temp, _final_links, data_frames):
+    """
+    From a given duration, find the closest previous mission with proper time_span
+
+    FIXME:  _temps structs and _final_links structs have same  memory address
+            Thus, modifying the first one, changes the other.
+    """
     _res_links = []
-    for _t in _temp:
-        if _t["type"] == "sat":
-            previous_sat = _t
-        elif _t["type"] == "DURATION":
-            try:
-                i = previous_sat["i"]
-            except (KeyError, TypeError):
-                print(previous_sat)
-                continue
-            _final_link = _final_links[i]
-            del _final_link[0]["i"]
-            _final_link.append(_t)
-            _res_links.append(_final_link)
+
+    # Merge DURATIONS  from _temp and 'sats' from _final_links
+    # sort by 'start' field
+    #
+    # _final_links is of the form
+    # [ [{sat}, {instr}], [{s},{i}], .... [{s},{i}]]
+    #
+    # it ends with durations inserted among [sat,instr] list
+    # [ [{sat}, {instr}], [{s},{i}], [{duration}], [{s},{i}] ...., [{duration}], ..., [{s},{i}]]
+    #
+
+    # 1- extract a list of duration as list of 1 element lists
+    _durations = [[_t] for _t in _temp if _t["type"] == "DURATION"]
+    # 2- add to final links list
+    _final_links.extend(_durations)
+    # 3- sort by char 'start' field
+    _final_links = sorted(_final_links, key=lambda d: d[0]["start"])
+
+    # Go to first DURATION,
+    # get the previous mission,
+    # build a [{sat}, {instr}, {duration}]
+    # add to the result list
+    for i, _fl in enumerate(_final_links):
+        _fl0 = _fl[0]  # either 'duration' or 'sat'
+        if _fl0["type"] != "DURATION":
+            continue
+        duration_start_stop = [_fl0["value"]["begin"], _fl0["value"]["end"]]
+        _mission = get_prev_mission(_final_links[:i], duration_start_stop, data_frames)
+        if _mission is None:
+            continue
+        _mission.append(_fl0)
+        # now compute D
+        _satellite = _mission[0]
+        _duration = _mission[2]  # which is in fact _fl0
+        _d = abs(_satellite["start"] - _duration["start"])
+        _satellite["D"] = _d
+        _res_links.append(_mission)
 
     return _temp, _res_links
 
@@ -745,24 +780,6 @@ def remove_duplicated(_final_links):
 def clean_by_timespan(_final_links, dataframes):
     _fl = copy.deepcopy(_final_links)
 
-    def in_time_span(row):
-        from dateutil import parser
-
-        mission_name = row[3]
-        # may raise KeyError
-        mission_start, mission_stop = [
-            parser.parse(d) for d in dataframes["time_span"][mission_name]
-        ]
-
-        event_start, event_stop = parser.parse(row[0]), parser.parse(row[1])
-        if (
-            mission_start <= event_start <= mission_stop
-            or mission_start <= event_stop <= mission_stop
-        ):
-            return True
-        else:
-            return False
-
     _fl_df = dicts_to_df(_fl)
 
     _r_df = _fl_df[_fl_df.apply(in_time_span, axis=1)]
@@ -879,10 +896,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     )
 
     # 8- Association of the closest duration of a satellite.
-    # temp, final_links = closest_duration(
-    temp, final_links = previous_mission_to_duration(
-        temp, final_links, data_frames, publication_date
-    )
+    temp, final_links = duration_to_mission(temp, final_links, data_frames)
     raw_dumper.dump_to_raw(
         final_links, "Add closest duration from sutime files", current_OCR_folder
     )
@@ -1326,13 +1340,13 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         current_OCR_folder,
     )
 
-    # 20- Clean by timespan
-    final_amda_list = clean_by_timespan(final_amda_list, data_frames)
-    raw_dumper.dump_to_raw(
-        final_amda_list,
-        f"Clean by timespan",
-        current_OCR_folder,
-    )
+    # # 20- Clean by timespan
+    # final_amda_list = clean_by_timespan(final_amda_list, data_frames)
+    # raw_dumper.dump_to_raw(
+    #     final_amda_list,
+    #     f"Clean by timespan",
+    #     current_OCR_folder,
+    # )
 
     # write in file
     with open(
