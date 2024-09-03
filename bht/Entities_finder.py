@@ -565,16 +565,14 @@ def add_sat_occurrence(_final_links, _sutime_json):
     return _temp, _fl_to_return
 
 
-def in_time_span(row, dataframes):
+def in_time_span(mission_name, start_stop, dataframes):
     from dateutil import parser
-
-    mission_name = row[3]
     # may raise KeyError
     mission_start, mission_stop = [
         parser.parse(d) for d in dataframes["time_span"][mission_name]
     ]
 
-    event_start, event_stop = parser.parse(row[0]), parser.parse(row[1])
+    event_start, event_stop = parser.parse(start_stop[0]), parser.parse(start_stop[1])
     if (
         mission_start <= event_start <= mission_stop
         or mission_start <= event_stop <= mission_stop
@@ -586,11 +584,15 @@ def in_time_span(row, dataframes):
 
 def get_prev_mission(_final_links, start_stop, data_frames):
     prev_mission = None
+    _r = 0
     for _fl in _final_links[::-1]:
         if _fl[0]["type"] == "sat":
-            prev_mission = copy.deepcopy(_fl)
-            break
-    prev_mission[0]['R'] = 1
+            _r = _r + 1
+            mission_name = _fl[0]["text"]
+            if in_time_span(mission_name, start_stop, data_frames):
+                prev_mission = copy.deepcopy(_fl)
+                prev_mission[0]['R'] = _r
+                break
     return prev_mission
 
 
@@ -630,6 +632,8 @@ def duration_to_mission(_temp, _final_links, data_frames):
             continue
         duration_start_stop = [_fl0["value"]["begin"], _fl0["value"]["end"]]
         _mission = get_prev_mission(_final_links[:i], duration_start_stop, data_frames)
+        if _mission is None:
+            continue
         _mission.append(_fl0)
         # now compute D
         _satellite = _mission[0]
@@ -775,24 +779,6 @@ def remove_duplicated(_final_links):
 
 def clean_by_timespan(_final_links, dataframes):
     _fl = copy.deepcopy(_final_links)
-
-    def in_time_span(row):
-        from dateutil import parser
-
-        mission_name = row[3]
-        # may raise KeyError
-        mission_start, mission_stop = [
-            parser.parse(d) for d in dataframes["time_span"][mission_name]
-        ]
-
-        event_start, event_stop = parser.parse(row[0]), parser.parse(row[1])
-        if (
-            mission_start <= event_start <= mission_stop
-            or mission_start <= event_stop <= mission_stop
-        ):
-            return True
-        else:
-            return False
 
     _fl_df = dicts_to_df(_fl)
 
@@ -1354,13 +1340,13 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         current_OCR_folder,
     )
 
-    # 20- Clean by timespan
-    final_amda_list = clean_by_timespan(final_amda_list, data_frames)
-    raw_dumper.dump_to_raw(
-        final_amda_list,
-        f"Clean by timespan",
-        current_OCR_folder,
-    )
+    # # 20- Clean by timespan
+    # final_amda_list = clean_by_timespan(final_amda_list, data_frames)
+    # raw_dumper.dump_to_raw(
+    #     final_amda_list,
+    #     f"Clean by timespan",
+    #     current_OCR_folder,
+    # )
 
     # write in file
     with open(
