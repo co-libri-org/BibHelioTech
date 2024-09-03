@@ -190,6 +190,13 @@ class TestBhtTools:
         _event_dict = _hp_events[0]
         assert len(_event_dict.keys()) == 6
 
+    def test_catfile_to_rows_big(self, big_cat_for_test):
+        _hp_events = catfile_to_rows(big_cat_for_test)
+        pprint(_hp_events)
+        assert len(_hp_events) == 33
+        _event_dict = _hp_events[0]
+        assert len(_event_dict.keys()) == 12
+
     def test_catfile_to_rows_allkeys(self, cat_for_test):
         _hp_events = catfile_to_rows(cat_for_test)
         _event_dict = _hp_events[0]

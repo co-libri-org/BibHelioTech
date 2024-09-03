@@ -176,6 +176,22 @@ def cat_for_test():
 
 
 @pytest.fixture(scope="module")
+def big_cat_for_test():
+    filename = "big_catalog.txt"
+    test_cat_file_orig = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"],
+        filename,
+    )
+    test_cat_file_dest = os.path.join(current_app.config["BHT_PAPERS_DIR"], filename)
+    shutil.copy(test_cat_file_orig, test_cat_file_dest)
+    #
+    yield test_cat_file_dest
+    #
+    if os.path.isfile(test_cat_file_dest):
+        os.remove(test_cat_file_dest)
+
+
+@pytest.fixture(scope="module")
 def small_cat_for_test():
     filename = "small_catalog.txt"
     test_cat_file_orig = os.path.join(
