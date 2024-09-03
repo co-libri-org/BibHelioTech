@@ -36,7 +36,7 @@ class TestEntitiesFinder:
         )
         with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
-            assert len(_r_content) == 30
+            assert len(_r_content) == 32
 
     def test_no_image_as_syn(self, ocr_dir_test):
         catalog_file = entities_finder(
@@ -65,7 +65,7 @@ class TestEntitiesFinder:
     def test_sat_recognition_with_chars(self, article_so, data_frames):
         sat_dict = data_frames[DataBankSheet.SATS]
         sat_dict_list = sat_recognition(article_so, sat_dict)
-        assert len(sat_dict_list) == 35
+        assert len(sat_dict_list) == 34
 
     def test_inst_recognition(self, article_as_str, data_frames):
         inst_dict = data_frames[DataBankSheet.INSTR]
