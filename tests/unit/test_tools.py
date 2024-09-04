@@ -142,6 +142,7 @@ class TestBhtTools:
         assert set(_dict.keys()).issubset(hpevent_keys_ordered[:7])
         _dict = row_to_dict(event_as_row[:10])
         assert set(_dict.keys()).issubset(hpevent_keys_ordered[:10])
+        assert 'start_time' in _dict
 
     def test_dict_to_string(self, small_event_dict, long_event_dict):
         small_string = dict_to_string(small_event_dict)
