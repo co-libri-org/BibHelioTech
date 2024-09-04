@@ -40,8 +40,10 @@ hpevent_parameters = {
 
 def row_to_dict(event_row):
     """
-    From a row of value, transform to a dict with keys.
-    The row values may follow the  order of hpevent_keys_ordered list
+    From a row of value as string, transform to a dict with keys.
+    The row values may follow the order of hpevent_keys_ordered list
+
+    This function is able to count the number of fields, and decide what keys to fill in.
 
     @param event_row:  row of hpevent values
     @return:  hpevent_dict
@@ -223,8 +225,9 @@ def catfile_to_rows(catfile):
            sometimes  6 (start, stop, doi, mission, instruments, region)
            sometimes 12 ( ..., D, R, SO, occur_sat, nb_durations, conf)
 
-       This is the reason of row_to_dict use.
+       This is the reason of row_to_dict() usage
 
+    @param catfile: file containing the catalog, rows of fields space separated.
     :return: hpevent_dict list
     """
     hpeventdict_list = []
