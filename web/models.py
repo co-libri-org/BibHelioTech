@@ -58,19 +58,20 @@ class HpEvent(db.Model):
     # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
     def __init__(
         self,
-        start_date: str,
-        stop_date: str,
+        start_time: str,
+        stop_time: str,
         doi: str,
-        mission: str,
-        instrument: str,
-        region: str,
+        sats: str,
+        insts: str,
+        regs: str,
+        **kwargs,
     ):
-        self.start_date = datetime.datetime.strptime(start_date, DATE_FORMAT)
-        self.stop_date = datetime.datetime.strptime(stop_date, DATE_FORMAT)
+        self.start_date = datetime.datetime.strptime(start_time, DATE_FORMAT)
+        self.stop_date = datetime.datetime.strptime(stop_time, DATE_FORMAT)
         self.set_doi(doi)
-        self.set_mission(mission)
-        self.set_instrument(instrument)
-        self.set_region(region)
+        self.set_mission(sats)
+        self.set_instrument(insts)
+        self.set_region(regs)
 
     def __repr__(self):
         r_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission_id}:{self.mission.name} {self.instrument.name}"
@@ -237,9 +238,9 @@ class Paper(db.Model):
             if self.ark:
                 self.istex_id = ark_to_id(self.ark)
             elif self.has_txt:
-                self.istex_id = os.path.basename(self.txt_path).split('.')[0]
+                self.istex_id = os.path.basename(self.txt_path).split(".")[0]
             elif self.has_pdf:
-                self.istex_id = os.path.basename(self.pdf_path).split('.')[0]
+                self.istex_id = os.path.basename(self.pdf_path).split(".")[0]
             else:
                 raise IstexError("Unable to grap meta info")
         istex_struct = get_doc_url(self.istex_id)
@@ -256,6 +257,7 @@ class Paper(db.Model):
         Read from catalog file and grab pipeline version number
         """
         import re
+
         version_number = "0.0"
         if not self.has_cat:
             return version_number

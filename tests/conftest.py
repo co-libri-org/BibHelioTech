@@ -249,3 +249,16 @@ def hpevent_dict_for_test():
         "region": "Earth.Magnetosheath",
     }
     return hpevent_dict
+
+
+@pytest.fixture(scope="module")
+def catalog_row_6fields():
+    catalog_row = [
+        "2007-07-16T19:50:00.000",
+        "2007-07-16T20:18:00.000",
+        "https://doi.org/10.1029/2010JA015404",
+        "THEMIS-A",
+        "FGM-ESA",
+        "Earth.Magnetosheath",
+    ]
+    return catalog_row
