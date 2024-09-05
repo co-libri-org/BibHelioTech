@@ -27,6 +27,7 @@ Only major refactoring improvements or functional changes should be noted.
 --------------------------------------------------------------------------------
 ## [0.17.0-dev] - 2024-09-xx  - Confidence Index
 #### Fixed
+- Add_to_db fixed 
 #### Changed
 #### New
 
