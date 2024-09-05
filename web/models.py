@@ -54,6 +54,7 @@ class HpEvent(db.Model):
     mission = db.relationship("Mission", back_populates="hp_events")
     instrument = db.relationship("Instrument", back_populates="hp_events")
     region = db.relationship("Region", back_populates="hp_events")
+    conf_idx = db.Column(db.Integer)
 
     catalog = db.relationship("Catalog", back_populates="hp_events")
     catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"))
