@@ -54,7 +54,7 @@ class HpEvent(db.Model):
     mission = db.relationship("Mission", back_populates="hp_events")
     instrument = db.relationship("Instrument", back_populates="hp_events")
     region = db.relationship("Region", back_populates="hp_events")
-    conf_idx = db.Column(db.Integer)
+    conf_idx = db.Column(db.Float)
 
     catalog = db.relationship("Catalog", back_populates="hp_events")
     catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"))
@@ -68,6 +68,7 @@ class HpEvent(db.Model):
         sats: str,
         insts: str,
         regs: str,
+        conf_idx: float = 1.0,
         **kwargs,
     ):
         self.start_date = datetime.datetime.strptime(start_time, DATE_FORMAT)
@@ -76,6 +77,7 @@ class HpEvent(db.Model):
         self.set_mission(sats)
         self.set_instrument(insts)
         self.set_region(regs)
+        self.set_conf_idx(conf_idx)
 
     def __repr__(self):
         r_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission_id}:{self.mission.name} {self.instrument.name}"
@@ -119,6 +121,9 @@ class HpEvent(db.Model):
         if region is None:
             region = Region(name=region_str)
         self.region = region
+
+    def set_conf_idx(self, conf_idx: float):
+        self.conf_idx = conf_idx
 
 
 class Doi(db.Model):
