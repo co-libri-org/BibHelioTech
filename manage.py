@@ -12,7 +12,7 @@ from flask.cli import FlaskGroup
 from bht.databank_reader import DataBank, DataBankSheet
 from web import create_app, db
 from web.bht_proxy import pipe_paper
-from web.models import catfile_to_db
+from web.models import catfile_to_db, Mission
 from web.models import Paper, HpEvent
 
 cli = FlaskGroup(create_app=create_app)
@@ -278,6 +278,13 @@ def list_events(mission_id=None):
         events = HpEvent.query.all()
     for e in events:
         print(e)
+
+
+@cli.command("missions_list")
+def missions_list():
+    """Show all missions with id and num events"""
+    for m in Mission.query.all():
+        print(m)
 
 
 @cli.command("refresh_events")
