@@ -68,7 +68,7 @@ class HpEvent(db.Model):
         sats: str,
         insts: str,
         regs: str,
-        conf_idx: float = 1.0,
+        conf_idx: float = None,
         **kwargs,
     ):
         self.start_date = datetime.datetime.strptime(start_time, DATE_FORMAT)
@@ -80,7 +80,8 @@ class HpEvent(db.Model):
         self.set_conf_idx(conf_idx)
 
     def __repr__(self):
-        r_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission_id}:{self.mission.name} {self.instrument.name}"
+        r_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission_id}:{self.mission.name}\
+        {self.instrument.name} D:{self.D} R:{self.R} Conf:{self.conf_idx}"
         return r_str
 
     def get_dict(self):
@@ -136,6 +137,9 @@ class Mission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     hp_events = db.relationship("HpEvent", back_populates="mission")
+
+    def __repr__(self):
+        return f"""<Mission #{self.id:<2} name: {self.name:15} num events: {len(self.hp_events):3}"""
 
 
 class Instrument(db.Model):
