@@ -231,13 +231,11 @@ def catfile_to_rows(catfile):
     :return: hpevent_dict list
     """
     hpeventdict_list = []
-    with open(catfile, newline="") as csvfile:
-        reader = csv.reader(
-            filter(lambda r: r[0] != "#", csvfile), delimiter=" ", quotechar='"'
-        )
-        for row in reader:
-            hpevent_dict = row_to_dict(row)
-            hpeventdict_list.append(hpevent_dict)
+    my_df = pd.read_csv(catfile, delimiter='\s+', comment='#', quotechar='"', header=None)
+    my_df.fillna("", inplace=True)
+    for row in my_df.values.tolist():
+        hpevent_dict = row_to_dict(row)
+        hpeventdict_list.append(hpevent_dict)
     return hpeventdict_list
 
 
@@ -247,6 +245,6 @@ def dicts_to_df(_final_links):
 
 
 def df_to_dicts(_fl_df):
-    """ Convert a a pandas dataframe to a list of dicts """
+    """ Convert a pandas dataframe to a list of dicts """
     return json.loads(_fl_df.to_json(orient="records"))
     pass

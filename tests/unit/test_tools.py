@@ -144,6 +144,11 @@ class TestBhtTools:
         assert set(_dict.keys()).issubset(hpevent_keys_ordered[:10])
         assert 'start_time' in _dict
 
+    def test_row_to_dict_with_conf(self, event_as_row):
+        _dict = row_to_dict(event_as_row)
+        assert 'conf' in _dict
+        pprint(_dict)
+
     def test_dict_to_string(self, small_event_dict, long_event_dict):
         small_string = dict_to_string(small_event_dict)
         assert len(small_string.split(" ")) == len(small_event_dict.keys())
@@ -189,12 +194,11 @@ class TestBhtTools:
         _hp_events = catfile_to_rows(small_cat_for_test)
         assert len(_hp_events) == 46
         _event_dict = _hp_events[0]
-        assert len(_event_dict.keys()) == 6
+        assert len(_event_dict.keys()) == 5
 
     def test_catfile_to_rows_big(self, big_cat_for_test):
         _hp_events = catfile_to_rows(big_cat_for_test)
-        pprint(_hp_events)
-        assert len(_hp_events) == 33
+        assert len(_hp_events) == 32
         _event_dict = _hp_events[0]
         assert len(_event_dict.keys()) == 12
 
