@@ -55,6 +55,8 @@ class HpEvent(db.Model):
     instrument = db.relationship("Instrument", back_populates="hp_events")
     region = db.relationship("Region", back_populates="hp_events")
     conf = db.Column(db.Float)
+    d = db.Column(db.Integer)
+    r = db.Column(db.Integer)
 
     catalog = db.relationship("Catalog", back_populates="hp_events")
     catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"))
@@ -69,6 +71,8 @@ class HpEvent(db.Model):
         insts: str,
         regs: str,
         conf: float = None,
+        d: int = None,
+        r: int = None,
         **kwargs,
     ):
         self.start_date = datetime.datetime.strptime(start_time, DATE_FORMAT)
@@ -78,10 +82,12 @@ class HpEvent(db.Model):
         self.set_instrument(insts)
         self.set_region(regs)
         self.set_conf(conf)
+        self.set_d(d)
+        self.set_r(r)
 
     def __repr__(self):
         r_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission_id}:{self.mission.name}\
-        {self.instrument.name} D:{self.D} R:{self.R} Conf:{self.conf}"
+        {self.instrument.name} D:{self.d} R:{self.r} Conf:{self.conf}"
         return r_str
 
     def get_dict(self):
@@ -125,6 +131,12 @@ class HpEvent(db.Model):
 
     def set_conf(self, conf: float):
         self.conf = conf
+
+    def set_d(self, d: int):
+        self.d = d
+
+    def set_r(self, r: int):
+        self.r = r
 
 
 class Doi(db.Model):
