@@ -795,4 +795,5 @@ def api_push_catalog():
     paper = db.session.get(Paper, paper_id)
     paper.push_cat()
     response_object = {"status": "success", "data": {"paper_id": paper_id}}
+    flash(f"Added catalog for paper {paper_id}")
     return jsonify(response_object), 201

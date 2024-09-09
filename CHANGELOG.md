@@ -25,7 +25,7 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [0.17.1-dev] - 2024-09-xx  - Confidence Index
+## [0.17.2-dev] - 2024-09-xx  - Confidence Index
 #### Fixed
 - Add_to_db fixed 
 #### Changed

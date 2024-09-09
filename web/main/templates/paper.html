@@ -56,10 +56,21 @@
     <tr>
         <th>events table:</th>
         <td>
+           {% if paper.cat_in_db %}
            <a class="btn btn-warning" title="Show events for paper {{paper.id}}"
            href="{{url_for('main.events', ref_name='paper', ref_id=paper.id)}}">
                events
            </a>
+           {% else %}
+            <button id="add-catalog"
+                class="btn btn-warning position-relative"
+                data-paper_id="{{paper.id}}" title="catalog not in db">
+                add in db
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                </span>
+            </button>
+            {% endif %}
+
         </td>
     </tr>
     <tr>
@@ -86,3 +97,27 @@
 <a class="btn btn-warning"
    href="{{url_for('main.paper_pipeline', paper_id=paper.id, step_num=0, pipeline_mode='entities')}}">Entities Steps</a>
 {% endblock %}
+
+{% block scripts %}
+<script>
+
+// For each un-added catalog button, attach callback:
+// - pushing the catalog id
+// - reloading the page
+$('#add-catalog').on('click', function() {
+    paper_id = $(this).data('paper_id')
+    $.post({
+        url: "{{url_for('main.api_push_catalog')}}",
+        data: JSON.stringify({ paper_id: paper_id}),
+        contentType: 'application/json; charset=utf-8'
+    })
+    .done((res) => {
+        console.log('Catalog added to db for paper id: ', res.data.paper_id);
+        location.reload();
+    })
+    .fail((err) => {
+    console.log(err);
+    });
+});
+</script>
+{%  endblock %}
