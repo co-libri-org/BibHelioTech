@@ -655,6 +655,7 @@ def istex():
 @bp.route("/events/<ref_name>/<ref_id>", methods=["GET"])
 def events(ref_name, ref_id):
     """UI page to display events by paper or mission, or any other criteria"""
+    paper = None
     if ref_name is None:
         all_events = HpEvent.query.all()
     elif ref_name == "paper":
@@ -664,7 +665,7 @@ def events(ref_name, ref_id):
     else:
         all_events = []
 
-    return render_template("events.html", events=all_events)
+    return render_template("events.html", events=all_events, paper=paper)
 
 
 @bp.route("/catalogs", methods=["GET"])

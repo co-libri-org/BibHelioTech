@@ -1,8 +1,27 @@
 {% extends "base_page.html" %}
 {% block more_head %}
-<title>{{events | length}} Events</title>
+{% if paper %}
+<title>{{events | length}} Events for paper {{paper.id}}</title>
+{% else %}
+<title>{{events | length}} Events in database</title>
+{% endif %}
 {% endblock %}
 {% block content %}
+<blockquote class="text-center">
+    {% if paper %}
+    <p class="lead fs-4 mb-0">
+        {{events | length }} Events for the paper
+        <a class="btn btn-warning paper-id" href="{{url_for('main.paper_show', paper_id=paper.id)}}"
+           title="Show paper #{{paper.id}}">
+                #{{paper.id}}
+        </a>
+    </p>
+    <p class="fs-4 mb-0 fw-bolder">
+        "{{paper.title}}
+    </p>
+    {% endif %}
+</blockquote>
+<hr class="mt-2 mb-3">
 <table id="events-table" class="table-hover table">
     <thead>
     <tr>
