@@ -28,7 +28,7 @@ from flask import (
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType
+from web.models import Paper, Mission, HpEvent, BhtFileType, Doi
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -651,11 +651,20 @@ def istex():
 
 
 # TODO: merge /events and /catalogs routes
-@bp.route("/events", methods=["GET"])
-def events():
+@bp.route("/events", defaults={"ref_id": None, "ref_name": None}, methods=["GET"])
+@bp.route("/events/<ref_name>/<ref_id>", methods=["GET"])
+def events(ref_name, ref_id):
     """UI page to display events by paper or mission, or any other criteria"""
-    all_events = HpEvent.query.all()
-    return render_template( "events.html", events=all_events)
+    if ref_name is None:
+        all_events = HpEvent.query.all()
+    elif ref_name == "paper":
+        paper = Paper.query.get(ref_id)
+        doi = Doi.query.filter_by(doi=paper.doi).one()
+        all_events = HpEvent.query.filter_by(doi_id=doi.id).all()
+    else:
+        all_events = []
+
+    return render_template("events.html", events=all_events)
 
 
 @bp.route("/catalogs", methods=["GET"])
