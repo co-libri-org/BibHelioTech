@@ -1,0 +1,36 @@
+{% extends "base_page.html" %}
+{% block more_head %}
+<title>{{events | length}} Events</title>
+{% endblock %}
+{% block content %}
+<table id="events-table" class="table-hover table">
+    <thead>
+    <tr>
+        <th scope="col" class="col-2">start</th>
+        <th scope="col" class="col-2">stop</th>
+        <th scope="col" class="col-1">instrument(s)</th>
+        <th scope="col" class="col-1">region</th>
+        <th scope="col" class="col-1">D</th>
+        <th scope="col" class="col-1">R</th>
+        <th scope="col" class="col-1">Conf</th>
+    </tr>
+    </thead>
+    <tbody id="events-body">
+    {% for event in events %}
+    <tr>
+        <td>{{event.start_date}}</td>
+        <td>{{event.stop_date}}</td>
+        <td>{{event.instrument.name}}</td>
+        <td>{{event.region.name}}</td>
+        <td>{{event.d}}</td>
+        <td>{{event.r}}</td>
+        <td>{{event.conf}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{%  endblock %}
+
+{% block scripts %}
+{%  endblock %}

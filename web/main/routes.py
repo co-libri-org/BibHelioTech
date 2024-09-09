@@ -650,6 +650,14 @@ def istex():
     )
 
 
+# TODO: merge /events and /catalogs routes
+@bp.route("/events", methods=["GET"])
+def events():
+    """UI page to display events by paper or mission, or any other criteria"""
+    all_events = HpEvent.query.all()
+    return render_template( "events.html", events=all_events)
+
+
 @bp.route("/catalogs", methods=["GET"])
 def catalogs():
     """UI page to retrieve catalogs by mission"""
