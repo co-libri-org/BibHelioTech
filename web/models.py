@@ -85,9 +85,13 @@ class HpEvent(db.Model):
         self.set_d(d)
         self.set_r(r)
 
-    def __repr__(self):
-        r_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission_id}:{self.mission.name}\
+    def __repr__(self, full=False):
+        full_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission.name:20}\
         {self.instrument.name} D:{self.d} R:{self.r} Conf:{self.conf}"
+        short_str = f"{self.start_date} {self.stop_date} {self.mission.name:20}\
+         {self.d:>4} {self.r:>4} {self.conf:>6}"
+        r_str = full_str if full else short_str
+
         return r_str
 
     def get_dict(self):
