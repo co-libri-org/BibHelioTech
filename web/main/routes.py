@@ -262,7 +262,7 @@ def configuration():
 # and tests
 @bp.route("/txt/<paper_id>")
 def txt(paper_id):
-    file_path = get_paper_file(paper_id, BhtFileType.TXT)
+    file_path: str = get_paper_file(paper_id, BhtFileType.TXT)
     if file_path is None:
         return redirect(url_for("main.papers"))
     else:
@@ -271,7 +271,7 @@ def txt(paper_id):
 
 @bp.route("/pdf/<paper_id>")
 def pdf(paper_id):
-    file_path = get_paper_file(paper_id, BhtFileType.PDF)
+    file_path: str = get_paper_file(paper_id, BhtFileType.PDF)
     if file_path is None:
         return redirect(url_for("main.papers"))
     else:
@@ -280,7 +280,7 @@ def pdf(paper_id):
 
 @bp.route("/cat/<paper_id>", methods=["GET"])
 def cat(paper_id):
-    file_path = get_paper_file(paper_id, BhtFileType.CAT)
+    file_path: str = get_paper_file(paper_id, BhtFileType.CAT)
     if file_path is None:
         return redirect(url_for("main.papers"))
     else:
