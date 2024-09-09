@@ -54,6 +54,15 @@
         {% endif %}
     </tr>
     <tr>
+        <th>events table:</th>
+        <td>
+           <a class="btn btn-warning" title="Show events for paper {{paper.id}}"
+           href="{{url_for('main.events', ref_name='paper', ref_id=paper.id)}}">
+               events
+           </a>
+        </td>
+    </tr>
+    <tr>
         <th>doi:</th>
         <td>{{paper.doi}}</td>
     </tr>
