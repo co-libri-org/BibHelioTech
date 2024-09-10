@@ -1,9 +1,8 @@
 import datetime
 import json
 import os
-from pprint import pprint
 
-import dateutil
+import dateutil.parser as parser
 import redis
 import filetype
 import requests
@@ -210,9 +209,12 @@ def pdf_to_db(file_stream, filename, istex_struct=None):
 
 @bp.app_template_filter("short_datetime")
 def short_datetime(date_time):
-    # date = dateutil.parser.parse(date_time)
-    # native = date.replace(tzinfo=None)
-    new_datetime = date_time.strftime("%Y-%m-%dT%H:%M:%S")
+    if type(date_time) is str:
+        date = parser.parse(date_time)
+        native = date.replace(tzinfo=None)
+    else:
+        native = date_time
+    new_datetime = native.strftime("%Y-%m-%dT%H:%M:%S")
     return new_datetime
 
 
@@ -675,7 +677,9 @@ def events(ref_name, ref_id):
     else:
         all_events = []
 
-    return render_template("events.html", events=all_events, paper=paper)
+    events_dict_list = [_e.get_dict() for _e in all_events ]
+
+    return render_template("events.html", events=events_dict_list, paper=paper)
 
 
 @bp.route("/catalogs", methods=["GET"])

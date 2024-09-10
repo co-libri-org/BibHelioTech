@@ -104,6 +104,9 @@ class HpEvent(db.Model):
             "mission": self.mission.name,
             "instrument": self.instrument.name,
             "region": self.region.name,
+            "conf": self.conf,
+            "d": self.d,
+            "r": self.r,
         }
         return r_dict
 

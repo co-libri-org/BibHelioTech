@@ -25,10 +25,10 @@
 <table id="events-table" class="table-hover table">
     <thead>
     <tr>
-        <th scope="col" class="col-2">start</th>
-        <th scope="col" class="col-2">stop</th>
+        <th scope="col" class="col-1">start</th>
+        <th scope="col" class="col-1">stop</th>
         <th scope="col" class="col-1">mission(s)</th>
-        <th scope="col" class="col-1">instrument(s)</th>
+        <th scope="col" class="col-2">instrument(s)</th>
         <th scope="col" class="col-1">region</th>
         <th scope="col" class="col-1">D</th>
         <th scope="col" class="col-1">R</th>
@@ -40,9 +40,9 @@
     <tr>
         <td>{{event.start_date|short_datetime}}</td>
         <td>{{event.stop_date|short_datetime}}</td>
-        <td>{{event.mission.name}}</td>
-        <td>{{event.instrument.name}}</td>
-        <td>{{event.region.name}}</td>
+        <td>{{event.mission}}</td>
+        <td>{{event.instrument}}</td>
+        <td>{{event.region}}</td>
         <td>{{event.d}}</td>
         <td>{{event.r}}</td>
         <td>{{event.conf}}</td>
