@@ -97,11 +97,16 @@ $('.add-catalog').on('click', function() {
         contentType: 'application/json; charset=utf-8'
     })
     .done((res) => {
-        console.log('Catalog added to db for paper id: ', res.data.paper_id);
+        if (res.status == "success"){
+            console.log('Catalog added to db for paper id: ', res.data.paper_id);
+        } else {
+            console.log('Error adding to db for paper id: ', res.data.paper_id);
+        }
         location.reload();
     })
     .fail((err) => {
-    console.log(err);
+        console.log("ERROR in REQUEST: ");
+        console.log(err);
     });
 });
 

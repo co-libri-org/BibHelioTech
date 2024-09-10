@@ -25,6 +25,7 @@ from flask import (
     Response,
 )
 
+from bht.errors import BhtCsvError
 from tools import StepLighter
 from . import bp
 from web import db
@@ -793,7 +794,11 @@ def api_push_catalog():
     """
     paper_id = request.json.get("paper_id")
     paper = db.session.get(Paper, paper_id)
-    paper.push_cat()
-    response_object = {"status": "success", "data": {"paper_id": paper_id}}
-    flash(f"Added catalog for paper {paper_id}")
+    try:
+        paper.push_cat()
+        response_object = {"status": "success", "data": {"paper_id": paper_id}}
+        flash(f"Added catalog for paper {paper_id}")
+    except BhtCsvError as e:
+        response_object = {"status": "error", "data": {"paper_id": paper_id, "error_msg": e.message}}
+        flash(f"Error trying to add catalog for {paper_id}", "error")
     return jsonify(response_object), 201
