@@ -1,10 +1,10 @@
-import csv
 import datetime
 import json
 import textwrap
 
 import pandas as pd
 
+from bht.errors import BhtCsvError
 from bht_config import yml_settings
 
 hpevent_keys_ordered = [
@@ -231,7 +231,10 @@ def catfile_to_rows(catfile):
     :return: hpevent_dict list
     """
     hpeventdict_list = []
-    my_df = pd.read_csv(catfile, delimiter='\s+', comment='#', quotechar='"', header=None)
+    try:
+        my_df = pd.read_csv(catfile, delimiter='\s+', comment='#', quotechar='"', header=None)
+    except pd.errors.EmptyDataError:
+        raise BhtCsvError("CSV Reading Error")
     my_df.fillna("", inplace=True)
     for row in my_df.values.tolist():
         hpevent_dict = row_to_dict(row)
