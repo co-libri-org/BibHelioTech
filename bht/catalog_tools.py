@@ -234,7 +234,7 @@ def catfile_to_rows(catfile):
     try:
         my_df = pd.read_csv(catfile, delimiter='\s+', comment='#', quotechar='"', header=None)
     except pd.errors.EmptyDataError:
-        raise BhtCsvError("CSV Reading Error")
+        return []
     my_df.fillna("", inplace=True)
     for row in my_df.values.tolist():
         hpevent_dict = row_to_dict(row)
