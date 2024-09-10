@@ -99,25 +99,13 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{url_for('static', filename='js/tools.js') | staticversion }} "></script>
 <script>
 
-// For each un-added catalog button, attach callback:
-// - pushing the catalog id
-// - reloading the page
-$('#add-catalog').on('click', function() {
-    paper_id = $(this).data('paper_id')
-    $.post({
-        url: "{{url_for('main.api_push_catalog')}}",
-        data: JSON.stringify({ paper_id: paper_id}),
-        contentType: 'application/json; charset=utf-8'
-    })
-    .done((res) => {
-        console.log('Catalog added to db for paper id: ', res.data.paper_id);
-        location.reload();
-    })
-    .fail((err) => {
-    console.log(err);
-    });
+$(document).ready(function() {
+    // - pushing the catalog id
+    // - reloading the page
+    $('#add-catalog').on('click', push_catalog );
 });
 </script>
 {%  endblock %}
