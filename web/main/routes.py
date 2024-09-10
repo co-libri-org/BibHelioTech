@@ -668,16 +668,23 @@ def istex():
 def events(ref_name, ref_id):
     """UI page to display events by paper or mission, or any other criteria"""
     paper = None
+    all_events = HpEvent.query.all()
     if ref_name is None:
-        all_events = HpEvent.query.all()
+        found_events = all_events
     elif ref_name == "paper":
         paper = Paper.query.get(ref_id)
         doi = Doi.query.filter_by(doi=paper.doi).one()
-        all_events = HpEvent.query.filter_by(doi_id=doi.id).all()
+        found_events = HpEvent.query.filter_by(doi_id=doi.id).all()
     else:
-        all_events = []
+        found_events = []
 
-    events_dict_list = [_e.get_dict() for _e in all_events ]
+    # translate events to dict list
+    events_dict_list = [_e.get_dict() for _e in found_events]
+
+    # normalize conf index on the whole database
+    max_conf = max([_e["conf"] for _e in events_dict_list])
+    for _d in events_dict_list:
+        _d["conf"] = "{:.4f}".format(_d["conf"]/max_conf)
 
     return render_template("events.html", events=events_dict_list, paper=paper)
 
