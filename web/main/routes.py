@@ -682,7 +682,7 @@ def events(ref_name, ref_id):
     events_dict_list = [_e.get_dict() for _e in found_events]
 
     # normalize conf index on the whole database
-    max_conf = max([_e["conf"] for _e in events_dict_list])
+    max_conf = max([_e.conf for _e in all_events])
     for _d in events_dict_list:
         _d["nconf"] = "{:.4f}".format(_d["conf"]/max_conf)
 
