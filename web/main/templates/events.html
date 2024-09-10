@@ -38,8 +38,8 @@
     <tbody id="events-body">
     {% for event in events %}
     <tr>
-        <td>{{event.start_date}}</td>
-        <td>{{event.stop_date}}</td>
+        <td>{{event.start_date|short_datetime}}</td>
+        <td>{{event.stop_date|short_datetime}}</td>
         <td>{{event.mission.name}}</td>
         <td>{{event.instrument.name}}</td>
         <td>{{event.region.name}}</td>

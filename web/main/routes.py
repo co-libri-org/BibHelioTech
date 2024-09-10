@@ -3,6 +3,7 @@ import json
 import os
 from pprint import pprint
 
+import dateutil
 import redis
 import filetype
 import requests
@@ -205,6 +206,14 @@ def pdf_to_db(file_stream, filename, istex_struct=None):
         paper.set_pubdate(istex_struct["pub_date"])
         paper.set_istex_id(istex_struct["istex_id"])
     return paper.id
+
+
+@bp.app_template_filter("short_datetime")
+def short_datetime(date_time):
+    # date = dateutil.parser.parse(date_time)
+    # native = date.replace(tzinfo=None)
+    new_datetime = date_time.strftime("%Y-%m-%dT%H:%M:%S")
+    return new_datetime
 
 
 @bp.app_template_filter("staticversion")
@@ -799,6 +808,9 @@ def api_push_catalog():
         response_object = {"status": "success", "data": {"paper_id": paper_id}}
         flash(f"Added catalog for paper {paper_id}")
     except BhtCsvError as e:
-        response_object = {"status": "error", "data": {"paper_id": paper_id, "error_msg": e.message}}
+        response_object = {
+            "status": "error",
+            "data": {"paper_id": paper_id, "error_msg": e.message},
+        }
         flash(f"Error trying to add catalog for {paper_id}", "error")
     return jsonify(response_object), 201
