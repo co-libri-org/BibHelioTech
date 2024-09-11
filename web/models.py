@@ -193,14 +193,15 @@ class Paper(db.Model):
 
     def __repr__(self):
         return f"""<Paper #{self.id}
-        title:    {self.title}
-        doi:      {self.doi}
-        ark:      {self.ark}
-        istex_id: {self.istex_id}
-        pdf:      {self.pdf_path}
-        txt:      {self.txt_path}
-        cat:      {self.cat_path}
-        pipe_ver: {self.pipeline_version}>"""
+        title:     {self.title}
+        doi:       {self.doi}
+        ark:       {self.ark}
+        istex_id:  {self.istex_id}
+        pdf:       {self.pdf_path}
+        txt:       {self.txt_path}
+        cat:       {self.cat_path}
+        cat_in_db: {self.cat_in_db}
+        pipe_ver:  {self.pipeline_version}>"""
 
     def set_task_id(self, task_id):
         self.task_id = task_id
@@ -263,6 +264,7 @@ class Paper(db.Model):
             if self.has_cat:
                 self.cat_in_db = True
                 catfile_to_db(self.cat_path)
+        db.session.commit()
 
     def istex_update(self):
         """From our ids, update meta information from istex api"""
