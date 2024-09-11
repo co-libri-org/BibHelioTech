@@ -1,6 +1,7 @@
 import pytest
 from datetime import datetime
 
+from bht.catalog_tools import row_to_dict
 from web.errors import IstexError
 from web.models import (
     Paper,
@@ -156,6 +157,16 @@ class TestModels:
         """
         hpevent = HpEvent(**hpevent_dict_for_test)
         assert hpevent.doi.doi == hpevent_dict_for_test["doi"]
+
+    def test_hpevent_from_row(self, catalog_row_6fields):
+        """
+        GIVEN a row
+        WHEN converted to hp_dic
+        THEN check HpEvent constructor
+        """
+        hpevent_dict = row_to_dict(catalog_row_6fields)
+        hpevent = HpEvent(**hpevent_dict)
+        assert hpevent.doi.doi == hpevent_dict["doi"]
 
     def test_hpevent_constructor(self):
         """

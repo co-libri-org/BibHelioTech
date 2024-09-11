@@ -54,6 +54,26 @@
         {% endif %}
     </tr>
     <tr>
+        <th>events table:</th>
+        <td>
+           {% if paper.cat_in_db %}
+           <a class="btn btn-warning" title="Show events for paper {{paper.id}}"
+           href="{{url_for('main.events', ref_name='paper', ref_id=paper.id)}}">
+               events
+           </a>
+           {% else %}
+            <button id="add-catalog"
+                class="btn btn-warning position-relative"
+                data-paper_id="{{paper.id}}" title="catalog not in db">
+                add in db
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                </span>
+            </button>
+            {% endif %}
+
+        </td>
+    </tr>
+    <tr>
         <th>doi:</th>
         <td>{{paper.doi}}</td>
     </tr>
@@ -77,3 +97,15 @@
 <a class="btn btn-warning"
    href="{{url_for('main.paper_pipeline', paper_id=paper.id, step_num=0, pipeline_mode='entities')}}">Entities Steps</a>
 {% endblock %}
+
+{% block scripts %}
+<script src="{{url_for('static', filename='js/tools.js') | staticversion }} "></script>
+<script>
+
+$(document).ready(function() {
+    // - pushing the catalog id
+    // - reloading the page
+    $('#add-catalog').on('click', push_catalog );
+});
+</script>
+{%  endblock %}

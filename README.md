@@ -138,21 +138,37 @@ Make sure to fulfill any dependency first:
 ### db migration
 
 In order to make sure we use the latest db structure on distant deployed versions,
-we recommend the usage of the SqlAlchemy migration tool.
+we recommend the usage of the SqlAlchemy migration tool, Alembic, provided by flask-migrate.
 
-It needs the environment variable FLASK_APP.
+It needs the environment variable FLASK_APP to be set.
 
 After db structure was changed, you can save a migration script on development side:
 
     FLASK_APP=web flask db migrate
     git add migrations
-    git commit -m "Db migration"
+    git commit -m "Db migration V-xx.xx"
 
-After deployment on server side:
+troubleshooting:
+
+if you get the `ERROR [flask_migrate] Error: Target database is not up to date.`
+
+then try
+
+    FLASK_APP=web flask db stamp head
+
+then, again
+
+    FLASK_APP=web flask db migrate
+
+and follow with `git add/commit`
+
+
+
+Then, after deployment on server side, change database on the fly:
 
     FLASK_APP=web flask db upgrade
 
-If running through docker then try
+If the app is running through docker then try
 
     docker compose run FLASK_APP=web flask db upgrade
 

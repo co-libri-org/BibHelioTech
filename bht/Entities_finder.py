@@ -567,6 +567,7 @@ def add_sat_occurrence(_final_links, _sutime_json):
 
 def in_time_span(mission_name, start_stop, dataframes):
     from dateutil import parser
+
     # may raise KeyError
     mission_start, mission_stop = [
         parser.parse(d) for d in dataframes["time_span"][mission_name]
@@ -591,7 +592,7 @@ def get_prev_mission(_final_links, start_stop, data_frames):
             mission_name = _fl[0]["text"]
             if in_time_span(mission_name, start_stop, data_frames):
                 prev_mission = copy.deepcopy(_fl)
-                prev_mission[0]['R'] = _r
+                prev_mission[0]["R"] = _r
                 break
     return prev_mission
 
@@ -756,15 +757,16 @@ def normalize_links(_final_links, TSO):
             elements[0]["D"] = 1
             elements[0]["R"] = 1
 
-        elements[0]["conf"] = (elements[0]["D"] * elements[0]["R"]) / (
-            elements[0]["SO"] / TSO["occur_sat"]
-        )  # à normalizé par max de conf
+        elements[0]["conf"] = int(
+            (elements[0]["D"] * elements[0]["R"])
+            / (elements[0]["SO"] / TSO["occur_sat"])
+        )  # à normalizer par max de conf
 
-    maxi = max([elements[0]["conf"] for elements in _final_links])
-    for elements in _final_links:
-        elements[0]["conf"] = (
-            elements[0]["conf"] / maxi
-        )  # normalisation by the maximum confidence index
+    # maxi = max([elements[0]["conf"] for elements in _final_links])
+    # for elements in _final_links:
+    #    elements[0]["conf"] = (
+    #        elements[0]["conf"] / maxi
+    #    )  # normalisation by the maximum confidence index
     return _final_links
 
 
@@ -1339,14 +1341,6 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         f"Remove duplicated events",
         current_OCR_folder,
     )
-
-    # # 20- Clean by timespan
-    # final_amda_list = clean_by_timespan(final_amda_list, data_frames)
-    # raw_dumper.dump_to_raw(
-    #     final_amda_list,
-    #     f"Clean by timespan",
-    #     current_OCR_folder,
-    # )
 
     # write in file
     with open(

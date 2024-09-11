@@ -84,33 +84,15 @@ Show found events when mission button was clicked
 {%  endblock %}
 
 {% block scripts %}
+<script src="{{url_for('static', filename='js/tools.js') | staticversion }} "></script>
 <script>
 
-// For each un-added catalog button, attach callback:
-// - pushing the catalog id
-// - reloading the page
-$('.add-catalog').on('click', function() {
-    paper_id = $(this).data('paper_id')
-    $.post({
-        url: "{{url_for('main.api_push_catalog')}}",
-        data: JSON.stringify({ paper_id: paper_id}),
-        contentType: 'application/json; charset=utf-8'
-    })
-    .done((res) => {
-        console.log('Catalog added to db for paper id: ', res.data.paper_id);
-        location.reload();
-    })
-    .fail((err) => {
-    console.log(err);
-    });
-});
-
-// For each mission button, attach a call back:
+// Update events displayed
 // - retrieving events from the catalogs' api url
 // - sending the resulting list to the setCatalog()
 // - showing the download button
 // - enlightening this mission among missions buttons
-$('.mission-catalog').on('click', function() {
+function update_catalog() {
     $.get({
         url: '{{url_for("main.api_catalogs")}}',
         data: {mission_id: $(this).data("mission_id")}
@@ -129,7 +111,7 @@ $('.mission-catalog').on('click', function() {
     .fail((err) => {
         console.log(err);
     });
-});
+}
 
 // At mission view catalog set the download button
 //  - showing it, changing title and content
@@ -168,6 +150,14 @@ function setCatalog(events) {
 }
 
 
+$(document).ready(function() {
+
+    // For each un-added catalog button, attach callback:
+    $('.add-catalog').on('click', push_catalog );
+
+    // For each mission button, attach a call back:
+    $('.mission-catalog').on('click', update_catalog);
+});
 
 </script>
 {%  endblock %}

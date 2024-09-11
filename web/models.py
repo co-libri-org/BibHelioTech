@@ -29,6 +29,9 @@ def catfile_to_db(catfile):
     :return: nothing
     """
     for hpevent_dict in catfile_to_rows(catfile):
+        # skip if row is empty
+        if not hpevent_dict:
+            continue
         hpevent = HpEvent(**hpevent_dict)
         db.session.add(hpevent)
         db.session.commit()
@@ -51,6 +54,9 @@ class HpEvent(db.Model):
     mission = db.relationship("Mission", back_populates="hp_events")
     instrument = db.relationship("Instrument", back_populates="hp_events")
     region = db.relationship("Region", back_populates="hp_events")
+    conf = db.Column(db.Float)
+    d = db.Column(db.Integer)
+    r = db.Column(db.Integer)
 
     catalog = db.relationship("Catalog", back_populates="hp_events")
     catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"))
@@ -58,22 +64,34 @@ class HpEvent(db.Model):
     # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
     def __init__(
         self,
-        start_date: str,
-        stop_date: str,
+        start_time: str,
+        stop_time: str,
         doi: str,
-        mission: str,
-        instrument: str,
-        region: str,
+        sats: str,
+        insts: str,
+        regs: str,
+        conf: float = None,
+        d: int = None,
+        r: int = None,
+        **kwargs,
     ):
-        self.start_date = datetime.datetime.strptime(start_date, DATE_FORMAT)
-        self.stop_date = datetime.datetime.strptime(stop_date, DATE_FORMAT)
+        self.start_date = datetime.datetime.strptime(start_time, DATE_FORMAT)
+        self.stop_date = datetime.datetime.strptime(stop_time, DATE_FORMAT)
         self.set_doi(doi)
-        self.set_mission(mission)
-        self.set_instrument(instrument)
-        self.set_region(region)
+        self.set_mission(sats)
+        self.set_instrument(insts)
+        self.set_region(regs)
+        self.set_conf(conf)
+        self.set_d(d)
+        self.set_r(r)
 
-    def __repr__(self):
-        r_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission_id}:{self.mission.name} {self.instrument.name}"
+    def __repr__(self, full=False):
+        full_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission.name:20}\
+        {self.instrument.name} D:{self.d} R:{self.r} Conf:{self.conf}"
+        short_str = f"{self.start_date} {self.stop_date} {self.mission.name:20}\
+         {self.d:>4} {self.r:>4} {self.conf:>6}"
+        r_str = full_str if full else short_str
+
         return r_str
 
     def get_dict(self):
@@ -86,6 +104,9 @@ class HpEvent(db.Model):
             "mission": self.mission.name,
             "instrument": self.instrument.name,
             "region": self.region.name,
+            "conf": self.conf,
+            "d": self.d,
+            "r": self.r,
         }
         return r_dict
 
@@ -115,6 +136,15 @@ class HpEvent(db.Model):
             region = Region(name=region_str)
         self.region = region
 
+    def set_conf(self, conf: float):
+        self.conf = conf
+
+    def set_d(self, d: int):
+        self.d = d
+
+    def set_r(self, r: int):
+        self.r = r
+
 
 class Doi(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -126,6 +156,9 @@ class Mission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, unique=True, nullable=False)
     hp_events = db.relationship("HpEvent", back_populates="mission")
+
+    def __repr__(self):
+        return f"""<Mission #{self.id:<2} name: {self.name:15} num events: {len(self.hp_events):3}"""
 
 
 class Instrument(db.Model):
@@ -237,9 +270,9 @@ class Paper(db.Model):
             if self.ark:
                 self.istex_id = ark_to_id(self.ark)
             elif self.has_txt:
-                self.istex_id = os.path.basename(self.txt_path).split('.')[0]
+                self.istex_id = os.path.basename(self.txt_path).split(".")[0]
             elif self.has_pdf:
-                self.istex_id = os.path.basename(self.pdf_path).split('.')[0]
+                self.istex_id = os.path.basename(self.pdf_path).split(".")[0]
             else:
                 raise IstexError("Unable to grap meta info")
         istex_struct = get_doc_url(self.istex_id)
@@ -256,6 +289,7 @@ class Paper(db.Model):
         Read from catalog file and grab pipeline version number
         """
         import re
+
         version_number = "0.0"
         if not self.has_cat:
             return version_number

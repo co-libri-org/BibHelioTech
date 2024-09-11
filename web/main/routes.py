@@ -1,8 +1,8 @@
 import datetime
 import json
 import os
-from pprint import pprint
 
+import dateutil.parser as parser
 import redis
 import filetype
 import requests
@@ -25,10 +25,11 @@ from flask import (
     Response,
 )
 
+from bht.errors import BhtCsvError
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType
+from web.models import Paper, Mission, HpEvent, BhtFileType, Doi
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -206,6 +207,17 @@ def pdf_to_db(file_stream, filename, istex_struct=None):
     return paper.id
 
 
+@bp.app_template_filter("short_datetime")
+def short_datetime(date_time):
+    if type(date_time) is str:
+        date = parser.parse(date_time)
+        native = date.replace(tzinfo=None)
+    else:
+        native = date_time
+    new_datetime = native.strftime("%Y-%m-%dT%H:%M:%S")
+    return new_datetime
+
+
 @bp.app_template_filter("staticversion")
 def staticversion_filter(filename):
     newfilename = "{0}?v={1}".format(filename, current_app.config["VERSION"])
@@ -262,7 +274,7 @@ def configuration():
 # and tests
 @bp.route("/txt/<paper_id>")
 def txt(paper_id):
-    file_path = get_paper_file(paper_id, BhtFileType.TXT)
+    file_path: str = get_paper_file(paper_id, BhtFileType.TXT)
     if file_path is None:
         return redirect(url_for("main.papers"))
     else:
@@ -271,7 +283,7 @@ def txt(paper_id):
 
 @bp.route("/pdf/<paper_id>")
 def pdf(paper_id):
-    file_path = get_paper_file(paper_id, BhtFileType.PDF)
+    file_path: str = get_paper_file(paper_id, BhtFileType.PDF)
     if file_path is None:
         return redirect(url_for("main.papers"))
     else:
@@ -280,7 +292,7 @@ def pdf(paper_id):
 
 @bp.route("/cat/<paper_id>", methods=["GET"])
 def cat(paper_id):
-    file_path = get_paper_file(paper_id, BhtFileType.CAT)
+    file_path: str = get_paper_file(paper_id, BhtFileType.CAT)
     if file_path is None:
         return redirect(url_for("main.papers"))
     else:
@@ -650,6 +662,33 @@ def istex():
     )
 
 
+# TODO: merge /events and /catalogs routes
+@bp.route("/events", defaults={"ref_id": None, "ref_name": None}, methods=["GET"])
+@bp.route("/events/<ref_name>/<ref_id>", methods=["GET"])
+def events(ref_name, ref_id):
+    """UI page to display events by paper or mission, or any other criteria"""
+    paper = None
+    found_events = []
+    all_events = HpEvent.query.all()
+    if ref_name is None:
+        found_events = all_events
+    elif ref_name == "paper":
+        paper = Paper.query.get(ref_id)
+        doi = Doi.query.filter_by(doi=paper.doi).one_or_none()
+        if doi is not None:
+            found_events = HpEvent.query.filter_by(doi_id=doi.id).all()
+
+    # translate events to dict list
+    events_dict_list = [_e.get_dict() for _e in found_events]
+
+    # normalize conf index on the whole database
+    max_conf = max([_e.conf for _e in all_events])
+    for _d in events_dict_list:
+        _d["nconf"] = "{:.4f}".format(_d["conf"]/max_conf)
+
+    return render_template("events.html", events=events_dict_list, paper=paper)
+
+
 @bp.route("/catalogs", methods=["GET"])
 def catalogs():
     """UI page to retrieve catalogs by mission"""
@@ -775,6 +814,14 @@ def api_push_catalog():
     """
     paper_id = request.json.get("paper_id")
     paper = db.session.get(Paper, paper_id)
-    paper.push_cat()
-    response_object = {"status": "success", "data": {"paper_id": paper_id}}
+    try:
+        paper.push_cat()
+        response_object = {"status": "success", "data": {"paper_id": paper_id}}
+        flash(f"Added catalog for paper {paper_id}")
+    except BhtCsvError as e:
+        response_object = {
+            "status": "error",
+            "data": {"paper_id": paper_id, "error_msg": e.message},
+        }
+        flash(f"Error trying to add catalog for {paper_id}", "error")
     return jsonify(response_object), 201

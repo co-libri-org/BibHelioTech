@@ -31,7 +31,8 @@ Only major refactoring improvements or functional changes should be noted.
 - added 'R' to struct: from duration_to_mission()
 #### Changed
 - added DEMETER instruments and region
-- find closest mission from duration changed with rank
+- find the closest mission from duration changed with rank
+- de-normalize 'conf' indices
 #### New
 
 ## [5.2] - 2024-08-28 - August changes

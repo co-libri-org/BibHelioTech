@@ -1,10 +1,10 @@
-import csv
 import datetime
 import json
 import textwrap
 
 import pandas as pd
 
+from bht.errors import BhtCsvError
 from bht_config import yml_settings
 
 hpevent_keys_ordered = [
@@ -40,8 +40,10 @@ hpevent_parameters = {
 
 def row_to_dict(event_row):
     """
-    From a row of value, transform to a dict with keys.
-    The row values may follow the  order of hpevent_keys_ordered list
+    From a row of value as string, transform to a dict with keys.
+    The row values may follow the order of hpevent_keys_ordered list
+
+    This function is able to count the number of fields, and decide what keys to fill in.
 
     @param event_row:  row of hpevent values
     @return:  hpevent_dict
@@ -223,18 +225,20 @@ def catfile_to_rows(catfile):
            sometimes  6 (start, stop, doi, mission, instruments, region)
            sometimes 12 ( ..., D, R, SO, occur_sat, nb_durations, conf)
 
-       This is the reason of row_to_dict use.
+       This is the reason of row_to_dict() usage
 
+    @param catfile: file containing the catalog, rows of fields space separated.
     :return: hpevent_dict list
     """
     hpeventdict_list = []
-    with open(catfile, newline="") as csvfile:
-        reader = csv.reader(
-            filter(lambda r: r[0] != "#", csvfile), delimiter=" ", quotechar='"'
-        )
-        for row in reader:
-            hpevent_dict = row_to_dict(row)
-            hpeventdict_list.append(hpevent_dict)
+    try:
+        my_df = pd.read_csv(catfile, delimiter='\s+', comment='#', quotechar='"', header=None)
+    except pd.errors.EmptyDataError:
+        return []
+    my_df.fillna("", inplace=True)
+    for row in my_df.values.tolist():
+        hpevent_dict = row_to_dict(row)
+        hpeventdict_list.append(hpevent_dict)
     return hpeventdict_list
 
 
@@ -244,6 +248,6 @@ def dicts_to_df(_final_links):
 
 
 def df_to_dicts(_fl_df):
-    """ Convert a a pandas dataframe to a list of dicts """
+    """ Convert a pandas dataframe to a list of dicts """
     return json.loads(_fl_df.to_json(orient="records"))
     pass

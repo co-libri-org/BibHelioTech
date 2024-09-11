@@ -176,6 +176,22 @@ def cat_for_test():
 
 
 @pytest.fixture(scope="module")
+def big_cat_for_test():
+    filename = "big_catalog.txt"
+    test_cat_file_orig = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"],
+        filename,
+    )
+    test_cat_file_dest = os.path.join(current_app.config["BHT_PAPERS_DIR"], filename)
+    shutil.copy(test_cat_file_orig, test_cat_file_dest)
+    #
+    yield test_cat_file_dest
+    #
+    if os.path.isfile(test_cat_file_dest):
+        os.remove(test_cat_file_dest)
+
+
+@pytest.fixture(scope="module")
 def small_cat_for_test():
     filename = "small_catalog.txt"
     test_cat_file_orig = os.path.join(
@@ -233,3 +249,16 @@ def hpevent_dict_for_test():
         "region": "Earth.Magnetosheath",
     }
     return hpevent_dict
+
+
+@pytest.fixture(scope="module")
+def catalog_row_6fields():
+    catalog_row = [
+        "2007-07-16T19:50:00.000",
+        "2007-07-16T20:18:00.000",
+        "https://doi.org/10.1029/2010JA015404",
+        "THEMIS-A",
+        "FGM-ESA",
+        "Earth.Magnetosheath",
+    ]
+    return catalog_row
