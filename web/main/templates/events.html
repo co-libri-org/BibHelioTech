@@ -16,6 +16,10 @@
            title="Show paper #{{paper.id}}">
                 #{{paper.id}}
         </a>
+        with pipeline
+        <a class="btn btn-warning btn-version" href="{{url_for('main.changelog', module='pipeline')}}" title="Please see CHANGELOG for changes">
+            V{{paper.pipeline_version}}
+        </a>
     </p>
     <p class="fs-4 mb-0 fw-bolder">
         "{{paper.title}}

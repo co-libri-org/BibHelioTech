@@ -25,6 +25,12 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [7.0] - 2024-09-xx - Pipeline Optimizations
+#### Fixed
+#### Changed
+- added SolarOrbiter synonyms
+#### New
+
 ## [6.1] - 2024-09-11 - Confidence Index
 #### Fixed
 - added 'D' to struct: "conf" is fixed
