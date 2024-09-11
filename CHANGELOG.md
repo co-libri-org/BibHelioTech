@@ -25,10 +25,9 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [0.17.3-dev] - 2024-09-xx  - Confidence Index
+## [0.17.4] - 2024-09-11  - Confidence Index
 #### Fixed
 - Add catalog to db fixed 
-#### Changed
 #### New
 - Events displayed in sortable table
 - Conf index is normalized on the whole DB
