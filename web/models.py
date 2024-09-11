@@ -283,6 +283,18 @@ class Paper(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def get_events(self):
+        """
+        Return the list of events with same doi as our's
+        #TODO: should be better to set a new relationship between HpEvent and Paper models
+        @return:  list of HpEvents
+        """
+        found_events = []
+        doi = Doi.query.filter_by(doi=self.doi).one_or_none()
+        if doi is not None:
+            found_events = HpEvent.query.filter_by(doi_id=doi.id).all()
+        return found_events
+
     @property
     def pipeline_version(self):
         """

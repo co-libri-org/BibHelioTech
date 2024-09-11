@@ -674,9 +674,7 @@ def events(ref_name, ref_id):
         found_events = all_events
     elif ref_name == "paper":
         paper = Paper.query.get(ref_id)
-        doi = Doi.query.filter_by(doi=paper.doi).one_or_none()
-        if doi is not None:
-            found_events = HpEvent.query.filter_by(doi_id=doi.id).all()
+        found_events = paper.get_events()
 
     # translate events to dict list
     events_dict_list = [_e.get_dict() for _e in found_events]
