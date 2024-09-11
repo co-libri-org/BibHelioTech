@@ -23,9 +23,9 @@ def show_databank():
     """For test purpose, show some entities_databank extracts"""
     databank = DataBank()
     message = f"Show databank from file {databank.databank_path}"
-    print(f"{'-'*len(message)}")
+    print(f"{'-' * len(message)}")
     print(f"{message}")
-    print(f"{'-'*len(message)}")
+    print(f"{'-' * len(message)}")
     sats_df = databank.get_sheet_as_df(DataBankSheet.SATS)
     sats_df.set_index("NAME", inplace=True)
     print(sats_df.loc["SolarOrbiter"])
@@ -288,7 +288,8 @@ def missions_list():
 
 
 @cli.command("refresh_events")
-def refresh_events():
+@click.argument("paper_id", required=False)
+def refresh_events(paper_id=None):
     """Reparse catalogs txt files
 
     \b
@@ -299,18 +300,29 @@ def refresh_events():
 
     This method was first writen to fix the hpevent datetime value in db
     A db bug that was fixed in the commit '6b38c89 Fix the missing hours in hpevent bug'
+
+    @param: paper_id to run refresh on that only
     """
+
+    papers = []
+    if paper_id:
+        papers.append(Paper.query.get(paper_id))
+    else:
+        papers = Paper.query.all()
+
+    events = []
+    for _p in papers:
+        events.extend(_p.get_events())
+
     # delete all events
-    for _e in HpEvent.query.all():
+    for _e in events:
         db.session.delete(_e)
         db.session.commit()
     # then parse catalogs again
-    for _p in Paper.query.all():
+    for _p in papers:
         _p.push_cat(force=True)
         db.session.commit()
 
-    events = HpEvent.query.all()
-    papers = Paper.query.all()
     print(f"Updated {len(events)} events from {len(papers)} papers")
 
 
