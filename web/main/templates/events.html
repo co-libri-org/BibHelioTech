@@ -23,7 +23,10 @@
     {% endif %}
 </blockquote>
 <hr class="mt-2 mb-3">
-<table id="events-table" class="table-hover table">
+{% if not events  %}
+    {% set table_visibility = "invisible" %}
+{% endif %}
+<table id="events-table" class="table-hover table {{table_visibility}}">
     <thead>
     <tr>
         <th scope="col" class="col-1">start</th>
