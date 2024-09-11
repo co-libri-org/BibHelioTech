@@ -25,6 +25,11 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [0.18.0-dev] - 2024-09-xx  - Pipeline optimizations
+#### Fixed
+#### Changed
+#### New
+
 ## [0.17.4] - 2024-09-11  - Confidence Index
 #### Fixed
 - Add catalog to db fixed 

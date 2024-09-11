@@ -25,7 +25,7 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [6.1-dev] - 2024-09-xx - Confidence Index
+## [6.1] - 2024-09-11 - Confidence Index
 #### Fixed
 - added 'D' to struct: "conf" is fixed
 - added 'R' to struct: from duration_to_mission()
@@ -33,7 +33,6 @@ Only major refactoring improvements or functional changes should be noted.
 - added DEMETER instruments and region
 - find the closest mission from duration changed with rank
 - de-normalize 'conf' indices
-#### New
 
 ## [5.2] - 2024-08-28 - August changes
 #### Changed
