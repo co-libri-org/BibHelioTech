@@ -27,10 +27,10 @@ Only major refactoring improvements or functional changes should be noted.
 --------------------------------------------------------------------------------
 ## [0.17.3-dev] - 2024-09-xx  - Confidence Index
 #### Fixed
-- Add_to_db fixed 
+- Add catalog to db fixed 
 #### Changed
 #### New
-- Events page displays table
+- Events displayed in sortable table
 - Conf index is normalized on the whole DB
 
 ## [0.16.0] - 2024-08-28  - August tasks
