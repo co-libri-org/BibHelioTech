@@ -141,6 +141,9 @@ def get_struct_date(_s):
 
 
 def set_duration_day(duration, day, keys=("begin", "end")):
+    """
+    Given a duration struct, replace the keys values with day as argument
+    """
     for _k in keys:
         k_date = parser.parse(duration["value"][_k])
         k_date = k_date.replace(year=day.year, month=day.month, day=day.day)
@@ -157,6 +160,7 @@ def durations_to_prevdate(json_list):
         value = _s["value"]
         begin_date = parser.parse(value["begin"])
         end_date = parser.parse(value["end"])
+        to_print = f"{begin_date} -> {end_date}"
         # either only end_date is set, so set begin to be the same
         if date_is_today(begin_date) and not date_is_today(end_date):
             set_duration_day(_s, end_date, keys=("begin",))
@@ -164,7 +168,7 @@ def durations_to_prevdate(json_list):
         elif not date_is_today(begin_date) and date_is_today(end_date):
             set_duration_day(_s, begin_date, keys=("end",))
         # or both are not set, so
-        else:
+        elif date_is_today(begin_date) and date_is_today(end_date):
             # get the previous date in list
             prev_date = previous_date(json_list, i)
             # and set both begin and end to that found date
