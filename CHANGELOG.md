@@ -29,6 +29,7 @@ Only major refactoring improvements or functional changes should be noted.
 #### Fixed
 - Catalog bugs, see pipeline changes
 #### Changed
+- Force db add after new pipeline
 #### New
 
 ## [0.17.4] - 2024-09-11  - Confidence Index

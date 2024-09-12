@@ -233,6 +233,7 @@ class Paper(db.Model):
 
     def set_cat_path(self, cat_path):
         self.cat_path = cat_path
+        self.cat_in_db = False
         db.session.add(self)
         db.session.commit()
 
@@ -263,12 +264,11 @@ class Paper(db.Model):
             return
         # only if there is a file
         if self.has_cat:
+            self.clean_events()
             catfile_to_db(self.cat_path)
             self.cat_in_db = True
-        # how to make sure cat_in_db is True ?
-        # db.session.add(self)
+        db.session.add(self)
         db.session.commit()
-        db.session.flush()
 
     def istex_update(self):
         """From our ids, update meta information from istex api"""
@@ -287,6 +287,16 @@ class Paper(db.Model):
         self.ark = istex_struct["ark"]
         self.publication_date = istex_struct["pub_date"]
         db.session.add(self)
+        db.session.commit()
+
+    def clean_events(self):
+        """
+        Remove the list of events with same doi as our's
+        #TODO: should be better to set a new relationship between HpEvent and Paper models
+        @return:  None
+        """
+        for _e in self.get_events():
+            db.session.delete(_e)
         db.session.commit()
 
     def get_events(self):

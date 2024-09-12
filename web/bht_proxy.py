@@ -78,6 +78,9 @@ def pipe_paper(paper_id, basedir=None, file_type=None):
         )
     _doc_meta_info = {"doi": _paper.doi, "pub_date": _paper.publication_date}
     catalogfile = bht_run_file(file_path, basedir, file_type, _doc_meta_info)
+    # cat_in_db= _paper.cat_in_db
     _paper.set_cat_path(catalogfile)
-    # FIXME: return real result
+    # if cat_in_db:
+    #     _paper.push_cat(force=True)
+    # TODO: return real result
     return _paper.id
