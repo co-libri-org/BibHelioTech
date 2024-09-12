@@ -123,10 +123,13 @@ def bht_run_file(orig_file, result_base_dir, file_type, doc_meta_info=None):
     # 3- filter result of the OCR to deletes references, change HHmm4 to HH:mm, etc ...
     run_step_filter(dest_file_dir)
 
-    # 3- Sutime processing
+    # 4- Sutime processing
     run_step_sutime(dest_file_dir)
 
-    # 4- Entities recognition, association and writing of HPEvent
+    # 5- Times cleaning
+    run_step_timefill(dest_file_dir)
+
+    # 6- Entities recognition, association and writing of HPEvent
     catalog_file = run_step_entities(dest_file_dir, doc_meta_info)
 
     if not os.path.isfile(catalog_file):

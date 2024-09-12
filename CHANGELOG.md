@@ -27,6 +27,7 @@ Only major refactoring improvements or functional changes should be noted.
 --------------------------------------------------------------------------------
 ## [0.18.0-dev] - 2024-09-xx  - Pipeline optimizations
 #### Fixed
+- Catalog bugs, see pipeline changes
 #### Changed
 #### New
 
