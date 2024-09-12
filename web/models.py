@@ -258,13 +258,17 @@ class Paper(db.Model):
 
     def push_cat(self, force=False):
         """Insert our catalog's events to db"""
-        # do it if not already done, or force
-        if not self.cat_in_db or force:
-            # only if there is a file
-            if self.has_cat:
-                self.cat_in_db = True
-                catfile_to_db(self.cat_path)
+        # Quit if already added and not force
+        if self.cat_in_db and not force:
+            return
+        # only if there is a file
+        if self.has_cat:
+            catfile_to_db(self.cat_path)
+            self.cat_in_db = True
+        # how to make sure cat_in_db is True ?
+        # db.session.add(self)
         db.session.commit()
+        db.session.flush()
 
     def istex_update(self):
         """From our ids, update meta information from istex api"""
