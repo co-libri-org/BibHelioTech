@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 
 import click
 import redis
@@ -171,28 +172,35 @@ def clone_paper(paper_id):
     print(p_cloned)
 
 
-@cli.command("run_paper")
-@click.argument("paper_id", required=True)
 def run_paper(paper_id):
     """Run the latest pipeline on that paper's article"""
-    _p_id = pipe_paper(paper_id)
-    print(f"Pipeline run on paper: {_p_id}.")
+    print(f"Pipeline run on paper: {paper_id}.")
+    try:
+        _p_id = pipe_paper(paper_id)
+    except Exception as e:
+        print(f"Couldn't run on paper #{paper_id}")
+
+
+@cli.command("run_paper")
+@click.argument("paper_id", required=True)
+def cmd_run_paper(paper_id):
+    """Run the latest pipeline on that paper's article"""
+    run_paper(paper_id)
 
 
 @cli.command("run_papers")
-def run_papers():
+def cmd_run_papers():
     """Run the latest pipeline on all papers"""
     for p in Paper.query.all():
-        print(f"Running pipeline on paper {p.id}")
-        try:
-            _p_id = pipe_paper(p.id)
-        except Exception as e:
-            print(f"Couldn't run on paper #{p.id}")
+        # print(f"{p.id}")
+        run_paper(p.id)
 
 
 @cli.command("refresh_papers")
 def refresh_papers():
-    """Parse the files on disk and update db
+    """DEPRECATED: TOBE REFACTORED
+
+    Parse the files on disk and update db
 
     - parse disk and re-insert pdf and txt files
 
@@ -211,6 +219,8 @@ def refresh_papers():
     (here, it is an Istex id)
 
     """
+    print("DEPRECATED: TOBE REFACTORED")
+    sys.exit()
     # First remove all papers
     for _p in Paper.query.all():
         db.session.delete(_p)
@@ -290,7 +300,7 @@ def missions_list():
 @cli.command("refresh_events")
 @click.argument("paper_id", required=False)
 def refresh_events(paper_id=None):
-    """Reparse catalogs txt files
+    """Reparse catalogs txt files for all or one paper
 
     \b
     - delete events
