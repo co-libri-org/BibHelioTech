@@ -118,6 +118,7 @@ if __name__ == "__main__":
             # Write bytes to file
             binary_file.write(content)
         print(f"Written to {filepath}")
+        # set default pipeline sequence
         if not pipe_steps:
             pipe_steps = [
                 PipeStep.MKDIR,
