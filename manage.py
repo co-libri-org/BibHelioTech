@@ -337,16 +337,11 @@ def refresh_events(paper_id=None):
         papers = Paper.query.all()
 
     events = []
-    for _p in papers:
-        events.extend(_p.get_events())
 
-    # delete all events
-    for _e in events:
-        db.session.delete(_e)
-        db.session.commit()
     # then parse catalogs again
     for _p in papers:
         _p.push_cat(force=True)
+        events.extend(_p.get_events())
         db.session.commit()
 
     print(f"Updated {len(events)} events from {len(papers)} papers")
