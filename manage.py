@@ -297,6 +297,22 @@ def missions_list():
         print(m)
 
 
+@cli.command("delete_events")
+@click.argument("paper_id", required=False)
+def refresh_events(paper_id=None):
+    """
+    Delete events for given paper id or all
+    """
+
+    papers = []
+    if paper_id:
+         papers.append(db.session.get(Paper, paper_id))
+    else:
+        papers = Paper.query.all()
+    for _p in papers:
+        _p.clean_events()
+
+
 @cli.command("refresh_events")
 @click.argument("paper_id", required=False)
 def refresh_events(paper_id=None):
