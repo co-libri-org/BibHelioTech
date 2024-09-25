@@ -1,6 +1,6 @@
-{% extends "base_page.html" %}
+{% extends "base_table.html" %}
 {% block more_head %}
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+{{ super () }}
 {% if paper %}
     <title>{{events | length}} Events for paper {{paper.id}}</title>
 {% else %}
@@ -64,8 +64,7 @@
 {%  endblock %}
 
 {% block scripts %}
-    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"> </script>
-    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"> </script>
+{{ super() }}
 <script>
 $(document).ready(function() {
     $('#events-table').DataTable(
