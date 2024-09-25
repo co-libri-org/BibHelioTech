@@ -306,7 +306,7 @@ def refresh_events(paper_id=None):
 
     papers = []
     if paper_id:
-         papers.append(db.session.get(Paper, paper_id))
+        papers.append(db.session.get(Paper, paper_id))
     else:
         papers = Paper.query.all()
     for _p in papers:
@@ -332,7 +332,7 @@ def refresh_events(paper_id=None):
 
     papers = []
     if paper_id:
-        papers.append(Paper.query.get(paper_id))
+        papers.append(db.session.get(Paper, paper_id))
     else:
         papers = Paper.query.all()
 
