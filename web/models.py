@@ -297,6 +297,7 @@ class Paper(db.Model):
         """
         for _e in self.get_events():
             db.session.delete(_e)
+        self.cat_in_db=False
         db.session.commit()
 
     def get_events(self):
