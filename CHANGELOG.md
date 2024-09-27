@@ -25,6 +25,11 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [0.19.0-dev] - 2024-10-xx - Post Filtering
+#### Fixed
+#### Changed
+#### New
+
 ## [0.18.0] - 2024-09-27 - Pipeline optimizations
 #### Fixed
 - Catalog bugs, see pipeline changes
