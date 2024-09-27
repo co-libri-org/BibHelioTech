@@ -20,6 +20,7 @@ class PipeStep(IntEnum):
     GROBID = auto()
     FILTER = auto()
     SUTIME = auto()
+    TIMEFILL = auto()
     ENTITIES = auto()
 
 
@@ -75,17 +76,24 @@ def run_step_filter(dest_pdf_dir):
 def run_step_sutime(dest_pdf_dir):
     _logger.info("BHT PIPELINE STEP 4: Sutime")
     from sutime import SUTime
-    from bht.SUTime_processing import SUTime_treatement, SUTime_transform
+    from bht.SUTime_processing import SUTime_treatement
 
     sutime = SUTime(mark_time_ranges=True, include_range=True)  # load sutime wrapper
     # SUTime read all the file and save its results in a file "res_sutime.json"
     SUTime_treatement(dest_pdf_dir, sutime)
+
+
+def run_step_timefill(dest_pdf_dir):
+    """" from a sutime json  transform date and create a json_2 """
+    _logger.info("BHT PIPELINE STEP 5: TimeTransform")
+    from bht.SUTime_processing import SUTime_transform
+
     # transforms some results of sutime to complete missing, etc ... save results in "res_sutime_2.json"
     SUTime_transform(dest_pdf_dir)
 
 
 def run_step_entities(dest_pdf_dir, doc_meta_info=None):
-    _logger.info("BHT PIPELINE STEP 5: Search Entities")
+    _logger.info("BHT PIPELINE STEP 6: Search Entities")
     catalog_file = entities_finder(dest_pdf_dir, doc_meta_info)
     return catalog_file
 
@@ -115,10 +123,13 @@ def bht_run_file(orig_file, result_base_dir, file_type, doc_meta_info=None):
     # 3- filter result of the OCR to deletes references, change HHmm4 to HH:mm, etc ...
     run_step_filter(dest_file_dir)
 
-    # 3- Sutime processing
+    # 4- Sutime processing
     run_step_sutime(dest_file_dir)
 
-    # 4- Entities recognition, association and writing of HPEvent
+    # 5- Times cleaning
+    run_step_timefill(dest_file_dir)
+
+    # 6- Entities recognition, association and writing of HPEvent
     catalog_file = run_step_entities(dest_file_dir, doc_meta_info)
 
     if not os.path.isfile(catalog_file):
@@ -181,7 +192,9 @@ def bht_run_dir(_base_pdf_dir):
                     )  # entities recognition and association + writing of HPEvent
 
 
-def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None, doc_meta_info=None):
+def run_pipeline(
+    file_path, doc_type, pipe_steps=(), dest_file_dir=None, doc_meta_info=None
+):
     """
 
 
@@ -222,6 +235,10 @@ def run_pipeline(file_path, doc_type, pipe_steps=(), dest_file_dir=None, doc_met
     if PipeStep.SUTIME in pipe_steps:
         run_step_sutime(dest_file_dir)
         done_steps.append(PipeStep.SUTIME)
+
+    if PipeStep.TIMEFILL in pipe_steps:
+        run_step_timefill(dest_file_dir)
+        done_steps.append(PipeStep.TIMEFILL)
 
     if PipeStep.ENTITIES in pipe_steps:
         run_step_entities(dest_file_dir, doc_meta_info)

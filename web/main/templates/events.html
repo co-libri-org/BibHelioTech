@@ -1,6 +1,6 @@
-{% extends "base_page.html" %}
+{% extends "base_table.html" %}
 {% block more_head %}
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+{{ super () }}
 {% if paper %}
     <title>{{events | length}} Events for paper {{paper.id}}</title>
 {% else %}
@@ -14,7 +14,11 @@
         {{events | length }} Events for the paper
         <a class="btn btn-warning paper-id" href="{{url_for('main.paper_show', paper_id=paper.id)}}"
            title="Show paper #{{paper.id}}">
-                #{{paper.id}}
+                {{paper.id}}
+        </a>
+        with pipeline
+        <a class="btn btn-warning btn-version" href="{{url_for('main.changelog', module='pipeline')}}" title="Please see CHANGELOG for changes">
+            V{{paper.pipeline_version}}
         </a>
     </p>
     <p class="fs-4 mb-0 fw-bolder">
@@ -60,8 +64,7 @@
 {%  endblock %}
 
 {% block scripts %}
-    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"> </script>
-    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"> </script>
+{{ super() }}
 <script>
 $(document).ready(function() {
     $('#events-table').DataTable(

@@ -193,14 +193,15 @@ class Paper(db.Model):
 
     def __repr__(self):
         return f"""<Paper #{self.id}
-        title:    {self.title}
-        doi:      {self.doi}
-        ark:      {self.ark}
-        istex_id: {self.istex_id}
-        pdf:      {self.pdf_path}
-        txt:      {self.txt_path}
-        cat:      {self.cat_path}
-        pipe_ver: {self.pipeline_version}>"""
+        title:     {self.title}
+        doi:       {self.doi}
+        ark:       {self.ark}
+        istex_id:  {self.istex_id}
+        pdf:       {self.pdf_path}
+        txt:       {self.txt_path}
+        cat:       {self.cat_path}
+        cat_in_db: {self.cat_in_db}
+        pipe_ver:  {self.pipeline_version}>"""
 
     def set_task_id(self, task_id):
         self.task_id = task_id
@@ -232,6 +233,7 @@ class Paper(db.Model):
 
     def set_cat_path(self, cat_path):
         self.cat_path = cat_path
+        self.cat_in_db = False
         db.session.add(self)
         db.session.commit()
 
@@ -257,12 +259,16 @@ class Paper(db.Model):
 
     def push_cat(self, force=False):
         """Insert our catalog's events to db"""
-        # do it if not already done, or force
-        if not self.cat_in_db or force:
-            # only if there is a file
-            if self.has_cat:
-                self.cat_in_db = True
-                catfile_to_db(self.cat_path)
+        # Quit if already added and not force
+        if self.cat_in_db and not force:
+            return
+        # only if there is a file
+        if self.has_cat:
+            self.clean_events()
+            catfile_to_db(self.cat_path)
+            self.cat_in_db = True
+        db.session.add(self)
+        db.session.commit()
 
     def istex_update(self):
         """From our ids, update meta information from istex api"""
@@ -282,6 +288,29 @@ class Paper(db.Model):
         self.publication_date = istex_struct["pub_date"]
         db.session.add(self)
         db.session.commit()
+
+    def clean_events(self):
+        """
+        Remove the list of events with same doi as our's
+        #TODO: should be better to set a new relationship between HpEvent and Paper models
+        @return:  None
+        """
+        for _e in self.get_events():
+            db.session.delete(_e)
+        self.cat_in_db=False
+        db.session.commit()
+
+    def get_events(self):
+        """
+        Return the list of events with same doi as our's
+        #TODO: should be better to set a new relationship between HpEvent and Paper models
+        @return:  list of HpEvents
+        """
+        found_events = []
+        doi = Doi.query.filter_by(doi=self.doi).one_or_none()
+        if doi is not None:
+            found_events = HpEvent.query.filter_by(doi_id=doi.id).all()
+        return found_events
 
     @property
     def pipeline_version(self):

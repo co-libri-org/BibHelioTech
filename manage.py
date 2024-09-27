@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 
 import click
 import redis
@@ -23,9 +24,9 @@ def show_databank():
     """For test purpose, show some entities_databank extracts"""
     databank = DataBank()
     message = f"Show databank from file {databank.databank_path}"
-    print(f"{'-'*len(message)}")
+    print(f"{'-' * len(message)}")
     print(f"{message}")
-    print(f"{'-'*len(message)}")
+    print(f"{'-' * len(message)}")
     sats_df = databank.get_sheet_as_df(DataBankSheet.SATS)
     sats_df.set_index("NAME", inplace=True)
     print(sats_df.loc["SolarOrbiter"])
@@ -171,28 +172,35 @@ def clone_paper(paper_id):
     print(p_cloned)
 
 
-@cli.command("run_paper")
-@click.argument("paper_id", required=True)
 def run_paper(paper_id):
     """Run the latest pipeline on that paper's article"""
-    _p_id = pipe_paper(paper_id)
-    print(f"Pipeline run on paper: {_p_id}.")
+    print(f"Pipeline run on paper: {paper_id}.")
+    try:
+        _p_id = pipe_paper(paper_id)
+    except Exception as e:
+        print(f"Couldn't run on paper #{paper_id}")
+
+
+@cli.command("run_paper")
+@click.argument("paper_id", required=True)
+def cmd_run_paper(paper_id):
+    """Run the latest pipeline on that paper's article"""
+    run_paper(paper_id)
 
 
 @cli.command("run_papers")
-def run_papers():
+def cmd_run_papers():
     """Run the latest pipeline on all papers"""
     for p in Paper.query.all():
-        print(f"Running pipeline on paper {p.id}")
-        try:
-            _p_id = pipe_paper(p.id)
-        except Exception as e:
-            print(f"Couldn't run on paper #{p.id}")
+        # print(f"{p.id}")
+        run_paper(p.id)
 
 
 @cli.command("refresh_papers")
 def refresh_papers():
-    """Parse the files on disk and update db
+    """DEPRECATED: TOBE REFACTORED
+
+    Parse the files on disk and update db
 
     - parse disk and re-insert pdf and txt files
 
@@ -211,6 +219,8 @@ def refresh_papers():
     (here, it is an Istex id)
 
     """
+    print("DEPRECATED: TOBE REFACTORED")
+    sys.exit()
     # First remove all papers
     for _p in Paper.query.all():
         db.session.delete(_p)
@@ -287,9 +297,26 @@ def missions_list():
         print(m)
 
 
+@cli.command("delete_events")
+@click.argument("paper_id", required=False)
+def refresh_events(paper_id=None):
+    """
+    Delete events for given paper id or all
+    """
+
+    papers = []
+    if paper_id:
+        papers.append(db.session.get(Paper, paper_id))
+    else:
+        papers = Paper.query.all()
+    for _p in papers:
+        _p.clean_events()
+
+
 @cli.command("refresh_events")
-def refresh_events():
-    """Reparse catalogs txt files
+@click.argument("paper_id", required=False)
+def refresh_events(paper_id=None):
+    """Reparse catalogs txt files for all or one paper
 
     \b
     - delete events
@@ -299,18 +326,24 @@ def refresh_events():
 
     This method was first writen to fix the hpevent datetime value in db
     A db bug that was fixed in the commit '6b38c89 Fix the missing hours in hpevent bug'
+
+    @param: paper_id to run refresh on that only
     """
-    # delete all events
-    for _e in HpEvent.query.all():
-        db.session.delete(_e)
-        db.session.commit()
+
+    papers = []
+    if paper_id:
+        papers.append(db.session.get(Paper, paper_id))
+    else:
+        papers = Paper.query.all()
+
+    events = []
+
     # then parse catalogs again
-    for _p in Paper.query.all():
+    for _p in papers:
         _p.push_cat(force=True)
+        events.extend(_p.get_events())
         db.session.commit()
 
-    events = HpEvent.query.all()
-    papers = Paper.query.all()
     print(f"Updated {len(events)} events from {len(papers)} papers")
 
 

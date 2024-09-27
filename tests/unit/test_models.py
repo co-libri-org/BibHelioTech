@@ -126,15 +126,15 @@ class TestPaper:
         paper = Paper(title="title", pdf_path="path")
         assert not paper.cat_in_db
 
-    def test_paper_push_cat(self, paper_for_test):
+    def test_paper_push_cat(self, paper_with_cat):
         """
         GIVEN Paper model instantiated
         WHEN push_cat() is called
         THEN verify attr is changed, ad db was populated
         """
-        assert not paper_for_test.cat_in_db
-        paper_for_test.push_cat()
-        # assert paper_for_test.cat_in_db
+        assert not paper_with_cat.cat_in_db
+        paper_with_cat.push_cat()
+        assert paper_with_cat.cat_in_db is True
 
 
 class TestModels:

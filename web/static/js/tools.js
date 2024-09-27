@@ -8,7 +8,7 @@
 function push_catalog(){
     paper_id = $(this).data('paper_id')
     $.post({
-        url: "{{url_for('main.api_push_catalog')}}",
+        url: "/api/push_catalog",
         data: JSON.stringify({ paper_id: paper_id}),
         contentType: 'application/json; charset=utf-8'
     })

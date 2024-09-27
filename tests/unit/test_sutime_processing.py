@@ -30,6 +30,30 @@ class TestSutimeProcessing:
         ]
         assert get_struct_date(durations_5[0]).isoformat() == "2019-12-26T00:00:00"
 
+    def test_durations_to_prevdate_3(self):
+        _durations = [
+            {
+                "end": 7612,
+                "start": 7605,
+                "text": "July 23",
+                "timex-value": "2024-07-23",
+                "type": "DATE",
+                "value": "2020-05-17",
+            },
+            {
+                "end": 7711,
+                "start": 7670,
+                "text": "From July 23 at 12:00 to July 24 at 12:00",
+                "type": "DURATION",
+                "value": {"begin": "2020-07-23T12:00:00", "end": "2020-07-24T02:00:00"},
+            },
+        ]
+        durations = durations_to_prevdate(_durations)
+        assert durations[1]["value"] == {
+            "begin": "2020-07-23T12:00:00",
+            "end": "2020-07-24T02:00:00",
+        }
+
     def test_set_duration_day_one_limit(self):
         duration = {
             "end": 26018,
