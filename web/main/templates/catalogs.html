@@ -1,7 +1,7 @@
 {% extends "base_table.html" %}
 {% block more_head %}
 {{ super () }}
-<title> {{missions | length}} Missions to display - {{base_title}}</title>
+<title> {{events | length}}  Events to display - {{base_title}}</title>
 {% endblock %}
 {% block content %}
 {% if db_stats.num_events > 0 %}
@@ -10,7 +10,7 @@
        {{db_stats.num_papers}} Papers processed to find
     </p>
     <p class="lead fs-4 mb-0">
-        {{db_stats.num_events}} Events accross {{db_stats.num_missions}} Missions
+        {{db_stats.num_events}} Events across {{db_stats.num_missions}} Missions
     </p>
     <p class="lead fs-4 mb-0">
         from {{db_stats.global_start}} to {{db_stats.global_stop}}
@@ -22,14 +22,23 @@
 Show missions found in db as clickable buttons, triggering mission's events display
 -----------------------------------------------------------------------------------
 #}
+<form action="{{url_for('main.catalogs')}}" method="post">
 <h4 class="mb-3">Available Missions:</h4>
 {% for mission in missions %}
-<button class="btn mission-catalog" data-mission_id="{{mission.id}}"
-        title="Show {{mission.num_events}} events for mission {{mission.name}}">
+    {% if mission.id in selected_missions %}
+        {%set checked = "checked"%}
+    {% else %}
+        {%set checked = ""%}
+    {% endif %}
+<button class="btn mission-catalog" title="Show {{mission.num_events}} events for mission {{mission.name}}">
+    <input name="missions" type="checkbox" {{ checked }} class="form-check-input mission-catalog" value="{{mission.id}}">
     {{mission.name}}
     <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
 </button>
 {% endfor %}
+    <input type="submit" value="Show Events"/>
+
+</form>
 <hr class="mt-2 mb-3">
 {#
 Show found events when mission button was clicked
@@ -44,12 +53,13 @@ Show found events when mission button was clicked
         Download
     </a>
 </div>
-<table id="events-table" class="table-hover table invisible">
+<table id="events-table" class="table-hover table">
     <thead>
     <tr>
         <th scope="col" class="col-2">start</th>
         <th scope="col" class="col-2">stop</th>
         <th scope="col" class="col-4">doi</th>
+        <th scope="col" class="col-1">mission</th>
         <th scope="col" class="col-1">instrument(s)</th>
         <th scope="col" class="col-1">region</th>
         <th scope="col" class="col-1">conf</th>
@@ -57,7 +67,19 @@ Show found events when mission button was clicked
     </tr>
     </thead>
     <tbody id="events-body">
-    {# this tbody will be filled in by js callback setCatalog() at '.mission-catalog' btn click #}
+    {% for _e  in events %}
+    <tr>
+        <td>{{_e.start_date}}</td>
+        <td>{{_e.stop_date}}</td>
+        <td>{{_e.doi}}</td>
+        <td>{{_e.mission}}</td>
+        <td>{{_e.instrument}}</td>
+        <td>{{_e.region}}</td>
+        <td>{{_e.conf}}</td>
+        <td>{{_e.nconf}}</td>
+    </tr>
+    {% endfor %}
+
     </tbody>
 </table>
 
@@ -67,82 +89,16 @@ Show found events when mission button was clicked
 {{ super() }}
 <script>
 
-// Update events displayed
-// - retrieving events from the catalogs' api url
-// - sending the resulting list to the setCatalog()
-// - showing the download button
-// - enlightening this mission among missions buttons
-function update_catalog() {
-    $.get({
-        url: '{{url_for("main.api_catalogs")}}',
-        data: {mission_id: $(this).data("mission_id")}
-    })
-    .done((res) => {
-        console.log('Events requested for mission id: ', res.data.mission_id);
-        // First configure  the download button
-        setDownloadBtn(res.data.mission);
-        // Then show the list of events on screen
-        setCatalog(res.data.events);
-        // And enlighten current mission button after removing previous
-        $('.mission-catalog.btn-warning').removeClass('btn-warning');
-        $(this).addClass('btn-warning');
-
-    })
-    .fail((err) => {
-        console.log(err);
-    });
-}
-
-// At mission view catalog set the download button
-//  - showing it, changing title and content
-//  - setting href for later click
-function setDownloadBtn(mission){
-    if( mission.num_events < 2 ){
-        event_string = "event"
-        }
-    else {
-        event_string = "events"
-        }
-    $('#get-catalog-title').text(mission.num_events+" "+event_string+" for "+mission.name)
-    get_catalog_btn = $('#get-catalog-txt')
-    get_catalog_btn.removeClass('invisible').addClass('visible')
-    get_catalog_btn.attr("title", "Get txt catalog for mission "+mission.name)
-    get_catalog_url = '{{url_for("main.api_catalogs_txt")}}?'+$.param({mission_id: mission.id});
-    get_catalog_btn.attr("href", get_catalog_url)
-}
-
-// When a mission-catalog button is clicked
-// Fill in rows with  a given list of event
-// But first delete container
-function setCatalog(events) {
-    $("#events-table").removeClass("invisible").addClass("visible")
-    eventsBodyElmnt = $("#events-body")
-    eventsBodyElmnt.empty();
-    $.each(events, function(idx, event){
-        var row  = $('<tr></tr>');
-        row.append($('<td>'+event.start_date+'</td>'));
-        row.append($('<td>'+event.stop_date+'</td>'));
-        row.append($('<td><a href="'+event.doi+'">'+event.doi+'</a></td>'));
-        row.append($('<td>'+event.instrument+'</td>'));
-        row.append($('<td><span class="region-value" title="as defined by the SPASE data model">'+event.region+'</span></td>'));
-        row.append($('<td>'+event.conf+'</td>'));
-        row.append($('<td>'+event.nconf+'</td>'));
-        eventsBodyElmnt.append(row);
-    });
-}
-
 
 $(document).ready(function() {
-    // For each mission button, attach a call back:
-    $('.mission-catalog').on('click', update_catalog);
 
     // Add datatable stuff
-    //$('#events-table').DataTable(
-    //    {
-    //    ordering: true,
-    //    search: false,
-    //    paging: false
-    //});
+    $('#events-table').DataTable(
+        {
+        ordering: true,
+        search: false,
+        paging: false
+    });
 
 });
 

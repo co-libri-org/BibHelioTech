@@ -28,7 +28,9 @@ Only major refactoring improvements or functional changes should be noted.
 ## [0.19.0-dev] - 2024-10-xx - Post Filtering
 #### Fixed
 #### Changed
+- Catalogs page is now form
 #### New
+- Admin page adds catalogs to db
 
 ## [0.18.0] - 2024-09-27 - Pipeline optimizations
 #### Fixed

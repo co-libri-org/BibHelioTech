@@ -10,6 +10,7 @@ import requests
 from rq import Queue
 from rq.exceptions import NoSuchJobError
 from rq.job import Job
+from soupsieve import select
 
 from werkzeug.utils import secure_filename
 
@@ -693,10 +694,22 @@ def admin():
     return render_template("admin.html", catalogs=_catalogs)
 
 
-@bp.route("/catalogs", methods=["GET"])
+@bp.route("/catalogs", methods=["GET", "POST"])
 def catalogs():
     """UI page to retrieve catalogs by mission"""
+    if request.method == "POST":
+        selected_missions = [int(i) for i in request.form.getlist("missions")]
+    else:
+        selected_missions = []
 
+    # look for events corresponding to selected missions
+    found_events = []
+    for m_id in selected_missions:
+        print("MISISON", m_id)
+        _m = Mission.query.get(m_id)
+        found_events.extend(_m.hp_events)
+
+    _events = [_e.get_dict() for _e in found_events]
     # rebuild all missions as dict, keeping only what we need
     _missions = [
         {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
@@ -728,7 +741,8 @@ def catalogs():
         "global_start": global_start,
         "global_stop": global_stop,
     }
-    return render_template("catalogs.html", missions=_missions, db_stats=_db_stats)
+    return render_template("catalogs.html", missions=_missions, events=_events,
+                           db_stats=_db_stats, selected_missions=selected_missions)
 
 
 @bp.route("/api/catalogs", methods=["GET"])
