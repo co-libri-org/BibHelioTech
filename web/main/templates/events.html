@@ -24,6 +24,10 @@
     <p class="fs-4 mb-0 fw-bolder">
         "{{paper.title}}
     </p>
+    {% else %}
+    <p class="lead fs-4 mb-0">
+     <span class="fw-bold">{{events | length }}</span> Events in whole database
+    </p>
     {% endif %}
 </blockquote>
 <hr class="mt-2 mb-3">
