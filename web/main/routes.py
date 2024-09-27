@@ -682,6 +682,17 @@ def events(ref_name, ref_id):
     return render_template("events.html", events=events_dict_list, paper=paper)
 
 
+@bp.route("/admin", methods=["GET"])
+def admin():
+
+    # build a list of papers with catalogs not already inserted in db
+    _catalogs = [
+        paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
+    ]
+
+    return render_template("admin.html", catalogs=_catalogs)
+
+
 @bp.route("/catalogs", methods=["GET"])
 def catalogs():
     """UI page to retrieve catalogs by mission"""
@@ -691,11 +702,6 @@ def catalogs():
         {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
         for _m in db.session.query(Mission).order_by(Mission.name).all()
         if len(_m.hp_events) > 0
-    ]
-
-    # build a list of papers with catalogs not already inserted in db
-    _catalogs = [
-        paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
     ]
 
     # now get some stats and pack as dict
@@ -722,9 +728,7 @@ def catalogs():
         "global_start": global_start,
         "global_stop": global_stop,
     }
-    return render_template(
-        "catalogs.html", missions=_missions, catalogs=_catalogs, db_stats=_db_stats
-    )
+    return render_template("catalogs.html", missions=_missions, db_stats=_db_stats)
 
 
 @bp.route("/api/catalogs", methods=["GET"])
