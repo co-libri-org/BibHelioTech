@@ -30,8 +30,8 @@ Show missions found in db as clickable buttons, triggering mission's events disp
     {% else %}
         {%set checked = ""%}
     {% endif %}
-<button class="btn mission-catalog" title="Show {{mission.num_events}} events for mission {{mission.name}}">
-    <input name="missions" type="checkbox" {{ checked }} class="form-check-input mission-catalog" value="{{mission.id}}">
+<button type="button" class="btn mission-catalog" title="Show {{mission.num_events}} events for mission {{mission.name}}">
+    <input name="missions" type="checkbox" {{ checked }} class="form-check-input" value="{{mission.id}}">
     {{mission.name}}
     <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
 </button>
@@ -91,6 +91,16 @@ Show found events when mission button was clicked
 
 
 $(document).ready(function() {
+
+    // Any mission button should (un)checked its input child
+     $('.mission-catalog').on('click', (event)=>{
+         our_self = $(event.target);
+         our_input_child = our_self.find('input');
+
+         checked = our_input_child.prop("checked");
+         our_input_child.prop("checked", !checked);
+        }
+    );
 
     // Add datatable stuff
     $('#events-table').DataTable(
