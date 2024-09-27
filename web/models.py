@@ -108,6 +108,10 @@ class HpEvent(db.Model):
             "d": self.d,
             "r": self.r,
         }
+        # normalize conf index on the whole database
+        all_events = HpEvent.query.all()
+        max_conf = max([_e.conf for _e in all_events])
+        r_dict["nconf"] = "{:.4f}".format(r_dict["conf"] / max_conf)
         return r_dict
 
     def set_doi(self, doi_str):
