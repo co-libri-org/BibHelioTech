@@ -25,12 +25,14 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [0.18.0-dev] - 2024-09-xx  - Pipeline optimizations
+## [0.18.0] - 2024-09-27 - Pipeline optimizations
 #### Fixed
 - Catalog bugs, see pipeline changes
 #### Changed
 - Force db add after new pipeline
 #### New
+- NConf now normalised on whole db
+- More CLI cmd: clean/updates events
 
 ## [0.17.4] - 2024-09-11  - Confidence Index
 #### Fixed
