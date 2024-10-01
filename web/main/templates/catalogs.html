@@ -94,7 +94,8 @@ $(document).ready(function() {
 
     // Any check event should turn show 'events button' to color
     $(':checkbox').change(function() {
-       $('#show-events-btn').addClass('to-submit');
+       $('#show-events-btn').removeClass('to-submit', 1000, 'linear');
+       $('#show-events-btn').addClass('to-submit', 1500, 'easeOutElastic');
     });
 
     // Add datatable stuff
