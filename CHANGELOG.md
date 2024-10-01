@@ -30,6 +30,7 @@ Only major refactoring improvements or functional changes should be noted.
 #### Changed
 - Catalogs page is now form
 #### New
+- Events datatables/sorting and form/filtering 
 - Admin page adds catalogs to db
 
 ## [0.18.0] - 2024-09-27 - Pipeline optimizations
