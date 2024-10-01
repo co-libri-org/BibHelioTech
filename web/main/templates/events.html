@@ -71,11 +71,16 @@
 {{ super() }}
 <script>
 $(document).ready(function() {
-    $('#events-table').DataTable(
-        {
+    new DataTable('#events-table', {
         ordering: true,
-        search: false,
-        paging: false
+        search: true,
+        paging: false,
+        buttons: [
+            'copy', 'csv'
+        ],
+        layout: {
+            topStart: 'buttons'
+        }
     });
 });
 </script>
