@@ -704,14 +704,21 @@ def admin():
 @bp.route("/catalogs", methods=["GET", "POST"])
 def catalogs():
     """UI page to retrieve catalogs by mission"""
+    params = {
+        "selected_missions": [],
+        "duration_max": None,
+        "duration_min": None,
+        "nconf_min": None,
+    }
     if request.method == "POST":
-        selected_missions = [int(i) for i in request.form.getlist("missions")]
-    else:
-        selected_missions = []
+        params["selected_missions"] = [int(i) for i in request.form.getlist("missions")]
+        params["duration_max"] = request.form.get("duration-max")
+        params["duration_min"] = request.form.get("duration-min")
+        params["nconf_min"] = request.form.get("nconf-min")
 
     # look for events corresponding to selected missions
     found_events = []
-    for m_id in selected_missions:
+    for m_id in params["selected_missions"]:
         _m = Mission.query.get(m_id)
         found_events.extend(_m.hp_events)
 
@@ -752,7 +759,7 @@ def catalogs():
         missions=_missions,
         events=_events,
         db_stats=_db_stats,
-        selected_missions=selected_missions,
+        params=params,
     )
 
 
