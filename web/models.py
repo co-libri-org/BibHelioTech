@@ -95,11 +95,13 @@ class HpEvent(db.Model):
         return r_str
 
     def get_dict(self):
+        duration = self.stop_date - self.start_date
         r_dict = {
             "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
                 0:-3
             ],
             "stop_date": datetime.datetime.strftime(self.stop_date, DATE_FORMAT)[0:-3],
+            "duration": duration,
             "doi": self.doi.doi,
             "mission": self.mission.name,
             "instrument": self.instrument.name,
@@ -301,7 +303,7 @@ class Paper(db.Model):
         """
         for _e in self.get_events():
             db.session.delete(_e)
-        self.cat_in_db=False
+        self.cat_in_db = False
         db.session.commit()
 
     def get_events(self):

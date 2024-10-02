@@ -10,7 +10,6 @@ import requests
 from rq import Queue
 from rq.exceptions import NoSuchJobError
 from rq.job import Job
-from soupsieve import select
 
 from werkzeug.utils import secure_filename
 
@@ -206,6 +205,14 @@ def pdf_to_db(file_stream, filename, istex_struct=None):
         paper.set_pubdate(istex_struct["pub_date"])
         paper.set_istex_id(istex_struct["istex_id"])
     return paper.id
+
+
+@bp.app_template_filter("short_timedelta")
+def short_timedelta(in_timedelta: datetime.timedelta):
+    out_timedelta = datetime.timedelta(
+        seconds=in_timedelta.seconds,
+    )
+    return out_timedelta
 
 
 @bp.app_template_filter("short_datetime")
@@ -705,7 +712,6 @@ def catalogs():
     # look for events corresponding to selected missions
     found_events = []
     for m_id in selected_missions:
-        print("MISISON", m_id)
         _m = Mission.query.get(m_id)
         found_events.extend(_m.hp_events)
 
@@ -741,8 +747,13 @@ def catalogs():
         "global_start": global_start,
         "global_stop": global_stop,
     }
-    return render_template("catalogs.html", missions=_missions, events=_events,
-                           db_stats=_db_stats, selected_missions=selected_missions)
+    return render_template(
+        "catalogs.html",
+        missions=_missions,
+        events=_events,
+        db_stats=_db_stats,
+        selected_missions=selected_missions,
+    )
 
 
 @bp.route("/api/catalogs", methods=["GET"])

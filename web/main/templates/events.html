@@ -39,6 +39,7 @@
     <tr>
         <th scope="col" class="col-1">start</th>
         <th scope="col" class="col-1">stop</th>
+        <th scope="col" class="col-1">duration</th>
         <th scope="col" class="col-1">mission(s)</th>
         <th scope="col" class="col-2">instrument(s)</th>
         <th scope="col" class="col-1">region</th>
@@ -53,6 +54,7 @@
     <tr>
         <td>{{event.start_date|short_datetime}}</td>
         <td>{{event.stop_date|short_datetime}}</td>
+        <td>{{event.duration|short_timedelta}}</td>
         <td>{{event.mission}}</td>
         <td>{{event.instrument}}</td>
         <td>{{event.region}}</td>
