@@ -3,6 +3,7 @@ import json
 import os
 
 import dateutil.parser as parser
+import pandas as pd
 import redis
 import filetype
 import requests
@@ -705,16 +706,19 @@ def admin():
 def catalogs():
     """UI page to retrieve catalogs by mission"""
     params = {
-        "selected_missions": [],
-        "duration_max": None,
-        "duration_min": None,
-        "nconf_min": None,
+        "selected_missions": [1],
+        "duration_max": 172800,  # 2 days in minutes
+        "duration_min": 3600,  # 1 hour in minutes
+        "nconf_min": 0.980,
     }
     if request.method == "POST":
         params["selected_missions"] = [int(i) for i in request.form.getlist("missions")]
-        params["duration_max"] = request.form.get("duration-max")
-        params["duration_min"] = request.form.get("duration-min")
-        params["nconf_min"] = request.form.get("nconf-min")
+        params["duration_max"] = int(request.form.get("duration-max"))
+        params["duration_min"] = int(request.form.get("duration-min"))
+        params["nconf_min"] = float(request.form.get("nconf-min"))
+    else:
+        # get params from session
+        pass
 
     # look for events corresponding to selected missions
     found_events = []
@@ -722,8 +726,21 @@ def catalogs():
         _m = Mission.query.get(m_id)
         found_events.extend(_m.hp_events)
 
-    _events = [_e.get_dict() for _e in found_events]
-    # rebuild all missions as dict, keeping only what we need
+    # translate to dict list, and pandas dataframe
+    _events_dicts = [_e.get_dict() for _e in found_events]
+
+    _events_df = pd.DataFrame.from_records(_events_dicts)
+    min_timedelta = pd.Timedelta(minutes=params["duration_min"])
+    max_timedelta = pd.Timedelta(minutes=params["duration_max"])
+    _events_df = _events_df[_events_df["duration"] < max_timedelta]
+    _events_df = _events_df[_events_df["duration"] > min_timedelta]
+    _events_df = _events_df[_events_df["nconf"] > params["nconf_min"]]
+    _events_df['duration'] = _events_df['duration'].astype(str).str[:-6]
+    _events_dicts = _events_df.to_records()
+    # print(type(_events_df['duration'][0]))
+    #
+
+    # for web display, rebuild all missions as dict, with only fields we need
     _missions = [
         {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
         for _m in db.session.query(Mission).order_by(Mission.name).all()
@@ -754,10 +771,11 @@ def catalogs():
         "global_start": global_start,
         "global_stop": global_stop,
     }
+
     return render_template(
         "catalogs.html",
         missions=_missions,
-        events=_events,
+        events=_events_dicts,
         db_stats=_db_stats,
         params=params,
     )
