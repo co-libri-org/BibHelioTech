@@ -36,7 +36,7 @@ Show missions found in db as clickable buttons, triggering mission's events disp
     <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
 </label>
 {% endfor %}
-    <input id="show-events-btn" type="submit" value="Show Events"/>
+    <input id="show-events-btn" type="submit" value="Show Events" disabled/>
 
 </form>
 <hr class="mt-2 mb-3">
@@ -94,8 +94,14 @@ $(document).ready(function() {
 
     // Any check event should turn show 'events button' to color
     $(':checkbox').change(function() {
-       $('#show-events-btn').removeClass('to-submit', 1000, 'linear');
-       $('#show-events-btn').addClass('to-submit', 1500, 'easeOutElastic');
+
+       if( $('#show-events-btn').hasClass( "to-submit")){
+           return;
+       }
+       $('#show-events-btn').prop('disabled', false);
+       $('#show-events-btn').addClass('to-submit', 500);
+       $('#show-events-btn').toggle( "pulsate");
+       $('#show-events-btn').toggle( "fade");
     });
 
     // Add datatable stuff
