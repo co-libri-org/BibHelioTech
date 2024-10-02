@@ -25,7 +25,7 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [0.19.0-dev] - 2024-10-xx - Post Filtering
+## [0.19.1-dev] - 2024-10-xx - Post Filtering
 #### Fixed
 #### Changed
 - Catalogs page is now form
