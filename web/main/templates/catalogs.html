@@ -1,13 +1,13 @@
 {% extends "base_table.html" %}
 {% block more_head %}
 {{ super () }}
-<title> {{events | length}}  Events to display - {{base_title}}</title>
+<title> {{events | length}} Events to display - {{base_title}}</title>
 {% endblock %}
 {% block content %}
 {% if db_stats.num_events > 0 %}
 <blockquote class="text-center">
     <p class="lead fs-4 mb-0">
-       {{db_stats.num_papers}} Papers processed to find
+        {{db_stats.num_papers}} Papers processed to find
     </p>
     <p class="lead fs-4 mb-0">
         {{db_stats.num_events}} Events across {{db_stats.num_missions}} Missions
@@ -24,23 +24,33 @@ Show missions found in db as clickable buttons, triggering mission's events disp
 #}
 <form action="{{url_for('main.catalogs')}}" method="post">
     <h4 class="mb-3">Filters:</h4>
-    <input class="filter-input" name="duration-min" type="number" value="{{params.duration_min}}">
-    <input class="filter-input" name="duration-max" type="number" value="{{params.duration_max}}">
-    <input class="filter-input" name="nconf-min" type="number" value="{{params.nconf_min}}">
+    <div class="form-group">
+        <label for="duration-min">duration min</label>
+        <input class="form-control filter-input" id="duration-min" name="duration-min" type="number" value="{{params.duration_min}}">
+    </div>
+    <div class="form-group">
+        <label for="duration-max">duration max</label>
+        <input class="form-control filter-input" id="duration-max" name="duration-max" type="number" value="{{params.duration_max}}">
+    </div>
+    <div class="form-group">
+        <label for="nconf-min">nconf min</label>
+        <input class="form-control filter-input" id="nconf-min" name="nconf-min" type="number" value="{{params.nconf_min}}">
+    </div>
     <hr class="mt-2 mb-3">
     <h4 class="mb-3">Available Missions:</h4>
-{% for mission in missions %}
+    {% for mission in missions %}
     {% if mission.id in params.selected_missions %}
-        {%set checked = "checked"%}
+    {%set checked = "checked"%}
     {% else %}
-        {%set checked = ""%}
+    {%set checked = ""%}
     {% endif %}
     <label class="btn mission-catalog" title="Show {{mission.num_events}} events for mission {{mission.name}}">
-        <input name="missions" type="checkbox" {{ checked }} class="filter-input form-check-input" value="{{mission.id}}">
+        <input name="missions" type="checkbox" {{ checked }} class="filter-input form-check-input"
+               value="{{mission.id}}">
         {{mission.name}}
         <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
     </label>
-{% endfor %}
+    {% endfor %}
 
     <hr class="mt-2 mb-3">
     <input id="show-events-btn" type="submit" value="Show Events" disabled/>
@@ -74,7 +84,7 @@ Show found events when mission button was clicked
     </tr>
     </thead>
     <tbody id="events-body">
-    {% for _e  in events %}
+    {% for _e in events %}
     <tr>
         <td>{{_e.start_date}}</td>
         <td>{{_e.stop_date}}</td>
@@ -96,31 +106,31 @@ Show found events when mission button was clicked
 {{ super() }}
 <script>
 
-function enable_submit() {
+    function enable_submit() {
 
-       if( $('#show-events-btn').hasClass( "to-submit")){
-           return;
-       }
-       $('#show-events-btn').prop('disabled', false);
-       $('#show-events-btn').addClass('to-submit', 500);
-       $('#show-events-btn').toggle( "pulsate");
-       $('#show-events-btn').toggle( "fade");
-    }
+           if( $('#show-events-btn').hasClass( "to-submit")){
+               return;
+           }
+           $('#show-events-btn').prop('disabled', false);
+           $('#show-events-btn').addClass('to-submit', 500);
+           $('#show-events-btn').toggle( "pulsate");
+           $('#show-events-btn').toggle( "fade");
+        }
 
-$(document).ready(function() {
+    $(document).ready(function() {
 
-    // Any check event should turn show 'events button' to color
-    $('.filter-input').change( enable_submit);
+        // Any check event should turn show 'events button' to color
+        $('.filter-input').change( enable_submit);
 
-    // Add datatable stuff
-    $('#events-table').DataTable(
-        {
-        ordering: true,
-        search: false,
-        paging: false
+        // Add datatable stuff
+        $('#events-table').DataTable(
+            {
+            ordering: true,
+            search: false,
+            paging: false
+        });
+
     });
-
-});
 
 </script>
 {%  endblock %}
