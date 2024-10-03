@@ -82,18 +82,23 @@ padding: 1px 2px !important;
     outline: 0px solid red !important;
     box-shadow: 0 0 0px  !important;
 }
+#catalog-filter   input[type="number"] {
+    width: 20%;
+}
 
 #show-events-btn {
     border: solid 1pt lightgrey !important;
     border-radius: 0.2em;
 }
-#show-events-btn:hover {
-    border: solid 1pt grey !important;
+#show-events-btn.to-submit:hover {
+    border: solid 1pt black !important;
 }
 #show-events-btn.to-submit  {
     border: solid 1pt grey !important;
     background-color: var(--bs-yellow);
 }
+
+
 
 button.btn[disabled] ,
 input.btn[disabled] ,

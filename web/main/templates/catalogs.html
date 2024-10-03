@@ -22,7 +22,7 @@
 Show missions found in db as clickable buttons, triggering mission's events display
 -----------------------------------------------------------------------------------
 #}
-<form action="{{url_for('main.catalogs')}}" method="post">
+<form id="catalog-filter" action="{{url_for('main.catalogs')}}" method="post">
     <h4 class="mb-3">Filters:</h4>
     <div class="form-group">
         <label for="duration-min">Min duration (minutes)</label>
