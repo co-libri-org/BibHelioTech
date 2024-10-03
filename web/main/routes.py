@@ -707,7 +707,7 @@ def catalogs():
     """UI page to retrieve catalogs by mission"""
     params = {
         "selected_missions": [1],
-        "duration_max": 172800,  # 2 days in minutes
+        "duration_max": 2880,  # 2 days in minutes
         "duration_min": 0,  # 1 hour in minutes
         "nconf_min": 0.980,
     }
