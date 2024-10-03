@@ -25,11 +25,11 @@ Show missions found in db as clickable buttons, triggering mission's events disp
 <form id="catalog-filter" action="{{url_for('main.catalogs')}}" method="post">
     <h4 class="mb-3">Filters:</h4>
     <div class="form-group">
-        <label for="duration-min">Min duration (minutes)</label>
+        <label for="duration-min">Min duration: <span class="duration-val"></span></label>
         <input class="form-control filter-input" id="duration-min" name="duration-min" type="number" value="{{params.duration_min}}"/>
     </div>
     <div class="form-group">
-        <label for="duration-max">Max duration (minutes)</label>
+        <label for="duration-max">Max duration: <span class="duration-val"></span></label>
         <input class="form-control filter-input" id="duration-max" name="duration-max" type="number" value="{{params.duration_max}}"/>
     </div>
     <div class="form-group">
@@ -108,22 +108,54 @@ Show found events when mission button was clicked
 {% block scripts %}
 {{ super() }}
 <script>
+    function format_minutes(minutes) {
+        const day = Math.floor(minutes / (24 * 60));
+        const hour = Math.floor((minutes % (24 * 60)) / 60);
+        const minute = minutes % 60;
+
+        let result = "";
+        if (day > 0) {
+            result += `${day} day${day > 1 ? 's' : ''} `;
+        }
+        if (hour > 0 || day > 0) {
+            result += `${hour} hour${hour > 1 ? 's' : ''} `;
+        }
+        result += `${minute} minute${minute > 1 ? 's' : ''}`;
+
+        return result.trim();
+    }
 
     function enable_submit() {
 
-           if( $('#show-events-btn').hasClass( "to-submit")){
-               return;
-           }
-           $('#show-events-btn').prop('disabled', false);
-           $('#show-events-btn').addClass('to-submit', 500);
-           $('#show-events-btn').toggle( "pulsate");
-           $('#show-events-btn').toggle( "fade");
+        if( $('#show-events-btn').hasClass( "to-submit")){
+           return;
         }
+        $('#show-events-btn').prop('disabled', false);
+        $('#show-events-btn').addClass('to-submit', 500);
+        $('#show-events-btn').toggle( "pulsate");
+        $('#show-events-btn').toggle( "fade");
+    }
+
+    function update_duration_span(duration_input){
+            var duration_str = format_minutes(duration_input.val());
+            duration_input.siblings("label").children("span").html(duration_str);
+    }
 
     $(document).ready(function() {
 
+        // Any duration input span label should be updated at start
+        $('input.filter-input[type="number"]').each( function(){
+            update_duration_span($(this));
+        });
+
+        // Bind input key to duration span update and submit btn blink
+        $('input.filter-input[type="number"]').on("input", function(){
+            update_duration_span($(this));
+            enable_submit();
+        });
+
         // Any check event should turn show 'events button' to color
-        $('.filter-input').change( enable_submit);
+        $('.filter-input[type=checkbox]').change( enable_submit);
 
         // Add datatable stuff
         $('#events-table').DataTable(
