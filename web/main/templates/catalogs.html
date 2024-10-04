@@ -55,11 +55,12 @@ Show missions found in db as clickable buttons, triggering mission's events disp
 
     <hr class="mt-2 mb-3">
     <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
-    <a class='btn btn-warning'
+    <button id="download-catalog"
+            class='btn btn-warning'
             title="Download as as HPevents catalog"
-            data-stuff="stuff" >
+            data-events_ids = {{ events_ids }} >
         Download
-    </a>
+    </button>
 </form>
 <hr class="mt-2 mb-3">
 {#
@@ -122,6 +123,11 @@ Show found events after form submit
         // Any check event should turn show 'events button' to color
         $('.filter-input[type=checkbox]').change( enable_submit);
 
+        $('#download-catalog').on('click', function() {
+            event.preventDefault();
+            let events_ids = $(this).data('events_ids')
+            alert(events_ids);
+        });
 
     });
 

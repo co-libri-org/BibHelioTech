@@ -102,6 +102,7 @@ class HpEvent(db.Model):
         duration_str = f"{days:4}d {hours_str:>8}"
 
         r_dict = {
+            "id": self.id,
             "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
                 0:-3
             ],

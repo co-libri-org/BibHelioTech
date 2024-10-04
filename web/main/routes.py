@@ -784,6 +784,7 @@ def catalogs():
         "catalogs.html",
         missions=_missions,
         events=_events_dicts,
+        events_ids=",".join([str(_e.id) for _e in _events_dicts]),
         db_stats=_db_stats,
         params=params,
     )
