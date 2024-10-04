@@ -34,22 +34,3 @@
 {% include 'events-table.html' %}
 
 {%  endblock %}
-
-{% block scripts %}
-{{ super() }}
-<script>
-$(document).ready(function() {
-    new DataTable('#events-table', {
-        ordering: true,
-        search: true,
-        paging: false,
-        buttons: [
-            'copy', 'csv'
-        ],
-        layout: {
-            topStart: 'buttons'
-        }
-    });
-});
-</script>
-{%  endblock %}
