@@ -2,6 +2,12 @@ tr {
     vertical-align: baseline;
 }
 
+td.hover-cell:hover {
+    cursor: help;
+    background: var(--bs-yellow);
+    border-radius: 2pt;
+}
+
 ul.flashes {
    list-style-position: inside;
    padding-left: 0;

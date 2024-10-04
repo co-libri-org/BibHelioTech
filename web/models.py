@@ -99,7 +99,7 @@ class HpEvent(db.Model):
         duration = datetime.timedelta(days=td.days, seconds=td.seconds, microseconds=0)
         hours_str = f"{duration}"[-8:]
         days = int(duration.days)
-        duration_str = f"{days:4} d, {hours_str:>8}"
+        duration_str = f"{days:4}d {hours_str:>8}"
 
         r_dict = {
             "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
