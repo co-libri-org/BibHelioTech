@@ -745,7 +745,6 @@ def catalogs():
         _events_df = _events_df[_events_df["duration"] < max_timedelta]
         _events_df = _events_df[_events_df["duration"] > min_timedelta]
         _events_df = _events_df[_events_df["nconf"] > params["nconf_min"]]
-        print(type(_events_df["duration"][0]))
 
         _events_dicts = _events_df.to_records()
 
