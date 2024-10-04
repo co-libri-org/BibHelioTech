@@ -20,6 +20,7 @@ hpevent_keys_ordered = [
     "occur_sat",
     "nb_durations",
     "conf",
+    "nconf",
 ]
 
 hpevent_parameters = {
@@ -35,6 +36,7 @@ hpevent_parameters = {
     "occur_sat": {"col_name": "OCCUR_SAT", "size": 1, "type": "int"},
     "nb_durations": {"col_name": "NB_DURATIONS", "size": 1, "type": "int"},
     "conf": {"col_name": "CONF", "size": 1, "type": "float"},
+    "nconf": {"col_name": "NCONF", "size": 1, "type": "float"},
 }
 
 
@@ -84,6 +86,7 @@ def dict_to_dict(event_dict, columns=None):
         "occur_sat": ["OCCUR_SAT"],
         "nb_durations": ["NB_DURATIONS"],
         "conf": ["CONF"],
+        "nconf": ["NCONF"],
     }
 
     # replace any synonym key with the proper one
