@@ -1,27 +1,40 @@
 {% extends "base_page.html" %}
 {% block more_head %}
-    <link rel="stylesheet" href="https:////cdn.datatables.net/2.1.7/css/dataTables.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css">
+<link rel="stylesheet" href="https:////cdn.datatables.net/2.1.7/css/dataTables.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css">
 
 {% endblock %}
 {% block scripts %}
-    <script src="https://cdn.datatables.net/2.1.7/js/dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            new DataTable('#events-table', {
-                ordering: true,
-                search: true,
-                paging: false,
-                buttons: [
-                    'csv'
-                ],
-                layout: {
-                    topStart: 'buttons'
-                }
-            });
+<script src="https://cdn.datatables.net/2.1.7/js/dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+<script>
+    function truncateString(str, num) {
+      if (str.length <= num) {
+        return str
+      }
+      return str.slice(0, num) + '...'
+    }
+    $(document).ready(function() {
+        new DataTable('#events-table', {
+            ordering: true,
+            search: true,
+            paging: false,
+            buttons: [
+                'csv'
+            ],
+            layout: {
+                topStart: 'buttons'
+            },
+<!--             columnDefs: [-->
+<!--                {-->
+<!--                render: (data, type, row) => data.substring(0,10)+"...",-->
+<!--                targets: 15-->
+<!--            },-->
+<!--]-->
+
         });
-    </script>
+    });
+</script>
 {%  endblock %}
