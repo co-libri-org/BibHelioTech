@@ -31,41 +31,7 @@
     {% endif %}
 </blockquote>
 <hr class="mt-2 mb-3">
-{% if not events  %}
-    {% set table_visibility = "invisible" %}
-{% endif %}
-<table id="events-table" class="table-hover table {{table_visibility}}">
-    <thead>
-    <tr>
-        <th scope="col" class="col-1">start</th>
-        <th scope="col" class="col-1">stop</th>
-        <th scope="col" class="col-1">duration</th>
-        <th scope="col" class="col-1">mission(s)</th>
-        <th scope="col" class="col-2">instrument(s)</th>
-        <th scope="col" class="col-1">region</th>
-        <th scope="col" class="col-1">D</th>
-        <th scope="col" class="col-1">R</th>
-        <th scope="col" class="col-1">Conf</th>
-        <th scope="col" class="col-1">NConf</th>
-    </tr>
-    </thead>
-    <tbody id="events-body">
-    {% for event in events %}
-    <tr>
-        <td>{{event.start_date|short_datetime}}</td>
-        <td>{{event.stop_date|short_datetime}}</td>
-        <td>{{event.duration|short_timedelta}}</td>
-        <td>{{event.mission}}</td>
-        <td>{{event.instrument}}</td>
-        <td>{{event.region}}</td>
-        <td>{{event.d}}</td>
-        <td>{{event.r}}</td>
-        <td>{{event.conf}}</td>
-        <td>{{event.nconf}}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% include 'events-table.html' %}
 
 {%  endblock %}
 

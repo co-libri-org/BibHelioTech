@@ -59,49 +59,10 @@ Show missions found in db as clickable buttons, triggering mission's events disp
 </form>
 <hr class="mt-2 mb-3">
 {#
-Show found events when mission button was clicked
--------------------------------------------------
+Show found events after form submit
+-----------------------------------
 #}
-<div class="mb-3">
-    {# Display Selected mission and Button for downloading at text catalog #}
-    <span id="get-catalog-title" class="h5"></span>
-    <a class="btn btn-warning invisible ms-3" id="get-catalog-txt"
-       href="#"
-       title="Get catalog as txt">
-        Download
-    </a>
-</div>
-<table id="events-table" class="table-hover table">
-    <thead>
-    <tr>
-        <th scope="col" class="col-2">start</th>
-        <th scope="col" class="col-2">stop</th>
-        <th scope="col" class="col-1">duration</th>
-        <th scope="col" class="col-4">doi</th>
-        <th scope="col" class="col-1">mission</th>
-        <th scope="col" class="col-1">instrument(s)</th>
-        <th scope="col" class="col-1">region</th>
-        <th scope="col" class="col-1">conf</th>
-        <th scope="col" class="col-1">nconf</th>
-    </tr>
-    </thead>
-    <tbody id="events-body">
-    {% for _e in events %}
-    <tr>
-        <td>{{_e.start_date}}</td>
-        <td>{{_e.stop_date}}</td>
-        <td>{{_e.duration}}</td>
-        <td>{{_e.doi}}</td>
-        <td>{{_e.mission}}</td>
-        <td>{{_e.instrument}}</td>
-        <td>{{_e.region}}</td>
-        <td>{{_e.conf}}</td>
-        <td>{{_e.nconf}}</td>
-    </tr>
-    {% endfor %}
-
-    </tbody>
-</table>
+{% include 'events-table.html' %}
 
 {%  endblock %}
 
@@ -157,12 +118,17 @@ Show found events when mission button was clicked
         // Any check event should turn show 'events button' to color
         $('.filter-input[type=checkbox]').change( enable_submit);
 
-        // Add datatable stuff
-        $('#events-table').DataTable(
-            {
+        // Add datatable capabilities
+        new DataTable('#events-table', {
             ordering: true,
-            search: false,
-            paging: false
+            search: true,
+            paging: false,
+            buttons: [
+                'copy', 'csv'
+            ],
+            layout: {
+                topStart: 'buttons'
+            }
         });
 
     });
