@@ -96,16 +96,10 @@ padding: 1px 2px !important;
     width: 20%;
 }
 
-#show-events-btn {
-    border: solid 1pt lightgrey !important;
-    border-radius: 0.2em;
-}
-#show-events-btn.to-submit:hover {
-    border: solid 1pt black !important;
-}
-#show-events-btn.to-submit  {
+#show-events-btn:disabled {
+    background-color: #F0F0F0 !important;
     border: solid 1pt grey !important;
-    background-color: var(--bs-yellow);
+    border-radius: 0.2em;
 }
 
 span.duration-val {

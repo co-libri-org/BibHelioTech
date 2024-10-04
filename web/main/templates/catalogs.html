@@ -54,8 +54,12 @@ Show missions found in db as clickable buttons, triggering mission's events disp
     {% endfor %}
 
     <hr class="mt-2 mb-3">
-    <input id="show-events-btn" type="submit" value="Show Events" disabled/>
-
+    <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
+    <a class='btn btn-warning'
+            title="Download as as HPevents catalog"
+            data-stuff="stuff" >
+        Download
+    </a>
 </form>
 <hr class="mt-2 mb-3">
 {#
