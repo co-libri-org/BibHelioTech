@@ -3,6 +3,7 @@ import json
 import os
 
 import dateutil.parser as parser
+import numpy as np
 import pandas as pd
 import redis
 import filetype
@@ -209,10 +210,18 @@ def pdf_to_db(file_stream, filename, istex_struct=None):
 
 
 @bp.app_template_filter("short_timedelta")
-def short_timedelta(in_timedelta: datetime.timedelta):
-    out_timedelta = datetime.timedelta(
-        seconds=in_timedelta.seconds,
-    )
+def short_timedelta(in_timedelta):
+    # out_timedelta = ""
+    # if type(in_timedelta) is np.timedelta64:
+    #     out_timedelta = in_timedelta.astype(str)[:-6]
+    # elif type(in_timedelta) is datetime.timedelta:
+    #     out_timedelta = datetime.timedelta(
+    #         days=in_timedelta.days,
+    #         seconds=in_timedelta.seconds,
+    #         microseconds=0,
+    #     )
+    out_timedelta = type(in_timedelta)
+
     return out_timedelta
 
 
@@ -726,19 +735,19 @@ def catalogs():
         _m = Mission.query.get(m_id)
         found_events.extend(_m.hp_events)
 
-    # translate to dict list, and pandas dataframe
+    # translate to dict list, then pandas dataframe, and filter
+    # then translate back to dict (pd.to_records)
     _events_dicts = [_e.get_dict() for _e in found_events]
+    if len(_events_dicts) > 0:
+        _events_df = pd.DataFrame.from_records(_events_dicts)
+        min_timedelta = pd.Timedelta(minutes=params["duration_min"])
+        max_timedelta = pd.Timedelta(minutes=params["duration_max"])
+        _events_df = _events_df[_events_df["duration"] < max_timedelta]
+        _events_df = _events_df[_events_df["duration"] > min_timedelta]
+        _events_df = _events_df[_events_df["nconf"] > params["nconf_min"]]
+        print(type(_events_df["duration"][0]))
 
-    _events_df = pd.DataFrame.from_records(_events_dicts)
-    min_timedelta = pd.Timedelta(minutes=params["duration_min"])
-    max_timedelta = pd.Timedelta(minutes=params["duration_max"])
-    _events_df = _events_df[_events_df["duration"] < max_timedelta]
-    _events_df = _events_df[_events_df["duration"] > min_timedelta]
-    _events_df = _events_df[_events_df["nconf"] > params["nconf_min"]]
-    _events_df['duration'] = _events_df['duration'].astype(str).str[:-6]
-    _events_dicts = _events_df.to_records()
-    # print(type(_events_df['duration'][0]))
-    #
+        _events_dicts = _events_df.to_records()
 
     # for web display, rebuild all missions as dict, with only fields we need
     _missions = [

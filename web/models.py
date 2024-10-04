@@ -95,13 +95,19 @@ class HpEvent(db.Model):
         return r_str
 
     def get_dict(self):
-        duration = self.stop_date - self.start_date
+        td = self.stop_date - self.start_date
+        duration = datetime.timedelta(days=td.days, seconds=td.seconds, microseconds=0)
+        hours_str = f"{duration}"[-8:]
+        days = int(duration.days)
+        duration_str = f"{days:4} d, {hours_str:>8}"
+
         r_dict = {
             "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
                 0:-3
             ],
             "stop_date": datetime.datetime.strftime(self.stop_date, DATE_FORMAT)[0:-3],
             "duration": duration,
+            "duration_str": duration_str,
             "doi": self.doi.doi,
             "mission": self.mission.name,
             "instrument": self.instrument.name,
