@@ -235,7 +235,9 @@ def catfile_to_rows(catfile):
     """
     hpeventdict_list = []
     try:
-        my_df = pd.read_csv(catfile, delimiter='\s+', comment='#', quotechar='"', header=None)
+        my_df = pd.read_csv(
+            catfile, delimiter="\s+", comment="#", quotechar='"', header=None
+        )
     except pd.errors.EmptyDataError:
         return []
     my_df.fillna("", inplace=True)
@@ -246,11 +248,11 @@ def catfile_to_rows(catfile):
 
 
 def dicts_to_df(_final_links):
-    """ Convert a list of dicts to a pandas dataframe """
+    """Convert a list of dicts to a pandas dataframe"""
     return pd.DataFrame.from_records(_final_links)
 
 
 def df_to_dicts(_fl_df):
-    """ Convert a pandas dataframe to a list of dicts """
+    """Convert a pandas dataframe to a list of dicts"""
     return json.loads(_fl_df.to_json(orient="records"))
     pass
