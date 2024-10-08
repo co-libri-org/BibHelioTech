@@ -116,6 +116,11 @@ font-weight: 500;
 }
 
 
+.number-bold {
+font-size=1.2em;
+font-weight: 500;
+}
+
 // ----------------------------------------------------------------------
 
 button.btn[disabled] ,

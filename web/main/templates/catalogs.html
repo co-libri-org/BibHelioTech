@@ -7,13 +7,15 @@
 {% if db_stats.filtered_events > 0 %}
 <blockquote class="text-center">
     <p class="lead fs-4 mb-0">
-        {{db_stats.filtered_events}} Events found over {{db_stats.total_events}}
+        <span class="number-bold">{{db_stats.filtered_events}}</span> Events filtered over a total <span
+            class="number-bold">{{db_stats.total_events}}</span>
     </p>
     <p class="lead fs-4 mb-0">
-         for missions {{db_stats.selected_missions}}
+        for missions: <span class="number-bold">{{db_stats.selected_missions|join(', ')}}</span>
     </p>
     <p class="lead fs-4 mb-0">
-        with filters MinDuration: {{params.duration_min}}, MaxDuration: {{params.duration_max}}, MinNConf: {{params.nconf_min}}
+        with filters MinDuration: <span class="number-bold">{{params.duration_min}} min</span>, MaxDuration: <span
+            class="number-bold">{{params.duration_max}} min</span>, MinNConf: <span class="number-bold">{{params.nconf_min}}</span>
     </p>
 </blockquote>
 <hr class="mt-2 mb-3">
@@ -23,52 +25,59 @@ Show missions found in db as clickable buttons, triggering mission's events disp
 -----------------------------------------------------------------------------------
 #}
 <form id="catalog-filter" action="{{url_for('main.catalogs')}}" method="post">
-    <h4 class="mb-3">Filters:</h4>
+    <h4 class="mb-3 d-inline-block">Filters:</h4>
     <div class="row">
         <div class="col">
             <div class="form-group">
                 <label for="duration-min">Min duration: <span class="duration-val"></span></label>
-                <input class="form-control filter-input" id="duration-min" name="duration-min" type="number" value="{{params.duration_min}}"/>
+                <input class="form-control filter-input" id="duration-min" name="duration-min" type="number"
+                       value="{{params.duration_min}}"/>
             </div>
         </div>
         <div class="col">
             <div class="form-group">
                 <label for="duration-max">Max duration: <span class="duration-val"></span></label>
-                <input class="form-control filter-input" id="duration-max" name="duration-max" type="number" value="{{params.duration_max}}"/>
+                <input class="form-control filter-input" id="duration-max" name="duration-max" type="number"
+                       value="{{params.duration_max}}"/>
             </div>
         </div>
         <div class="col">
             <div class="form-group">
                 <label for="nconf-min">Min NConf (0.0 - 1.0)</label>
-                <input class="form-control filter-input" id="nconf-min" name="nconf-min" type="number" value="{{params.nconf_min}}"
-                placeholder="1.0" step="0.01" min="0.0" max="1.0" />
+                <input class="form-control filter-input" id="nconf-min" name="nconf-min" type="number"
+                       value="{{params.nconf_min}}"
+                       placeholder="1.0" step="0.01" min="0.0" max="1.0"/>
             </div>
         </div>
     </div>
-    <h4 class="mt-5 mb-3">Available Missions:</h4>
-    {% for mission in missions %}
+    <h4 class="d-inline-block mt-5 mb-3">Available Missions:</h4>
+    <div class="row">
+        {% for mission in missions %}
         {% if mission.id in params.selected_missions %}
-            {%set checked = "checked"%}
+        {%set checked = "checked"%}
         {% else %}
-            {%set checked = ""%}
+        {%set checked = ""%}
         {% endif %}
-        <label class="btn mission-catalog" title="Show {{mission.num_events}} events for mission {{mission.name}}">
-            <input name="missions" type="checkbox" {{ checked }} class="filter-input form-check-input"
-                   value="{{mission.id}}">
-            {{mission.name}}
-            <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
-        </label>
-    {% endfor %}
+        <div class="col">
+            <label class="btn mission-catalog" title="Show {{mission.num_events}} events for mission {{mission.name}}">
+                <input name="missions" type="checkbox" {{ checked }} class="filter-input form-check-input"
+                       value="{{mission.id}}">
+                {{mission.name}}
+                <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
+            </label>
+        </div>
+        {% endfor %}
+    </div>
 
-    <hr class="mt-3 mb-3">
-    <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
-    <button id="download-catalog"
-            class='btn btn-warning'
-            title="Download as as HPevents catalog">
-        <a href="{{url_for('main.api_catalogs_txt',events_ids= events_ids)}} ">
-        Download
-        </a>
-    </button>
+        <hr class="mt-3 mb-3">
+        <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
+        <button id="download-catalog"
+                class='btn btn-warning'
+                title="Download as as HPevents catalog">
+            <a href="{{url_for('main.api_catalogs_txt',events_ids= events_ids)}} ">
+                Download
+            </a>
+        </button>
 </form>
 <hr class="mt-2 mb-3">
 {#
@@ -89,12 +98,12 @@ Show found events after form submit
 
         let result = "";
         if (day > 0) {
-            result += `${day} day${day > 1 ? 's' : ''} `;
+            result += `${day}d `;
         }
         if (hour > 0 || day > 0) {
-            result += `${hour} hour${hour > 1 ? 's' : ''} `;
+            result += `${hour}h `;
         }
-        result += `${minute} minute${minute > 1 ? 's' : ''}`;
+        result += `${minute}m`;
 
         return result.trim();
     }
