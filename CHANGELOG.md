@@ -25,11 +25,12 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [0.19.1-dev] - 2024-10-xx - Post Filtering
+## [0.19.2-dev] - 2024-10-xx - Post Filtering
 #### Fixed
 #### Changed
 - Catalogs page is now form
 #### New
+- Download button on events search page (/catalogs)
 - Events form/filtering by duration and NConf
 - Events datatables/sorting
 - Admin page adds catalogs to db
