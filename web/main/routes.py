@@ -757,9 +757,12 @@ def catalogs():
 
     # look for events corresponding to selected missions
     found_events = []
+    selected_missions_names = []
     for m_id in params["selected_missions"]:
         _m = Mission.query.get(m_id)
+        selected_missions_names.append(_m.name)
         found_events.extend(_m.hp_events)
+
 
     # translate to dict list, then pandas dataframe, and filter
     # then translate back to dict (pd.to_records)
@@ -781,29 +784,13 @@ def catalogs():
         if len(_m.hp_events) > 0
     ]
 
+
     # now get some stats and pack as dict
-    processed_papers = Paper.query.filter_by(cat_in_db=True).all()
-    all_missions = Mission.query.all()
-    all_events = HpEvent.query.all()
-    if len(all_events) > 1:
-        events_start_dates_asc = sorted(
-            [_e.start_date for _e in all_events], reverse=False
-        )
-        events_stop_dates_dsc = sorted(
-            [_e.stop_date for _e in all_events], reverse=True
-        )
-        global_start = events_start_dates_asc[0].strftime("%Y-%m-%d")
-        global_stop = events_stop_dates_dsc[0].strftime("%Y-%m-%d")
-    else:
-        global_start = ""
-        global_stop = ""
 
     _db_stats = {
-        "num_events": len(all_events),
-        "num_papers": len(processed_papers),
-        "num_missions": len(all_missions),
-        "global_start": global_start,
-        "global_stop": global_stop,
+        "total_events": len(found_events),
+        "filtered_events": len(_events_dicts),
+        "selected_missions": selected_missions_names,
     }
 
     return render_template(

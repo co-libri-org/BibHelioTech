@@ -4,16 +4,16 @@
 <title> {{events | length}} Events to display - {{base_title}}</title>
 {% endblock %}
 {% block content %}
-{% if db_stats.num_events > 0 %}
+{% if db_stats.filtered_events > 0 %}
 <blockquote class="text-center">
     <p class="lead fs-4 mb-0">
-        {{db_stats.num_papers}} Papers processed to find
+        {{db_stats.filtered_events}} Events found over {{db_stats.total_events}}
     </p>
     <p class="lead fs-4 mb-0">
-        {{db_stats.num_events}} Events across {{db_stats.num_missions}} Missions
+         for missions {{db_stats.selected_missions}}
     </p>
     <p class="lead fs-4 mb-0">
-        from {{db_stats.global_start}} to {{db_stats.global_stop}}
+        with filters MinDuration: {{params.duration_min}}, MaxDuration: {{params.duration_max}}, MinNConf: {{params.nconf_min}}
     </p>
 </blockquote>
 <hr class="mt-2 mb-3">
