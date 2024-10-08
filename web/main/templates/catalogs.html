@@ -57,9 +57,10 @@ Show missions found in db as clickable buttons, triggering mission's events disp
     <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
     <button id="download-catalog"
             class='btn btn-warning'
-            title="Download as as HPevents catalog"
-            data-events_ids = {{ events_ids }} >
+            title="Download as as HPevents catalog">
+        <a href="{{url_for('main.api_catalogs_txt',events_ids= events_ids)}} ">
         Download
+        </a>
     </button>
 </form>
 <hr class="mt-2 mb-3">
@@ -100,6 +101,7 @@ Show found events after form submit
         $('#show-events-btn').addClass('to-submit', 500);
         $('#show-events-btn').toggle( "fade");
         $('#show-events-btn').toggle( "fade");
+        $('#download-catalog').attr('disabled', 'disabled');
     }
 
     function update_duration_span(duration_input){
@@ -122,12 +124,6 @@ Show found events after form submit
 
         // Any check event should turn show 'events button' to color
         $('.filter-input[type=checkbox]').change( enable_submit);
-
-        $('#download-catalog').on('click', function() {
-            event.preventDefault();
-            let events_ids = $(this).data('events_ids')
-            alert(events_ids);
-        });
 
     });
 

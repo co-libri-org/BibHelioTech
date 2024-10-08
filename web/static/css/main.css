@@ -107,6 +107,14 @@ font-size: 1.2em;
 font-weight: 500;
 }
 
+#download-catalog:disabled {
+    background-color: #F0F0F0 !important;
+}
+#download-catalog>a{
+    color: inherit; /* blue colors for links too */
+    text-decoration: inherit; /* no underline */
+}
+
 // ----------------------------------------------------------------------
 
 button.btn[disabled] ,

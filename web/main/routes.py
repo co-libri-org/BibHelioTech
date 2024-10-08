@@ -831,25 +831,54 @@ def api_catalogs_txt():
     :parameter: mission_id  in get request
     :return: catalog text file as attachment
     """
+    events_ids = request.args.get("events_ids")
     mission_id = request.args.get("mission_id")
-    mission = db.session.get(Mission, mission_id) if mission_id else None
-    if mission_id is None or mission is None:
-        return Response(
-            f"No valid parameters for url: {mission_id} {mission}",
-            status=400,
-        )
-    # TODO: REFACTOR extract to method and merge common code with api_catalogs
-    events_list = [
-        event.get_dict()
-        for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
-            HpEvent.start_date
-        )
-    ]
-    catalog_txt_stream = rows_to_catstring(events_list, mission.name)
+    if events_ids:
+        today = datetime.datetime.now().strftime("%Y%M%dT%H%m%S")
+        catalog_name = f"web_request_{today}"
+        events_ids = events_ids.split(",")
+        events_list = []
+        for e_id in events_ids:
+            events_list.append(db.session.get(HpEvent, e_id).get_dict())
+    elif mission_id:
+        mission = db.session.get(Mission, mission_id) if mission_id else None
+        catalog_name = mission.name
+        if mission_id is None or mission is None:
+            return Response(
+                f"No valid parameters for url: {mission_id} {mission}",
+                status=400,
+            )
+        # TODO: REFACTOR extract to method and merge common code with api_catalogs
+        events_list = [
+            event.get_dict()
+            for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
+                HpEvent.start_date
+            )
+        ]
+    else:
+        flash(f"Missing arguments 'mission_id' or 'events_list')")
+        return redirect(url_for("main.catalogs"))
+    catalog_txt_stream = rows_to_catstring(
+        events_list,
+        catalog_name,
+        columns=[
+            "start_time",
+            "stop_time",
+            "doi",
+            "sats",
+            "insts",
+            "regs",
+            "d",
+            "r",
+            "conf",
+            "nconf",
+        ],
+    )
+
     date_now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     bht_pipeline_version = current_app.config["BHT_PIPELINE_VERSION"]
     # TODO: build catalog name else where, may be from some bht.method()
-    file_name = f"{mission.name}_{date_now}_bibheliotech_V{bht_pipeline_version}.txt"
+    file_name = f"{catalog_name}_{date_now}_bibheliotech_V{bht_pipeline_version}.txt"
     upload_dir = current_app.config["WEB_UPLOAD_DIR"]
     if not os.path.exists(upload_dir):
         os.makedirs(upload_dir)
