@@ -697,7 +697,33 @@ def events(ref_name, ref_id):
     # translate events to dict list
     events_dict_list = [_e.get_dict() for _e in found_events]
 
-    return render_template("events.html", events=events_dict_list, paper=paper)
+    # now get some stats and pack as dict
+    processed_papers = Paper.query.filter_by(cat_in_db=True).all()
+    all_missions = Mission.query.all()
+    if len(all_events) > 1:
+        events_start_dates_asc = sorted(
+            [_e.start_date for _e in all_events], reverse=False
+        )
+        events_stop_dates_dsc = sorted(
+            [_e.stop_date for _e in all_events], reverse=True
+        )
+        global_start = events_start_dates_asc[0].strftime("%Y-%m-%d")
+        global_stop = events_stop_dates_dsc[0].strftime("%Y-%m-%d")
+    else:
+        global_start = ""
+        global_stop = ""
+
+    _db_stats = {
+        "num_events": len(all_events),
+        "num_papers": len(processed_papers),
+        "num_missions": len(all_missions),
+        "global_start": global_start,
+        "global_stop": global_stop,
+    }
+
+    return render_template(
+        "events.html", events=events_dict_list, paper=paper, db_stats=_db_stats
+    )
 
 
 @bp.route("/admin", methods=["GET"])
