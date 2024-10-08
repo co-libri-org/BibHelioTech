@@ -856,7 +856,7 @@ def api_catalogs_txt():
             )
         ]
     else:
-        flash(f"Missing arguments 'mission_id' or 'events_list')")
+        flash(f"Missing arguments 'mission_id' or 'events_ids[]' empty", "warning")
         return redirect(url_for("main.catalogs"))
     catalog_txt_stream = rows_to_catstring(
         events_list,
