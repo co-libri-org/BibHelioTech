@@ -95,11 +95,20 @@ class HpEvent(db.Model):
         return r_str
 
     def get_dict(self):
+        td = self.stop_date - self.start_date
+        duration = datetime.timedelta(days=td.days, seconds=td.seconds, microseconds=0)
+        hours_str = f"{duration}"[-8:]
+        days = int(duration.days)
+        duration_str = f"{days:4}d {hours_str:>8}"
+
         r_dict = {
+            "id": self.id,
             "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
                 0:-3
             ],
             "stop_date": datetime.datetime.strftime(self.stop_date, DATE_FORMAT)[0:-3],
+            "duration": duration,
+            "duration_str": duration_str,
             "doi": self.doi.doi,
             "mission": self.mission.name,
             "instrument": self.instrument.name,
@@ -108,6 +117,10 @@ class HpEvent(db.Model):
             "d": self.d,
             "r": self.r,
         }
+        # normalize conf index on the whole database
+        all_events = HpEvent.query.all()
+        max_conf = max([_e.conf for _e in all_events])
+        r_dict["nconf"] = 1.0 - r_dict["conf"] / max_conf
         return r_dict
 
     def set_doi(self, doi_str):
@@ -297,7 +310,7 @@ class Paper(db.Model):
         """
         for _e in self.get_events():
             db.session.delete(_e)
-        self.cat_in_db=False
+        self.cat_in_db = False
         db.session.commit()
 
     def get_events(self):

@@ -2,9 +2,9 @@
 {% block more_head %}
 {{ super () }}
 {% if paper %}
-    <title>{{events | length}} Events for paper {{paper.id}}</title>
+<title>{{events | length}} Events for paper {{paper.id}}</title>
 {% else %}
-    <title>{{events | length}} Events in database</title>
+<title>{{events | length}} Events in database</title>
 {% endif %}
 {% endblock %}
 {% block content %}
@@ -14,65 +14,36 @@
         {{events | length }} Events for the paper
         <a class="btn btn-warning paper-id" href="{{url_for('main.paper_show', paper_id=paper.id)}}"
            title="Show paper #{{paper.id}}">
-                {{paper.id}}
+            {{paper.id}}
         </a>
         with pipeline
-        <a class="btn btn-warning btn-version" href="{{url_for('main.changelog', module='pipeline')}}" title="Please see CHANGELOG for changes">
+        <a class="btn btn-warning btn-version" href="{{url_for('main.changelog', module='pipeline')}}"
+           title="Please see CHANGELOG for changes">
             V{{paper.pipeline_version}}
         </a>
     </p>
     <p class="fs-4 mb-0 fw-bolder">
         "{{paper.title}}
     </p>
+    {% elif db_stats.num_events > 0 %}
+    <blockquote class="text-center">
+        <p class="lead fs-4 mb-0">
+            {{db_stats.num_papers}} Papers processed to find
+        </p>
+        <p class="lead fs-4 mb-0">
+            {{db_stats.num_events}} Events across {{db_stats.num_missions}} Missions
+        </p>
+        <p class="lead fs-4 mb-0">
+            from {{db_stats.global_start}} to {{db_stats.global_stop}}
+        </p>
+    </blockquote>
+    {% else %}
+    <p class="lead fs-4 mb-0">
+        <span class="fw-bold">{{events | length }}</span> Events in whole database
+    </p>
     {% endif %}
 </blockquote>
 <hr class="mt-2 mb-3">
-{% if not events  %}
-    {% set table_visibility = "invisible" %}
-{% endif %}
-<table id="events-table" class="table-hover table {{table_visibility}}">
-    <thead>
-    <tr>
-        <th scope="col" class="col-1">start</th>
-        <th scope="col" class="col-1">stop</th>
-        <th scope="col" class="col-1">mission(s)</th>
-        <th scope="col" class="col-2">instrument(s)</th>
-        <th scope="col" class="col-1">region</th>
-        <th scope="col" class="col-1">D</th>
-        <th scope="col" class="col-1">R</th>
-        <th scope="col" class="col-1">Conf</th>
-        <th scope="col" class="col-1">NConf</th>
-    </tr>
-    </thead>
-    <tbody id="events-body">
-    {% for event in events %}
-    <tr>
-        <td>{{event.start_date|short_datetime}}</td>
-        <td>{{event.stop_date|short_datetime}}</td>
-        <td>{{event.mission}}</td>
-        <td>{{event.instrument}}</td>
-        <td>{{event.region}}</td>
-        <td>{{event.d}}</td>
-        <td>{{event.r}}</td>
-        <td>{{event.conf}}</td>
-        <td>{{event.nconf}}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% include 'events-table.html' %}
 
-{%  endblock %}
-
-{% block scripts %}
-{{ super() }}
-<script>
-$(document).ready(function() {
-    $('#events-table').DataTable(
-        {
-        ordering: true,
-        search: false,
-        paging: false
-    });
-});
-</script>
 {%  endblock %}

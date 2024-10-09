@@ -2,6 +2,12 @@ tr {
     vertical-align: baseline;
 }
 
+td.hover-cell:hover {
+    cursor: help;
+    background: var(--bs-yellow);
+    border-radius: 2pt;
+}
+
 ul.flashes {
    list-style-position: inside;
    padding-left: 0;
@@ -61,13 +67,70 @@ margin-top: -5px;
 padding: 1px 2px !important;
 }
 
-.mission-catalog{
+// -----------------------------------------------------------------------
+//                     CATALOGS FORM
+// -----------------------------------------------------------------------
+
+label.mission-catalog {
+
+}
+
+.mission-catalog > span {
+float: right;
+}
+.mission-catalog {
+    width:100%;
+    text-align: left !important;
     margin-bottom: 8px;
     margin-right: 5px;
 }
 .mission-catalog:hover{
-    border: solid 1pt grey !important ;
+    border: solid 1pt black !important ;
 }
+.mission-catalog:has(input:checked) {
+     background-color: #ffca2c;
+}
+.mission-catalog > input[type="checkbox"] {
+    border: solid 1pt grey;
+    background-color: white;
+}
+.mission-catalog > input[type="checkbox"]:checked {
+    background-color: lightgrey;
+}
+.mission-catalog > input[type="checkbox"]:focus {
+    outline: 0px solid red !important;
+    box-shadow: 0 0 0px  !important;
+}
+#catalog-filter   input[type="number"] {
+    width: 60%;
+}
+
+#show-events-btn:disabled {
+    background-color: #F0F0F0 !important;
+    border: solid 1pt grey !important;
+    border-radius: 0.2em;
+}
+
+span.duration-val {
+font-size: 1.2em;
+font-weight: 500;
+}
+
+#download-catalog:disabled {
+    background-color: #F0F0F0 !important;
+}
+#download-catalog>a{
+    color: inherit; /* blue colors for links too */
+    text-decoration: inherit; /* no underline */
+}
+
+
+.number-bold {
+font-size=1.2em;
+font-weight: 500;
+}
+
+// ----------------------------------------------------------------------
 
 button.btn[disabled] ,
 input.btn[disabled] ,

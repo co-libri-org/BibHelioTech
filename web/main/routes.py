@@ -3,6 +3,8 @@ import json
 import os
 
 import dateutil.parser as parser
+import numpy as np
+import pandas as pd
 import redis
 import filetype
 import requests
@@ -205,6 +207,22 @@ def pdf_to_db(file_stream, filename, istex_struct=None):
         paper.set_pubdate(istex_struct["pub_date"])
         paper.set_istex_id(istex_struct["istex_id"])
     return paper.id
+
+
+@bp.app_template_filter("short_timedelta")
+def short_timedelta(in_timedelta):
+    # out_timedelta = ""
+    # if type(in_timedelta) is np.timedelta64:
+    #     out_timedelta = in_timedelta.astype(str)[:-6]
+    # elif type(in_timedelta) is datetime.timedelta:
+    #     out_timedelta = datetime.timedelta(
+    #         days=in_timedelta.days,
+    #         seconds=in_timedelta.seconds,
+    #         microseconds=0,
+    #     )
+    out_timedelta = type(in_timedelta)
+
+    return out_timedelta
 
 
 @bp.app_template_filter("short_datetime")
@@ -679,34 +697,9 @@ def events(ref_name, ref_id):
     # translate events to dict list
     events_dict_list = [_e.get_dict() for _e in found_events]
 
-    # normalize conf index on the whole database
-    max_conf = max([_e.conf for _e in all_events])
-    for _d in events_dict_list:
-        _d["nconf"] = "{:.4f}".format(_d["conf"]/max_conf)
-
-    return render_template("events.html", events=events_dict_list, paper=paper)
-
-
-@bp.route("/catalogs", methods=["GET"])
-def catalogs():
-    """UI page to retrieve catalogs by mission"""
-
-    # rebuild all missions as dict, keeping only what we need
-    _missions = [
-        {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
-        for _m in db.session.query(Mission).order_by(Mission.name).all()
-        if len(_m.hp_events) > 0
-    ]
-
-    # build a list of papers with catalogs not already inserted in db
-    _catalogs = [
-        paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
-    ]
-
     # now get some stats and pack as dict
     processed_papers = Paper.query.filter_by(cat_in_db=True).all()
     all_missions = Mission.query.all()
-    all_events = HpEvent.query.all()
     if len(all_events) > 1:
         events_start_dates_asc = sorted(
             [_e.start_date for _e in all_events], reverse=False
@@ -727,8 +720,86 @@ def catalogs():
         "global_start": global_start,
         "global_stop": global_stop,
     }
+
     return render_template(
-        "catalogs.html", missions=_missions, catalogs=_catalogs, db_stats=_db_stats
+        "events.html", events=events_dict_list, paper=paper, db_stats=_db_stats
+    )
+
+
+@bp.route("/admin", methods=["GET"])
+def admin():
+
+    # build a list of papers with catalogs not already inserted in db
+    _catalogs = [
+        paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
+    ]
+
+    return render_template("admin.html", catalogs=_catalogs)
+
+
+@bp.route("/catalogs", methods=["GET", "POST"])
+def catalogs():
+    """UI page to retrieve catalogs by mission"""
+    params = {
+        "selected_missions": [1],
+        "duration_max": 2880,  # 2 days in minutes
+        "duration_min": 0,  # 1 hour in minutes
+        "nconf_min": 0.980,
+    }
+    if request.method == "POST":
+        params["selected_missions"] = [int(i) for i in request.form.getlist("missions")]
+        params["duration_max"] = int(request.form.get("duration-max"))
+        params["duration_min"] = int(request.form.get("duration-min"))
+        params["nconf_min"] = float(request.form.get("nconf-min"))
+    else:
+        # get params from session
+        pass
+
+    # look for events corresponding to selected missions
+    found_events = []
+    selected_missions_names = []
+    for m_id in params["selected_missions"]:
+        _m = Mission.query.get(m_id)
+        selected_missions_names.append(_m.name)
+        found_events.extend(_m.hp_events)
+
+
+    # translate to dict list, then pandas dataframe, and filter
+    # then translate back to dict (pd.to_records)
+    _events_dicts = [_e.get_dict() for _e in found_events]
+    if len(_events_dicts) > 0:
+        _events_df = pd.DataFrame.from_records(_events_dicts)
+        min_timedelta = pd.Timedelta(minutes=params["duration_min"])
+        max_timedelta = pd.Timedelta(minutes=params["duration_max"])
+        _events_df = _events_df[_events_df["duration"] < max_timedelta]
+        _events_df = _events_df[_events_df["duration"] > min_timedelta]
+        _events_df = _events_df[_events_df["nconf"] > params["nconf_min"]]
+
+        _events_dicts = _events_df.to_records()
+
+    # for web display, rebuild all missions as dict, with only fields we need
+    _missions = [
+        {"name": _m.name, "id": _m.id, "num_events": len(_m.hp_events)}
+        for _m in db.session.query(Mission).order_by(Mission.name).all()
+        if len(_m.hp_events) > 0
+    ]
+
+
+    # now get some stats and pack as dict
+
+    _db_stats = {
+        "total_events": len(found_events),
+        "filtered_events": len(_events_dicts),
+        "selected_missions": selected_missions_names,
+    }
+
+    return render_template(
+        "catalogs.html",
+        missions=_missions,
+        events=_events_dicts,
+        events_ids=",".join([str(_e.id) for _e in _events_dicts]),
+        db_stats=_db_stats,
+        params=params,
     )
 
 
@@ -773,25 +844,54 @@ def api_catalogs_txt():
     :parameter: mission_id  in get request
     :return: catalog text file as attachment
     """
+    events_ids = request.args.get("events_ids")
     mission_id = request.args.get("mission_id")
-    mission = db.session.get(Mission, mission_id) if mission_id else None
-    if mission_id is None or mission is None:
-        return Response(
-            f"No valid parameters for url: {mission_id} {mission}",
-            status=400,
-        )
-    # TODO: REFACTOR extract to method and merge common code with api_catalogs
-    events_list = [
-        event.get_dict()
-        for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
-            HpEvent.start_date
-        )
-    ]
-    catalog_txt_stream = rows_to_catstring(events_list, mission.name)
+    if events_ids:
+        today = datetime.datetime.now().strftime("%Y%M%dT%H%m%S")
+        catalog_name = f"web_request_{today}"
+        events_ids = events_ids.split(",")
+        events_list = []
+        for e_id in events_ids:
+            events_list.append(db.session.get(HpEvent, e_id).get_dict())
+    elif mission_id:
+        mission = db.session.get(Mission, mission_id) if mission_id else None
+        catalog_name = mission.name
+        if mission_id is None or mission is None:
+            return Response(
+                f"No valid parameters for url: {mission_id} {mission}",
+                status=400,
+            )
+        # TODO: REFACTOR extract to method and merge common code with api_catalogs
+        events_list = [
+            event.get_dict()
+            for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
+                HpEvent.start_date
+            )
+        ]
+    else:
+        flash(f"Missing arguments 'mission_id' or 'events_ids[]' empty", "warning")
+        return redirect(url_for("main.catalogs"))
+    catalog_txt_stream = rows_to_catstring(
+        events_list,
+        catalog_name,
+        columns=[
+            "start_time",
+            "stop_time",
+            "doi",
+            "sats",
+            "insts",
+            "regs",
+            "d",
+            "r",
+            "conf",
+            "nconf",
+        ],
+    )
+
     date_now = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     bht_pipeline_version = current_app.config["BHT_PIPELINE_VERSION"]
     # TODO: build catalog name else where, may be from some bht.method()
-    file_name = f"{mission.name}_{date_now}_bibheliotech_V{bht_pipeline_version}.txt"
+    file_name = f"{catalog_name}_{date_now}_bibheliotech_V{bht_pipeline_version}.txt"
     upload_dir = current_app.config["WEB_UPLOAD_DIR"]
     if not os.path.exists(upload_dir):
         os.makedirs(upload_dir)

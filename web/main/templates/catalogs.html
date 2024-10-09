@@ -1,174 +1,147 @@
 {% extends "base_table.html" %}
 {% block more_head %}
 {{ super () }}
-<title> {{catalogs | length}} Catalogs pending - {{base_title}}</title>
+<title> {{events | length}} Events to display - {{base_title}}</title>
 {% endblock %}
 {% block content %}
-{% if db_stats.num_events > 0 %}
+{% if db_stats.filtered_events > 0 %}
 <blockquote class="text-center">
     <p class="lead fs-4 mb-0">
-       {{db_stats.num_papers}} Papers processed to find
+        <span class="number-bold">{{db_stats.filtered_events}}</span> Events filtered over a total <span
+            class="number-bold">{{db_stats.total_events}}</span>
     </p>
     <p class="lead fs-4 mb-0">
-        {{db_stats.num_events}} Events accross {{db_stats.num_missions}} Missions
+        for missions: <span class="number-bold">{{db_stats.selected_missions|join(', ')}}</span>
     </p>
     <p class="lead fs-4 mb-0">
-        from {{db_stats.global_start}} to {{db_stats.global_stop}}
+        with filters MinDuration: <span class="number-bold">{{params.duration_min}} min</span>, MaxDuration: <span
+            class="number-bold">{{params.duration_max}} min</span>, MinNConf: <span class="number-bold">{{params.nconf_min}}</span>
     </p>
 </blockquote>
-<hr class="mt-2 mb-3">
-{% endif %}
-{#
-Show a list of catalogs files not already inserted in db
---------------------------------------------------------
-#}
-{% if not catalogs|length == 0 %}
-<h4>Catalogs to add in database:</h4>
-<table class="table-hover table">
-    {% for paper in catalogs %}
-    <tr>
-        <td class="col-4 text-truncate" style="max-width: 550px;" title="{{paper.ark}}">
-            {{paper.title}}
-        </td>
-        <td class="col-6">
-            <button class="btn btn-warning add-catalog position-relative" data-paper_id="{{paper.id}}">add in db
-                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                </span>
-            </button>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
 <hr class="mt-2 mb-3">
 {% endif %}
 {#
 Show missions found in db as clickable buttons, triggering mission's events display
 -----------------------------------------------------------------------------------
 #}
-<h4 class="mb-3">Available Missions:</h4>
-{% for mission in missions %}
-<button class="btn mission-catalog" data-mission_id="{{mission.id}}"
-        title="Show {{mission.num_events}} events for mission {{mission.name}}">
-    {{mission.name}}
-    <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
-</button>
-{% endfor %}
+<form id="catalog-filter" action="{{url_for('main.catalogs')}}" method="post">
+    <h4 class="mb-3 d-inline-block">Filters:</h4>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label for="duration-min">Min duration: <span class="duration-val"></span></label>
+                <input class="form-control filter-input" id="duration-min" name="duration-min" type="number"
+                       value="{{params.duration_min}}"/>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="duration-max">Max duration: <span class="duration-val"></span></label>
+                <input class="form-control filter-input" id="duration-max" name="duration-max" type="number"
+                       value="{{params.duration_max}}"/>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="nconf-min">Min NConf (0.0 - 1.0)</label>
+                <input class="form-control filter-input" id="nconf-min" name="nconf-min" type="number"
+                       value="{{params.nconf_min}}"
+                       placeholder="1.0" step="0.01" min="0.0" max="1.0"/>
+            </div>
+        </div>
+    </div>
+    <h4 class="d-inline-block mt-5 mb-3">Available Missions:</h4>
+    <div class="row">
+        {% for mission in missions %}
+        {% if mission.id in params.selected_missions %}
+        {%set checked = "checked"%}
+        {% else %}
+        {%set checked = ""%}
+        {% endif %}
+        <div class="col-2">
+            <label class="btn mission-catalog" title="Show {{mission.num_events}} events for mission {{mission.name}}">
+                <input name="missions" type="checkbox" {{ checked }} class="filter-input form-check-input"
+                       value="{{mission.id}}">
+                {{mission.name}}
+                <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
+            </label>
+        </div>
+        {% endfor %}
+    </div>
+
+        <hr class="mt-3 mb-3">
+        <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
+        <button id="download-catalog"
+                class='btn btn-warning'
+                title="Download as as HPevents catalog">
+            <a href="{{url_for('main.api_catalogs_txt',events_ids= events_ids)}} ">
+                Download
+            </a>
+        </button>
+</form>
 <hr class="mt-2 mb-3">
 {#
-Show found events when mission button was clicked
--------------------------------------------------
+Show found events after form submit
+-----------------------------------
 #}
-<div class="mb-3">
-    {# Display Selected mission and Button for downloading at text catalog #}
-    <span id="get-catalog-title" class="h5"></span>
-    <a class="btn btn-warning invisible ms-3" id="get-catalog-txt"
-       href="#"
-       title="Get catalog as txt">
-        Download
-    </a>
-</div>
-<table id="events-table" class="table-hover table invisible">
-    <thead>
-    <tr>
-        <th scope="col" class="col-2">start</th>
-        <th scope="col" class="col-2">stop</th>
-        <th scope="col" class="col-4">doi</th>
-        <th scope="col" class="col-1">instrument(s)</th>
-        <th scope="col" class="col-1">region</th>
-    </tr>
-    </thead>
-    <tbody id="events-body">
-    {# this tbody will be filled in by js callback setCatalog() at '.mission-catalog' btn click #}
-    </tbody>
-</table>
+{% include 'events-table.html' %}
 
 {%  endblock %}
 
 {% block scripts %}
 {{ super() }}
-<script src="{{url_for('static', filename='js/tools.js') | staticversion }} "></script>
 <script>
+    function format_minutes(minutes) {
+        const day = Math.floor(minutes / (24 * 60));
+        const hour = Math.floor((minutes % (24 * 60)) / 60);
+        const minute = minutes % 60;
 
-// Update events displayed
-// - retrieving events from the catalogs' api url
-// - sending the resulting list to the setCatalog()
-// - showing the download button
-// - enlightening this mission among missions buttons
-function update_catalog() {
-    $.get({
-        url: '{{url_for("main.api_catalogs")}}',
-        data: {mission_id: $(this).data("mission_id")}
-    })
-    .done((res) => {
-        console.log('Events requested for mission id: ', res.data.mission_id);
-        // First configure  the download button
-        setDownloadBtn(res.data.mission);
-        // Then show the list of events on screen
-        setCatalog(res.data.events);
-        // And enlighten current mission button after removing previous
-        $('.mission-catalog.btn-warning').removeClass('btn-warning');
-        $(this).addClass('btn-warning');
-
-    })
-    .fail((err) => {
-        console.log(err);
-    });
-}
-
-// At mission view catalog set the download button
-//  - showing it, changing title and content
-//  - setting href for later click
-function setDownloadBtn(mission){
-    if( mission.num_events < 2 ){
-        event_string = "event"
+        let result = "";
+        if (day > 0) {
+            result += `${day}d `;
         }
-    else {
-        event_string = "events"
+        if (hour > 0 || day > 0) {
+            result += `${hour}h `;
         }
-    $('#get-catalog-title').text(mission.num_events+" "+event_string+" for "+mission.name)
-    get_catalog_btn = $('#get-catalog-txt')
-    get_catalog_btn.removeClass('invisible').addClass('visible')
-    get_catalog_btn.attr("title", "Get txt catalog for mission "+mission.name)
-    get_catalog_url = '{{url_for("main.api_catalogs_txt")}}?'+$.param({mission_id: mission.id});
-    get_catalog_btn.attr("href", get_catalog_url)
-}
+        result += `${minute}m`;
 
-// When a mission-catalog button is clicked
-// Fill in rows with  a given list of event
-// But first delete container
-function setCatalog(events) {
-    $("#events-table").removeClass("invisible").addClass("visible")
-    eventsBodyElmnt = $("#events-body")
-    eventsBodyElmnt.empty();
-    $.each(events, function(idx, event){
-        var row  = $('<tr></tr>');
-        row.append($('<td>'+event.start_date+'</td>'));
-        row.append($('<td>'+event.stop_date+'</td>'));
-        row.append($('<td><a href="'+event.doi+'">'+event.doi+'</a></td>'));
-        row.append($('<td>'+event.instrument+'</td>'));
-        row.append($('<td><span class="region-value" title="as defined by the SPASE data model">'+event.region+'</span></td>'));
-        eventsBodyElmnt.append(row);
+        return result.trim();
+    }
+
+    function enable_submit() {
+
+        if( $('#show-events-btn').hasClass( "to-submit")){
+           return;
+        }
+        $('#show-events-btn').prop('disabled', false);
+        $('#show-events-btn').addClass('to-submit', 500);
+        $('#show-events-btn').toggle( "fade");
+        $('#show-events-btn').toggle( "fade");
+        $('#download-catalog').attr('disabled', 'disabled');
+    }
+
+    function update_duration_span(duration_input){
+            var duration_str = format_minutes(duration_input.val());
+            duration_input.siblings("label").children("span").html(duration_str);
+    }
+
+    $(document).ready(function() {
+
+        // Any duration input span label should be updated at start
+        $('input.filter-input[type="number"]').each( function(){
+            update_duration_span($(this));
+        });
+
+        // Bind input key to duration span update and submit btn blink
+        $('input.filter-input[type="number"]').on("input", function(){
+            update_duration_span($(this));
+            enable_submit();
+        });
+
+        // Any check event should turn show 'events button' to color
+        $('.filter-input[type=checkbox]').change( enable_submit);
+
     });
-}
-
-
-$(document).ready(function() {
-
-    // For each un-added catalog button, attach callback:
-    $('.add-catalog').on('click', push_catalog );
-
-    // For each mission button, attach a call back:
-    $('.mission-catalog').on('click', update_catalog);
-
-    // Add datatable stuff
-    $('#events-table').DataTable(
-        {
-        ordering: true,
-        search: false,
-        paging: false
-    });
-
-});
 
 </script>
 {%  endblock %}

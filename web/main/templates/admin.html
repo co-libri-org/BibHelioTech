@@ -1,0 +1,41 @@
+{% extends "base_page.html" %}
+{%  block more_head %}
+<title> {{catalogs | length}} Catalogs pending - {{base_title}}</title>
+{%  endblock %}
+{% block content %}
+{#
+Show a list of catalogs files not already inserted in db
+--------------------------------------------------------
+#}
+{% if not catalogs|length == 0 %}
+<h4>Catalogs to add in database:</h4>
+<table class="table-hover table">
+    {% for paper in catalogs %}
+    <tr>
+        <td class="col-4 text-truncate" style="max-width: 550px;" title="{{paper.ark}}">
+            {{paper.title}}
+        </td>
+        <td class="col-6">
+            <button class="btn btn-warning add-catalog position-relative" data-paper_id="{{paper.id}}">add in db
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                </span>
+            </button>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+<hr class="mt-2 mb-3">
+{% endif %}
+{%  endblock content %}
+
+{% block scripts %}
+<script src="{{url_for('static', filename='js/tools.js') | staticversion }} "></script>
+<script>
+
+$(document).ready(function() {
+
+    // For each un-added catalog button, attach callback:
+    $('.add-catalog').on('click', push_catalog );
+});
+</script>
+{%  endblock %}

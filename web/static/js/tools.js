@@ -6,7 +6,7 @@
 // - pushing the catalog id
 // - reloading the page
 function push_catalog(){
-    paper_id = $(this).data('paper_id')
+    let paper_id = $(this).data('paper_id')
     $.post({
         url: "/api/push_catalog",
         data: JSON.stringify({ paper_id: paper_id}),

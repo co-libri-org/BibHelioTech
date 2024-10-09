@@ -25,6 +25,15 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [0.19.2] - 2024-10-09 - Post Filtering Form
+#### Changed
+- Catalogs page is now form
+#### New
+- Download button on events search page (/catalogs)
+- Events form/filtering by duration and NConf
+- Events datatables/sorting
+- Admin page adds catalogs to db
+
 ## [0.18.0] - 2024-09-27 - Pipeline optimizations
 #### Fixed
 - Catalog bugs, see pipeline changes
