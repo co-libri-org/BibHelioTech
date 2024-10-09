@@ -58,7 +58,7 @@ Show missions found in db as clickable buttons, triggering mission's events disp
         {% else %}
         {%set checked = ""%}
         {% endif %}
-        <div class="col">
+        <div class="col-2">
             <label class="btn mission-catalog" title="Show {{mission.num_events}} events for mission {{mission.name}}">
                 <input name="missions" type="checkbox" {{ checked }} class="filter-input form-check-input"
                        value="{{mission.id}}">
