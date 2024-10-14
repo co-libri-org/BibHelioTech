@@ -2,6 +2,8 @@ import datetime
 import os.path
 from enum import StrEnum, auto
 
+from requests import session
+
 from bht.catalog_tools import catfile_to_rows
 from web import db
 from web.errors import IstexError
@@ -18,6 +20,11 @@ class BhtFileType(StrEnum):
 
 
 # TOOLS TO INSERT IN MODELS METHODS
+
+
+def istexid_to_paper(istex_id):
+    paper = db.session.query(Paper).filter_by(istex_id=istex_id).one_or_none()
+    return paper
 
 
 # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db

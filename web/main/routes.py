@@ -31,7 +31,7 @@ from bht.errors import BhtCsvError
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType, Doi
+from web.models import Paper, Mission, HpEvent, BhtFileType, Doi, istexid_to_paper
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -744,6 +744,11 @@ def admin():
     _sutime_structs = []
     for json_f in json_files:
         paper_name = os.path.dirname(json_f).split('/')[-1]
+        paper = istexid_to_paper(paper_name)
+        if paper is None:
+            paper_id = None
+        else:
+            paper_id = paper.id
         with open(json_f) as of:
             structs = json.load(of)
             structs.pop()
@@ -755,7 +760,7 @@ def admin():
                 date_end = parser.parse(_s["value"]["end"])
                 delta_time = date_end - date_begin
                 new_structs.append(
-                    {"paper_name": paper_name, "text": _s["text"], "value": _s["value"], "delta_time": delta_time}
+                    {"paper_id": paper_id, "paper_name": paper_name, "text": _s["text"], "value": _s["value"], "delta_time": delta_time}
                 )
             _sutime_structs.extend(new_structs)
     _sorted_structs = sorted(_sutime_structs, key=lambda x: x["delta_time"])
