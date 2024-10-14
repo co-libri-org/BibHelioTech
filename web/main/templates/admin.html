@@ -25,15 +25,36 @@ Show a list of catalogs files not already inserted in db
     {% endfor %}
 </table>
 <hr class="mt-2 mb-3">
+<h4>Sutime strings:</h4>
+<table id="sutime-str-table" class="table-hover table">
+    <thead>
+    <tr>
+        <th scope="col" >Paper ID</th>
+        <th scope="col" >Text</th>
+        <th scope="col" >DeltaTime</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for sutime_str in sutime_structs %}
+    <tr>
+        <td class="col">
+            {{sutime_str.paper_name}}
+        </td>
+        <td class="col">
+            {{sutime_str.text}}
+        </td>
+        <td class="col">
+            {{sutime_str.delta_time}}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 {% endif %}
 {%  endblock content %}
 
 {% block scripts %}
 <script src="{{url_for('static', filename='js/tools.js') | staticversion }} "></script>
 <script>
-
-$(document).ready(function() {
-
     // For each un-added catalog button, attach callback:
     $('.add-catalog').on('click', push_catalog );
 });
