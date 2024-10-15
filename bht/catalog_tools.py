@@ -61,7 +61,7 @@ def row_to_dict(event_row):
 
 def dict_to_dict(event_dict, columns=None):
     """
-    Sometimes, an incoming hpevent dictionnary needs tweaking to fullfill our standards:
+    Sometimes, an incoming hpevent dictionnary needs tweaking to fulfill our standards:
         - rewriting some keys
         - converting keys string to lower case
     @param columns:
