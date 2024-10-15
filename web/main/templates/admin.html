@@ -1,5 +1,6 @@
-{% extends "base_page.html" %}
-{%  block more_head %}
+{% extends "base_table.html" %}
+{% block more_head %}
+{{ super () }}
 <title> {{catalogs | length}} Catalogs pending - {{base_title}}</title>
 {%  endblock %}
 {% block content %}
@@ -51,15 +52,25 @@ Show a list of catalogs files not already inserted in db
         </td>
     </tr>
     {% endfor %}
+    </tbody>
 </table>
 {% endif %}
 {%  endblock content %}
 
 {% block scripts %}
+{{ super() }}
 <script src="{{url_for('static', filename='js/tools.js') | staticversion }} "></script>
 <script>
-    // For each un-added catalog button, attach callback:
-    $('.add-catalog').on('click', push_catalog );
-});
+    $(document).ready(function() {
+
+        // For each un-added catalog button, attach callback:
+        $('.add-catalog').on('click', push_catalog );
+
+        new DataTable('#sutime-str-table', {
+            ordering: true,
+            searching: false,
+            paging: false,
+        });
+    });
 </script>
 {%  endblock %}
