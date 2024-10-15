@@ -743,7 +743,7 @@ def admin():
 
     _sutime_structs = []
     for json_f in json_files:
-        paper_name = os.path.dirname(json_f).split('/')[-1]
+        paper_name = os.path.dirname(json_f).split("/")[-1]
         paper = istexid_to_paper(paper_name)
         if paper is None:
             continue
@@ -754,13 +754,20 @@ def admin():
             structs.pop()
             new_structs = []
             for _s in structs:
-                if _s["type"] != "DURATION" or _s["text"] in ["8327-8338", '0004-6361']:
+                if _s["type"] != "DURATION" or _s["text"] in ["8327-8338", "0004-6361"]:
                     continue
                 date_begin = parser.parse(_s["value"]["begin"])
                 date_end = parser.parse(_s["value"]["end"])
                 delta_time = date_end - date_begin
                 new_structs.append(
-                    {"paper_id": paper_id, "paper_name": paper_name, "text": _s["text"], "value": _s["value"], "delta_time": delta_time}
+                    {
+                        "paper_title": paper.title,
+                        "paper_id": paper.id,
+                        "paper_name": paper_name,
+                        "text": _s["text"],
+                        "value": _s["value"],
+                        "delta_time": delta_time,
+                    }
                 )
             _sutime_structs.extend(new_structs)
     _sorted_structs = sorted(_sutime_structs, key=lambda x: x["delta_time"])
