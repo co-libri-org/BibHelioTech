@@ -9,7 +9,7 @@ Show a list of catalogs files not already inserted in db
 --------------------------------------------------------
 #}
 {% if not catalogs|length == 0 %}
-<h4>Catalogs to add in database:</h4>
+<h4>{{catalogs | length}} Catalogs to add in database:</h4>
 <table class="table-hover table">
     {% for paper in catalogs %}
     <tr>
@@ -26,7 +26,8 @@ Show a list of catalogs files not already inserted in db
     {% endfor %}
 </table>
 <hr class="mt-2 mb-3">
-<h4>Sutime strings:</h4>
+{% endif %}
+<h4>{{sutime_structs | length}} Sutime strings:</h4>
 <table id="sutime-str-table" class="table-hover table">
     <thead>
     <tr>
@@ -55,7 +56,6 @@ Show a list of catalogs files not already inserted in db
     {% endfor %}
     </tbody>
 </table>
-{% endif %}
 {%  endblock content %}
 
 {% block scripts %}
