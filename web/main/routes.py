@@ -746,7 +746,7 @@ def admin():
         paper_name = os.path.dirname(json_f).split('/')[-1]
         paper = istexid_to_paper(paper_name)
         if paper is None:
-            paper_id = None
+            continue
         else:
             paper_id = paper.id
         with open(json_f) as of:
