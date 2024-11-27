@@ -155,14 +155,14 @@ class JsonAnalyser:
         @return:
         """
         # get the max sat name length
-        sat_names_lgths = []
+        sat_names_lengths = []
         for _ls in self._structs:
             for _s in _ls:
                 if "type" not in _s.keys():
                     continue
                 if _s["type"] == "sat":
-                    sat_names_lgths.append(len(_s["text"]))
-        max_sat_lgth = max(sat_names_lgths)
+                    sat_names_lengths.append(len(_s["text"]))
+        max_sat_lgth = max(sat_names_lengths)
         line_format = [
             {"name": "event begin", "format": "24"},
             {"name": "event end", "format": "24"},
