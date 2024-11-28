@@ -21,6 +21,18 @@ full context of the observations. It produces standardized catalogues of events 
 instruments, regions, metrics) which can then be exploited in space physics visualization tools such as
 AMDA (http://amda.cdpp.eu/).
 
+## Quick run
+
+website only:
+
+    FLASK_DEBUG=true FLASK_APP=web flask run --host=0.0.0.0
+
+
+with pipeline capabilities:
+
+    docker run --rm --name redis_for_bht -d -p 6379:6379 redis
+    python manage.py run_worker
+
 ## From scratch
 
 ### Install sutime dependencies and update language file
