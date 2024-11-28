@@ -490,11 +490,12 @@ def upload():
     # empty file without a filename.
     if file.filename == "":
         flash("No selected file")
-        return redirect(url_for("main.papers"))
-    if file and allowed_file(file.filename):
+    elif file and allowed_file(file.filename):
         pdf_to_db(file.read(), file.filename)
         flash(f"Uploaded {file.filename}")
-        return redirect(url_for("main.papers"))
+    else:
+        flash(f"{file.filename} Not allowed")
+    return redirect(url_for("main.papers"))
 
 
 @bp.route("/bht_status/<paper_id>", methods=["GET"])
