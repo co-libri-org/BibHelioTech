@@ -1,6 +1,5 @@
 name: "bht"
 services:
-
     web:
         image: bht/web:${WEB_TAG:-latest}
         build:
@@ -8,15 +7,21 @@ services:
             target: bht-prod
         command: gunicorn --bind 0.0.0.0:5000 bht_web:app
         volumes:
-            - bht_data:/home/bibheliotech/BibHelioTech/DATA:rw
+            - bht_data:/home/bibheliotech/BibHelioTech/DATA:cached
+        cpus: 8
+        mem_limit: 32g
+        mem_reservation: 16g
         depends_on:
           grobid:
             condition: service_healthy
           redis:
             condition: service_started
-
+ 
     grobid:
       image: lfoppiano/grobid:0.7.2
+      cpus: 8
+      mem_limit: 32g
+      mem_reservation: 16g
       # thank you to:
       # https://github.com/elifesciences/sciencebeam-orchester/blob/develop/docker-compose.yml#L27-L34
       healthcheck:
@@ -32,7 +37,10 @@ services:
       image: bht/web:${WEB_TAG:-latest}
       command: python manage.py run_worker
       volumes:
-        - bht_data:/home/bibheliotech/BibHelioTech/DATA:rw
+        - bht_data:/home/bibheliotech/BibHelioTech/DATA:cached
+      cpus: 8
+      mem_limit: 32g
+      mem_reservation: 16g
       depends_on:
         - web
 
