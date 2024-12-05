@@ -541,6 +541,23 @@
   ENV.defaults["priority"] = 10
   ENV.defaults["stage"] = 2
 
+  # RHI: capture strings like "june 2 and 3, 2020"
+  { name: "composite-month-day-day-year",
+    priority: 20,
+      active: options."markTimeRanges",
+    pattern: ( (?$month [ { temporal::MONTH } ])
+              (?$day1 $NUM_ORD|/\d\d?/ & $INT1TO31)
+              /and/
+              (?$day2 $NUM_ORD|/\d\d?/ & $INT1TO31)
+              /,/
+              (?$year $POSSIBLE_YEAR)
+              ),
+    result: TimeRange(
+      IsoDate(2020, $month[0].temporal.value.month, $day1[0].numcompvalue),
+      IsoDate(2020, $month[0].temporal.value.month, $day2[0].numcompvalue)
+    )
+  }
+
   # Duration (start, end, unit, range_start, range_end)
   # Duration rules
   # i.e. "the past twenty four years"
