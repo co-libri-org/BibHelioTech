@@ -994,7 +994,7 @@
 
   { name: "temporal-composite-8b:ranges",
   active: options."markTimeRanges",
-    pattern: ( /between/? ( [ { temporal::IS_TIMEX_TIME } | { temporal::IS_TIMEX_DATE } ] ) /and|–/ ( [ { temporal::IS_TIMEX_TIME } |   {   temporal::IS_TIMEX_DATE } ] ) ),
+    pattern: ( /between/ ( [ { temporal::IS_TIMEX_TIME } | { temporal::IS_TIMEX_DATE } ] ) /and/ ( [ { temporal::IS_TIMEX_TIME } |   {   temporal::IS_TIMEX_DATE } ] ) ),
   result: TimeRange( $1[0].temporal.value, $2[0].temporal.value ) }
 
 #  { name: "temporal-composite-8c:ranges",
