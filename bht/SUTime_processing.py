@@ -869,15 +869,15 @@ def SUTime_transform(current_OCR_folder):
                 dicts["value"]["begin"] += ".000"
 
             if end.group(14) == "":
-                dicts["value"]["end"] += ":59.999"
+                dicts["value"]["end"] += ":59.000"
             elif end.group(12) == "":
-                dicts["value"]["end"] += ":59:59.999"
+                dicts["value"]["end"] += ":59:59.000"
             elif end.group(16) == "":
-                dicts["value"]["end"] += ".999"
+                dicts["value"]["end"] += ".000"
         except:
             continue
 
-    raw_dumper.dump_to_raw(JSON_list, "Do some :59:59.999 magic ", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "Do some .000 magic ", current_OCR_folder)
 
     for dicts in JSON_list:
         if not re.search(
