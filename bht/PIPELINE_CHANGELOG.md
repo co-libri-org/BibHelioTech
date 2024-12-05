@@ -25,13 +25,14 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [7.2] - 2024-10-xx - Pipeline Optimizations
+## [7.3] - 2024-10-xx - Pipeline Optimizations
 #### Fixed
 - fixed prevdate bug 
 - dash issues
 #### Changed
 - added SolarOrbiter synonyms
 #### New
+- more interval detection rules
 
 ## [6.1] - 2024-09-11 - Confidence Index
 #### Fixed
