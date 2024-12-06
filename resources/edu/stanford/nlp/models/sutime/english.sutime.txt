@@ -579,6 +579,41 @@
     )
   }
 
+  #RHI: "28 February-15 March 2017",
+  { name: "temporal-composite-date-range-explicit",
+      priority: 200,  // Priorité très haute
+      active: options."markTimeRanges",
+      pattern: ( (?$day1 $INT1TO31)
+                /\s+/?
+                (?$month1 [ { temporal::MONTH } ])
+                /-/
+                (?$day2 $INT1TO31)
+                /\s+/?
+                (?$month2 [ { temporal::MONTH } ])
+                /\s+/?
+                (?$year $POSSIBLE_YEAR)
+                ),
+      result: TimeRange(
+          IsoDate($year[0].numcompvalue, $month1[0].temporal.value.month, $day1[0].numcompvalue),
+          IsoDate($year[0].numcompvalue, $month2[0].temporal.value.month, $day2[0].numcompvalue)
+      )
+    }
+
+  #RHI: "July-August 2017",
+  { name: "temporal-composite-month-range",
+    priority: 20,
+    active: options."markTimeRanges",
+    pattern: ( (?$month1 [ { temporal::MONTH } ])
+              /-/
+              (?$month2 [ { temporal::MONTH } ])
+              (?$year $POSSIBLE_YEAR)
+              ),
+    result: TimeRange(
+      IsoDate($year[0].temporal.value.year, $month1[0].temporal.value.month, 1),
+      IsoDate($year[0].temporal.value.year, $month2[0].temporal.value.month, 31)
+    )
+  }
+
   # Duration (start, end, unit, range_start, range_end)
   # Duration rules
   # i.e. "the past twenty four years"
