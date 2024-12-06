@@ -222,7 +222,8 @@ input.success{
 .btn.btn-version,
 .btn.btn-version:hover {
     cursor: help;
-    margin: 3pt;
+    padding: 1pt;
+    margin: 0pt;
     border: solid 1pt black;
     font-weight: 600 !important;
     display: inline !important;
