@@ -541,6 +541,29 @@
   ENV.defaults["priority"] = 10
   ENV.defaults["stage"] = 2
 
+
+ # RHI: capture strings like "From 20:45 to 21:30 on July 23"
+ { name: "range-time-with-date",
+  priority: 100,
+  active: options."markTimeRanges",
+  pattern: ( /from/
+            (?$time1 [ { temporal::IS_TIMEX_TIME } ])
+            /to/
+            (?$time2 [ { temporal::IS_TIMEX_TIME } ])
+            /on/
+            (?$month [ { temporal::MONTH } ])
+            (?$day $NUM_ORD|/\d\d?/ & $INT1TO31)
+  ),
+  result: TimeRange(
+    TemporalCompose(INTERSECT,
+      $time1[0].temporal.value,
+      IsoDate(NIL, $month[0].temporal.value.month, $day[0].numcompvalue)),
+    TemporalCompose(INTERSECT,
+      $time2[0].temporal.value,
+      IsoDate(NIL, $month[0].temporal.value.month, $day[0].numcompvalue))
+  )
+}
+
   # RHI: capture strings like "from June 4 2020, to June 11 2020"
   { name: "temporal-composite-date-range",
     priority: 20,
