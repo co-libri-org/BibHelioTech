@@ -188,7 +188,7 @@ def json_step_4():
 
 
 @pytest.fixture(scope="module")
-def sutime_json():
+def sutime2_json():
     data_dir = "ark_67375_WNG-HPV609C7-D"
     ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)
     sutime_json_path = os.path.join(ocr_dir_orig, "res_sutime_2.json")

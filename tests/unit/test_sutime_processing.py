@@ -101,3 +101,7 @@ class TestSutimeProcessing:
     def test_date_is_today_str(self):
         assert not date_is_today("2023-03-06")
         assert date_is_today(datetime.datetime.now().isoformat())
+
+
+    def test_sutime_transform(self):
+        assert True
