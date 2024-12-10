@@ -1,3 +1,4 @@
+import os
 import re
 import json
 from calendar import monthrange
@@ -515,7 +516,8 @@ def nearest_year(JSON_list, compteur_dicts):
 
 def SUTime_transform(current_OCR_folder):
     _logger.info("SUTime_transform -> res_sutime2.json")
-    with open(current_OCR_folder + "/" + "res_sutime.json", "r") as file:
+    orig_sutime_file = os.path.join(current_OCR_folder, "res_sutime.json")
+    with open(orig_sutime_file, "r") as file:
         reading = file.read()
         JSON_list = eval(reading)
 
@@ -753,7 +755,9 @@ def SUTime_transform(current_OCR_folder):
         compteur_dicts += 1
 
     raw_dumper.dump_to_raw(
-        JSON_list, "Date rewriting: short date to whole month DURATION", current_OCR_folder
+        JSON_list,
+        "Date rewriting: short date to whole month DURATION",
+        current_OCR_folder,
     )
 
     # compteur = 0
@@ -903,8 +907,10 @@ def SUTime_transform(current_OCR_folder):
 
     raw_dumper.dump_to_raw(JSON_list, "Remove not DURATION", current_OCR_folder)
 
-    file = open(
-        current_OCR_folder + "/" + "res_sutime_2.json", "w"
-    )  # save the transformed results in a separate file. This is the file that will be read for later linking of intervals/sat/inst/etc.
-    file.write(json.dumps(JSON_list, sort_keys=True, indent=4))
-    file.close()
+    final_sutime_file = os.path.join(current_OCR_folder, "res_sutime_2.json")
+    # save the transformed results in a separate file.
+    # This is the file that will be read for later linking of intervals/sat/inst/etc.
+    _logger.info(f"OPENING {final_sutime_file}")
+    with open(final_sutime_file, "w") as final_json:
+        final_json.write(json.dumps(JSON_list, sort_keys=True, indent=4))
+        final_json.close()
