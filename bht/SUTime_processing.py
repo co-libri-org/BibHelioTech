@@ -515,7 +515,7 @@ def nearest_year(JSON_list, compteur_dicts):
 
 
 def SUTime_transform(current_OCR_folder):
-    _logger.info("SUTime_transform -> res_sutime2.json")
+    _logger.info(f"SUTime_transform -> res_sutime2.json from dir {current_OCR_folder}")
     orig_sutime_file = os.path.join(current_OCR_folder, "res_sutime.json")
     with open(orig_sutime_file, "r") as file:
         reading = file.read()

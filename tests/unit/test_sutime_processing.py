@@ -108,3 +108,7 @@ class TestSutimeProcessing:
         SUTime_transform(ocr_dir_sutime)
         assert os.path.isfile(os.path.join(ocr_dir_sutime, "res_sutime_2.json"))
         # assert True
+
+    def test_sutime_transform_2(self, ocr_dir_sutime_fails):
+        SUTime_transform(ocr_dir_sutime_fails)
+        assert os.path.isfile(os.path.join(ocr_dir_sutime_fails, "res_sutime_2.json"))
