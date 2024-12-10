@@ -3,6 +3,8 @@
 #
 import copy
 import datetime
+import os
+
 import dateutil.parser as parser
 
 from bht.SUTime_processing import (
@@ -10,7 +12,7 @@ from bht.SUTime_processing import (
     set_duration_day,
     previous_date,
     date_is_today,
-    get_struct_date,
+    get_struct_date, SUTime_transform,
 )
 
 
@@ -102,6 +104,7 @@ class TestSutimeProcessing:
         assert not date_is_today("2023-03-06")
         assert date_is_today(datetime.datetime.now().isoformat())
 
-
-    def test_sutime_transform(self):
-        assert True
+    def test_sutime_transform(self, ocr_dir_sutime):
+        SUTime_transform(ocr_dir_sutime)
+        assert os.path.isfile(os.path.join(ocr_dir_sutime, "res_sutime_2.json"))
+        # assert True
