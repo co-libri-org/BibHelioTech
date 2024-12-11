@@ -100,29 +100,76 @@ def show_paper(paper_id):
     print(p)
 
 
-@cli.command("clean_paper")
+@cli.command("clean_raws")
 @click.argument("paper_id", required=True)
-def clean_paper(paper_id):
-    """Erase all paper's raw-dumper files
+@click.option("--dry-run/--no-dry-run", is_flag=True, default=True, help="Don't remove / Force remove (default dry)")
+def clean_raws(paper_id, dry_run):
+    """Remove all raw files that don't belong to the normal sequence """
+    from pathlib import Path
 
-    @see class RawDumper
-    """
+    def find_files_to_exclude(directory, raw_type="sutime"):
+        """
+        Find files to exclude based on the first sequence break in file numbering.
+        Scans a directory for files matching pattern 'rawX_sutime.json'.
+
+        @param (str) directory : Path to directory containing the files
+        @param (str) raw_type: sutime|entities
+
+        Returns:
+            list: Files that come after the first sequence break
+        """
+        # Get all matching files from directory
+        path = Path(directory)
+        files = list(path.glob(f"raw*_{raw_type}.json"))
+
+        if not files:
+            return []
+
+        # Extract and sort numbers
+        numbers = sorted(
+            [
+                int(f.name.split("_")[0][3:])  # Extract number from 'rawX_sutime.json'
+                for f in files
+            ]
+        )
+
+        # Find first break point
+        break_point = next(
+            (
+                numbers[i]
+                for i in range(len(numbers) - 1)
+                if numbers[i + 1] - numbers[i] > 1
+            ),
+            numbers[-1],  # Default to last number if no break found
+        )
+
+        # Return files after break point
+        return [f for f in files if int(f.name.split("_")[0][3:]) > break_point]
+
     p = db.session.get(Paper, paper_id)
-
-    # get paper basedir
-    if p.has_txt:
-        basedir = os.path.dirname(p.cat_path)
-    else:
-        print("Paper doesnt have catalog, quitting")
+    if not p:
+        print(f"Paper {paper_id} not found")
         return
 
-    # remove all raw-dumper files
-    import glob
+    print(p)
+    catalog_file = p.cat_path
 
-    pattern = os.path.join(basedir, "raw*.json")
-    found = glob.glob(pattern)
-    for _f in found:
-        os.remove(_f)
+    if p.cat_path and os.path.isfile(catalog_file):
+        occ_dir = os.path.dirname(catalog_file)
+    else:
+        print(f"Paper {paper_id} doesnt have catalog, quitting")
+        return
+
+    sutime_to_rm = find_files_to_exclude(occ_dir, 'sutime')
+    entities_to_rm = find_files_to_exclude(occ_dir, 'entities')
+
+    # Remove files or just print them
+    for f in sutime_to_rm + entities_to_rm:
+        if dry_run:
+            print(f"Would remove: {f.name}")
+        else:
+            f.unlink()
+            print(f"Removed: {f.name}")
 
 
 @cli.command("del_paper")
@@ -299,7 +346,7 @@ def missions_list():
 
 @cli.command("delete_events")
 @click.argument("paper_id", required=False)
-def refresh_events(paper_id=None):
+def delete_events(paper_id=None):
     """
     Delete events for given paper id or all
     """

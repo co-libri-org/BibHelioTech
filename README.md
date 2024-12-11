@@ -284,6 +284,19 @@ Or may be try it on a whole directory
 
 Optionally if you want to have AMDA catalogues by satellites, you need to run "SATS_catalogue_generator.py".
 
+### Tips, Tricks and logs
+
+Some raw files where created randomly.
+A new manager tool is available for that:
+
+    python manage.py clean_raws --no-dry-run 3
+
+`3` being the id of the paper we want to clean.
+
+    for i in {1..15} ;do python manage.py clean_raws --no-dry-run $i; done
+
+to erase all papers' unwanted raw files from id 1 to 15.
+
 ## Versioning and git workflows
 
 `VERSION.txt` holds the current project version in a semver model. (Also see `CHANGELOG.md`)
