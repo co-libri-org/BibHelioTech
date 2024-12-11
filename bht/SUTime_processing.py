@@ -360,6 +360,8 @@ def nearest_year(JSON_list, compteur_dicts):
         compteur_apres += 1
 
     if avant == 0:  # case: no DATE or DURATION before
+        if apres == 0:
+            return datetime.now().strftime("%Y")
         if JSON_list[compteur_apres]["type"] == "DATE":
             nearest = re.match(
                 "((^[0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_apres]["value"]
