@@ -1,0 +1,380 @@
+[
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 41,
+            "conf": 1.0,
+            "end": 2831,
+            "start": 2825,
+            "text": "Wind",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": [
+                "3DP"
+            ]
+        },
+        {
+            "end": 2400,
+            "start": 2393,
+            "text": "Earth",
+            "type": "region"
+        },
+        {
+            "end": 3147,
+            "start": 3132,
+            "text": "magnetosphere",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T00:00:00.000",
+            "end": "2020-03-04T23:59:59.999"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 55,
+            "conf": 0.7454545454545456,
+            "end": 7170,
+            "start": 7155,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": []
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T04:03:00.000",
+            "end": "2020-03-04T04:03:59.999"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 55,
+            "conf": 0.7454545454545456,
+            "end": 8155,
+            "start": 8140,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": []
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T00:00:00.000",
+            "end": "2020-03-04T23:59:59.999"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 55,
+            "conf": 0.7454545454545456,
+            "end": 8936,
+            "start": 8921,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": []
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T04:58:00.000",
+            "end": "2020-03-04T04:58:59.999"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 55,
+            "conf": 0.7454545454545456,
+            "end": 10879,
+            "start": 10864,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": []
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T00:00:00.000",
+            "end": "2020-03-04T23:59:59.999"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 41,
+            "conf": 1.0,
+            "end": 20757,
+            "start": 20751,
+            "text": "Wind",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": [
+                "3DP"
+            ]
+        },
+        {
+            "end": 2400,
+            "start": 2393,
+            "text": "Earth",
+            "type": "region"
+        },
+        {
+            "end": 28707,
+            "start": 28692,
+            "text": "magnetosheath",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T09:29:42.000",
+            "end": "2020-03-04T09:32:36.999"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 41,
+            "conf": 1.0,
+            "end": 21893,
+            "start": 21887,
+            "text": "Wind",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": [
+                "3DP"
+            ]
+        },
+        {
+            "end": 2400,
+            "start": 2393,
+            "text": "Earth",
+            "type": "region"
+        },
+        {
+            "end": 28707,
+            "start": 28692,
+            "text": "magnetosheath",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T00:00:00.000",
+            "end": "2020-03-04T23:59:59.999"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 55,
+            "conf": 0.7454545454545456,
+            "end": 23111,
+            "start": 23096,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": []
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T09:30:00.000",
+            "end": "2020-03-04T09:30:59.999"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 41,
+            "conf": 1.0,
+            "end": 23790,
+            "start": 23784,
+            "text": "Wind",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": [
+                "3DP"
+            ]
+        },
+        {
+            "end": 2400,
+            "start": 2393,
+            "text": "Earth",
+            "type": "region"
+        },
+        {
+            "end": 28707,
+            "start": 28692,
+            "text": "magnetosheath",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T04:57:00.000",
+            "end": "2020-03-04T04:57:59.999"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 55,
+            "conf": 0.7454545454545456,
+            "end": 24521,
+            "start": 24506,
+            "text": "SolarOrbiter",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": []
+        },
+        {
+            "end": 10,
+            "start": 0,
+            "text": "Heliosphere",
+            "type": "region"
+        },
+        {
+            "end": 30,
+            "start": 20,
+            "text": "Inner",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T04:57:00.000",
+            "end": "2020-03-04T04:57:59.999"
+        }
+    ],
+    [
+        {
+            "D": 1,
+            "R": 1,
+            "SO": 41,
+            "conf": 1.0,
+            "end": 25656,
+            "start": 25650,
+            "text": "Wind",
+            "type": "sat"
+        },
+        {
+            "end": 19130.5,
+            "start": 19129.5,
+            "text": [
+                "3DP"
+            ]
+        },
+        {
+            "end": 2400,
+            "start": 2393,
+            "text": "Earth",
+            "type": "region"
+        },
+        {
+            "end": 28707,
+            "start": 28692,
+            "text": "magnetosheath",
+            "type": "region"
+        },
+        {
+            "begin": "2020-03-04T04:57:00.000",
+            "end": "2020-03-04T04:57:59.999"
+        }
+    ],
+    {
+        "message": "16- Sats / Region linker",
+        "pipeline_version": "4.4",
+        "step": "16"
+    }
+]

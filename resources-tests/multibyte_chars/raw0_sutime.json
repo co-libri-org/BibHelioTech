@@ -1,0 +1,703 @@
+[
+    {
+        "end": 44,
+        "start": 21,
+        "text": "February 10 2020, 04:03",
+        "timex-value": "2020-02-10T04:03",
+        "type": "TIME",
+        "value": "2020-02-10T04:03"
+    },
+    {
+        "end": 117,
+        "start": 113,
+        "text": "2015",
+        "timex-value": "2015",
+        "type": "DATE",
+        "value": "2015"
+    },
+    {
+        "end": 122,
+        "start": 118,
+        "text": "2025",
+        "timex-value": "2025",
+        "type": "DATE",
+        "value": "2025"
+    },
+    {
+        "end": 5093,
+        "start": 5086,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 5180,
+        "start": 5171,
+        "text": "the 1970s",
+        "timex-value": "197X",
+        "type": "DATE",
+        "value": "197X"
+    },
+    {
+        "end": 5665,
+        "start": 5661,
+        "text": "time",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 6083,
+        "start": 6075,
+        "text": "recently",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 6196,
+        "start": 6192,
+        "text": "2012",
+        "timex-value": "2012",
+        "type": "DATE",
+        "value": "2012"
+    },
+    {
+        "end": 6688,
+        "start": 6680,
+        "text": "recently",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 6810,
+        "start": 6806,
+        "text": "1998",
+        "timex-value": "1998",
+        "type": "DATE",
+        "value": "1998"
+    },
+    {
+        "end": 7266,
+        "start": 7259,
+        "text": "Decades",
+        "timex-value": "PXY",
+        "type": "DURATION",
+        "value": "PXY"
+    },
+    {
+        "end": 7390,
+        "start": 7382,
+        "text": "Recently",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 7504,
+        "start": 7496,
+        "text": "20 years",
+        "timex-value": "P20Y",
+        "type": "DURATION",
+        "value": "P20Y"
+    },
+    {
+        "end": 7771,
+        "start": 7758,
+        "text": "April 19 2020",
+        "timex-value": "2020-04-19",
+        "type": "DATE",
+        "value": "2020-04-19"
+    },
+    {
+        "end": 7828,
+        "start": 7821,
+        "text": "the day",
+        "timex-value": "2024-08-12",
+        "type": "DATE",
+        "value": "2024-08-12"
+    },
+    {
+        "end": 9794,
+        "start": 9791,
+        "text": "SEP",
+        "timex-value": "2024-09",
+        "type": "DATE",
+        "value": "2024-09"
+    },
+    {
+        "end": 10073,
+        "start": 10067,
+        "text": "June 7",
+        "timex-value": "2024-06-07",
+        "type": "DATE",
+        "value": "2024-06-07"
+    },
+    {
+        "end": 10081,
+        "start": 10077,
+        "text": "2020",
+        "timex-value": "2020",
+        "type": "DATE",
+        "value": "2020"
+    },
+    {
+        "end": 10138,
+        "start": 10131,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 10423,
+        "start": 10416,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 13317,
+        "start": 13312,
+        "text": "1-min",
+        "timex-value": "PT1M",
+        "type": "DURATION",
+        "value": "PT1M"
+    },
+    {
+        "end": 14263,
+        "start": 14257,
+        "text": "10 min",
+        "timex-value": "PT10M",
+        "type": "DURATION",
+        "value": "PT10M"
+    },
+    {
+        "end": 14544,
+        "start": 14537,
+        "text": "Current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 17921,
+        "start": 17916,
+        "text": "8-day",
+        "timex-value": "P8D",
+        "type": "DURATION",
+        "value": "P8D"
+    },
+    {
+        "end": 17962,
+        "start": 17951,
+        "text": "June 4 2020",
+        "timex-value": "2020-06-04",
+        "type": "DATE",
+        "value": "2020-06-04"
+    },
+    {
+        "end": 17979,
+        "start": 17967,
+        "text": "June 11 2020",
+        "timex-value": "2020-06-11",
+        "type": "DATE",
+        "value": "2020-06-11"
+    },
+    {
+        "end": 18128,
+        "start": 18114,
+        "text": "about two days",
+        "timex-value": "P2D",
+        "type": "DURATION",
+        "value": "P2D"
+    },
+    {
+        "end": 18150,
+        "start": 18144,
+        "text": "June 7",
+        "timex-value": "2024-06-07",
+        "type": "DATE",
+        "value": "2024-06-07"
+    },
+    {
+        "end": 18158,
+        "start": 18154,
+        "text": "2020",
+        "timex-value": "2020",
+        "type": "DATE",
+        "value": "2020"
+    },
+    {
+        "end": 24117,
+        "start": 24072,
+        "text": "from June 7 2020, 02:13 to June 8 2020, 13:47",
+        "type": "DURATION",
+        "value": {
+            "begin": "2020-06-07T02:13",
+            "end": "2020-06-08T13:47"
+        }
+    },
+    {
+        "end": 24154,
+        "start": 24144,
+        "text": "previously",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 26230,
+        "start": 26227,
+        "text": "min",
+        "timex-value": "PT1M",
+        "type": "DURATION",
+        "value": "PT1M"
+    },
+    {
+        "end": 26579,
+        "start": 26576,
+        "text": "min",
+        "timex-value": "PT1M",
+        "type": "DURATION",
+        "value": "PT1M"
+    },
+    {
+        "end": 27623,
+        "start": 27616,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 28423,
+        "start": 28406,
+        "text": "a couple of hours",
+        "timex-value": "PT2H",
+        "type": "DURATION",
+        "value": "PT2H"
+    },
+    {
+        "end": 29325,
+        "start": 29320,
+        "text": "a day",
+        "timex-value": "P1D",
+        "type": "DURATION",
+        "value": "P1D"
+    },
+    {
+        "end": 33355,
+        "start": 33348,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 34513,
+        "start": 34506,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 35034,
+        "start": 35027,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 35189,
+        "start": 35182,
+        "text": "current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 35252,
+        "start": 35248,
+        "text": "past",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 35582,
+        "start": 35574,
+        "text": "one-hour",
+        "timex-value": "PT1H",
+        "type": "DURATION",
+        "value": "PT1H"
+    },
+    {
+        "end": 36075,
+        "start": 36063,
+        "text": "every 10 min",
+        "timex-value": "PT10M",
+        "type": "SET",
+        "value": "PT10M"
+    },
+    {
+        "end": 37324,
+        "start": 37309,
+        "text": "about +1.7 days",
+        "timex-value": "P1D",
+        "type": "DURATION",
+        "value": "P1D"
+    },
+    {
+        "end": 37900,
+        "start": 37895,
+        "text": "1-min",
+        "timex-value": "PT1M",
+        "type": "DURATION",
+        "value": "PT1M"
+    },
+    {
+        "end": 38666,
+        "start": 38658,
+        "text": "This may",
+        "timex-value": "2024-05",
+        "type": "DATE",
+        "value": "2024-05"
+    },
+    {
+        "end": 39795,
+        "start": 39788,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 40787,
+        "start": 40781,
+        "text": "June 2",
+        "timex-value": "2024-06-02",
+        "type": "DATE",
+        "value": "2024-06-02"
+    },
+    {
+        "end": 40799,
+        "start": 40795,
+        "text": "2020",
+        "timex-value": "2020",
+        "type": "DATE",
+        "value": "2020"
+    },
+    {
+        "end": 41055,
+        "start": 41017,
+        "text": "between 02:00 and 14:22 on June 7 2020",
+        "type": "DURATION",
+        "value": {
+            "begin": "T02:00",
+            "end": "2020-06-07T14:22"
+        }
+    },
+    {
+        "end": 41065,
+        "start": 41057,
+        "text": "A second",
+        "timex-value": "PT1S",
+        "type": "DURATION",
+        "value": "PT1S"
+    },
+    {
+        "end": 41493,
+        "start": 41471,
+        "text": "the end of June 3 2020",
+        "timex-value": "2020-06-03",
+        "type": "DATE",
+        "value": "2020-06-03"
+    },
+    {
+        "end": 41515,
+        "start": 41504,
+        "text": "This second",
+        "timex-value": "2024-08-12TXX:XX",
+        "type": "TIME",
+        "value": "2024-08-12TXX:XX"
+    },
+    {
+        "end": 42437,
+        "start": 42429,
+        "text": "one week",
+        "timex-value": "P1W",
+        "type": "DURATION",
+        "value": "P1W"
+    },
+    {
+        "end": 42517,
+        "start": 42499,
+        "text": "May 25 2020, 12:00",
+        "timex-value": "2020-05-25T12:00",
+        "type": "TIME",
+        "value": "2020-05-25T12:00"
+    },
+    {
+        "end": 51715,
+        "start": 51708,
+        "text": "Current",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 52131,
+        "start": 52113,
+        "text": "June 7 2020, 00:00",
+        "timex-value": "2020-06-07T00:00",
+        "type": "TIME",
+        "value": "2020-06-07T00:00"
+    },
+    {
+        "end": 52789,
+        "start": 52778,
+        "text": "June 7 2020",
+        "timex-value": "2020-06-07",
+        "type": "DATE",
+        "value": "2020-06-07"
+    },
+    {
+        "end": 53184,
+        "start": 53175,
+        "text": "+1.7 days",
+        "timex-value": "P1D",
+        "type": "DURATION",
+        "value": "P1D"
+    },
+    {
+        "end": 53279,
+        "start": 53268,
+        "text": "June 9 2020",
+        "timex-value": "2020-06-09",
+        "type": "DATE",
+        "value": "2020-06-09"
+    },
+    {
+        "end": 53310,
+        "start": 53299,
+        "text": "about a day",
+        "timex-value": "P1D",
+        "type": "DURATION",
+        "value": "P1D"
+    },
+    {
+        "end": 53395,
+        "start": 53384,
+        "text": "June 8 2020",
+        "timex-value": "2020-06-08",
+        "type": "DATE",
+        "value": "2020-06-08"
+    },
+    {
+        "end": 54369,
+        "start": 54364,
+        "text": "00:30",
+        "timex-value": "2024-08-12T00:30",
+        "type": "TIME",
+        "value": "2024-08-12T00:30"
+    },
+    {
+        "end": 54390,
+        "start": 54370,
+        "text": "11:30 on June 8 2020",
+        "timex-value": "2020-06-08T11:30",
+        "type": "TIME",
+        "value": "2020-06-08T11:30"
+    },
+    {
+        "end": 55206,
+        "start": 55201,
+        "text": "4 day",
+        "timex-value": "P4D",
+        "type": "DURATION",
+        "value": "P4D"
+    },
+    {
+        "end": 56729,
+        "start": 56712,
+        "text": "September 22 1999",
+        "timex-value": "1999-09-22",
+        "type": "DATE",
+        "value": "1999-09-22"
+    },
+    {
+        "end": 59212,
+        "start": 59207,
+        "text": "07:00",
+        "timex-value": "2024-08-12T07:00",
+        "type": "TIME",
+        "value": "2024-08-12T07:00"
+    },
+    {
+        "end": 59233,
+        "start": 59213,
+        "text": "19:00 on June 7 2020",
+        "timex-value": "2020-06-07T19:00",
+        "type": "TIME",
+        "value": "2020-06-07T19:00"
+    },
+    {
+        "end": 59916,
+        "start": 59906,
+        "text": "previously",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 61637,
+        "start": 61619,
+        "text": "June 4 2020, 00:04",
+        "timex-value": "2020-06-04T00:04",
+        "type": "TIME",
+        "value": "2020-06-04T00:04"
+    },
+    {
+        "end": 62678,
+        "start": 62671,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 65159,
+        "start": 65141,
+        "text": "June 4 2020, 00:00",
+        "timex-value": "2020-06-04T00:00",
+        "type": "TIME",
+        "value": "2020-06-04T00:00"
+    },
+    {
+        "end": 65224,
+        "start": 65206,
+        "text": "June 6 2020, 20:34",
+        "timex-value": "2020-06-06T20:34",
+        "type": "TIME",
+        "value": "2020-06-06T20:34"
+    },
+    {
+        "end": 65303,
+        "start": 65255,
+        "text": "between June 6 2020, 11:07 and June 7 2020 09:28",
+        "type": "DURATION",
+        "value": {
+            "begin": "2020-06-06T11:07",
+            "end": "2020-06-07T09:28"
+        }
+    },
+    {
+        "end": 65668,
+        "start": 65650,
+        "text": "June 4 2020, 18:00",
+        "timex-value": "2020-06-04T18:00",
+        "type": "TIME",
+        "value": "2020-06-04T18:00"
+    },
+    {
+        "end": 65756,
+        "start": 65745,
+        "text": "June 7 2020",
+        "timex-value": "2020-06-07",
+        "type": "DATE",
+        "value": "2020-06-07"
+    },
+    {
+        "end": 65766,
+        "start": 65761,
+        "text": "13:53",
+        "timex-value": "2024-08-12T13:53",
+        "type": "TIME",
+        "value": "2024-08-12T13:53"
+    },
+    {
+        "end": 65815,
+        "start": 65777,
+        "text": "between 07:17 and 21:26 on June 7 2020",
+        "type": "DURATION",
+        "value": {
+            "begin": "T07:17",
+            "end": "2020-06-07T21:26"
+        }
+    },
+    {
+        "end": 66552,
+        "start": 66542,
+        "text": "previously",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 69866,
+        "start": 69860,
+        "text": "June 6",
+        "timex-value": "2024-06-06",
+        "type": "DATE",
+        "value": "2024-06-06"
+    },
+    {
+        "end": 69879,
+        "start": 69874,
+        "text": "08:00",
+        "timex-value": "2024-08-12T08:00",
+        "type": "TIME",
+        "value": "2024-08-12T08:00"
+    },
+    {
+        "end": 69896,
+        "start": 69891,
+        "text": "23:00",
+        "timex-value": "2024-08-12T23:00",
+        "type": "TIME",
+        "value": "2024-08-12T23:00"
+    },
+    {
+        "end": 71669,
+        "start": 71661,
+        "text": "recently",
+        "timex-value": "PAST_REF",
+        "type": "DATE",
+        "value": "PAST_REF"
+    },
+    {
+        "end": 75673,
+        "start": 75657,
+        "text": "late June 7 2020",
+        "timex-value": "2020-06-07",
+        "type": "DATE",
+        "value": "2020-06-07"
+    },
+    {
+        "end": 79384,
+        "start": 79377,
+        "text": "present",
+        "timex-value": "PRESENT_REF",
+        "type": "DATE",
+        "value": "PRESENT_REF"
+    },
+    {
+        "end": 81693,
+        "start": 81684,
+        "text": "June 2020",
+        "timex-value": "2020-06",
+        "type": "DATE",
+        "value": "2020-06"
+    },
+    {
+        "message": "0- Raw sutime output",
+        "pipeline_version": "5.1",
+        "step": "0"
+    }
+]
