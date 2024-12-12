@@ -19,8 +19,8 @@ from web.models import Paper, HpEvent
 cli = FlaskGroup(create_app=create_app)
 
 
-@cli.command("show_databank")
-def show_databank():
+@cli.command("databank_show")
+def databank_show():
     """For test purpose, show some entities_databank extracts"""
     databank = DataBank()
     message = f"Show databank from file {databank.databank_path}"
@@ -35,8 +35,8 @@ def show_databank():
     # print(insts_df.loc["SolarOrbiter"])
 
 
-@cli.command("show_config")
-def show_config():
+@cli.command("config_show")
+def config_show():
     """List all config variables values"""
 
     for k, v in current_app.config.items():
@@ -76,35 +76,40 @@ def run_worker():
     worker.work()
 
 
-@cli.command("list_papers")
-def list_papers():
+@cli.command("papers_list")
+def papers_list():
     """Show all papers contained in database"""
     for p in Paper.query.all():
         print(p)
 
 
-@cli.command("update_paper")
+@cli.command("paper_update")
 @click.option("-c", "--cat-path", "cat_path")
 @click.argument("paper_id", required=True)
-def update_paper_catpath(paper_id, cat_path):
+def paper_update(paper_id, cat_path):
     """Set new paper's catpath"""
     p = db.session.get(Paper, paper_id)
     p.set_cat_path(cat_path)
 
 
-@cli.command("show_paper")
+@cli.command("paper_show")
 @click.argument("paper_id", required=True)
-def show_paper(paper_id):
+def paper_show(paper_id):
     """Display paper's content by id"""
     p = db.session.get(Paper, paper_id)
     print(p)
 
 
-@cli.command("clean_raws")
+@cli.command("raws_clean")
 @click.argument("paper_id", required=True)
-@click.option("--dry-run/--no-dry-run", is_flag=True, default=True, help="Don't remove / Force remove (default dry)")
-def clean_raws(paper_id, dry_run):
-    """Remove all raw files that don't belong to the normal sequence """
+@click.option(
+    "--dry-run/--no-dry-run",
+    is_flag=True,
+    default=True,
+    help="Don't remove / Force remove (default dry)",
+)
+def raws_clean(paper_id, dry_run):
+    """Remove all raw files that don't belong to the normal sequence"""
     from pathlib import Path
 
     def find_files_to_exclude(directory, raw_type="sutime"):
@@ -160,8 +165,8 @@ def clean_raws(paper_id, dry_run):
         print(f"Paper {paper_id} doesnt have catalog, quitting")
         return
 
-    sutime_to_rm = find_files_to_exclude(occ_dir, 'sutime')
-    entities_to_rm = find_files_to_exclude(occ_dir, 'entities')
+    sutime_to_rm = find_files_to_exclude(occ_dir, "sutime")
+    entities_to_rm = find_files_to_exclude(occ_dir, "entities")
 
     # Remove files or just print them
     for f in sutime_to_rm + entities_to_rm:
@@ -172,18 +177,18 @@ def clean_raws(paper_id, dry_run):
             print(f"Removed: {f.name}")
 
 
-@cli.command("del_paper")
+@cli.command("paper_del")
 @click.argument("paper_id", required=True)
-def del_paper(paper_id):
+def paper_del(paper_id):
     """Remove from database the record by id"""
     p = db.session.get(Paper, paper_id)
     db.session.delete(p)
     db.session.commit()
 
 
-@cli.command("clone_paper")
+@cli.command("paper_clone")
 @click.argument("paper_id", required=True)
-def clone_paper(paper_id):
+def paper_clone(paper_id):
     """Copy an already existing paper
 
     Will create a new record in the database,
@@ -219,7 +224,7 @@ def clone_paper(paper_id):
     print(p_cloned)
 
 
-def run_paper(paper_id):
+def paper_run(paper_id):
     """Run the latest pipeline on that paper's article"""
     print(f"Pipeline run on paper: {paper_id}.")
     try:
@@ -228,23 +233,23 @@ def run_paper(paper_id):
         print(f"Couldn't run on paper #{paper_id}")
 
 
-@cli.command("run_paper")
+@cli.command("paper_run")
 @click.argument("paper_id", required=True)
-def cmd_run_paper(paper_id):
+def paper_run_cmd(paper_id):
     """Run the latest pipeline on that paper's article"""
-    run_paper(paper_id)
+    paper_run(paper_id)
 
 
-@cli.command("run_papers")
-def cmd_run_papers():
+@cli.command("papers_run")
+def papers_run_cmd():
     """Run the latest pipeline on all papers"""
     for p in Paper.query.all():
         # print(f"{p.id}")
-        run_paper(p.id)
+        paper_run(p.id)
 
 
-@cli.command("refresh_papers")
-def refresh_papers():
+@cli.command("papers_refresh")
+def papers_refresh():
     """DEPRECATED: TOBE REFACTORED
 
     Parse the files on disk and update db
@@ -301,8 +306,8 @@ def refresh_papers():
     print(f"Updated {len(papers)} papers")
 
 
-@cli.command("mock_papers")
-def mock_papers():
+@cli.command("papers_mock")
+def papers_mock():
     """Create a false list of papers inserted in database for test purpose"""
     papers_list = [
         ["aa33199-18", "aa33199-18.pdf", None, None],
@@ -325,9 +330,9 @@ def mock_papers():
     db.session.commit()
 
 
-@cli.command("list_events")
+@cli.command("events_list")
 @click.argument("mission_id", required=False)
-def list_events(mission_id=None):
+def events_list(mission_id=None):
     """Show all events contained in database"""
     if mission_id:
         events = HpEvent.query.filter_by(mission_id=mission_id)
@@ -344,9 +349,9 @@ def missions_list():
         print(m)
 
 
-@cli.command("delete_events")
+@cli.command("events_del")
 @click.argument("paper_id", required=False)
-def delete_events(paper_id=None):
+def events_del(paper_id=None):
     """
     Delete events for given paper id or all
     """
@@ -360,9 +365,9 @@ def delete_events(paper_id=None):
         _p.clean_events()
 
 
-@cli.command("refresh_events")
+@cli.command("events_refresh")
 @click.argument("paper_id", required=False)
-def refresh_events(paper_id=None):
+def events_refresh(paper_id=None):
     """Reparse catalogs txt files for all or one paper
 
     \b
@@ -394,9 +399,9 @@ def refresh_events(paper_id=None):
     print(f"Updated {len(events)} events from {len(papers)} papers")
 
 
-@cli.command("feed_catalog")
+@cli.command("catalog_feed")
 @click.argument("catalog_file")
-def feed_catalog(catalog_file):
+def catalog_feed(catalog_file):
     """From a catalog file, feed db with events"""
     catfile_to_db(catalog_file)
 
