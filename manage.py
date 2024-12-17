@@ -330,18 +330,6 @@ def papers_mock():
     db.session.commit()
 
 
-@cli.command("events_list")
-@click.argument("mission_id", required=False)
-def events_list(mission_id=None):
-    """Show all events contained in database"""
-    if mission_id:
-        events = HpEvent.query.filter_by(mission_id=mission_id)
-    else:
-        events = HpEvent.query.all()
-    for e in events:
-        print(e)
-
-
 @cli.command("missions_list")
 def missions_list():
     """Show all missions with id and num events"""
@@ -349,12 +337,56 @@ def missions_list():
         print(m)
 
 
+@cli.command("events_list")
+@click.option("-m", "--mission-id")
+@click.option("-p", "--paper-id")
+def events_list(mission_id=None, paper_id=None):
+    """Show events for given mission or paper, or all contained in database"""
+    if mission_id and paper_id:
+        print("Provide only one argument --paper-id or --mission-id")
+        return
+    if mission_id:
+        events = HpEvent.query.filter_by(mission_id=mission_id)
+    elif paper_id:
+        paper = db.session.get(Paper, paper_id)
+        events = paper.get_events()
+    else:
+        events = HpEvent.query.all()
+
+    for e in events:
+        print(e.__repr__(full=True))
+
+
 @cli.command("events_del")
-@click.argument("paper_id", required=False)
-def events_del(paper_id=None):
+@click.option(
+    "-p",
+    "--paper-id",
+    help="Paper's id to delete events from",
+)
+@click.option(
+    "-a",
+    "--all-events",
+    is_flag=True,
+    default=False,
+    help="Don't remove / Force remove (default dry)",
+)
+def events_del(paper_id, all_events):
     """
     Delete events for given paper id or all
     """
+    if (paper_id and all_events) or (not paper_id and not all_events):
+        print(
+            "Provide one and only one argument --paper-id <#id> or --all-events. Try --help"
+        )
+        return
+
+    if all_events:
+        do_it = True if input("Really erase all events ?") in ["yes", "y"] else False
+        if not do_it:
+            return
+        for _e in HpEvent.query.all():
+            db.session.delete(_e)
+            db.session.commit()
 
     papers = []
     if paper_id:
@@ -366,7 +398,7 @@ def events_del(paper_id=None):
 
 
 @cli.command("events_refresh")
-@click.argument("paper_id", required=False)
+@click.option("-p", "--paper-id")
 def events_refresh(paper_id=None):
     """Reparse catalogs txt files for all or one paper
 
@@ -392,6 +424,7 @@ def events_refresh(paper_id=None):
 
     # then parse catalogs again
     for _p in papers:
+        _p.clean_events()
         _p.push_cat(force=True)
         events.extend(_p.get_events())
         db.session.commit()
