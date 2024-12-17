@@ -1,5 +1,7 @@
 from dateutil import parser
+from typing import List, Dict, Optional
 from datetime import datetime, date
+import re
 
 
 def dt2date(_dt):
@@ -49,6 +51,155 @@ def date_from_struct(_sutime_struct):
         print("NONE OF ALL")
 
     return _res_date
+
+
+def nearest_date(json_list: List[Dict], current_index: int) -> Optional[Dict]:
+    """
+    Find the nearest date or duration entry relative to a given position in a JSON list.
+
+    Args:
+        json_list: List of dictionaries containing date and duration information
+        current_index: Index of the current position to find nearest date from
+
+    Returns:
+        Dictionary containing the nearest date/duration entry or None if no valid dates found
+    """
+
+    def is_valid_date_format(date_str: str) -> bool:
+        """Check if a string matches YYYY-MM-DD format."""
+        return bool(re.match(r'^\d{4}-\d{2}-\d{2}$', date_str))
+
+    def is_valid_date_entry(entry: Dict) -> bool:
+        """Validate if an entry contains properly formatted date information."""
+        if entry['type'] == 'DATE':
+            return is_valid_date_format(entry['value'])
+        elif entry['type'] == 'DURATION':
+            return (is_valid_date_format(entry['value']['begin']) and
+                    is_valid_date_format(entry['value']['end']))
+        return False
+
+    def find_nearest_valid_date(start_idx: int, step: int, limit: int) -> Optional[Dict]:
+        """Find the nearest valid date entry in a given direction."""
+        idx = start_idx
+        while 0 <= idx < limit:
+            if is_valid_date_entry(json_list[idx]):
+                return json_list[idx]
+            idx += step
+        return None
+
+    # Find nearest valid dates before and after current position
+    before = find_nearest_valid_date(current_index - 1, -1, len(json_list))
+    after = find_nearest_valid_date(current_index + 1, 1, len(json_list))
+
+    # Handle cases where one or both directions have no valid dates
+    if not before:
+        return after
+    if not after:
+        return before
+
+    # Calculate distances to determine the nearest date
+    current_entry = json_list[current_index]
+    distance_to_before = abs(before['end'] - current_entry['start'])
+    distance_to_after = abs(current_entry['end'] - after['start'])
+
+    return before if distance_to_before < distance_to_after else after
+
+
+# Constants
+DATE_PATTERN = r"([0-9]{4})-[0-9]{2}-[0-9]{2}"
+UNKNOWN_YEAR_PATTERN = r"XXXX-[0-9]{2}-[0-9]{2}"
+
+
+class DateProcessor:
+    @staticmethod
+    def extract_year(date_string: str) -> Optional[str]:
+        """Extracts the year from a date string in YYYY-MM-DD format."""
+        match = re.search(f"({DATE_PATTERN})", date_string)
+        return match.group(1)[:4] if match else None
+
+    @staticmethod
+    def has_unknown_year(date_string: str) -> bool:
+        """Checks if the date contains XXXX as year."""
+        return bool(re.search(UNKNOWN_YEAR_PATTERN, date_string))
+
+
+class DateItem:
+    def __init__(self, data: Dict):
+        self.type = data["type"]
+        self.data = data
+        self.value = data["value"]
+
+    def get_year(self) -> Optional[str]:
+        """Extracts the year based on the item type."""
+        if self.type in ["DATE", "TIME"]:
+            return DateProcessor.extract_year(self.value)
+
+        if self.type == "DURATION":
+            # Case where one of the dates has an unknown year (XXXX)
+            if DateProcessor.has_unknown_year(self.value["begin"]):
+                return DateProcessor.extract_year(self.value["end"])
+            if DateProcessor.has_unknown_year(self.value["end"]):
+                return DateProcessor.extract_year(self.value["begin"])
+
+            # If both dates have years, take the first one
+            return (DateProcessor.extract_year(self.value["begin"]) or
+                    DateProcessor.extract_year(self.value["end"]))
+
+        return None
+
+
+def nearest_year(items: List[Dict], current_index: int) -> str:
+    """
+    Finds the nearest year in a list of date/duration items.
+
+    Args:
+        items: List of dictionaries containing date information
+        current_index: Current index in the list
+
+    Returns:
+        str: The nearest year found or current year if none found
+    """
+    current_item = DateItem(items[current_index])
+
+    # First check the current item if it's a DURATION type
+    if current_item.type == "DURATION":
+        year = current_item.get_year()
+        if year:
+            return year
+
+    # Look for items before and after
+    before = None
+    after = None
+
+    # Search backwards
+    for i in range(current_index - 1, -1, -1):
+        item = DateItem(items[i])
+        if (year := item.get_year()):
+            before = (item, i)
+            break
+
+    # Search forwards
+    for i in range(current_index + 1, len(items)):
+        item = DateItem(items[i])
+        if (year := item.get_year()):
+            after = (item, i)
+            break
+
+    # Case where no dates are found
+    if not before and not after:
+        return datetime.now().strftime("%Y")
+
+    # Case where only one direction has a date
+    if not before:
+        return after[0].get_year()
+    if not after:
+        return before[0].get_year()
+
+    # Compare distances to find the closest
+    dist_before = abs(items[before[1]]["end"] - items[current_index]["start"])
+    dist_after = abs(items[current_index]["end"] - items[after[1]]["start"])
+
+    return before[0].get_year() if dist_before < dist_after else after[0].get_year()
 
 
 if __name__ == "__main__":
