@@ -94,16 +94,16 @@ def SUTime_treatement(current_OCR_folder, sutime):
                 "^[0-9]{4}$", str(dicts["value"])
             ):  # remove years alone (value : "2004")
                 dicts.clear()
-            elif re.search("^\+.*", str(dicts["value"])):  # remove +XXXX alone
+            elif re.search(r"^\+.*", str(dicts["value"])):  # remove +XXXX alone
                 dicts.clear()
             elif re.search(
-                str(str(date.today()).replace("-", "\-")), dicts["value"]
+                str(str(date.today()).replace("-", "-")), dicts["value"]
             ):  # remove date if it's today
                 dicts["value"] = re.sub(
-                    str(str(date.today()).replace("-", "\-")), "", dicts["value"]
+                    str(str(date.today()).replace("-", "-")), "", dicts["value"]
                 )
                 dicts["timex-value"] = re.sub(
-                    str(str(date.today()).replace("-", "\-")), "", dicts["timex-value"]
+                    str(str(date.today()).replace("-", "-")), "", dicts["timex-value"]
                 )
                 if dicts["value"] == "":
                     dicts.clear()
@@ -586,10 +586,10 @@ def SUTime_transform(current_OCR_folder):
         try:
             # Removal in the DURATIONS of the "+0000" added in the times, induced by the reading of "UTC" by SUTime
             if dicts["type"] == "DURATION":
-                dicts["value"]["begin"] = re.sub("\+0000", "", dicts["value"]["begin"])
-                dicts["value"]["end"] = re.sub("\+0000", "", dicts["value"]["end"])
+                dicts["value"]["begin"] = re.sub(r"\+0000", "", dicts["value"]["begin"])
+                dicts["value"]["end"] = re.sub(r"\+0000", "", dicts["value"]["end"])
             else:
-                dicts["value"] = re.sub("\+0000", "", dicts["value"])
+                dicts["value"] = re.sub(r"\+0000", "", dicts["value"])
         except:
             continue
 
@@ -599,7 +599,7 @@ def SUTime_transform(current_OCR_folder):
             if dicts["type"] == "TIME":
                 # search for a time that is at least THH (with all possible variations of YYYY-MM-DDTHH:MM:SS.msmsmsms)
                 test = re.match(
-                    "((?:[0-9]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9]{1,4})?)",
+                    r"((?:[0-9]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9]{1,4})?)",
                     dicts["value"],
                 )
                 if test != None:
@@ -861,11 +861,11 @@ def SUTime_transform(current_OCR_folder):
     # harmonise the formats, bring them all down to the millisecond
     for dicts in JSON_list:
         begin = re.match(
-            "((?:[0-9X]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9X]{1,4})?)",
+            r"((?:[0-9X]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9X]{1,4})?)",
             dicts["value"]["begin"],
         )
         end = re.match(
-            "((?:[0-9X]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9X]{1,4})?)",
+            r"((?:[0-9X]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9X]{1,4})?)",
             dicts["value"]["end"],
         )
 
