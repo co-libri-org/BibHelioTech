@@ -41,19 +41,19 @@ def SUTime_treatement(current_OCR_folder, sutime):
                 dicts.clear()
             elif re.search(
                 "P.*", str(dicts["value"])
-            ):  # remove times of types like PXS.XS,PTXS,PTXM,PTXH,PXD,PXW,PXY
+            ):  # remove times of types like PXS.XS,PTXS,TOM,PTAH,PXD,PXW,PXY
                 dicts.clear()
             elif re.search(
                 "^([^0-9]*)$", str(dicts["text"])
-            ):  # remove times that do not contains digit (like 'today', 'dusk', 'the night', etc...)
+            ):  # remove times that do not contain digit (like 'today', 'dusk', 'the night', etc...)
                 dicts.clear()
             elif re.search(
                 "-WE$", str(dicts["value"])
-            ):  # remove times of type XXXX-WX-WE (weeks/week-end)
+            ):  # remove times of type XXXX-WX-WE (weeks/weekend)
                 dicts.clear()
             elif re.search(
                 "-W", str(dicts["value"])
-            ):  # remove times of type XXXX-WX-WE (weeks/week-end)
+            ):  # remove times of type XXXX-WX-WE (weeks/weekend)
                 dicts.clear()
             elif re.search(
                 ".*Q.*", str(dicts["value"])
@@ -135,7 +135,7 @@ def get_struct_date(_s):
         # return end date of duration
         if not date_is_today(end_date):
             return end_date
-        # or the begin one
+        # or the beginning date
         elif not date_is_today(begin_date):
             return begin_date
         # or nothing if both are today
@@ -213,9 +213,6 @@ def previous_date(JSON_list, index):
         else:
             continue
     return None
-
-
-
 
 
 def SUTime_transform(current_OCR_folder):
@@ -299,7 +296,7 @@ def SUTime_transform(current_OCR_folder):
         try:
             # TIMES
             if dicts["type"] == "TIME":
-                # search for a time that is at least THH (with all possible variations of YYYY-MM-DDTHH:MM:SS.msmsmsms)
+                # search for a time that is at least THH (with all possible variations of YYYY-MM-DDTHH:MM:SS.ms)
                 test = re.match(
                     r"((?:[0-9]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9]{1,4})?)",
                     dicts["value"],

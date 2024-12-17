@@ -1,3 +1,6 @@
+import sys
+from pprint import pprint
+
 from dateutil import parser
 from typing import List, Dict, Optional
 from datetime import datetime, date
@@ -206,6 +209,13 @@ if __name__ == "__main__":
     # TODO : move that to test case
     import json
 
+    sutime_1 = '/home/richard/01DEV/bht2/DATA/web-upload/8DD74E2D8726EB88DC6EC10F22790CBF852567EE/res_sutime.json'
+    with open(sutime_1) as _fd:
+        sutime_1_structs = json.load(_fd)
+    pprint(sutime_1_structs)
+    print(nearest_date(sutime_1_structs, 5))
+    sys.exit()
+
     filename = '/home/richard/01DEV/bht2/DATA/web-upload/F0F66AF64F9A96EB6B8E36BD19F269229B48E29F/raw4_sutime.json'
     with open(filename) as _fd:
         json_structs = json.load(_fd)
@@ -219,3 +229,4 @@ if __name__ == "__main__":
             _date = _date.strftime("%Y-%m-%d")
         # print(f"<{type(_date.__repr__())}>")
         print(f"{_st['type']:9} {_date.__repr__():<15} {_st['value'].__repr__():<65} {_st['text']}")
+#
