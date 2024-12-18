@@ -1,6 +1,3 @@
-import sys
-from pprint import pprint
-
 from dateutil import parser
 from typing import List, Dict, Optional
 from datetime import datetime, date
@@ -70,18 +67,21 @@ def nearest_date(json_list: List[Dict], current_index: int) -> Optional[Dict]:
 
     def is_valid_date_format(date_str: str) -> bool:
         """Check if a string matches YYYY-MM-DD format."""
-        return bool(re.match(r'^\d{4}-\d{2}-\d{2}$', date_str))
+        return bool(re.match(r"^\d{4}-\d{2}-\d{2}$", date_str))
 
     def is_valid_date_entry(entry: Dict) -> bool:
         """Validate if an entry contains properly formatted date information."""
-        if entry['type'] == 'DATE':
-            return is_valid_date_format(entry['value'])
-        elif entry['type'] == 'DURATION':
-            return (is_valid_date_format(entry['value']['begin']) and
-                    is_valid_date_format(entry['value']['end']))
+        if entry["type"] == "DATE":
+            return is_valid_date_format(entry["value"])
+        elif entry["type"] == "DURATION":
+            return is_valid_date_format(
+                entry["value"]["begin"]
+            ) and is_valid_date_format(entry["value"]["end"])
         return False
 
-    def find_nearest_valid_date(start_idx: int, step: int, limit: int) -> Optional[Dict]:
+    def find_nearest_valid_date(
+        start_idx: int, step: int, limit: int
+    ) -> Optional[Dict]:
         """Find the nearest valid date entry in a given direction."""
         idx = start_idx
         while 0 <= idx < limit:
@@ -102,8 +102,8 @@ def nearest_date(json_list: List[Dict], current_index: int) -> Optional[Dict]:
 
     # Calculate distances to determine the nearest date
     current_entry = json_list[current_index]
-    distance_to_before = abs(before['end'] - current_entry['start'])
-    distance_to_after = abs(current_entry['end'] - after['start'])
+    distance_to_before = abs(before["end"] - current_entry["start"])
+    distance_to_after = abs(current_entry["end"] - after["start"])
 
     return before if distance_to_before < distance_to_after else after
 
@@ -145,8 +145,9 @@ class DateItem:
                 return DateProcessor.extract_year(self.value["begin"])
 
             # If both dates have years, take the first one
-            return (DateProcessor.extract_year(self.value["begin"]) or
-                    DateProcessor.extract_year(self.value["end"]))
+            return DateProcessor.extract_year(
+                self.value["begin"]
+            ) or DateProcessor.extract_year(self.value["end"])
 
         return None
 
@@ -177,14 +178,14 @@ def nearest_year(items: List[Dict], current_index: int) -> str:
     # Search backwards
     for i in range(current_index - 1, -1, -1):
         item = DateItem(items[i])
-        if (year := item.get_year()):
+        if year := item.get_year():
             before = (item, i)
             break
 
     # Search forwards
     for i in range(current_index + 1, len(items)):
         item = DateItem(items[i])
-        if (year := item.get_year()):
+        if year := item.get_year():
             after = (item, i)
             break
 
