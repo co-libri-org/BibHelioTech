@@ -109,8 +109,8 @@ def nearest_date(json_list: List[Dict], current_index: int) -> Optional[Dict]:
 
 
 # Constants
-DATE_PATTERN = r"([0-9]{4})-[0-9]{2}-[0-9]{2}"
-UNKNOWN_YEAR_PATTERN = r"XXXX-[0-9]{2}-[0-9]{2}"
+DATE_PATTERN = r"([0-9]{4})-[0-9]{2}(-[0-9]{2})?"
+UNKNOWN_YEAR_PATTERN = r"XXXX-[0-9]{2}(-[0-9]{2})?"
 
 
 class DateProcessor:

@@ -25,10 +25,11 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [7.5] - 2024-12-xx - Pipeline Optimizations
+## [7.6] - 2024-12-xx - Pipeline Optimizations
 #### Fixed
 - fixed prevdate bug 
 - dash issues
+- nearest_year regexp
 #### Changed
 - added SolarOrbiter synonyms
 - short date to month duration
