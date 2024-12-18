@@ -206,28 +206,44 @@ def nearest_year(items: List[Dict], current_index: int) -> str:
     return before[0].get_year() if dist_before < dist_after else after[0].get_year()
 
 
-if __name__ == "__main__":
-    # TODO : move that to test case
+def jsonfile_to_struct(json_file):
     import json
 
-    sutime_1 = '/home/richard/01DEV/bht2/DATA/web-upload/8DD74E2D8726EB88DC6EC10F22790CBF852567EE/res_sutime.json'
-    with open(sutime_1) as _fd:
-        sutime_1_structs = json.load(_fd)
-    pprint(sutime_1_structs)
-    print(nearest_date(sutime_1_structs, 5))
-    sys.exit()
+    with open(json_file) as _fd:
+        json_struct = json.load(_fd)
+    return json_struct
 
-    filename = '/home/richard/01DEV/bht2/DATA/web-upload/F0F66AF64F9A96EB6B8E36BD19F269229B48E29F/raw4_sutime.json'
-    with open(filename) as _fd:
-        json_structs = json.load(_fd)
 
-    print(json_structs.pop())
-    for _st in json_structs:
+def try_nearest_year():
+    sutime_1_file = "/home/richard/01DEV/bht2/DATA/web-upload/8DD74E2D8726EB88DC6EC10F22790CBF852567EE/res_sutime.json"
+    sutime_1_structs = jsonfile_to_struct(sutime_1_file)
+    return nearest_year(sutime_1_structs, 4)
+
+
+def try_date_from_struct():
+    filename = "/home/richard/01DEV/bht2/DATA/web-upload/F0F66AF64F9A96EB6B8E36BD19F269229B48E29F/raw4_sutime.json"
+    json_struct = jsonfile_to_struct(filename)
+
+    print(json_struct.pop())
+    for _st in json_struct:
         _date = date_from_struct(_st)
         if _date is None:
             _date = "None"
         else:
             _date = _date.strftime("%Y-%m-%d")
-        # print(f"<{type(_date.__repr__())}>")
-        print(f"{_st['type']:9} {_date.__repr__():<15} {_st['value'].__repr__():<65} {_st['text']}")
+        return f"{_st['type']:9} {_date.__repr__():<15} {_st['value'].__repr__():<65} {_st['text']}"
+
+
+if __name__ == "__main__":
+    # TODO : move that to test case
+    import sys
+    from pprint import pprint
+
+    choice = 1
+
+    if choice == 0:
+        print(try_nearest_year())
+    elif choice == 1:
+        print(try_date_from_struct())
+
 #
