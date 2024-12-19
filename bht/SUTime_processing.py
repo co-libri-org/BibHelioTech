@@ -1,13 +1,12 @@
 import os
 import re
 import json
-from calendar import monthrange
 from datetime import date, datetime, timedelta
 
 import dateutil.parser as parser
 
 from bht.bht_logging import init_logger
-from bht.sutime_tools import nearest_year
+from bht.sutime_tools import nearest_year, shortdate_rewriting_step
 from tools import RawDumper
 
 _logger = init_logger()
@@ -435,25 +434,7 @@ def SUTime_transform(current_OCR_folder):
         JSON_list, "Change type TIME to DURATION", current_OCR_folder
     )
 
-    # date correction when in short format (YYYY-MM (no DD))
-    compteur_dicts = 0
-    for dicts in JSON_list:
-        if dicts["type"] == "DATE":
-            matched = re.search("^([0-9]{4})-([0-9]{2})$", dicts["value"])
-            if matched:
-                year, month = matched.groups()
-                year, month = int(year), int(month)
-                first, last = monthrange(year, month)
-                begin = datetime(year, month, 1)
-                end = datetime(year, month, last)
-                DATEFORMAT = "%Y-%m-%d %H:%M:%S.000"
-
-                dicts["type"] = "DURATION"
-                dicts["value"] = {
-                    "begin": begin.strftime(DATEFORMAT),
-                    "end": end.strftime(DATEFORMAT),
-                }
-        compteur_dicts += 1
+    shortdate_rewriting_step(JSON_list)
 
     raw_dumper.dump_to_raw(
         JSON_list,
