@@ -541,6 +541,7 @@
   ENV.defaults["priority"] = 10
   ENV.defaults["stage"] = 2
 
+
  # RHI: capture strings like "3-9 August 2017"
 { name: "temporal-composite-day-range-single-month",
   priority: 200,  // Priorité haute pour passer avant les autres règles
@@ -1060,7 +1061,8 @@
 
   { name: "temporal-composite-8:ranges",
 	active: options."markTimeRanges",
-    pattern: ( /from/? ( [ { temporal::IS_TIMEX_TIME } | { temporal::IS_TIMEX_DATE } ] ) /to|-|–|—|until|∼/ ( [ { temporal::IS_TIMEX_TIME } |   {   temporal::IS_TIMEX_DATE } ] ) ),
+    pattern: ( /from/? ( [ { temporal::IS_TIMEX_TIME } | {
+    temporal::IS_TIMEX_DATE } ] ) /to|and|-|–|—|until|∼/ ( [ { temporal::IS_TIMEX_TIME } |   {   temporal::IS_TIMEX_DATE } ] ) ),
 	result: TimeRange( $1[0].temporal.value, $2[0].temporal.value ) }
 
     { name: "temporal-composite-8a:ranges",
