@@ -114,4 +114,12 @@
 
 {% block scripts %}
 <script src="{{url_for('static', filename='js/papers.js') | staticversion }} " defer></script>
+<script>
+
+    $(document).ready(function() {
+    setBhtRunOnClick();
+    updateAllStatuses();
+    });
+
+</script>
 {% endblock %}
