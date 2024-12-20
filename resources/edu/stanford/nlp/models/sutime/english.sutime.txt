@@ -541,6 +541,24 @@
   ENV.defaults["priority"] = 10
   ENV.defaults["stage"] = 2
 
+ # RHI: capture strings like "3-9 August 2017"
+{ name: "temporal-composite-day-range-single-month",
+  priority: 200,  // Priorité haute pour passer avant les autres règles
+  active: TRUE,
+  pattern: ( (?$day1 $INT1TO31)
+            /-/
+            (?$day2 $INT1TO31)
+            /\s+/?
+            (?$month [ { temporal::MONTH } ])
+            /\s+/?
+            (?$year $POSSIBLE_YEAR)
+            ),
+  result: TimeRange(
+      IsoDate($year[0].numcompvalue, $month[0].temporal.value.month, $day1[0].numcompvalue),
+      IsoDate($year[0].numcompvalue, $month[0].temporal.value.month, $day2[0].numcompvalue)
+  )
+}
+
 
  # RHI: capture strings like "From 20:45 to 21:30 on July 23"
  { name: "range-time-with-date",
