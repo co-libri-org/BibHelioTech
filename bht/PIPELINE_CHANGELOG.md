@@ -25,7 +25,7 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [7.8] - 2024-12-xx - Pipeline Optimizations
+## [7.9] - 2024-12-xx - Pipeline Optimizations
 #### Fixed
 - fixed prevdate bug 
 - dash issues
@@ -34,6 +34,7 @@ Only major refactoring improvements or functional changes should be noted.
 #### Changed
 - added SolarOrbiter synonyms
 - short date to month duration
+- more DataBanks timespans
 #### New
 - more interval detection rules
 
