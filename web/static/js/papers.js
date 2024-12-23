@@ -4,9 +4,14 @@
 
 // Change the catalog status depending on request response
 //
-
 function toggleCatalog(res, action) {
     const catElmtId = '#cat-link-' + res.data.paper_id;
+    some_div_element = $(catElmtId);
+
+    if ( some_div_element.length == 0 ) {
+        // L'élément n'existe pas dans le DOM
+        return;
+    }
     if (action == "enable") {
         $(catElmtId).contents()[0].data = res.data.ppl_ver;
         $(catElmtId).removeAttr('disabled');
@@ -104,6 +109,7 @@ function updateAllStatuses() {
 //
 function setBhtRunOnClick() {
     $('.run-bht').on('click', function() {
+        alert($(this).data('paper_id'));
         let paper_id = $(this).data('paper_id');
         const statusElmtId = '#bht-status-' + paper_id;
         $(statusElmtId).fadeOut(200).fadeIn(200);

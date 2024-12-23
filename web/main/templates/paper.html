@@ -9,6 +9,13 @@
 <a class="btn btn-warning"
    href="{{url_for('main.paper_update', paper_id=paper.id)}}"
    title="reload from istex">Reload From ISTEX</a>
+<button class='btn btn-warning run-bht'
+        title="Run bht pipeline {{config.BHT_PIPELINE_VERSION}} on TXT file"
+        data-paper_id="{{paper.id}}"
+        data-file_type="txt"
+        {{disabled(not paper.has_txt)}}>
+    Run <b>{{config.BHT_PIPELINE_VERSION}}</b>
+</button>
 <table id="paper_keys" class="table table-striped">
     <tbody>
     <tr>
@@ -99,6 +106,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{url_for('static', filename='js/papers.js') | staticversion }} " defer></script>
 <script src="{{url_for('static', filename='js/tools.js') | staticversion }} "></script>
 <script>
 
@@ -106,6 +114,7 @@ $(document).ready(function() {
     // - pushing the catalog id
     // - reloading the page
     $('#add-catalog').on('click', push_catalog );
+    setBhtRunOnClick();
 });
 </script>
 {%  endblock %}
