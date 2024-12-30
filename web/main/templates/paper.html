@@ -6,16 +6,20 @@
 
 
 <h3 class="d-flex justify-content-center align-items-center p-3 ">#{{paper.id}}- &laquo;{{paper.title}}&raquo;</h3>
-<a class="btn btn-warning"
-   href="{{url_for('main.paper_update', paper_id=paper.id)}}"
-   title="reload from istex">Reload From ISTEX</a>
-<button class='btn btn-warning run-bht'
-        title="Run bht pipeline {{config.BHT_PIPELINE_VERSION}} on TXT file"
-        data-paper_id="{{paper.id}}"
-        data-file_type="txt"
-        {{disabled(not paper.has_txt)}}>
-    Run <b>{{config.BHT_PIPELINE_VERSION}}</b>
-</button>
+<div id="paper-btns">
+    <a class="btn btn-warning"
+       href="{{url_for('main.paper_update', paper_id=paper.id)}}"
+       title="reload from istex">Reload From ISTEX</a>
+    <button class='btn btn-warning run-bht'
+            title="Run bht pipeline {{config.BHT_PIPELINE_VERSION}} on TXT file"
+            data-paper_id="{{paper.id}}"
+            data-file_type="txt"
+            {{disabled(not paper.has_txt)}}>
+        Run <b>{{config.BHT_PIPELINE_VERSION}}</b>
+    </button>
+    <span class="bht-status" id="bht-status-{{paper.id}}"></span>
+    <span class="spinner-border spinner-border-sm text-warning d-none" id="spinner-{{paper.id}}"></span>
+</div>
 <table id="paper_keys" class="table table-striped">
     <tbody>
     <tr>
@@ -115,6 +119,7 @@ $(document).ready(function() {
     // - reloading the page
     $('#add-catalog').on('click', push_catalog );
     setBhtRunOnClick();
+    updateAllStatuses();
 });
 </script>
 {%  endblock %}

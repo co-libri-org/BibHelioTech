@@ -109,7 +109,6 @@ function updateAllStatuses() {
 //
 function setBhtRunOnClick() {
     $('.run-bht').on('click', function() {
-        alert($(this).data('paper_id'));
         let paper_id = $(this).data('paper_id');
         const statusElmtId = '#bht-status-' + paper_id;
         $(statusElmtId).fadeOut(200).fadeIn(200);
