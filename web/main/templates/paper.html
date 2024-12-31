@@ -6,22 +6,25 @@
 
 
 <h3 class="d-flex justify-content-center align-items-center p-3 ">#{{paper.id}}- &laquo;{{paper.title}}&raquo;</h3>
-<a class="btn btn-warning"
-   href="{{url_for('main.paper_update', paper_id=paper.id)}}"
-   title="reload from istex">Reload From ISTEX</a>
+<div id="paper-btns">
+    <a class="btn btn-warning"
+       href="{{url_for('main.paper_update', paper_id=paper.id)}}"
+       title="reload from istex">Reload From ISTEX</a>
+    <button class='btn btn-warning run-bht'
+            title="Run bht pipeline {{config.BHT_PIPELINE_VERSION}} on TXT file"
+            data-paper_id="{{paper.id}}"
+            data-file_type="txt"
+            {{disabled(not paper.has_txt)}}>
+        Run <b>{{config.BHT_PIPELINE_VERSION}}</b>
+    </button>
+    <span class="bht-status" id="bht-status-{{paper.id}}"></span>
+    <span class="spinner-border spinner-border-sm text-warning d-none" id="spinner-{{paper.id}}"></span>
+</div>
 <table id="paper_keys" class="table table-striped">
     <tbody>
     <tr>
         <th>pipeline status:</th>
-        {% if paper.has_cat %}
-        <td class="paper_attr_yes">
-
-            {% set task_started = paper.task_started |string %}
-            Version <b>{{ paper.pipeline_version}}</b> ran on {{task_started[:19]}}
-        </td>
-        {% else %}
-        <td class="paper_attr_no">No pipeline run yet</td>
-        {% endif %}
+        <td class="paper_attr_yes" id="paper-status-{{paper.id}}"> </td>
     </tr>
     <tr>
         <th>pdf file:</th>
@@ -99,6 +102,7 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="{{url_for('static', filename='js/papers.js') | staticversion }} " defer></script>
 <script src="{{url_for('static', filename='js/tools.js') | staticversion }} "></script>
 <script>
 
@@ -106,6 +110,8 @@ $(document).ready(function() {
     // - pushing the catalog id
     // - reloading the page
     $('#add-catalog').on('click', push_catalog );
+    setBhtRunOnClick();
+    updateAllStatuses();
 });
 </script>
 {%  endblock %}

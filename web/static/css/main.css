@@ -130,7 +130,7 @@ font-size=1.2em;
 font-weight: 500;
 }
 
-// ----------------------------------------------------------------------
+/* ---------------------------------------------------------------------- */
 
 button.btn[disabled] ,
 input.btn[disabled] ,
@@ -176,19 +176,37 @@ input.success{
 /* Disable btn if document already in db  */
 /* see above input.btn[disabled] */
 
+/* PAPER */
+#paper-btns {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+#paper-btns .run-bht {
+    margin: 3px;
+}
+
 /* PAPERS LIST */
+/*
+*/
 .bht-status:hover {
+    height: 100%;
     cursor: help;
     border: 1pt solid lightgrey;
     background-color: white !important;
 }
 .bht-status {
+    align-items: center; /* Centrage vertical du contenu */
+    margin: 3px;
+    height: 100%;
     border: 1pt solid transparent;
     color: black;
     display: inline-block;
-    width: 84%;
+    align-items: center;
     border-radius: 5pt;
-    padding: 3px;
+    padding: 6px;
 }
 .bht-status.queued{
     /* queued is blue */
