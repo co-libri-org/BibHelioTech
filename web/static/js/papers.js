@@ -2,8 +2,6 @@
 // BHT tasks display
 //
 
-// Change the catalog status depending on request response
-//
 function toggleWrapper(res, action) {
     const catElmtId = '#cat-link-' + res.data.paper_id;
     const statusElmtId = '#paper-status-' + res.data.paper_id;
@@ -30,10 +28,14 @@ function togglePaperStatus(res, action, statusElmtId){
     }
     else if ( res.data.task_status == 'started') {
         html_content = "Version <b>"+res.data.ppl_ver+"</b> "+"running since "+res.data.task_started;
+    } else {
+        html_content = "No content: "+res.data.task_status;
     }
     $(statusElmtId).html( html_content);
 }
 
+// Change the catalog status depending on request response
+//
 function toggleCatalog(res, action, catElmtId) {
     if (action == "enable") {
         $(catElmtId).contents()[0].data = res.data.ppl_ver;
@@ -88,6 +90,7 @@ function setStatus(paper_id) {
 
             // Update display depending on status
             if (taskStatus === 'started') {
+                toggleWrapper(res, "disable");
                 // show spinner while running task
                 $(spinnerElmtId).removeClass('d-none')
                 $(spinnerElmtId).addClass('d-inline-block')

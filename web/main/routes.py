@@ -544,6 +544,7 @@ def bht_status(paper_id):
             paper_id=paper.id,
             task_status=paper.task_status,
             task_started=paper.task_started,
+            ppl_ver=paper.pipeline_version,
             task_stopped=paper.task_stopped,
             cat_is_processed=paper.has_cat and paper.cat_in_db,
             message=f"{paper.task_status} {elapsed}",
@@ -576,6 +577,7 @@ def bht_status(paper_id):
                 paper_id=paper.id,
                 task_status=task_status,
                 task_started=task_started,
+                ppl_ver=current_app.config["BHT_PIPELINE_VERSION"],
                 cat_is_processed=paper.has_cat and paper.cat_in_db,
                 message=f"{task_status} {elapsed}",
             )
@@ -596,7 +598,6 @@ def bht_status(paper_id):
             return response_object.response, 503
 
         # TODO: END CUTTING
-    response_object.set_ppl_ver(paper.pipeline_version)
     return response_object.response, 200
 
 
