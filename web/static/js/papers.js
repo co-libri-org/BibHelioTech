@@ -22,16 +22,14 @@ function toggleWrapper(res, action) {
         alert("None");
         return
     }
-    console.log("RES: ");
-    console.log(res);
 }
 
 function togglePaperStatus(res, action, statusElmtId){
     if  ( ["finished", "failed"].includes(res.data.task_status) ){
-        html_content = "Version <b>"+res.data.ppl_ver+"</b> "+res.data.message;
+        html_content = "Version <b>"+res.data.ppl_ver+"</b> "+res.data.task_status+" at "+res.data.task_stopped;
     }
     else if ( res.data.task_status == 'started') {
-        html_content = "Version <b>"+res.data.ppl_ver+"</b> "+"Running ...";
+        html_content = "Version <b>"+res.data.ppl_ver+"</b> "+"running since "+res.data.task_started;
     }
     $(statusElmtId).html( html_content);
 }

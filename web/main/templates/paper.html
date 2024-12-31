@@ -24,15 +24,7 @@
     <tbody>
     <tr>
         <th>pipeline status:</th>
-        {% if paper.has_cat %}
-        <td class="paper_attr_yes" id="paper-status-{{paper.id}}">
-
-            {% set task_started = paper.task_started |string %}
-            Version <b>{{ paper.pipeline_version}}</b> ran on {{task_started[:19]}}
-        </td>
-        {% else %}
-        <td class="paper_attr_no" id="paper-status-{{paper.id}}">No pipeline run yet</td>
-        {% endif %}
+        <td class="paper_attr_yes" id="paper-status-{{paper.id}}"> </td>
     </tr>
     <tr>
         <th>pdf file:</th>

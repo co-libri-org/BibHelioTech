@@ -59,6 +59,7 @@ class StatusResponse:
         ppl_ver: str = None,
         task_status: str = None,
         task_started: datetime = None,
+        task_stopped: datetime = None,
         cat_is_processed: bool = None,
         message: str = None,
         alt_message: str = None,
@@ -68,18 +69,24 @@ class StatusResponse:
         self.ppl_ver = ppl_ver
         self.task_status = task_status
         self.task_started = task_started
+        self.task_stopped = task_stopped
         self.cat_is_processed = cat_is_processed
         self.message = message
         self.alt_message = alt_message
         if task_started is not None:
-            task_started_str = task_started.strftime("%a, %b %d, %Y - %H:%M:%S")
+            self.task_started_str = task_started.strftime('%Y-%m-%dT%H:%M:%S')
         else:
-            task_started_str = "(no time info)"
+            self.task_started_str = "(no time info)"
+        if task_stopped is not None:
+            self.task_stopped_str = task_stopped.strftime('%Y-%m-%dT%H:%M:%S')
+        else:
+            self.task_stopped_str = "(no time info)"
 
         if task_status in ["started", "finished", "failed"] and alt_message is None:
-            self.alt_message = f"Started {task_started_str}"
+            self.alt_message = f"Started {self.task_started_str}"
+
         elif task_status in ["queued"] and alt_message is None:
-            self.alt_message = f"Waiting since {task_started_str}"
+            self.alt_message = f"Waiting since {self.task_started_str}"
 
     @property
     def _response(self):
@@ -89,6 +96,8 @@ class StatusResponse:
                 "paper_id": self.paper_id,
                 "ppl_ver": self.ppl_ver,
                 "task_status": self.task_status,
+                "task_started": self.task_started_str,
+                "task_stopped": self.task_stopped_str,
                 "cat_is_processed": self.cat_is_processed,
                 "message": self.message,
                 "alt_message": self.alt_message,
@@ -525,6 +534,7 @@ def bht_status(paper_id):
     # TODO: REFACTOR cut and delegate to Paper and Task models
     # Get task info from db if task has finished
     if paper.task_status == "finished" or paper.task_status == "failed":
+        message = f"Paper task = {paper.task_status}"
         try:
             elapsed = str(paper.task_stopped - paper.task_started).split(".")[0]
         except Exception as e:
@@ -534,6 +544,7 @@ def bht_status(paper_id):
             paper_id=paper.id,
             task_status=paper.task_status,
             task_started=paper.task_started,
+            task_stopped=paper.task_stopped,
             cat_is_processed=paper.has_cat and paper.cat_in_db,
             message=f"{paper.task_status} {elapsed}",
         )
@@ -624,7 +635,7 @@ def bht_run():
     response_object = StatusResponse(
         status="success", task_status="queued", paper_id=paper.id
     )
-    return response_object.json, 202
+    return response_object.response, 202
 
 
 @bp.route("/istex_test", methods=["GET"])
