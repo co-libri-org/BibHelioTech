@@ -96,8 +96,15 @@ class StatusResponse:
         }
 
     @property
-    def json(self):
+    def response(self):
         return jsonify(self._response)
+
+    def to_dict(self):
+        return self._response
+
+    def to_json_string(self):
+        import json
+        return json.dumps(self._response, indent=4)
 
     def set_ppl_ver(self, ppl_ver):
         self.ppl_ver = ppl_ver
@@ -575,11 +582,11 @@ def bht_status(paper_id):
                 message="Redis Cnx Err",
                 alt_message="Database to read tasks status is unreachable",
             )
-            return response_object.json, 503
+            return response_object.response, 503
 
         # TODO: END CUTTING
     response_object.set_ppl_ver(paper.pipeline_version)
-    return response_object.json, 200
+    return response_object.response, 200
 
 
 @bp.route("/bht_run", methods=["POST"])
