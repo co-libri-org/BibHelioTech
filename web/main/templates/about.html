@@ -32,8 +32,9 @@
             <img width="70" src="{{url_for('static', filename='img/GitHub_Logo.png')}}"/>
         </a>
     </p>
-    <p>
+    <h5>
         See Changelogs for more details on changes between versions:
+    </h5>
     <ul>
         <li>
             BibHelioTech: <a class="btn btn-version" href="{{url_for('main.changelog')}}"
@@ -49,8 +50,27 @@
         </li>
 
     </ul>
-
-    </p>
+    <h5>
+        Pipeline Hints:
+    </h5>
+    <ul>
+        <li> First, SUTIME is run to discover time intervals called Durations.</li>
+        <li> Then we search for Missions and Instruments in the text.</li>
+        <li> A correspondance is then done between Missions and Durations</li>
+        <li> That allows us to set some indicators:
+            <ul>
+                <li>D: is the distance in the text ( number of characters) between the Duration and the Mission</li>
+                <li>R: is the rank of the mission, meaning how many midssions we had to skip in the text befor making
+                    the correspondance with the Duration
+                </li>
+                <li>Conf: is an indice, wich formula is:
+                    <strong>D × R / (SO × sat_occ)</strong> where <strong>SO</strong> is the total number of missions,
+                    and <strong>sat_occ</strong> the occurences of that specific mission.
+                </li>
+                <li>NConf: is this indice normalized on the whole database</li>
+            </ul>
+        </li>
+    </ul>
 
 </div>
 {% endblock %}
