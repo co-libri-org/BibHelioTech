@@ -25,7 +25,7 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [7.9] - 2024-12-xx - Pipeline Optimizations
+## [7.9] - 2024-12-31 - Pipeline Optimizations
 #### Fixed
 - fixed prevdate bug 
 - dash issues
