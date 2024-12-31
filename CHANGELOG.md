@@ -25,12 +25,14 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [0.20.1-dev] - 2024-10-xx - Pipeline changes
+## [0.20.1] - 2024-12-31 - Pipeline changes
 #### Fixed
 #### Changed
 - raw files cleaner keeps normal raws
 #### New
+- Upgraded web interface
 - Sutime DURATION analysis
+- More Sutime rules, see PIPELINE_CHANGELOG
 
 
 ## [0.19.2] - 2024-10-09 - Post Filtering Form
