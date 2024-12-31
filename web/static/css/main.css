@@ -130,7 +130,7 @@ font-size=1.2em;
 font-weight: 500;
 }
 
-// ----------------------------------------------------------------------
+/* ---------------------------------------------------------------------- */
 
 button.btn[disabled] ,
 input.btn[disabled] ,
@@ -184,11 +184,15 @@ input.success{
     margin-bottom: 10px;
 }
 
+#paper-btns .run-bht {
+    margin: 3px;
+}
+
 /* PAPERS LIST */
 /*
 */
 .bht-status:hover {
-height: 100%;
+    height: 100%;
     cursor: help;
     border: 1pt solid lightgrey;
     background-color: white !important;

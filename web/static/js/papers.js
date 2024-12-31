@@ -4,14 +4,39 @@
 
 // Change the catalog status depending on request response
 //
-function toggleCatalog(res, action) {
+function toggleWrapper(res, action) {
     const catElmtId = '#cat-link-' + res.data.paper_id;
-    some_div_element = $(catElmtId);
+    const statusElmtId = '#paper-status-' + res.data.paper_id;
 
-    if ( some_div_element.length == 0 ) {
-        // L'élément n'existe pas dans le DOM
-        return;
+    cat_element = $(catElmtId);
+    status_element = $(statusElmtId)
+
+    if ( cat_element.length > 0 ) {
+        // element catalog exists in DOM
+        toggleCatalog(res, action, catElmtId);
+    } else if ( status_element.length > 0 ){
+        // element paper-status exists in DOM
+        togglePaperStatus(res, action, statusElmtId)
+    } else {
+        // none of the previous
+        alert("None");
+        return
     }
+    console.log("RES: ");
+    console.log(res);
+}
+
+function togglePaperStatus(res, action, statusElmtId){
+    if  ( ["finished", "failed"].includes(res.data.task_status) ){
+        html_content = "Version <b>"+res.data.ppl_ver+"</b> "+res.data.message;
+    }
+    else if ( res.data.task_status == 'started') {
+        html_content = "Version <b>"+res.data.ppl_ver+"</b> "+"Running ...";
+    }
+    $(statusElmtId).html( html_content);
+}
+
+function toggleCatalog(res, action, catElmtId) {
     if (action == "enable") {
         $(catElmtId).contents()[0].data = res.data.ppl_ver;
         $(catElmtId).removeAttr('disabled');
@@ -73,21 +98,24 @@ function setStatus(paper_id) {
                     setStatus(res.data.paper_id);
                 }, 1000);
             }
-            if (taskStatus === 'queued') {
+            else if (taskStatus === 'queued') {
                 // wait for queued to be executed
                 setTimeout(function() {
                     setStatus(res.data.paper_id);
                 }, 1000);
             }
-            if (taskStatus === 'finished') {
+            else if (taskStatus === 'finished') {
                 // update catalog availability when task finished, then quit
-                toggleCatalog(res, "enable");
+                toggleWrapper(res, "enable");
                 return false;
             }
-            if (taskStatus === 'failed') {
+            else if (taskStatus === 'failed') {
                 // disable catalog access when task failed, then quit
-                toggleCatalog(res, "disable")
+                toggleWrapper(res, "disable");
                 return false;
+            }
+            else {
+                console.log(res);
             }
         })
         .fail((err) => {
@@ -121,7 +149,7 @@ function setBhtRunOnClick() {
                 method: 'POST'
             })
             .done((res) => {
-                toggleCatalog(res, "disable");
+                toggleWrapper(res, "disable");
                 if (res.status === "success") {
                     setStatus(res.data.paper_id);
                 } else {
