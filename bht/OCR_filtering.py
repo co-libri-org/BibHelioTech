@@ -17,7 +17,7 @@ def content_filter(content):
     content = re.sub("\n{1,5}", " ", content)  # remove all \n
 
     content = re.sub(r"UT ", r" UT ", content)  # replace "22:02UT" by "22:02 UT"
-    content = re.sub(r" UT ", r"UTC", content)  # replace "22:02 UT" by "22:02 UTC"
+    content = re.sub(r" UT ", r" UTC", content)  # replace "22:02 UT" by "22:02 UTC"
 
     # HHmm to HH:mm
     content = re.sub(r"([0-9]{2})([0-9]{2})(\:[0-9]{2})", r"\1:\2\3", content)
@@ -27,7 +27,7 @@ def content_filter(content):
     #     r"\1:\2 - \8:\9",
     #     content,
     # )
-    content = re.sub(r"([0-9]{2})([0-9]{2}) (UTC)", r"\1:\2\3", content)
+    content = re.sub(r"([0-9]{2})([0-9]{2}) (UTC)", r"\1:\2 \3", content)
 
     content = re.sub(
         r"((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?)) ([0-9]{1,2})((?: )?)(,)((?: )?)([0-9]{4})",
@@ -75,7 +75,7 @@ def content_filter(content):
         content,
     )  # replace "2018 Oct 9 12:00 2018 Oct 11 00:00" by "9 Oct 2018 at 12:00 to 11 Oct 2018 at 00:00 "
 
-    content = re.sub(r"UTC", r"", content)  # replace "22:02 UTC" by "22:02"
+    content = re.sub(r"UTC", r" ", content)  # replace "22:02 UTC" by "22:02"
 
     return content
 
