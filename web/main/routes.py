@@ -25,6 +25,7 @@ from flask import (
     send_file,
     jsonify,
     Response,
+    send_from_directory,
 )
 
 from bht.errors import BhtCsvError
@@ -253,6 +254,15 @@ def basename_filter(filename):
 def index():
     # return render_template("index.html")
     return redirect(url_for("main.catalogs"))
+
+
+@bp.route("/favicon.ico")
+def favicon():
+    return send_from_directory(
+        os.path.join(current_app.static_folder, "img"),
+        "bht2-32x32.png",
+        mimetype="image/vnd.microsoft.icon",
+    )
 
 
 @bp.route("/changelog/<module>")
