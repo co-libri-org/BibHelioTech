@@ -34,33 +34,47 @@ def content_filter(content):
         r"\1 \3 \7",
         content,
     )  # replace "09:30-23:30" by "09:30 - 23:30"
+
+    # content = re.sub(
+    #     r"([0-9]{2}\:[0-9]{2})(\-|\–|\—)([0-9]{2}\:[0-9]{2})", r"\1 \2 \3", content
+    # )  # replace "09:30-23:30" by "09:30 - 23:30"
+    # content = re.sub(
+    #     r"([0-9]{2}\:[0-9]{2})(\-|\–|\—) ([0-9]{2}\:[0-9]{2})", r"\1 \2 \3", content
+    # )  # replace "09:30- 23:30" by "09:30 - 23:30"
+    # content = re.sub(
+    #     r"([0-9]{2}\:[0-9]{2}) (\-|\–|\—)([0-9]{2}\:[0-9]{2})", r"\1 \2 \3", content
+    # )  # replace "09:30 -23:30" by "09:30 - 23:30"
+
+    # replace any unicode dash sign
+    content = content.replace("−", "-")  # minus sign
+    content = content.replace("–", "-")  # en dash
+    content = content.replace("—", "-")  # em dash
     content = re.sub(
-        r"([0-9]{2}\:[0-9]{2})(\-|\–|\—)([0-9]{2}\:[0-9]{2})", r"\1 \2 \3", content
-    )  # replace "09:30-23:30" by "09:30 - 23:30"
-    content = re.sub(
-        r"([0-9]{2}\:[0-9]{2})(\-|\–|\—) ([0-9]{2}\:[0-9]{2})", r"\1 \2 \3", content
-    )  # replace "09:30- 23:30" by "09:30 - 23:30"
-    content = re.sub(
-        r"([0-9]{2}\:[0-9]{2}) (\-|\–|\—)([0-9]{2}\:[0-9]{2})", r"\1 \2 \3", content
-    )  # replace "09:30 -23:30" by "09:30 - 23:30"
+        r"([0-9]{2}:[0-9]{2})\s*-\s*([0-9]{2}:[0-9]{2})", r"\1 - \2", content
+    )  # replace "09:30?-?23:30" by "09:30 - 23:30"
+
     content = re.sub(
         r"([0-9]{2}\:[0-9]{2}\:[0-9]{2}\.[0-9]{1,3})", r"T\1", content
     )  # replace "10:28:42.950" by "T10:28:42.950"
+
     content = re.sub(
         r"([0-9]{2})(\/|\–|\-)([0-9]{2}) ((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?)) ([0-9]{4})",
         r" \1 \4 \6 - \3 \4 \6",
         content,
     )  # replace "17/18 September 2000" by "17 September 2000 - 18 September 2000"
+
     content = re.sub(
         r"([0-9]{4}) ((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?)) ([0-9]{1,2})",
         r" \4 \2 \1 ",
         content,
     )  # replace "2018 Oct 9" by "9 Oct 2018"
+
     content = re.sub(
         r"([0-9]{1,2}) ((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?)) ([0-9]{4}) (([0-9]{2}\:){1,2}[0-9]{2}) ([0-9]{1,2}) ((?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|(Nov|Dec)(?:ember)?)) ([0-9]{4}) (([0-9]{2}\:){1,2}[0-9]{2})",
         r" \1 \2 \4 at \5 to \7 \8 \10 at \11 ",
         content,
     )  # replace "2018 Oct 9 12:00 2018 Oct 11 00:00" by "9 Oct 2018 at 12:00 to 11 Oct 2018 at 00:00 "
+
     content = re.sub(r"UTC", r"", content)  # replace "22:02 UTC" by "22:02"
 
     return content

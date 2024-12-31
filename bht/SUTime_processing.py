@@ -1,3 +1,4 @@
+import os
 import re
 import json
 from datetime import date, datetime, timedelta
@@ -5,6 +6,7 @@ from datetime import date, datetime, timedelta
 import dateutil.parser as parser
 
 from bht.bht_logging import init_logger
+from bht.sutime_tools import nearest_year, shortdate_rewriting_step
 from tools import RawDumper
 
 _logger = init_logger()
@@ -25,83 +27,83 @@ def SUTime_treatement(current_OCR_folder, sutime):
         try:
             # removal of useless values
             if re.search(
-                    "PRESENT_REF", str(dicts["value"])
+                "PRESENT_REF", str(dicts["value"])
             ):  # remove times of type "..._REF"
                 dicts.clear()
             elif re.search(
-                    "FUTURE_REF", str(dicts["value"])
+                "FUTURE_REF", str(dicts["value"])
             ):  # remove times of type "..._REF"
                 dicts.clear()
             elif re.search(
-                    "PAST_REF", str(dicts["value"])
+                "PAST_REF", str(dicts["value"])
             ):  # remove times of type "..._REF"
                 dicts.clear()
             elif re.search(
-                    "P.*", str(dicts["value"])
-            ):  # remove times of types like PXS.XS,PTXS,PTXM,PTXH,PXD,PXW,PXY
+                "P.*", str(dicts["value"])
+            ):  # remove times of types like PXS.XS,PTXS,TOM,PTAH,PXD,PXW,PXY
                 dicts.clear()
             elif re.search(
-                    "^([^0-9]*)$", str(dicts["text"])
-            ):  # remove times that do not contains digit (like 'today', 'dusk', 'the night', etc...)
+                "^([^0-9]*)$", str(dicts["text"])
+            ):  # remove times that do not contain digit (like 'today', 'dusk', 'the night', etc...)
                 dicts.clear()
             elif re.search(
-                    "-WE$", str(dicts["value"])
-            ):  # remove times of type XXXX-WX-WE (weeks/week-end)
+                "-WE$", str(dicts["value"])
+            ):  # remove times of type XXXX-WX-WE (weeks/weekend)
                 dicts.clear()
             elif re.search(
-                    "-W", str(dicts["value"])
-            ):  # remove times of type XXXX-WX-WE (weeks/week-end)
+                "-W", str(dicts["value"])
+            ):  # remove times of type XXXX-WX-WE (weeks/weekend)
                 dicts.clear()
             elif re.search(
-                    ".*Q.*", str(dicts["value"])
+                ".*Q.*", str(dicts["value"])
             ):  # remove times of type QX (Quarters)
                 dicts.clear()
             elif re.search(
-                    "MO$", str(dicts["value"])
+                "MO$", str(dicts["value"])
             ):  # remove times of type MO (morning)
                 dicts.clear()
             elif re.search(
-                    "AF$", str(dicts["value"])
+                "AF$", str(dicts["value"])
             ):  # remove times of type AF (afternoon)
                 dicts.clear()
             elif re.search(
-                    "EV$", str(dicts["value"])
+                "EV$", str(dicts["value"])
             ):  # remove times of type EV (evening)
                 dicts.clear()
             elif re.search(
-                    "NI$", str(dicts["value"])
+                "NI$", str(dicts["value"])
             ):  # remove times of type NI (night)
                 dicts.clear()
             elif re.search(
-                    "-FA$", str(dicts["value"])
+                "-FA$", str(dicts["value"])
             ):  # remove times of type FA (autumn)
                 dicts.clear()
             elif re.search(
-                    "-SU$", str(dicts["value"])
+                "-SU$", str(dicts["value"])
             ):  # remove times of type SU (summer)
                 dicts.clear()
             elif re.search(
-                    "-SP$", str(dicts["value"])
+                "-SP$", str(dicts["value"])
             ):  # remove times of type SP (spring)
                 dicts.clear()
             elif re.search(
-                    "-WI$", str(dicts["value"])
+                "-WI$", str(dicts["value"])
             ):  # remove times of type WI (winter)
                 dicts.clear()
             elif re.search(
-                    "^[0-9]{4}$", str(dicts["value"])
+                "^[0-9]{4}$", str(dicts["value"])
             ):  # remove years alone (value : "2004")
                 dicts.clear()
-            elif re.search("^\+.*", str(dicts["value"])):  # remove +XXXX alone
+            elif re.search(r"^\+.*", str(dicts["value"])):  # remove +XXXX alone
                 dicts.clear()
             elif re.search(
-                    str(str(date.today()).replace("-", "\-")), dicts["value"]
+                str(str(date.today()).replace("-", "-")), dicts["value"]
             ):  # remove date if it's today
                 dicts["value"] = re.sub(
-                    str(str(date.today()).replace("-", "\-")), "", dicts["value"]
+                    str(str(date.today()).replace("-", "-")), "", dicts["value"]
                 )
                 dicts["timex-value"] = re.sub(
-                    str(str(date.today()).replace("-", "\-")), "", dicts["timex-value"]
+                    str(str(date.today()).replace("-", "-")), "", dicts["timex-value"]
                 )
                 if dicts["value"] == "":
                     dicts.clear()
@@ -132,7 +134,7 @@ def get_struct_date(_s):
         # return end date of duration
         if not date_is_today(end_date):
             return end_date
-        # or the begin one
+        # or the beginning date
         elif not date_is_today(begin_date):
             return begin_date
         # or nothing if both are today
@@ -212,309 +214,10 @@ def previous_date(JSON_list, index):
     return None
 
 
-def nearest_date(JSON_list, compteur_dicts):
-    compteur_avant = compteur_dicts - 1
-    compteur_apres = compteur_dicts + 1
-    avant = 0
-    apres = 0
-    # browse the elements contained before JSON_list[counter_dicts] in JSON_list
-    while compteur_avant >= 0:
-        if JSON_list[compteur_avant]["type"] == "DATE":
-            if re.search(
-                    "((^[0-9]{4})-[0-9]{2}-[0-9]{2}$)", JSON_list[compteur_avant]["value"]
-            ):
-                avant = JSON_list[compteur_avant]
-                break
-        elif JSON_list[compteur_avant]["type"] == "DURATION":
-            if re.search(
-                    "((^[0-9]{4})-[0-9]{2}-[0-9]{2}$)",
-                    JSON_list[compteur_avant]["value"]["begin"],
-            ) and re.search(
-                "((^[0-9]{4})-[0-9]{2}-[0-9]{2}$)",
-                JSON_list[compteur_avant]["value"]["end"],
-            ):
-                avant = JSON_list[compteur_avant]
-                break
-        compteur_avant -= 1
-
-    # browse the elements contained after JSON_list[counter_dicts] in JSON_list
-    while compteur_apres < len(JSON_list):
-        if JSON_list[compteur_apres]["type"] == "DATE":
-            if re.search(
-                    "((^[0-9]{4})-[0-9]{2}-[0-9]{2}$)", JSON_list[compteur_apres]["value"]
-            ):
-                apres = JSON_list[compteur_apres]
-                break
-        elif JSON_list[compteur_apres]["type"] == "DURATION":
-            if re.search(
-                    "((^[0-9]{4})-[0-9]{2}-[0-9]{2}$)",
-                    JSON_list[compteur_apres]["value"]["begin"],
-            ) and re.search(
-                "((^[0-9]{4})-[0-9]{2}-[0-9]{2}$)",
-                JSON_list[compteur_apres]["value"]["end"],
-            ):
-                avant = JSON_list[compteur_apres]
-                break
-        compteur_apres += 1
-
-    if avant == 0:  # case: no DATE or DURATION before
-        nearest = JSON_list[compteur_apres]
-    elif apres == 0:  # case: no DATE or DURATION after
-        nearest = JSON_list[compteur_avant]
-    elif abs(
-            JSON_list[compteur_avant]["end"] - JSON_list[compteur_dicts]["start"]
-    ) < abs(
-        JSON_list[compteur_dicts]["end"] - JSON_list[compteur_apres]["start"]
-    ):  # closer between before and after: it is before
-        nearest = JSON_list[compteur_avant]
-    else:  # closer between before and after: it is after
-        nearest = JSON_list[compteur_apres]
-    return nearest
-
-
-def nearest_year(JSON_list, compteur_dicts):
-    if JSON_list[compteur_dicts]["type"] == "DURATION":
-        if re.search(
-                "((XXXX)-[0-9]{2}-[0-9]{2})", JSON_list[compteur_dicts]["value"]["begin"]
-        ):
-            nearest = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                JSON_list[compteur_dicts]["value"]["end"],
-            )
-            if nearest != None:
-                return nearest.group(2)
-        elif re.search(
-                "((XXXX)-[0-9]{2}-[0-9]{2})", JSON_list[compteur_dicts]["value"]["end"]
-        ):
-            nearest = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                JSON_list[compteur_dicts]["value"]["begin"],
-            )
-            if nearest != None:
-                return nearest.group(2)
-
-    compteur_avant = compteur_dicts - 1
-    compteur_apres = compteur_dicts + 1
-    avant = 0
-    apres = 0
-    # browse the elements contained before JSON_list[counter_dicts] in JSON_list
-    while compteur_avant >= 0:
-        if JSON_list[compteur_avant]["type"] == "DATE":
-            matcher = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_avant]["value"]
-            )
-            if matcher != None:
-                avant = JSON_list[compteur_avant]
-                break
-        elif JSON_list[compteur_avant]["type"] == "DURATION":
-            matcher_begin = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                JSON_list[compteur_avant]["value"]["begin"],
-            )
-            matcher_end = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                JSON_list[compteur_avant]["value"]["end"],
-            )
-            if matcher_begin != None or matcher_end != None:
-                avant = JSON_list[compteur_avant]
-                break
-        elif JSON_list[compteur_avant]["type"] == "TIME":
-            matcher = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_avant]["value"]
-            )
-            if matcher != None:
-                avant = JSON_list[compteur_avant]
-                break
-        compteur_avant -= 1
-
-    # browse the elements contained after JSON_list[counter_dicts] in JSON_list
-    while compteur_apres < len(JSON_list):
-        if JSON_list[compteur_apres]["type"] == "DATE":
-            matcher = re.match(
-                "((^[0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_apres]["value"]
-            )
-            if matcher != None:
-                apres = JSON_list[compteur_apres]
-                break
-        elif JSON_list[compteur_apres]["type"] == "DURATION":
-            matcher_begin = re.match(
-                "((^[0-9]{4})-[0-9]{2}-[0-9]{2})",
-                JSON_list[compteur_apres]["value"]["begin"],
-            )
-            matcher_end = re.match(
-                "((^[0-9]{4})-[0-9]{2}-[0-9]{2})",
-                JSON_list[compteur_apres]["value"]["end"],
-            )
-            if matcher_begin != None or matcher_end != None:
-                apres = JSON_list[compteur_apres]
-                break
-        elif JSON_list[compteur_apres]["type"] == "TIME":
-            matcher = re.match(
-                "((^[0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_apres]["value"]
-            )
-            if matcher != None:
-                avant = JSON_list[compteur_apres]
-                break
-        compteur_apres += 1
-
-    if avant == 0:  # case: no DATE or DURATION before
-        if JSON_list[compteur_apres]["type"] == "DATE":
-            nearest = re.match(
-                "((^[0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_apres]["value"]
-            ).group(2)
-        elif JSON_list[compteur_apres]["type"] == "TIME":
-            nearest = re.match(
-                "((^[0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_apres]["value"]
-            ).group(2)
-        elif JSON_list[compteur_apres]["type"] == "DURATION":
-            if re.search(
-                    "((XXXX)-[0-9]{2}-[0-9]{2})",
-                    JSON_list[compteur_apres]["value"]["begin"],
-            ):
-                nearest = re.match(
-                    "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                    JSON_list[compteur_apres]["value"]["end"],
-                )
-                if nearest != None:
-                    return nearest.group(2)
-            elif re.search(
-                    "((XXXX)-[0-9]{2}-[0-9]{2})", JSON_list[compteur_apres]["value"]["end"]
-            ):
-                nearest = re.match(
-                    "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                    JSON_list[compteur_apres]["value"]["begin"],
-                )
-                if nearest != None:
-                    return nearest.group(2)
-            else:
-                if re.search(
-                        "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                        JSON_list[compteur_apres]["value"]["begin"],
-                ):
-                    nearest = re.match(
-                        "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                        JSON_list[compteur_apres]["value"]["begin"],
-                    ).group(2)
-                elif re.search(
-                        "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                        JSON_list[compteur_apres]["value"]["end"],
-                ):
-                    nearest = re.match(
-                        "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                        JSON_list[compteur_apres]["value"]["end"],
-                    ).group(2)
-    elif apres == 0:  # case: no DATE or DURATION after
-        if JSON_list[compteur_avant]["type"] == "DATE":
-            nearest = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_avant]["value"]
-            ).group(2)
-        elif JSON_list[compteur_avant]["type"] == "TIME":
-            nearest = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_avant]["value"]
-            ).group(2)
-        elif JSON_list[compteur_avant]["type"] == "DURATION":
-            if re.search(
-                    "((XXXX)-[0-9]{2}-[0-9]{2})",
-                    JSON_list[compteur_avant]["value"]["begin"],
-            ):
-                nearest = re.match(
-                    "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                    JSON_list[compteur_avant]["value"]["end"],
-                )
-                if nearest != None:
-                    return nearest.group(2)
-            elif re.search(
-                    "((XXXX)-[0-9]{2}-[0-9]{2})", JSON_list[compteur_avant]["value"]["end"]
-            ):
-                nearest = re.match(
-                    "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                    JSON_list[compteur_avant]["value"]["begin"],
-                )
-                if nearest != None:
-                    return nearest.group(2)
-            else:
-                if re.search(
-                        "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                        JSON_list[compteur_avant]["value"]["begin"],
-                ):
-                    nearest = re.match(
-                        "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                        JSON_list[compteur_avant]["value"]["begin"],
-                    ).group(2)
-                elif re.search(
-                        "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                        JSON_list[compteur_avant]["value"]["end"],
-                ):
-                    nearest = re.match(
-                        "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                        JSON_list[compteur_avant]["value"]["end"],
-                    ).group(2)
-    elif abs(
-            JSON_list[compteur_avant]["end"] - JSON_list[compteur_dicts]["start"]
-    ) < abs(
-        JSON_list[compteur_dicts]["end"] - JSON_list[compteur_apres]["start"]
-    ):  # plus proche entre avant et après: c'est avant
-        if JSON_list[compteur_avant]["type"] == "DATE":
-            nearest = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_avant]["value"]
-            ).group(2)
-        elif JSON_list[compteur_avant]["type"] == "TIME":
-            nearest = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_avant]["value"]
-            ).group(2)
-        elif JSON_list[compteur_avant]["type"] == "DURATION":
-            matcher_begin = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                JSON_list[compteur_avant]["value"]["begin"],
-            )
-            if matcher_begin != None:
-                nearest = re.match(
-                    "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                    JSON_list[compteur_avant]["value"]["begin"],
-                ).group(2)
-            matcher_end = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                JSON_list[compteur_avant]["value"]["end"],
-            )
-            if matcher_end != None:
-                nearest = re.match(
-                    "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                    JSON_list[compteur_avant]["value"]["end"],
-                ).group(2)
-    else:  # closer between before and after: it is after
-        if JSON_list[compteur_apres]["type"] == "DATE":
-            nearest = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_apres]["value"]
-            ).group(2)
-        elif JSON_list[compteur_apres]["type"] == "TIME":
-            nearest = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})", JSON_list[compteur_apres]["value"]
-            ).group(2)
-        elif JSON_list[compteur_apres]["type"] == "DURATION":
-            matcher_begin = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                JSON_list[compteur_apres]["value"]["begin"],
-            )
-            if matcher_begin != None:
-                nearest = re.match(
-                    "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                    JSON_list[compteur_apres]["value"]["begin"],
-                ).group(2)
-            matcher_end = re.match(
-                "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                JSON_list[compteur_apres]["value"]["end"],
-            )
-            if matcher_end != None:
-                nearest = re.match(
-                    "(([0-9]{4})-[0-9]{2}-[0-9]{2})",
-                    JSON_list[compteur_apres]["value"]["end"],
-                ).group(2)
-    return nearest
-
-
 def SUTime_transform(current_OCR_folder):
-    _logger.info("SUTime_transform -> res_sutime2.json")
-    with open(current_OCR_folder + "/" + "res_sutime.json", "r") as file:
+    _logger.info(f"SUTime_transform -> res_sutime2.json from dir {current_OCR_folder}")
+    orig_sutime_file = os.path.join(current_OCR_folder, "res_sutime.json")
+    with open(orig_sutime_file, "r") as file:
         reading = file.read()
         JSON_list = eval(reading)
 
@@ -581,10 +284,10 @@ def SUTime_transform(current_OCR_folder):
         try:
             # Removal in the DURATIONS of the "+0000" added in the times, induced by the reading of "UTC" by SUTime
             if dicts["type"] == "DURATION":
-                dicts["value"]["begin"] = re.sub("\+0000", "", dicts["value"]["begin"])
-                dicts["value"]["end"] = re.sub("\+0000", "", dicts["value"]["end"])
+                dicts["value"]["begin"] = re.sub(r"\+0000", "", dicts["value"]["begin"])
+                dicts["value"]["end"] = re.sub(r"\+0000", "", dicts["value"]["end"])
             else:
-                dicts["value"] = re.sub("\+0000", "", dicts["value"])
+                dicts["value"] = re.sub(r"\+0000", "", dicts["value"])
         except:
             continue
 
@@ -592,9 +295,9 @@ def SUTime_transform(current_OCR_folder):
         try:
             # TIMES
             if dicts["type"] == "TIME":
-                # search for a time that is at least THH (with all possible variations of YYYY-MM-DDTHH:MM:SS.msmsmsms)
+                # search for a time that is at least THH (with all possible variations of YYYY-MM-DDTHH:MM:SS.ms)
                 test = re.match(
-                    "((?:[0-9]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9]{1,4})?)",
+                    r"((?:[0-9]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9]{1,4})?)",
                     dicts["value"],
                 )
                 if test != None:
@@ -603,14 +306,14 @@ def SUTime_transform(current_OCR_folder):
 
                     group_counter_max = len(test.groups())
                     while (
-                            test.group(group_counter_max) == ""
-                            or test.group(group_counter_max) == None
+                        test.group(group_counter_max) == ""
+                        or test.group(group_counter_max) == None
                     ):  # stop test at HH or MM or ...
                         group_counter_max -= 1
 
                     group_counter_min = group_counter_max
                     while (
-                            test.group(group_counter_min) != ""
+                        test.group(group_counter_min) != ""
                     ):  # test start at YYYY or MM or ...
                         if group_counter_min == 0:
                             break
@@ -690,34 +393,34 @@ def SUTime_transform(current_OCR_folder):
                     elif group_counter_max == 9:  # end of the hours
                         if group_counter_min == 1:  # beginning in the years
                             begin = (
-                                    "".join(list(test.group(1, 2, 4, 5, 7, 8, 9, 10, 12)))
-                                    + str(":" + "%02d" % (0))
-                                    + str(":" + "%02d" % (0))
+                                "".join(list(test.group(1, 2, 4, 5, 7, 8, 9, 10, 12)))
+                                + str(":" + "%02d" % (0))
+                                + str(":" + "%02d" % (0))
                             )
                             end = (
-                                    "".join(list(test.group(1, 2, 4, 5, 7, 8, 9, 10, 12)))
-                                    + str(":" + "%02d" % (59))
-                                    + str(":" + "%02d" % (59))
+                                "".join(list(test.group(1, 2, 4, 5, 7, 8, 9, 10, 12)))
+                                + str(":" + "%02d" % (59))
+                                + str(":" + "%02d" % (59))
                             )
                         elif group_counter_min == 4:  # beginning at months
                             begin = (
-                                    "".join(list(test.group(4, 5, 7, 8, 9, 10, 12)))
-                                    + str(":" + "%02d" % (0))
-                                    + str(":" + "%02d" % (0))
+                                "".join(list(test.group(4, 5, 7, 8, 9, 10, 12)))
+                                + str(":" + "%02d" % (0))
+                                + str(":" + "%02d" % (0))
                             )
                             end = "".join(
                                 list(test.group(4, 5, 7, 8, 9, 10, 12))
                             ) + str(":" + "%02d" % (59))
                         elif group_counter_min == 8:  # start at T (undated time)
                             begin = (
-                                    "".join(list(test.group(8, 9, 10, 12)))
-                                    + str(":" + "%02d" % (0))
-                                    + str(":" + "%02d" % (0))
+                                "".join(list(test.group(8, 9, 10, 12)))
+                                + str(":" + "%02d" % (0))
+                                + str(":" + "%02d" % (0))
                             )
                             end = (
-                                    "".join(list(test.group(8, 9, 10, 12)))
-                                    + str(":" + "%02d" % (59))
-                                    + str(":" + "%02d" % (59))
+                                "".join(list(test.group(8, 9, 10, 12)))
+                                + str(":" + "%02d" % (59))
+                                + str(":" + "%02d" % (59))
                             )
                     dicts["type"] = "DURATION"  # TIME becomes a DURATIONS
                     dicts["value"] = {
@@ -731,26 +434,12 @@ def SUTime_transform(current_OCR_folder):
         JSON_list, "Change type TIME to DURATION", current_OCR_folder
     )
 
-    # date correction when in short format (YYYY-MM (no DD))
-    compteur_dicts = 0
-    for dicts in JSON_list:
-        if dicts["type"] == "DURATION":
-            if "begin" in dicts["value"]:
-                if re.search("^(([0-9]{4})(-)([0-9]{2}))$", dicts["value"]["begin"]):
-                    dicts["value"]["begin"] += "-01"
-            if "end" in dicts["value"]:
-                if re.search("^(([0-9]{4})(-)([0-9]{2}))$", dicts["value"]["end"]):
-                    dicts["value"]["end"] += "-28"
-        elif dicts["type"] == "DATE":
-            if re.search("^(([0-9]{4})(-)([0-9]{2}))$", dicts["value"]):
-                dicts["value"] += "-15"
-        elif dicts["type"] == "TIME":
-            if re.search("^(([0-9]{4})(-)([0-9]{2}))$", dicts["value"]):
-                dicts["value"] += "-15"
-        compteur_dicts += 1
+    shortdate_rewriting_step(JSON_list)
 
     raw_dumper.dump_to_raw(
-        JSON_list, "Date rewriting: add day number to short date", current_OCR_folder
+        JSON_list,
+        "Date rewriting: short date to whole month DURATION",
+        current_OCR_folder,
     )
 
     # compteur = 0
@@ -839,7 +528,7 @@ def SUTime_transform(current_OCR_folder):
             dicts.clear()
         elif dicts["type"] == "DURATION":
             if re.search("[0-9]{2}-[0-9]{2}$", dicts["value"]["begin"]) and re.search(
-                    "[0-9]{2}-[0-9]{2}$", dicts["value"]["end"]
+                "[0-9]{2}-[0-9]{2}$", dicts["value"]["end"]
             ):
                 dicts["value"]["begin"] += "T00:00:00.000"
                 dicts["value"]["end"] += "T23:59:59.000"
@@ -852,11 +541,11 @@ def SUTime_transform(current_OCR_folder):
     # harmonise the formats, bring them all down to the millisecond
     for dicts in JSON_list:
         begin = re.match(
-            "((?:[0-9X]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9X]{1,4})?)",
+            r"((?:[0-9X]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9X]{1,4})?)",
             dicts["value"]["begin"],
         )
         end = re.match(
-            "((?:[0-9X]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9X]{1,4})?)",
+            r"((?:[0-9X]{4})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)((?:(\-|\–|\—))?)((?:[0-9]{2})?)(T)([0-9]{2})((?:(\:))?)((?:[0-9]{2})?)((?:\:)?)((?:[0-9]{2})?)((?:\.)?)((?:[0-9X]{1,4})?)",
             dicts["value"]["end"],
         )
 
@@ -869,20 +558,20 @@ def SUTime_transform(current_OCR_folder):
                 dicts["value"]["begin"] += ".000"
 
             if end.group(14) == "":
-                dicts["value"]["end"] += ":59.999"
+                dicts["value"]["end"] += ":59.000"
             elif end.group(12) == "":
-                dicts["value"]["end"] += ":59:59.999"
+                dicts["value"]["end"] += ":59:59.000"
             elif end.group(16) == "":
-                dicts["value"]["end"] += ".999"
+                dicts["value"]["end"] += ".000"
         except:
             continue
 
-    raw_dumper.dump_to_raw(JSON_list, "Do some :59:59.999 magic ", current_OCR_folder)
+    raw_dumper.dump_to_raw(JSON_list, "Do some .000 magic ", current_OCR_folder)
 
     for dicts in JSON_list:
         if not re.search(
-                "^([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})(T)([0-9]{2})(:)([0-9]{2})(:)([0-9]{2})(.)([0-9]{3})$",
-                dicts["value"]["begin"],
+            "^([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})(T)([0-9]{2})(:)([0-9]{2})(:)([0-9]{2})(.)([0-9]{3})$",
+            dicts["value"]["begin"],
         ) or not re.search(
             "^([0-9]{4})(-)([0-9]{2})(-)([0-9]{2})(T)([0-9]{2})(:)([0-9]{2})(:)([0-9]{2})(.)([0-9]{3})$",
             dicts["value"]["end"],
@@ -900,8 +589,10 @@ def SUTime_transform(current_OCR_folder):
 
     raw_dumper.dump_to_raw(JSON_list, "Remove not DURATION", current_OCR_folder)
 
-    file = open(
-        current_OCR_folder + "/" + "res_sutime_2.json", "w"
-    )  # save the transformed results in a separate file. This is the file that will be read for later linking of intervals/sat/inst/etc.
-    file.write(json.dumps(JSON_list, sort_keys=True, indent=4))
-    file.close()
+    final_sutime_file = os.path.join(current_OCR_folder, "res_sutime_2.json")
+    # save the transformed results in a separate file.
+    # This is the file that will be read for later linking of intervals/sat/inst/etc.
+    _logger.info(f"OPENING {final_sutime_file}")
+    with open(final_sutime_file, "w") as final_json:
+        final_json.write(json.dumps(JSON_list, sort_keys=True, indent=4))
+        final_json.close()

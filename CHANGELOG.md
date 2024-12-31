@@ -25,6 +25,14 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [0.20.1-dev] - 2024-10-xx - Pipeline changes
+#### Fixed
+#### Changed
+- raw files cleaner keeps normal raws
+#### New
+- Sutime DURATION analysis
+
+
 ## [0.19.2] - 2024-10-09 - Post Filtering Form
 #### Changed
 - Catalogs page is now form

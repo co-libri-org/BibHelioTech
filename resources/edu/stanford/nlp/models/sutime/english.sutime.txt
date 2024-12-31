@@ -541,6 +541,121 @@
   ENV.defaults["priority"] = 10
   ENV.defaults["stage"] = 2
 
+
+ # RHI: capture strings like "3-9 August 2017"
+{ name: "temporal-composite-day-range-single-month",
+  priority: 200,  // Priorité haute pour passer avant les autres règles
+  active: TRUE,
+  pattern: ( (?$day1 $INT1TO31)
+            /-/
+            (?$day2 $INT1TO31)
+            /\s+/?
+            (?$month [ { temporal::MONTH } ])
+            /\s+/?
+            (?$year $POSSIBLE_YEAR)
+            ),
+  result: TimeRange(
+      IsoDate($year[0].numcompvalue, $month[0].temporal.value.month, $day1[0].numcompvalue),
+      IsoDate($year[0].numcompvalue, $month[0].temporal.value.month, $day2[0].numcompvalue)
+  )
+}
+
+
+ # RHI: capture strings like "From 20:45 to 21:30 on July 23"
+ { name: "range-time-with-date",
+  priority: 100,
+  active: options."markTimeRanges",
+  pattern: ( /from/
+            (?$time1 [ { temporal::IS_TIMEX_TIME } ])
+            /to/
+            (?$time2 [ { temporal::IS_TIMEX_TIME } ])
+            /on/
+            (?$month [ { temporal::MONTH } ])
+            (?$day $NUM_ORD|/\d\d?/ & $INT1TO31)
+  ),
+  result: TimeRange(
+    TemporalCompose(INTERSECT,
+      $time1[0].temporal.value,
+      IsoDate(NIL, $month[0].temporal.value.month, $day[0].numcompvalue)),
+    TemporalCompose(INTERSECT,
+      $time2[0].temporal.value,
+      IsoDate(NIL, $month[0].temporal.value.month, $day[0].numcompvalue))
+  )
+}
+
+  # RHI: capture strings like "from June 4 2020, to June 11 2020"
+  { name: "temporal-composite-date-range",
+    priority: 20,
+    active: options."markTimeRanges",
+    pattern: ( /from/
+            (?$month1 [ { temporal::MONTH } ])
+            (?$day1 $NUM_ORD|/\d\d?/ & $INT1TO31)
+            (?$year1 $POSSIBLE_YEAR)
+            /,/?
+            /until|to/
+            (?$month2 [ { temporal::MONTH } ])
+            (?$day2 $NUM_ORD|/\d\d?/ & $INT1TO31)
+            (?$year2 $POSSIBLE_YEAR)
+            /,/?
+            ),
+    result: TimeRange(
+      IsoDate(2024, $month1[0].temporal.value.month, $day1[0].numcompvalue),
+      IsoDate(2024, $month2[0].temporal.value.month, $day2[0].numcompvalue)
+                    )
+  }
+
+  # RHI: capture strings like "june 2 and 3, 2020"
+  { name: "composite-month-day-day-year",
+    priority: 20,
+      active: options."markTimeRanges",
+    pattern: ( (?$month [ { temporal::MONTH } ])
+              (?$day1 $NUM_ORD|/\d\d?/ & $INT1TO31)
+              /and|-/
+              (?$day2 $NUM_ORD|/\d\d?/ & $INT1TO31)
+              /,/
+              (?$year $POSSIBLE_YEAR)
+              ),
+    result: TimeRange(
+      IsoDate(2020, $month[0].temporal.value.month, $day1[0].numcompvalue),
+      IsoDate(2020, $month[0].temporal.value.month, $day2[0].numcompvalue)
+    )
+  }
+
+  #RHI: "28 February-15 March 2017",
+  { name: "temporal-composite-date-range-explicit",
+      priority: 200,  // Priorité très haute
+      active: options."markTimeRanges",
+      pattern: ( (?$day1 $INT1TO31)
+                /\s+/?
+                (?$month1 [ { temporal::MONTH } ])
+                /-/
+                (?$day2 $INT1TO31)
+                /\s+/?
+                (?$month2 [ { temporal::MONTH } ])
+                /\s+/?
+                (?$year $POSSIBLE_YEAR)
+                ),
+      result: TimeRange(
+          IsoDate($year[0].numcompvalue, $month1[0].temporal.value.month, $day1[0].numcompvalue),
+          IsoDate($year[0].numcompvalue, $month2[0].temporal.value.month, $day2[0].numcompvalue)
+      )
+    }
+
+  #RHI: "July-August 2017",
+  { name: "temporal-composite-month-range",
+    priority: 20,
+    active: options."markTimeRanges",
+    pattern: ( (?$month1 [ { temporal::MONTH } ])
+              /-/
+              (?$month2 [ { temporal::MONTH } ])
+              (?$year $POSSIBLE_YEAR)
+              ),
+    result: TimeRange(
+      IsoDate($year[0].temporal.value.year, $month1[0].temporal.value.month, 1),
+      IsoDate($year[0].temporal.value.year, $month2[0].temporal.value.month, 31)
+    )
+  }
+
   # Duration (start, end, unit, range_start, range_end)
   # Duration rules
   # i.e. "the past twenty four years"
@@ -946,7 +1061,8 @@
 
   { name: "temporal-composite-8:ranges",
 	active: options."markTimeRanges",
-    pattern: ( /from/? ( [ { temporal::IS_TIMEX_TIME } | { temporal::IS_TIMEX_DATE } ] ) /to|-|–|—|until|∼/ ( [ { temporal::IS_TIMEX_TIME } |   {   temporal::IS_TIMEX_DATE } ] ) ),
+    pattern: ( /from/? ( [ { temporal::IS_TIMEX_TIME } | {
+    temporal::IS_TIMEX_DATE } ] ) /to|and|-|–|—|until|∼/ ( [ { temporal::IS_TIMEX_TIME } |   {   temporal::IS_TIMEX_DATE } ] ) ),
 	result: TimeRange( $1[0].temporal.value, $2[0].temporal.value ) }
 
     { name: "temporal-composite-8a:ranges",
@@ -956,7 +1072,7 @@
 
   { name: "temporal-composite-8b:ranges",
   active: options."markTimeRanges",
-    pattern: ( /between/? ( [ { temporal::IS_TIMEX_TIME } | { temporal::IS_TIMEX_DATE } ] ) /and|–/ ( [ { temporal::IS_TIMEX_TIME } |   {   temporal::IS_TIMEX_DATE } ] ) ),
+    pattern: ( /between/ ( [ { temporal::IS_TIMEX_TIME } | { temporal::IS_TIMEX_DATE } ] ) /and/ ( [ { temporal::IS_TIMEX_TIME } |   {   temporal::IS_TIMEX_DATE } ] ) ),
   result: TimeRange( $1[0].temporal.value, $2[0].temporal.value ) }
 
 #  { name: "temporal-composite-8c:ranges",

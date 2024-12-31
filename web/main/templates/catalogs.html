@@ -141,6 +141,19 @@ Show found events after form submit
         // Any check event should turn show 'events button' to color
         $('.filter-input[type=checkbox]').change( enable_submit);
 
+        // Sortable table
+        new DataTable('#events-table', {
+            ordering: true,
+            search: true,
+            paging: false,
+            buttons: [
+                'csv'
+            ],
+            layout: {
+                topStart: 'buttons'
+            },
+        });
+
     });
 
 </script>

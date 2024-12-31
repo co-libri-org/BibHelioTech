@@ -3,6 +3,8 @@
 #
 import copy
 import datetime
+import os
+
 import dateutil.parser as parser
 
 from bht.SUTime_processing import (
@@ -10,7 +12,7 @@ from bht.SUTime_processing import (
     set_duration_day,
     previous_date,
     date_is_today,
-    get_struct_date,
+    get_struct_date, SUTime_transform,
 )
 
 
@@ -66,7 +68,7 @@ class TestSutimeProcessing:
         set_duration_day(duration, parser.parse("2023-03-04"), keys=("end",))
         assert duration["value"] == {
             "begin": "2023-03-03T11:31:00",
-            "end": "2024-06-20T11:32:00",
+            "end": "2023-03-04T11:32:00",
         }
 
     def test_set_duration_day(self):
@@ -82,8 +84,8 @@ class TestSutimeProcessing:
         assert date_is_today(duration["value"]["end"])
         set_duration_day(duration, datetime.datetime(2023, 9, 9))
         assert duration["value"] == {
-            "begin": "2024-06-20T11:31:00",
-            "end": "2024-06-20T11:32:00",
+            "begin": "2023-09-09T11:31:00",
+            "end": "2023-09-09T11:32:00",
         }
 
     def test_previous_date_from_first(self, json_step_4_2):
@@ -92,7 +94,8 @@ class TestSutimeProcessing:
 
     def test_previous_date(self, json_step_4):
         prev_date = previous_date(json_step_4, 10)
-        assert prev_date == parser.parse("2020-12-27")
+        print(prev_date)
+        assert prev_date == parser.parse("2020-12-27T15:00:00")
 
     def test_date_is_today(self):
         assert not date_is_today(datetime.datetime(2024, 9, 9))
@@ -101,3 +104,12 @@ class TestSutimeProcessing:
     def test_date_is_today_str(self):
         assert not date_is_today("2023-03-06")
         assert date_is_today(datetime.datetime.now().isoformat())
+
+    def test_sutime_transform(self, ocr_dir_sutime):
+        SUTime_transform(ocr_dir_sutime)
+        assert os.path.isfile(os.path.join(ocr_dir_sutime, "res_sutime_2.json"))
+        # assert True
+
+    def test_sutime_transform_2(self, ocr_dir_sutime_fails):
+        SUTime_transform(ocr_dir_sutime_fails)
+        assert os.path.isfile(os.path.join(ocr_dir_sutime_fails, "res_sutime_2.json"))

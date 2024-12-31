@@ -33,7 +33,23 @@
         </a>
     </p>
     <p>
-        See <a href="{{url_for('main.changelog')}}">Changelog</a> for more details on changes between versions.
+        See Changelogs for more details on changes between versions:
+    <ul>
+        <li>
+            BibHelioTech: <a class="btn btn-version" href="{{url_for('main.changelog')}}"
+                             title="BibHelioTech CHANGELOG">
+            V{{config.VERSION}}</a>
+
+        </li>
+        <li>
+            BhtPipeline: <a class="btn btn-version" href="{{url_for('main.changelog', module='pipeline')}}"
+                            title="BhtPipeline CHANGELOG">
+            V{{config.BHT_PIPELINE_VERSION}}</a>
+
+        </li>
+
+    </ul>
+
     </p>
 
 </div>

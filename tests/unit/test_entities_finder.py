@@ -146,17 +146,17 @@ class TestEntitiesFinder:
         assert "PVO" in [_s[0]["text"] for _s in _final_links_pvo]
         # assert 'PVO' not in [_s[0]["text"] for _s in _final_with_syns]
 
-    def test_satellite_occurrence(self, sutime_json, final_links, data_frames):
+    def test_satellite_occurrence(self, sutime2_json, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)
         final_with_syns = update_final_synonyms(final_links, data_frames)
-        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime2_json)
         assert len(tmp) == 46
         assert len(sat_occ) == 40
 
-    def test_closest_duration(self, sutime_json, final_links, data_frames):
+    def test_closest_duration(self, sutime2_json, final_links, data_frames):
         final_links = update_final_instruments(final_links, data_frames)
         final_with_syns = update_final_synonyms(final_links, data_frames)
-        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime2_json)
         published_date = "2015-12-01T00:00:00Z"
         tmp, sat_closest = closest_duration(tmp, sat_occ, data_frames, published_date)
         for _dict in sat_closest:
@@ -165,11 +165,11 @@ class TestEntitiesFinder:
         assert len(tmp) == 46
         assert len(sat_closest) == 40
 
-    def test_duration_to_mission(self, sutime_json, final_links, data_frames):
+    def test_duration_to_mission(self, sutime2_json, final_links, data_frames):
 
         final_links = update_final_instruments(final_links, data_frames)
         final_with_syns = update_final_synonyms(final_links, data_frames)
-        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_json)
+        tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime2_json)
         _ld = [_d for _d in tmp if _d["type"] == "DURATION"]
         tmp, sat_closest = duration_to_mission(
             tmp, sat_occ, data_frames

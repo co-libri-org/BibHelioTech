@@ -1,0 +1,52 @@
+[
+    {
+        "end": 5830,
+        "start": 5799,
+        "text": "Between February and April 2008",
+        "type": "DURATION",
+        "value": {
+            "begin": "XXXX-02",
+            "end": "2008-04"
+        }
+    },
+    {
+        "end": 9048,
+        "start": 9029,
+        "text": "12:25:40 - 12:26:00",
+        "type": "DURATION",
+        "value": {
+            "begin": "T12:25:40",
+            "end": "T12:26:00"
+        }
+    },
+    {
+        "end": 12240,
+        "start": 12211,
+        "text": "between 12:25:40 and 12:26:00",
+        "type": "DURATION",
+        "value": {
+            "begin": "T12:25:40",
+            "end": "T12:26:00"
+        }
+    },
+    {
+        "end": 16342,
+        "start": 16323,
+        "text": "12:26:45 - 12:26:48",
+        "type": "DURATION",
+        "value": {
+            "begin": "T12:26:45",
+            "end": "T12:26:48"
+        }
+    },
+    {
+        "end": 16810,
+        "start": 16791,
+        "text": "12:25:40 - 12:26:00",
+        "type": "DURATION",
+        "value": {
+            "begin": "T12:25:40",
+            "end": "T12:26:00"
+        }
+    }
+]

@@ -15,7 +15,7 @@ RUN apt-get update && \
     python3-venv \
     software-properties-common \
     unzip \
-#    vim \
+    vim \
 #    wget \
     zip && \
     rm -rf /var/lib/apt/lists/*

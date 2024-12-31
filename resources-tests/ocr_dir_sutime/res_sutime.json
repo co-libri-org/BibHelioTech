@@ -1,0 +1,73 @@
+[
+    {
+        "end": 6858,
+        "start": 6845,
+        "text": "17 March 2022",
+        "timex-value": "2022-03-17",
+        "type": "DATE",
+        "value": "2022-03-17"
+    },
+    {
+        "end": 8575,
+        "start": 8562,
+        "text": "19 March 2022",
+        "timex-value": "2022-03-19",
+        "type": "DATE",
+        "value": "2022-03-19"
+    },
+    {
+        "end": 8595,
+        "start": 8582,
+        "text": "01 April 2022",
+        "timex-value": "2022-04-01",
+        "type": "DATE",
+        "value": "2022-04-01"
+    },
+    {
+        "end": 9539,
+        "start": 9526,
+        "text": "17 March 2022",
+        "timex-value": "2022-03-17",
+        "type": "DATE",
+        "value": "2022-03-17"
+    },
+    {
+        "end": 9553,
+        "start": 9548,
+        "text": "03:32",
+        "timex-value": "T03:32",
+        "type": "TIME",
+        "value": "T03:32"
+    },
+    {
+        "end": 10227,
+        "start": 10213,
+        "text": "the next 3 min",
+        "type": "DURATION",
+        "value": {}
+    },
+    {
+        "end": 14510,
+        "start": 14505,
+        "text": "03:34",
+        "timex-value": "T03:34",
+        "type": "TIME",
+        "value": "T03:34"
+    },
+    {
+        "end": 17470,
+        "start": 17457,
+        "text": "19 March 2022",
+        "timex-value": "2022-03-19",
+        "type": "DATE",
+        "value": "2022-03-19"
+    },
+    {
+        "end": 19651,
+        "start": 19638,
+        "text": "17 March 2022",
+        "timex-value": "2022-03-17",
+        "type": "DATE",
+        "value": "2022-03-17"
+    }
+]

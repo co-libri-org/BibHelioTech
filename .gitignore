@@ -18,3 +18,4 @@ test-upload
 bht2.log
 logs
 .ipynb_checkpoints
+profiling/

@@ -129,8 +129,3 @@ function setBhtRunOnClick() {
             });
     });
 }
-
-$(document).ready(function() {
-    setBhtRunOnClick();
-    updateAllStatuses();
-});

@@ -31,7 +31,7 @@ from bht.errors import BhtCsvError
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType, Doi
+from web.models import Paper, Mission, HpEvent, BhtFileType, Doi, istexid_to_paper
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -490,11 +490,12 @@ def upload():
     # empty file without a filename.
     if file.filename == "":
         flash("No selected file")
-        return redirect(url_for("main.papers"))
-    if file and allowed_file(file.filename):
+    elif file and allowed_file(file.filename):
         pdf_to_db(file.read(), file.filename)
         flash(f"Uploaded {file.filename}")
-        return redirect(url_for("main.papers"))
+    else:
+        flash(f"{file.filename} Not allowed")
+    return redirect(url_for("main.papers"))
 
 
 @bp.route("/bht_status/<paper_id>", methods=["GET"])
@@ -734,7 +735,47 @@ def admin():
         paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
     ]
 
-    return render_template("admin.html", catalogs=_catalogs)
+    import glob
+
+    search_pattern = os.path.join(
+        f"{current_app.config["BHT_DATA_DIR"]}/**/", "raw4_sutime.json"
+    )
+    json_files = glob.glob(search_pattern, recursive=True)
+
+    _sutime_structs = []
+    for json_f in json_files:
+        paper_name = os.path.dirname(json_f).split("/")[-1]
+        paper = istexid_to_paper(paper_name)
+        if paper is None:
+            continue
+        else:
+            paper_id = paper.id
+        with open(json_f) as of:
+            structs = json.load(of)
+            structs.pop()
+            new_structs = []
+            for _s in structs:
+                if _s["type"] != "DURATION" or _s["text"] in ["8327-8338", "0004-6361"]:
+                    continue
+                date_begin = parser.parse(_s["value"]["begin"])
+                date_end = parser.parse(_s["value"]["end"])
+                delta_time = date_end - date_begin
+                new_structs.append(
+                    {
+                        "paper_title": paper.title,
+                        "paper_id": paper.id,
+                        "paper_name": paper_name,
+                        "text": _s["text"],
+                        "value": _s["value"],
+                        "delta_time": delta_time,
+                    }
+                )
+            _sutime_structs.extend(new_structs)
+    _sorted_structs = sorted(_sutime_structs, key=lambda x: x["delta_time"])
+
+    return render_template(
+        "admin.html", catalogs=_catalogs, sutime_structs=_sorted_structs
+    )
 
 
 @bp.route("/catalogs", methods=["GET", "POST"])
@@ -763,7 +804,6 @@ def catalogs():
         selected_missions_names.append(_m.name)
         found_events.extend(_m.hp_events)
 
-
     # translate to dict list, then pandas dataframe, and filter
     # then translate back to dict (pd.to_records)
     _events_dicts = [_e.get_dict() for _e in found_events]
@@ -783,7 +823,6 @@ def catalogs():
         for _m in db.session.query(Mission).order_by(Mission.name).all()
         if len(_m.hp_events) > 0
     ]
-
 
     # now get some stats and pack as dict
 

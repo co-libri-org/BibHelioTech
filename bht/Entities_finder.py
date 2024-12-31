@@ -1378,7 +1378,10 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     }
     final_amda_list = [{**tso_dict, **hpevent_dict} for hpevent_dict in final_amda_list]
 
-    cat_as_txt = rows_to_catstring(final_amda_list, catalog_name)
+    columns_to_display.extend(["r", "so", "occur_sat", "nb_durations", "conf"])
+    cat_as_txt = rows_to_catstring(
+        final_amda_list, catalog_name=catalog_name, columns=columns_to_display
+    )
 
     catalog_path = os.path.join(current_OCR_folder, catalog_name)
     with open(

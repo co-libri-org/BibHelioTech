@@ -1,0 +1,472 @@
+1.
+- Introduction On February 10 2020, 04:03 UT, Solar Orbiter ( ), the first mission of the ESA’s Cosmic Vision 2015−2025 program with strong NASA participation, was launched from Cape Canaveral with the aim of exploring the Sun and the inner heliosphere, both in and out of the ecliptic plane.
+Specifically, Solar Orbiter combines both a close distance to the Sun, with the closest approach at about 0.28 au, and out-of-ecliptic vantage points, namely above 17° and 30° heliographic latitude during the nominal and extended mission phase, respectively.
+However, the strength and uniqueness of the mission lie in the combination of both in situ measurements and high-resolution remote-sensing observations.
+Indeed, the spacecraft carries four in situ instruments ( ) to measure, with very high time resolution, the plasma and magnetic field properties of the solar wind and the energetic particles, and six remote-sensing instruments ( ) to observe the Sun, the solar corona, and the heliospheric plasma.
+The synergy between in situ and remote-sensing measurements will allow, for the first time, an accurate magnetic field connectivity between the physical conditions of the plasma around the probe and its source regions in the solar atmosphere ( ; ).
+One of the main science objectives to be addressed, for which Solar Orbiter has been designed, is to understand how solar transients drive the heliospheric variability ( ).
+This is a very hot topic since it is strictly connected to space-weather science and forecasting.
+Indeed, these transient events, such as flares ( ), eruptive prominences ( ), interplanetary shocks ( ; ; ), and coronal mass ejections (CMEs; ; ), significantly influence the structure and dynamics of the solar wind plasma, eventually affecting Earth’s magnetosphere and upper atmosphere.
+Specifically, the most severe geomagnetic storms are caused by Earth-directed CME events, which impact systems and technologies in orbit and on the ground (e.g., radio communication blocks, satellite electrical failure, power grid operation degradation, radio navigation systems issues).
+Coronal mass ejections are a large-scale cloud of plasma and magnetic field that can erupt from the Sun in any direction and which can be detected remotely with a Thomson-scattered white-light coronagraph.
+When a CME reaches the Earth as an interplanetary CME (ICME; ), it buffets the magnetosphere, compressing the dayside magnetopause and extending the nightside tail.
+Magnetic reconnection between the CME and Earth fields (taking place when they are oppositely directed, that is, when the CME magnetic field is predominantly southwardly oriented) opens the magnetosphere, exposing the near-Earth space environment to the huge amount of kinetic and magnetic energy carried by the CME.
+Its release to the magnetosphere causes intense geomagnetic disturbances (e.g., ).
+Predicting such an occurrence or its effects on the heliosphere and geospace represents a key point for heliophysical research and, particularly, for space weather science.
+Indeed, one of the main goals of the Solar Orbiter mission is the detailed study of the origin of solar transient phenomena and their impact on the heliosphere.
+In particular, Solar Orbiter will enable significant steps forward in understanding CME structure and how CMEs evolve during their propagation from the corona into the inner heliosphere, by combining remote-sensing and in situ measurements made at close distances and in near-corotation with the Sun ( ).
+The core magnetic configuration of (I)CMEs is consistent with a flux-rope-like structure ( ), namely a bundle of twisted magnetic field lines wound around a tube-like shape with a strong azimuthal field ( ).
+Due to their internal helical configuration, (I)CMEs are usually observed to have a high value of magnetic helicity, which is the result of the plasma forcing in the high- β photosphere and represents the magnetohydrodynamic (MHD) topological invariant that quantifies the degree of kink of the magnetic field lines ( ).
+As a matter of fact, localizing intervals with high values of magnetic helicity in in-situ data allows the detection of (I)CMEs that are propagating in the solar wind ( , ; ).
+Interplanetary coronal mass ejections can be detected in situ by different spacecraft at different radial distances in the inner and outer heliosphere.
+They can be identified by several magnetic field, plasma, and energetic particle signatures ( ; ).
+Following the definition in , the typical signatures of an ICME (in addition to high levels of magnetic helicity) are (i) a significant enhancement of the magnetic field compared to the surrounding solar wind plasma, and a long and smooth rotation of the magnetic field components (related to the embedded flux-rope-like structure); (ii) a low proton temperature; and (iii) low values of the plasma beta, β , defined as the ratio of the thermal and magnetic pressures (e.g., ).
+Moreover, ICMEs usually drive an upstream shock and are preceded by a sheath ( ).
+However, due to their strong variability, not all ICMEs present this full set of signatures ( ; ; ).
+The first studies on ICMEs date back to the 1970s.
+observed an anomalously low proton temperature associated with a high value of the solar wind speed and an increase in the helium abundance at 1 au.
+Moreover, it was observed that a large percentage of these events were preceded by the passage of interplanetary shocks (whose observation dates back even further; see , and references therein).
+These findings were consistent with some models of shock wave disturbances and the ejection of new material into the solar wind at the time of large solar flares, with the formation of a magnetic bottle configuration.
+Then, used magnetic field and plasma data from five spacecraft at different radial distances (Voyager 1 and 2, Helios 1 and 2, and IMP 8) to study the flow behind an interplanetary shock.
+The shock was followed by a turbulent sheath in which large fluctuations in both the magnetic field strength and direction were observed.
+More recently, performed an extensive study of the evolution of a fast CME and its interplanetary counterpart observed in 2012 by combining both remote-sensing observations by the two STEREO (Solar TErrestrial RElation Observatory) spacecraft and multipoint in situ measurements by MESSENGER (MErcury Surface, Space ENvironment, GEochemistry and Ranging), Venus Express, Wind, and Mars Express.
+Due to the favorable position of the inner planets, it was possible to detect the ICME at four different times and locations, constraining its kinematics and shape during its evolution in interplanetary space.
+Very recently, studied, for the first time, the radial evolution of the MHD turbulent properties of an ICME event that occurred in 1998 via a joint observation by Wind and Ulysses.
+This study provided evidence for the magnetic erosion of the structure and a deformation and degradation of its helical configuration.
+For a comprehensive historical review of key milestones in ICME investigation, the reader is referred to .
+Regardless of the few examples described above, ICMEs have largely been investigated by using in situ measurements (see the review by , and references therein).
+Decades of these studies have suggested several criteria for the detection of the ICMEs biased by observer interpretation.
+Recently, a convolutional neural network, based on sliding windows and peaks selection, has been tested on almost 20 years of in-situ data from Wind to automatically detect ICMEs on a multi-scale prospective ( ).
+Finally, of the in situ studies of the ICMEs, the work by provides the first in situ detection of a CME by Solar Orbiter.
+The solar event crossed Solar Orbiter on April 19 2020, when the spacecraft was orbiting at 0.8 au, and the day after it reached BepiColombo, separated by 0.2 au Earthward.
+By exploiting this radial alignment, investigated the radial evolution of the CME, finding evidence for a large distortion of the CME during its expansion, thus questioning the classical picture of a cylindrical geometry generally adopted for ICMEs.
+The same event and, in particular, the transmission of turbulence and wave modes across the ICME-driven shock is also the focus of the work by .
+During their journey through the heliosphere, ICMEs often interact with other ICMEs through a variety of mechanisms (see the review by , and references therein).
+As a result, their kinematical and morphological parameters (such as the dynamic pressure, speed, size, expansion rate, distortion, orientation) and MHD properties (such as the degree of twisting of the magnetic field lines and the internal energy budget, ) can be strongly altered.
+Magnetic reconnection is the driver of two in some sense opposite processes routinely occurring at the interface between two interacting ICMEs: magnetic erosion and coalescence.
+Whenever the fields of the rear and front of the two successive ejecta are nearly oppositely directed, they reconnect, peeling away the outer layers of the two ICMEs (which in turn reduce in size) and leaving a less twisted core (magnetic erosion, , ; ).
+Occasionally, full coalescence, namely, merging, of two ejecta into one (associated with a total reconnection of one CME’s magnetic flux) occurs ( ; ).
+CME-CME interaction is a frequent phenomenon (e.g., ; ), especially during the Sun’s highest activity phases, when CMEs occur up to ten times more frequently with respect to the minimum of the solar cycle (e.g., ), and thus homologous and sympathetic eruptions at the Sun are very likely to generate two or more successive interacting ICMEs (see the review by , and references therein).
+The interaction of successive ICMEs can be a source of intense Solar Energetic Particle (SEP; ; ) events and impact the geoeffectiveness of individual ICMEs ( ), thus directly affecting space weather.
+During the first Solar Orbiter close approach to the Sun, when the spacecraft had reached a perihelion distance of 0.52 au, two consecutive ICMEs were detected (on June 7−8, 2020).
+These ejecta propagate within the heliospheric current sheet (HCS; the boundary separating the two heliospheric sectors where the large-scale magnetic field points toward or away from the Sun).
+The investigation of these two ICMEs and their likely interaction with each other and the surrounding solar wind plasma is the aim of the present paper.
+Specifically, this study is carried out from both an observational and modeling perspective, allowing a characterization of the solar transients and a thorough investigation of the physical processes occurring during CME-CME and/or CME-HCS interaction.
+On the observational side, due to the unavailability of plasma measurements during this period (as Solar Orbiter was in the commissioning phase of the mission), the study mainly focuses on the magnetic properties of the ICMEs, such as the magnetic helicity and polarization, which allow a depiction of the magnetic field rotation associated with the flux-rope-like structures embedded in the ICMEs, and provide a description of their magnetic configurations (temporal duration, chirality, pitch of the magnetic field winding).
+The magnetic connectivity between the Sun and the ICMEs is dealt with by analyzing energetic particle data and looking for electrons and ions kept out by the ejecta.
+Indirect information on the heliospheric plasma environment where the ICMEs propagate in is finally mined from in situ magnetic and electric field fluctuations.
+On the modeling side, a complete suite of numerical codes has been employed to (i) map the ambient solar wind at the Solar Orbiter position (with the Heliospheric Upwind eXtrapolation (HUX) model), (ii) assess the kinematical and geometrical parameters of the ICMEs (like direction, orientation, twist, speed, with the 3D COronal Rope Ejection (3DCORE) technique), which are then used as input in the EUropean Heliospheric FORecasting Information Asset (EUHFORIA) modeling tool to (iii) simulate the evolution of the ICMEs in the inner heliosphere and their interactions with each other and with the HCS.
+The layout of this paper presents a methodological approach to the analysis of Solar Orbiter data (Sect.
+), geometrical and physical modeling of the ICMEs observed by Solar Orbiter (Sect.
+), discussing and interpreting the results obtained from data analysis and simulations (Sect.
+), and concluding remarks (Sect.
+).
+2.
+- Data analysis The analysis of the ICMEs magnetic topology, the HCS identification and characterization, and the insights into the ambient solar wind, are based on observational data coming from three of the four in situ instruments on board Solar Orbiter: magnetic field measurements acquired by the magnetometer (MAG; ), suprathermal particle properties and anisotropies provided by the Energetic Particle Detector (EPD; ) instrument suite, and magnetic and electric field fluctuations, in addition to measurements of the spacecraft potential, gathered by the Radio and Plasma Waves (RPW; ) instrument.
+The Solar Orbiter/MAG fluxgate instrument operates at a cadence of 16 samples s −1 in normal mode and up to 64 samples s −1 in burst mode.
+Since this study deals with the large-scale magnetic structures associated with the ICMEs and the HCS, 1-min averaged time series are used in the analysis.
+MAG data are in the heliographic Radial Tangential Normal (RTN) coordinate system, where _placeholder_formula_ points from the spacecraft away from the Sun, _placeholder_formula_ is the cross product of the Sun’s spin axis and _placeholder_formula_ , and _placeholder_formula_ completes the right-handed triad.
+The Solar Orbiter/EPD experiment comprises four different sensors to measure energetic particles from the Sun over a wide range of energies, from 2 keV to 500 MeV nucleon −1 : the SupraThermal Electrons and Protons (STEP) instrument, the Electron Proton Telescopes (EPT), the High Energy Telescopes (HET), and the Suprathermal Ion Spectrograph (SIS).
+In order to assess whether or not ICMEs are still rooted at the Sun with their legs, by looking for bi-directional (counter-streaming) electron or ion flows within the ICMEs, STEP and EPT electron and ion spectrograms averaged at 10 min are analyzed.
+The Solar Orbiter/RPW instrument, which consists of a set of three ANTennas (ANTs) and a Search Coil Magnetometer (SCM), measures electric and magnetic field fluctuations, as well as solar radio emissions, in the wide frequency range from the near-DC (Direct Current) to 16.4 MHz.
+The BIASing (BIAS) component additionally quantifies the satellite floating potential.
+In order to infer the local electron density, the BIAS spacecraft potential and the ANTs low-frequency electric field measurements at 16 Hz are used.
+Rough estimates of the solar wind bulk speed are instead obtained joining 16 Hz RPW electric field and 8 Hz MAG magnetic field data.
+2.1.
+- Solar Orbiter/MAG data analysis An estimate of the amount of magnetic helicity carried by the ICMEs during their propagation follows from the surrogate spectrum-based form proposed by to derive information on magnetic helicity even with single-spacecraft observations, and successively extended in the time domain, for studying flux rope structures, by by virtue of wavelet transforms.
+Accordingly, the normalized magnetic helicity σ m can be expressed as a function of time t and timescale s as _placeholder_formula_ where 𝒲 R ( t , s ), 𝒲 T ( t , s ), and 𝒲 N ( t , s ) are the Paul-wavelet transforms ( , which are more suited for time localization than other mother wavelets) of time series of the magnetic field components B R , B T , and B N , respectively, ℑ represents the imaginary part of a complex number, and the complex conjugate.
+The normalized magnetic helicity takes values in the interval −1 ≤ σ m ≤ +1.
+It is important to stress that, while Eq.
+( ) is related to the handedness (chirality) of the magnetic field and to how tightly the field lines are wound, it does not return the intrinsic magnetic helicity, which is an invariant of the ideal MHD equations and, as such, does not depend, for instance, on which reference system it is calculated in.
+Conversely, Eq.
+( ), which is derived for collinear measurements and therefore is just a proxy of the intrinsic magnetic helicity, clearly depends on the reference system.
+In fact, at the opposite of other MHD quantities, magnetic helicity is really a non local quantity, which involves how infinitely thin flux tubes are braided and entangled.
+However, its estimation depends on local measurements, which moreover are limited to the 1D spacecraft trajectory (for a rather exhaustive discussion on the impossibility to achieve complete information on magnetic helicity with measurements from a single spacecraft and, in turn, without information on the 3D magnetic field topology, the reader is referred to ; , ).
+This means that such a notation clearly relates the σ m sign to the corresponding rotation sense of the magnetic field (i.e., chirality), provided the mean global magnetic field B 0 orientation is known.
+Indeed, the HCS crossing is marked in spacecraft measurements by a change in the signs of only the radial and tangential magnetic field components (e.g., ), which leads Eq.
+( ) to change sign as well.
+It turns out that, in RTN coordinates, for outward (i.e., positive polarity) magnetic sectors, σ m ≶ 0 corresponds to (counter)clockwise rotations of the magnetic field vector, namely to (right)left-handed chirality (the opposite applies for inward, i.e., negative polarity, magnetic sectors), while σ m ∼ 0 indicates untwisted magnetic field lines.
+In other words, a flux rope with (intrinsic) right-handedness is observed to have positive (negative) reduced magnetic helicity sign in inward (outward) magnetic sectors.
+The magnetic field vector B intensity and components relative to an 8-day time interval, recorded from June 4 2020, to June 11 2020, are displayed in the first and second panels of Fig.
+a, respectively.
+A significant increase in the magnetic field magnitude lasting about two days is observed on June 7−8, 2020.
+In the middle is a region of reduced B magnitude, which is accompanied by a reversal of the radial component of the magnetic field ( B R , blue curve in the second panel of Fig.
+a, where the horizontal dot-dashed line denoting B R = 0 is also shown as a reference) and by a fairly sharp change in the elevation ( θ ) and azimuthal ( ϕ ) angles (shown in the forth and fifth panel of Fig.
+a), which altogether are indicative of a quite sharp HCS crossing (as confirmed in the next section where the HCS location and orientation is thoroughly investigated).
+Upstream and downstream of the HCS crossing are two helical structures (delimited by the dashed vertical lines), as revealed by the large-scale rotations of the transverse magnetic field components, B T and B N (green and red curves in the second panel of Fig.
+a), and, especially and most prominently, by the highly positive values assumed by the magnetic helicity (Fig.
+b).
+These high σ m features are to be considered reliable (and due to the transit of the helical structures), since they are above the cross-hatched area representing the Cone Of Influence (COI), where the Paul coefficients are affected by edge effects.
+Corresponding to the increase in magnetic field magnitude, in the σ m spectrogram, are enclosed regions of high magnetic helicity, where σ m > 0.8 (Fig.
+b).
+Despite the arbitrariness of their definition, these contour lines allow an estimation of the duration of the helical structures and the tightness with which the magnetic field lines are wound around their axis (deduced by their characteristic timescale).
+It follows that the two events last 12.4 and 9.6 h, respectively, and that both of them appear to be limited to approximately the same timescales around 20 h.
+This is consistent with expectations, since the probe samples just a semi-rotation of any helical structure, implying that the observed pitch of the magnetic field winding is generally twice the crossed section.
+The averaged normalized magnetic helicity over the bounded regions are ⟨ σ m ⟩ = 0.87 and 0.84, thus indicating that the degree of the magnetic field winding is very similar in the two structures.
+Despite the observation that the helical structures upstream and downstream of the HCS crossing share the same sign of magnetic helicity ( σ m > 0), it is worth noting that, according to this approach, they have opposite chirality.
+Indeed, they are respectively immersed in an inward ( B R < 0) and outward ( B R > 0) magnetic sector: This implies that the leading structure is right-handed, whilst the trailing one is left-handed.
+Even though the magnetic helicity analysis (as well as the below hodogram analysis) suggests a right-handedness of the upstream structure and, as will be shown in Sect.
+, 3DCORE fitting is inconclusive on this event, thus preventing a precise determination of its chirality, it has to be acknowledged that a visual inspection of the MAG time series clearly indicates that the upstream structure is left-handed.
+Indeed, as displayed in the fourth and fifth panels of Fig.
+a, the magnetic field rotates from ϕ ≃ 90° (west) at the front to ϕ ≃ 270° (east) at the rear, with θ ≃ −90° (south) around the middle, thus pointing to a left-handed WSE flux rope.
+Although it is beyond the scope of this work to resolve the discrepancy between the standard interpretation of the magnetic field component profiles and the magnetic helicity analysis (actually, inconsistency between magnetic helicity output and a force-free field model-based fitting procedure is also found for the downstream structure; see Sect.
+), it has to be remarked that the interpretation of the observational results in the paper stems from the identified handedness of the helical structures.
+Depending on whether the upstream structure is left- or right-handed, two possibile scenarios are indeed possible.
+Specifically, if the leading and trailing structures had opposite handedness, the relative intervals could not correspond to two distinct parts of a single, complex large-scale helical structure engulfing the HCS, but rather they would appear to be two different events.
+On the other hand, if, as suggested by the standard approach in use throughout ICME research, both the helical structures were left-handed, this would allow for the possibility of a double crossing of the same ICME (according to the scenario first depicted by ).
+Consistent with the observational and modeling findings presented throughout this paper (both at coronal and heliospheric heights: in Sect.
+the plausible solar counterparts of the two ICMEs locally measured by Solar Orbiter will be identified), the scenario of two interacting ICMEs is actually considered and discussed, even if the alternative possibility of having one single CME crossed by Solar Orbiter twice is further mentioned and acknowledged in Sect.
+.
+Supporting the hypothesis of two different structures encountered by Solar Orbiter is the range of values of the angle between the magnetic field vector and the radial direction θ BR = arccos( B R / B ), shown in the third panel of Fig.
+a.
+Since it can be safely assumed that the solar wind is expanding radially, θ BR resembles the angle between the magnetic field and the solar wind direction.
+It results that the magnetic field within the upstream helical structure is more oblique (⟨ θ BR ⟩ = 76°) to the solar wind velocity direction, compared to the magnetic field within the downstream event (⟨ θ BR ⟩ = 56°), corroborating the scenario in which Solar Orbiter is observing two different helical structures.
+These findings are confirmed and complemented by the hodogram analysis, conducted to further study the polarization properties of the two helical structures.
+The corresponding results are displayed in Fig.
+.
+The left panel shows the time series of the RTN components and magnitude of the magnetic field vector during the time interval from June 7 2020, 02:13 to June 8 2020, 13:47 UT, encompassing both the previously identified helical structures.
+The thick continuous lines overlaying the B T and B N components represent their large-scale trends, reconstructed by means of an Empirical Mode Decomposition (EMD, ) procedure.
+The 3D magnetic hodograms B R − B T , B R − B N , and B T − B N , along with their projections onto the associated planes (displayed in the right panels), are characterized, as expected, by the presence of two distinct rotational periods of the magnetic field, associated with the passage of the two helical structures (marked in blue and red).
+Of particular interest is the rotation of the magnetic field vector exhibited in the T − N plane, which is perpendicular to B R , namely to the sampling direction.
+The B T − B N hodogram reveals a clockwise rotation during both the events (full dot and star refer to the starting and ending time point corresponding to the large-scale EMD-reconstructed rotation).
+However, during the first event the large-scale magnetic field vector points toward the T − N plane ( B 0R < 0; see second panel of Fig.
+a), whereas during the second one B 0 points away from it, thus confirming the right- and left-handedness (i.e., the positive and negative chirality) of the leading and trailing helical structure, respectively.
+From the analytical expressions of the EMD-reconstructed B T and B N components, it is possibile to get the curvature of the magnetic field rotation, _placeholder_formula_ , where ′ and ″ denote the first- and second-order derivative with respect to time, respectively: This is shown in the bottom rightmost panel of Fig.
+.
+It is evident that ρ experiences two different time evolutions, as expected.
+Although flux-rope-like structures (as the ones observed in this paper) can be described as magnetic field lines twisted around a cylindrical tube-like shape (with radius R ), most of time they are sampled by a spacecraft at some angle with respect to the rotation axis.
+This implies that flux ropes show an elliptical cross section and, in turn, the curvature ρ varies sinusoidally between the minimum ρ min = ( b / a 2 ) and maximum ρ max = ( a / b 2 ) values (if a and b are the semimajor and semiminor axes, respectively).
+Assuming a = R and b = R cos( φ ), where φ is the angle between the rotation axis and the sampling direction, it results that the ratio between maximum and minimum values of the curvature of the observed flux rope is ρ max / ρ min = a 3 / b 3 = R 3 /[ R cos( φ )] 3 = 1/cos 3 ( φ ) (thus independent of R ).
+Hence, from the comparison between the values assumed by ρ during the two helical events, it can be assessed (to a first approximation) that the φ angle for the upstream and downstream structure is 54° and 36°, respectively.
+Thus, it can be argued that the two helical structures are sampled at quite different angles with respect to their axis.
+It would have been very interesting to perform the Grad-Shafranov reconstruction of the two structures to provide stricter results on their orientation, which, however, was impossible given the lack of plasma data.
+To conclude, considering the two periods as a whole, the magnetic hodograms are characterized by an over-rotation (namely a rotation larger than 180°), which is typically interpreted as a signature of flux ropes with significant curvature or complex topologies, such as a spheromak or a double flux-rope-like structure (see category “ F + ” in ).
+However, the fact that the magnetic hodograms also present two distinct rotations, namely different curvatures between the two subperiods, in addition to a different chirality, suggests this is rather the signature of a passage of two different structures classified as complex “ C x ” types in , see e.g., Fig.
+5d therein).
+The two structures are too long to be suggestive of local flux ropes that possibly originated by disconnection from the HCS, via magnetic reconnection-related processes, such as tearing modes (although a failed Walén test, impossible due to the lack of Solar Orbiter high-resolution plasma data in this time interval, would be required to definitively confirm that reconnection is not occurring).
+Locally generated flux ropes are usually shorter than the observed half-a-day helical structures, having a duration of a couple of hours at most (see e.g., , , on the detection of local magnetic flux ropes in the inner heliosphere from Parker Solar Probe observations).
+The possibility of fragmentation of an ICME into two flux ropes, due to its motion through the HCS and consequent reconnection with it (in accordance with e.g., , simulations), has to be ruled out as well, since in this case, as discussed above, the resulting trailing flux-rope-like structure should have had the same chirality of the mother ICME (contrary to what is observed).
+In addition, reports a typical duration for magnetic ejecta at 0.5 au of about 10 h.
+This is in striking agreement with the temporal extensions of 12.4 and 9.6 h estimated for the two structures observed by Solar Orbiter at 0.52 au.
+The signatures presented so far are all indicative of the passage of two oppositely handed ICMEs (hereafter ICME1 and ICME2), lasting both about half a day each and propagating in the two opposite magnetic polarity heliospheric hemispheres.
+These carry a similar content of magnetic helicity and are characterized by a similar pitch of the magnetic field winding corresponding to the embedded flux rope structure as well.
+The ICME1 propagating angle is more perpendicular to the background magnetic field compared to ICME2.
+In addition, the rotational axis of the ICME1 is more inclined to the sampling direction with respect to ICME2.
+2.2.
+- HCS identification and characterization Since the HCS lies between the ICMEs, it is important to assess its local orientation, as this can have an effect on the conclusions drawn.
+The HCS structure is explored using data from the Solar Orbiter and Wind spacecraft, located at 0.5 and 1 au, respectively, for this time period.
+Although separated by 0.5 au, these spacecraft were approximately connected along the same Parker spiral field lines, which means that they crossed the HCS at similar times.
+Spacecraft data are ballistically mapped back to the Sun’s source surface, assumed to be at 2.5 R ⊙ ( ; ).
+To this purpose, Wind 6-h average radial velocity is used.
+Due to the lack of Solar Orbiter plasma data, a constant value of 350 km s −1 (consistent with Wind observations and with RPW estimations, as further discussed below) is assumed as a reasonable estimate of the solar wind speed at the Solar Orbiter position.
+The bottom panel of Fig.
+shows a map of the solar source surface, with the color representing the polarity of the field at each spacecraft and the observation time advancing from right to left.
+The two ICMEs can be seen around 220° longitude, where the polarity changes from toward (negative) to away (positive) from the Sun, coinciding with a significant rise in the magnetic field magnitude.
+The panel also shows the overall shape of the HCS at this time, with a (fairly sharp) displacement toward negative (positive) latitudes below (above) 210° longitude, which matches the Solar Orbiter in situ data well.
+A quite sharp crossing of the HCS, thus effectively lying between the two ICMEs, is confirmed by , where a more in-depth 3D description of this region is accomplished using multiple spacecraft observations (i.e., Solar Orbiter, BepiColombo, Wind, and STEREO-A) at different longitudes and latitudes.
+Following the crossing of the HCS, the Wind spacecraft entered a high-speed stream (HSS), as seen in the top panel of Fig.
+, where the trailing edges of this HSS map to the same longitude on the Sun’s source surface.
+Since Solar Orbiter was at a higher latitude than both the Wind spacecraft and the HCS at this longitude, it follows (as confirmed below by RPW observations) that Solar Orbiter also passed into a HSS with a positive polarity, originating from a northern polar coronal hole.
+Due to the low latitude extension of this HSS, it lay at the same latitude as the slow wind surrounding the HCS.
+This led to the formation of a Stream Interaction Region (SIR), where the faster wind compressed the slower plasma flow upstream.
+Such a phenomenon can be seen at the Wind position, as evidenced by an increase in both plasma density and magnetic field intensity.
+It is unclear how developed this SIR is at the Solar Orbiter position, due to the lack of plasma data, but it is worth noting that this could have some effect on the dynamical evolution of the ICMEs encountered by Solar Orbiter (some indication of how developed is the SIR is given in the following section, where local density estimations as derived from RPW data are presented).
+The existence of a low- and high-speed plasma flow upstream and downstream of the HCS is also confirmed by the magnetic field properties characterizing the two intervals.
+The downstream region is characterized by larger magnetic fluctuations with respect to the upstream region (second panel of Fig.
+a), as well as a lower level of magnetic compressibility (not shown).
+Both are indicative of the presence of Alfvénic fluctuations, which are typically present in the fast wind (see the review by , and references therein).
+It follows that ICME1 and ICME2 are immersed in a low- and high-speed stream, respectively.
+In between them is the HCS.
+ICME2 has at least the same bulk speed of the fast solar wind in which it is propagating.
+If ICME2 had a lower velocity it would indeed be accelerated to the speed of the HSS from which it would be dragged.
+The result is that ICME2 is pushing on the preceding ICME1, driving likely dynamical (such as compression) and magnetic (such as reconnection) interactions.
+2.3.
+- Solar Orbiter/RPW data analysis Although not primarily designed to measure the plasma parameters of the solar wind, RPW can be used to contextualize the heliospheric environment where the two ICMEs propagate, thus validating the assumptions made in the HCS reconstruction and supporting conclusions about the large-scale solar wind drawn on the basis of the solely magnetic field measurements.
+Specifically, to roughly estimate the solar wind speed, use was made of de Hoffmann-Teller (HT) analysis ( ), the purpose of which is to find the proper (co-moving) frame of magnetic structures such as current sheets, in which the electric field is 0.
+If such a frame exists and the structure is moving with velocity V HT with respect to the spacecraft, then the electric field is given by E = − V HT × B in the spacecraft frame.
+In the modified HT analysis, measurements of E and B are used to find the frame in which E T is 0.
+The resulting HT velocity only contains the V R and V N components and gives no information about V T , but since the solar wind is radial V T and V N are rarely of practical importance.
+In the present analysis, this is expected to be the case also in the possible presence of non-radial deflection at the stream interaction region.
+For a frozen-in current sheet, the V HT is the speed at which the structure moves past the spacecraft, namely, the solar wind speed, whereas for an Alfvén wave, the V HT corresponds to the phase speed of the wave in the spacecraft frame, namely, the solar wind speed plus or minus a comparatively small correction ≤ V A , which is the phase speed of the wave in the plasma frame.
+The HT method is applied on one-hour intervals of electric and magnetic field data.
+By comparing the resulting velocity with the electric field through E T = −( V HT × B ) T , the quality of the velocity estimate can be assessed.
+Of particular use is the correlation coefficient and linear slope between E T and −( V HT × B ) T .
+If the absolute value of the correlation coefficient is above 0.9 and the slope is between 0.95 and 1.05, the velocity estimate is deemed to be of good quality.
+This analysis is repeated every 10 min: Any velocities not fulfilling the mentioned criteria for high quality are discarded.
+Details on the technique can be found in .
+The 16 Hz electron density is instead customarily obtained using the spacecraft potential (with respect to the electric field probes) and the high-frequency electric field measurements ( ; ; ).
+Under the assumption of equal ion and electron density, and locally constant photoelectron emission and electron temperature, and considering that in the solar wind the radius of the spacecraft is typically much smaller than the Debye length, the spacecraft potential only depends on the electron density.
+In order to obtain the correct electron density time series, additional calibration is required with the low-cadence estimate of plasma density, as obtained from the plasma frequency measured by the RPW high-frequency electric field.
+The solar wind speed and density time series, as inferred from Solar Orbiter/RPW observations and relative to the same interval shown in Fig.
+, are displayed as blue lines in the top and bottom panels of Fig.
+, respectively, where they are compared to the corresponding 92-s Wind observations (red lines), mapped to Solar Orbiter.
+This corresponds to a time shifting of about +1.7 days (for related formulas see e.g., ).
+By doing so, both the solar rotation and the different heliocentric distance of Solar Orbiter have been considered.
+In addition, Wind densities (acquired at 0.99 au) are radially scaled at the Solar Orbiter position (0.52 au), by (0.52/0.99) −2 , in order to take into account the solar wind expansion.
+Because of the large variability in the speed estimates inferred from RPW, these were averaged over a 12-h window (full blue dots in the top panel of Fig.
+, with superposed standard deviation-related error bars).
+On the other hand, 1-min averages of the density deduced from RPW are displayed.
+A general good agreement between Solar Orbiter/RPW and Wind solar wind speed estimations is found, both in terms of overall time profiles and absolute values.
+Remarkably, RPW estimates mark quite well the transition from the low- to the high-speed regime of the plasma flow, as well as both the trailing edges of the HSS.
+Differences may be ascribed to the uncertainties related to the HT analysis and/or to the natural expansion of the solar wind (as a matter of fact Solar Orbiter is observing a more pristine, namely, less evolved, solar wind with respect to Wind).
+In this regard, it is worth noting that Solar Orbiter does not observe the abrupt increase in density detected further out by Wind.
+This may reflect that the stream-stream interaction would not yet be well developed at 0.52 au: As a consequence, the region of strong compression associated with the SIR would therefore not yet have formed.
+Regardless of the not surprising differences with Wind (due both to the fact that RPW does not directly measure plasma parameters and that Solar Orbiter and Wind observe a different plasma – the satellites are not radially aligned – at different times), it is certainly worth noting that the assumptions made in the HCS reconstruction are fully supported by the RPW observations (in particular, the choice of a speed of 350 km s −1 , which is in striking accordance to what observed by Wind during the low-speed stream).
+More importantly, RPW corroborates the indications outlined in the previous section that Solar Orbiter passed into a HSS after the HCS crossing.
+2.4.
+- Solar counterparts A complete characterization of the two ICMEs at coronal heights (by means of remote-sensing observations) as well as pinning down the exact location of their source regions in the lower solar atmosphere is beyond the scope of the present paper.
+Nonetheless the identification, in coronagraphic images, of the solar counterparts of the two interplanetary transients is necessary to strengthen the picture of two interacting ICMEs and to infer the CME parameters (such as timing, propagation direction, and outflow velocity) useful for the CME modeling presented in Sect.
+.
+Two likely candidates are the CMEs launched at near-equatorial latitudes (and thus potentially impacting Solar Orbiter traveling on the ecliptic plane), that appeared approximately above 2 R ⊙ in visible light images of the solar corona at times and with outflow velocities consistent with the expected transit times to the Solar Orbiter position.
+Specifically, a faint CME, possibly linked to the filament eruption observed at 304 Å on the northwest limb by the Extreme UltraViolet Imager (EUVI) on board the ahead spacecraft of the twin STEREO satellites (Fig.
+a), first appeared in the field of view of the STEREO-A/COR1 coronagraph at the turn of June 2 and 3, 2020 (Fig.
+b).
+This first CME, hereafter CME1, expanding at a polar angle (counterclockwise from north) of ∼275° with a speed ≲250 km s −1 , can be considered the cause of the ICME1 observed at the Solar Orbiter position, between 02:00 and 14:22 on June 7 2020.
+A second streamer-blowout, likely associated with the hot, bright material flowing into the solar corona at around 40° north close to the west limb, as seen in 171 Å images of the Atmospheric Imaging Assembly (AIA) instrument on board the Solar Dynamics Observatory (SDO, Fig.
+c), was first recorded by the Large Angle Spectrometric COronagraph (LASCO-C2) on board the SOlar and Heliospheric Observatory (SOHO) at the end of June 3 2020 (Fig.
+d).
+This second transient event, hereafter CME2, launched at a polar angle of ∼250° and outflowing at a speed of ∼240 km s −1 (as inferred by the SOHO/LASCO manually identified CME catalog ), could explain the ICME2 signatures observed at 0.52 au about 12 h after the passage of ICME1.
+Despite the large uncertainties associated with the propagation direction of the CME and its longitudinal extension (arising from inferring these intrinsically 3D quantities from 2D CME images projected onto the plane of the sky), on the basis of simple geometrical considerations about the relative Solar Orbiter-SOHO positions, it can be argued that the ICME2 signature at Solar Orbiter was separated by ∼45° longitude from its source region, suggesting that an extreme flank hit was most likely.
+Both ejecta are likely associated with the bipolar magnetic structure observed in the northwest quadrant of the solar photosphere approximately one week before the CMEs onset.
+The colorized magnetogram acquired on May 25 2020, 12:00 by the Helioseismic and Magnetic Imager (HMI, bottom right panel in Fig.
+c) on board SDO shows indeed the presence of a large bipolar configuration of strong magnetic field, which is a possible candidate for triggering the eruptive phenomena observed at the western limb and later on in the solar corona.
+2.5.
+- Solar Orbiter/EPD data analysis In an attempt to assess whether or not the ICMEs seen in Solar Orbiter/MAG data are characterized by flux-rope magnetic configurations connected to the Sun, the properties of suprathermal electron and ion populations as measured by Solar Orbiter/EPD are investigated.
+The goal is to find out whether there are bi-directional (counter-streaming) particle flows observed during the ICMEs passage, which are commonly interpreted as indicative of a closed magnetic field topology either connected to the Sun at both ends or completely disconnected from it (e.g., ; ).
+Electron strahls are observable in an energy range between ∼60 eV and ∼2 keV (e.g., ; ), while ion flows are typically observed at energies ≳0.5 MeV (e.g., ; ; ).
+From top to bottom, Fig.
+displays, in the same interval of Fig.
+, the STEP spectrogram of electrons and ions, and ions only, in the 4−80 keV deposited (i.e., measured) energy range (“integral channel” and “magnet channel”, respectively), the STEP instantaneous pitch-angle (PA) distribution (function of both ions direction and intensity of particles), the EPT spectrograms of ions (using EPT’s magnet channel which deflects electrons away from the detectors), in the primary (i.e., proton) energy range from 50 keV up to 6 MeV, in the sunward and anti-sunward directions (the reader is referred to , for a detailed description of the sensor pointing), and the time profile of the MAG magnetic field magnitude and components (shown as reference for the location of ICMEs).
+Because EPD/STEP starts at about 4 keV energy and is thus not designed to measure electrons with energies typical of electron strahl (≲2 keV), its measurements cannot provide information about bi-directionality of the electron flows.
+Thus, no conclusions on the magnetic topology of the ICMEs structure based on electron populations can be drawn with EPD observations.
+In addition, STEP measurements of the electron and ion integrated particle flux (first and second panel of Fig.
+) provide evidence that EPD did not measure any significant increase at any energy above 4 keV in the electron flux during the passage of the ICMEs.
+However, ion flows can provide useful information as well, and it is thus very important to investigate whether EPD observed any significant anisotropy in the ion distributions during the ICMEs’ transit.
+The EPD/STEP plots (first and second panel of Fig.
+) show significant flux enhancements of low-energy ions on both sides of ICME2, suggesting that this acts to keep the suprathermal particles out, as expected if the ICME was still rooted with its legs at the Sun.
+Following the theoretical model by , observationally supported by , , particles are stochastically accelerated by small-scale flux ropes elsewhere between the Sun and the spacecraft, probably in a magnetically bounded region that is filled with magnetic islands (due to ripple or fold in the HCS), from which they leak out.
+Then, the particles stream away from the acceleration region following the magnetic field lines: The field lines still connected to the source region and organized as 2D helical structures (as CME-associated flux ropes) trap the particles, while other field lines governed by slab turbulence or magnetic islands (as CMEs disconnected from the Sun) spread out them randomly.
+This picture is also consistent with the interpretation that dropout events are associated with topological structures, as 2D flux ropes, rather than resulting from the initial motions on the surface of the Sun (e.g., ; ; , ).
+It turns out that the particles are confined to ICME2 which is still magnetically connected to the Sun.
+As the spacecraft passed through ICME2, EPD observed an enhanced energetic particle flux.
+In contrast, the lack of suprathermal ions during ICME1 suggests that this structure is completely disconnected from the Sun.
+Since variations in the PA are strictly related to changes in the magnetic field direction, the ion PA distribution measured by STEP (shown in the third panel of Fig.
+), in addition to the connection with concurrent particle flux intensity changes, provides additional information on the magnetic topology and geometry of the ICMEs encountered by Solar Orbiter.
+During ICME1 and ICME2, STEP covers pretty constant PAs around 120° and 30°, respectively, thus indicating that Solar Orbiter is indeed looking into the (same) large-scale magnetic structures.
+Between the two ICMEs is a sudden onset of energetic ion flow, which is accompanied by a fairly fast rotation of the PA to quasi-parallel direction (i.e., by a change in the local magnetic field): This means, as expected, that Solar Orbiter is entering another magnetic region (i.e., a different flux tube), which is aligned to the interplanetary magnetic field.
+Interestingly, there is also a small increase in low-energy ions seen with STEP during ICME2 around the time that B N rotates through 0.
+The magnetic disconnection of CME1 from the Sun may indicate that this might even be a coronal blob ( ), detached from the equatorial streamer cusp via magnetic reconnection with nearby open field lines, and thus escaped outward along the HCS ( ).
+Such disconnected plasmoids have typical speeds of ∼300 km s −1 at 25 R ⊙ (see , and Fig.
+6 therein) and the helical structure of magnetic flux ropes ( ), in accordance with the observed ICME1 properties.
+In addition, as discussed above, CME1 appears very faint in white-light coronal images, as expected for coronal blobs.
+All these hints further support this alternative coronal origin for ICME1.
+Looking at higher energies, the EPD/EPT plots (fourth and fifth panel of Fig.
+) clearly show that energetic ions at ∼100 keV are anisotropic, with most of the energetic particles coming from the Sun.
+In addition, no velocity dispersion is observed during this event, that is, particles of different energies arrive at about a similar time.
+This could mean that Solar Orbiter entered a magnetically separated region (i.e., a flux tube) that was already filled with energetic particles (thus preventing any velocity dispersion from being observed), which were accelerated farther away, even at the Sun, or that the ions were accelerated very close with insufficient time for velocity dispersion to manifest itself, thus pointing to a reconnection-related local (or, at least, relatively local) acceleration.
+If the latter were the case, the evidence that the enhancement of the energetic particle flux coincides especially with the region between the two ICMEs (even if significant energetic particles are observed also during the passage of ICME2) would suggest that magnetic reconnection processes are occurring at the CME-CME interface and are probably related to the interaction between the two ICMEs (as discussed in Sect.
+).
+Little scattering of the particles in the flux tubes associated with this region might explain why only particles streaming from the acceleration source region and not coming from the anti-Sun direction are observed.
+In addition, it is worth noting that if reconnection was actually occurring, then it would start first from the outer boundaries of the two ICMEs so that the field lines at the interface would be connected to each other.
+In this case, if the reconnection had occurred long time before Solar Orbiter observations, ICME1 should have had similar EPD properties as ICME2 because their outer boundaries would have been connected (so that ICME1 would have connected as well to the source region).
+Since observations do not show such a result, it might mean that reconnection has just started occurring.
+As shown in the following, numerical modeling of the CMEs’ evolution supports the scenario in which the two ejecta collide and start interacting (presumably via reconnection processes) exactly at the Solar Orbiter position, in accordance with EPD results.
+3.
+- Modeling and simulations In order to complement the observational analysis and to provide theoretical support to the findings presented in Sect.
+, numerical simulations, aimed at modeling the ICME flux-rope geometry and the evolution and interaction of the ejecta during their propagation throughout inner heliosphere, have been carried out.
+In addition, to contextualize the in situ Solar Orbiter and Wind observations, the ambient solar wind has been modeled so as to provide valuable insights into the heliospheric plasma conditions during the ICME events.
+3.1.
+- HUX ambient solar wind model To study how the ICMEs are embedded in the ambient solar wind flow, the widely applied Wang-Sheeley-Arge (WSA) model ( ) is used.
+The WSA model uses photospheric magnetic field measurements from the Global Oscillation Network Group (GONG) provided by the National Solar Observatory.
+These measurements provide the inner boundary conditions for a Potential Field Source Surface (PFSS; ) and a Schatten Current Sheet (SCS) model ( ) to derive the large-scale coronal magnetic field.
+The WSA model is used to drive the efficient HUX heliospheric model ( ; ; ), which evolves the solar wind conditions near the Sun into the solar system (for more details on the applied numerical framework the reader is refereed to , ).
+Figure a shows the computed large-scale solar wind conditions in interplanetary space on June 7 2020, 00:00 UT, whilst Figs.
+b,d give the magnetic field data at Solar Orbiter and Wind, respectively.
+The results on the solar wind bulk speed from the WSA/HUX model do not match the observations at the Wind position, as shown by different time profiles of the modeled (dashed line) and observed (solid line) proton speed displayed in Fig.
+e.
+This discrepancy questions the reliability of the model also at the Solar Orbiter position (Fig.
+c), where indeed the RPW wind speed estimates are pretty different (blue line in the top panel of Fig.
+).
+The WSA/HUX model suggests a transition from the trailing edge of a HSS to the following rarefaction region on June 7 2020 (Fig.
+a and dashed line in Fig.
+c), whilst observational evidence for exactly the opposite condition (with a fast wind overtaking the preceding slower plasma flow) has been provided in Sect.
+.
+To address this shortcoming and match RPW observations, the alternative strategy of mapping Wind observations to Solar Orbiter has been adopted (time-shifting Wind speed data by approximately +1.7 days).
+As indicated also by RPW, a HSS reaching ∼500 km s −1 is thus found to arrive on June 9 2020, at Solar Orbiter, about a day after the HCS/ICMEs compound structure that this work focuses on ends on June 8 2020.
+This confirms the previous findings that Solar Orbiter is observing a compound stream including all three large-scale solar wind structures (ICMEs, HCS and, to a lesser extent, SIR).
+3.2.
+- Insights into general ICME parameters with 3DCORE Figure shows the application of the 3DCORE semiempirical flux rope model first introduced by and then updated by .
+This method allows fitting rotating field intervals in ICME flux ropes observed in the Solar Orbiter magnetometer data, in order to reconstruct general flux rope parameters.
+The 3DCORE model consists of a bent torus that is attached to the Sun at all times and contains a uniform twist magnetic field.
+The magnetic structure propagates away from the Sun according to a drag-based model.
+The technique can be used either in hindsight for fitting ICME flux rope intervals in the solar wind or in a forward modeling mode.
+As demonstrated in Fig.
+, 3DCORE could successfully fit the interval corresponding to ICME2 (00:30−11:30 on June 8 2020), which is characterized by a smoothly rotating magnetic field with a low level of fluctuations.
+However, the interpretation, both visually and with the aid of 3DCORE, is not straightforward.
+In the ICME2 interval, the radial component of the magnetic field B R is strongly elevated, which means that, for a toroidal flux rope such as used in the 3DCORE model, the spacecraft trajectory must pass through the flank of the flux rope structure.
+For comparison, if the spacecraft passed through the magnetic flux rope near the apex, B R would be flat around zero, whilst the transverse components, B T or B N , would show unipolar or bipolar excursions ( ; ).
+On the other hand, an unrealistically high initial CME speed (666 km s −1 , as reported in Table ) is needed to get the CME leg to Solar Orbiter in the ∼4 day transit time; if this speed were more realistic (i.e., lower), the leg would reach the spacecraft much later than actually observed.
+This suggests that a crossing closer to the apex, rather than a flank hit, in fact occurred.
+Furthermore, the Approximate Bayesian Computation Sequential Monte Carlo (ABC-SMC) fitting method ( ) finds that the magnetic structure embedded in ICME2 is a right-handed south-west-north flux rope, with an axis that has a low inclination of about 20° to the solar equatorial plane, pointing West.
+It is worth noting that this is in striking disagreement both with a visual interpretation (where the axial field in the middle of this interval would point toward the − T direction, namely toward the east) and observational results based on magnetic helicity and hodogram analyses (where clear indications of left-handedness were found for ICME2).
+This inconsistency between observations and the model raises the question of whether or not the 3DCORE-adopted toroidal flux rope model is a satisfactory representation of the observed ICME core structure and, in turn, whether other magnetic configurations, such as a cylindrical flux rope geometry à la , might yield different and more satisfactory results.
+The statistical work by , in which a large number of flux-rope events were fitted with cylindrical geometry Bessel functions to retrieve various flux rope parameters including the handedness, seems to suggest that this is the case.
+Looking at Fig.
+3 therein, the event of September 22 1999, looks very similar to the ICME2 studied in this paper (provided the x - and y -components of the magnetic field are rotated, since they were given in Geocentric Solar Ecliptic (GSE) coordinates).
+Using the method, found a left-handed rotation for that event, in line with the expectations for ICME2.
+Figure gives a 3D visualization of the propagation of ICME2 as reconstructed with 3DCORE.
+This shows that the eastern flank of the ICME passed over Solar Orbiter.
+Hence, despite some inconsistencies between 3DCORE and observations discussed above, but as also suggested in Sect.
+based on considering the spacecraft position relative to the CME source region, the ICME2 signature observed by Solar Orbiter may correspond to a very glancing leg encounter.
+It is worth noting that, due to the flank encounter, there may be some doubts about the reliability of these results, as no systematic studies have been performed so far on fitting this or any other models specifically to flux rope flank impacts, and the magnetic signatures of ICME flank encounters are generally poorly understood (incidentally, this could be another plausible explanation of the discrepancy between MAG observations and 3DCORE regarding the ICME2 handedness).
+In addition, any attempt to draw a picture of the flank crossing geometry should also take into account the differences in the ICME duration in case of central or leg encounters.
+The duration of a spacecraft crossing through an ejecta structure is considered to be typically longer for leg encounters than in the case of crossings close to the CME apex.
+Typical indicators of legs encounters are: long duration, little rotation, and high B R (e.g., ; ), assuming the spacecraft is propagating along the leg axis for a long time.
+The period corresponding to ICME2 is characterized by a high B R component, but also by a clear rotation in the components and only an average duration ( ).
+This is unlikely therefore to be a traditional leg encounter ( ; ), but rather a crossing perpendicularly to the leg axis (see also ).
+Despite the above caveats, 3DCORE is able to fit the field rotation very well and returns a reasonable result, in particular concerning the direction and orientation of this ICME flux rope when compared to solar imaging (Fig.
+).
+Table summarizes the flux rope parameters determined from the fitting process.
+The 3DCORE model has been tentatively applied also to the time interval corresponding to the ICME1 passage (i.e., 07:00−19:00 on June 7 2020) but with unsatisfactory results (which are thus not shown).
+Despite the even clearer (with respect to ICME2) rotation of the magnetic field (as illustrated by Figs.
+and and the somewhat larger level of magnetic helicity content σ m = 0.87), the level of fluctuations within ICME1 is too high for a fit to be performed, and would require a strong level of smoothing.
+Most likely, however, the reason behind the inability to find a fitting solution with 3DCORE lies in the fact that, as stated above, the 3DCORE model assumes that the flux rope structure is magnetically connected to the Sun during the whole propagation period throughout interplanetary space.
+However, as previously shown by EPD data (Fig.
+), ICME1 is no longer anchored to the Sun with its legs.
+It follows that 3DCORE cannot be confidently applied to this first structure and it is therefore not surprising that it does not return results in agreement with observations.
+Alternative explanations behind the inconclusiveness of 3DCORE in modeling ICME1 might be nonideal flux rope geometries, untwisted legs, pancaking, and magnetic erosion (which would lead, as further discussed below, to large fluctuations within the ejecta, as actually observed to be associated with ICME1).
+3.3.
+- CME simulation with EUHFORIA In order to track the ICMEs from the source regions at the Sun to the location of Solar Orbiter and to answer the question of whether and how the ICMEs interact with each other and with the HCS, the hypothesis of two CMEs interacting at Solar Orbiter, with the HCS in between the two structures, is tested with EUHFORIA ( ).
+First, EUHFORIA is used to perform 3D MHD simulations of the inner heliosphere, in order to recreate the ambient solar wind in which the CMEs are evolving.
+A model domain between 0.1 and 2 au, covering ±60° in latitude and ±180° in longitude, is used.
+The simulations are run using a homogeneous grid composed by 512 grid cells in the radial direction (corresponding to a resolution of 0.0037 au), 60 grid cells in the latitudinal direction (corresponding to a resolution of 2°), and 180 grid cells in the longitudinal direction (corresponding to a resolution of 2°).
+The solar wind conditions at the model inner boundary are generated by the semiempirical WSA coronal model available in EUHFORIA, which is initialized using the standard magnetogram synoptic map generated on June 4 2020, 00:04 by GONG.
+An overview of the resulting coronal and solar wind configurations derived from EUHFORIA is provided in Fig.
+.
+The presence of a HCS along the Sun-Solar Orbiter line, namely, in the propagation space of the CMEs under investigation, is particularly visible from Fig.
+c.
+Remarkably, the modeled HCS global configuration at the source surface (Fig.
+a) is in generally good agreement with that obtained by back-mapping MAG time series at 2.5 R ⊙ (bottom panel of Fig.
+, see also ).
+At 0.1 au, EUHFORIA returns a very flat and low-latitude HCS (Fig.
+a), which may suggest that it was just skimmed by Solar Orbiter.
+This is in disagreement with Solar Orbiter observations (fourth and fifth panels of Fig.
+a and third panel of Fig.
+) and the HCS reconstruction accomplished in Sect.
+, which rather both point to a sharp crossing of the HCS, and may result from uncertainties behind the coronal modeling of the HCS and the CME propagation direction, as discussed below.
+In addition, no clear Corotating Interaction Region (CIR) is present in the CME propagation space between the Sun and Solar Orbiter (Fig.
+d), although various solar wind streams and the associated SIRs are visible.
+The linear force-free spheromak model, introduced by and validated by , , is then used to perform a simulation including two CMEs evolving in the heliosphere.
+As mentioned above, CME1 (CME2) as identified in Fig.
+are assumed to be associated with the ICME signatures observed by Solar Orbiter upstream (downstream) of the HCS crossing, namely, ICME1 (ICME2).
+The simulated CME input parameters are derived from a combination of methods, as follows.
+Given the limited information on the de-projected CME directions of propagation in the solar corona, and the limited capability of the spheromak model to reproduce the large-scale flux rope structure embedded in CMEs ( ), only the Solar Orbiter-directed portion of the CMEs has been modeled, thereby initializing the CMEs in the simulations as directed straight to Solar Orbiter (i.e., longitude of 45° and latitude of 5°).
+A half width of 30°, which is a typical value for slow CMEs (e.g., ; ), is adopted in the simulations.
+The Drag Based Ensemble Model (DBEM; ; ), available through the ESA Space Situational Awareness (SSA) portal , is further used to back-extrapolate the approximate CME speeds and passage times at 0.1 au, based on their arrival times observed at Solar Orbiter.
+As initial parameters for DBEM, the above values and a drag parameter Γ = 0.5 × 10 7 km −1 , as appropriate for slow CMEs, are used.
+For the ambient solar wind, a speed of 350 km s −1 , as resulting from the EUHFORIA simulations shown in Fig.
+and fully in accordance to Solar Orbiter/RPW observations (blue line in the top panel of Fig.
+), is instead chosen.
+An initial height of 20 R ⊙ , close to the height of insertion of the CMEs in EUHFORIA (set at 0.1 au), is furthermore chosen.
+Finally, given the slow CME speeds as observed in coronagraphic images (Fig.
+), their initial speeds are assumed to have been below the solar wind speed, namely, ≲250 km s −1 .
+The uncertainties in the DBEM input parameters are set to: ±0.1 for the drag parameter, ±100 km s −1 for the ambient solar wind speed and for the initial CME speed, ±12 h for the CME passage time at 0.1 au, ±5° for the CME half width, and ±5° for the CME direction/longitude.
+DBEM has been run for a total of 10 000 realizations.
+With this approach, DBEM predicts the arrival of CME1 at Solar Orbiter (time at 0.1 au: June 4 2020, 00:00 UT, initial speed at 0.1 au: 200 km s −1 ) on June 6 2020, 20:34 (95% confidence interval (CI) between June 6 2020, 11:07 and June 7 2020 09:28 UT).
+The median CME impact speed at Solar Orbiter is predicted to be 298 km s −1 (95% C.I.
+between 247 km s −1 and 352 km s −1 ).
+Overall, DBEM predicts an arrival time for CME1 at Solar Orbiter that is less than 4 h earlier than observed, namely in good agreement with in situ observations.
+The arrival at Solar Orbiter of CME2 (time at 0.1 au: June 4 2020, 18:00 UT, initial speed at 0.1 au: 200 km s −1 ) is predicted by DBEM to occur on June 7 2020, at 13:53 (95% C.I.
+between 07:17 and 21:26 on June 7 2020).
+The median CME impact speed at Solar Orbiter is predicted to be 298 km s −1 (95% C.I.
+between 271 km s −1 and 324 km s −1 ).
+In this case, DBEM predicts a CME arrival time at Solar Orbiter that is about 10 h earlier than observed, which is worse than the prediction for CME1 but not unreasonable given the mean errors in the prediction of the CME arrival times for such models (e.g., ; ).
+As indicated by the magnetic helicity analysis conducted in Sect.
+, the flux rope structure of CME2 is modeled as characterized by a negative chirality and low inclination with the axial field pointing eastward (corresponding to a SEN flux-rope type using the classification proposed by ).
+Regarding the CME1 orientation, although, as previously mentioned in Sect.
+, in situ MAG data would lend weight to a left-handed WSE rotation, the magnetic helicity analysis clearly indicates a right-handedness of ICME1 and, in turn, a SWN flux-rope configuration.
+In addition, EUHFORIA simulations run assuming a left-handed (WSE type) CME1 (not shown) result in a complete disagreement with the observed B component profiles.
+Thus, in line with the assumptions made throughout the paper, a SWN flux rope was input to the EUHFORIA run (even if, as discussed below in Sect.
+, some discrepancies, albeit minor, are found also in this case between EUHFORIA simulations and observations, in terms of the component polarities).
+Both CMEs are initialized using a toroidal magnetic flux equal to 10 13 Wb, which corresponds to the typical order of magnitude for the magnetic flux reconnected during the eruption of weak (slow) flux rope CMEs (e.g., ), and which also well matches the magnetic field strength measured at Solar Orbiter.
+A summary of the CME parameters used in EUHFORIA simulations, along with the methods and sources used to derive each of them, is provided in Table .
+A 3D visualization of the CME flux-rope magnetic structures during propagation from 0.1 au to Solar Orbiter is provided in Fig.
+.
+As illustrated in the simulations, both Solar Orbiter and the CMEs are embedded in the HCS.
+However, as discussed above and shown in Fig.
+b, the modeled HCS 3D shape is (contrary to what is observed) extremely flat and low-lying on the heliocentric equatorial plane.
+As a result, the CME structures are cut across by the HCS in the equatorial plane (i.e., the CMEs are inserted half above and half below of the HCS), and the regions that are initially above (below) of the HCS remain so while approaching Solar Orbiter.
+This characteristic of the HCS influences the EUHFORIA modeled time series at Solar Orbiter, which are displayed in Fig.
+as solid red lines, as further discussed below.
+In addition to the EUHFORIA time series, Fig.
+shows by comparison the time profiles of solar wind bulk speed, plasma density, and magnetic field as obtained from in-situ Solar Orbiter data (solid black lines).
+Due to the early prediction of the CME arrival times in EUHFORIA (further discussed below), Solar Orbiter time series have been time-shifted by −24 h in order to facilitate the comparison between modeled and observed CME signatures.
+As evident from the β time profile (bottom panel of Fig.
+), the CME magnetic structures are magnetically dominated ( β < 1) and are immediately distinguishable from the ambient solar wind (plasma-dominated component, β > 1).
+It is worth noting that there is a slight difference between the boundaries identified in the magnetic helicity analysis (vertical dashed lines in Fig.
+) and a more standard visual inspection based on either the observed magnetic field time series or the simulated β < 1 periods (yellow and blue shaded areas in the bottom panel of Fig.
+).
+This can be easily explained bearing in mind that the flux ropes (here identified as regions of magnetic helicity higher than 0.8) are the core magnetic structures of any (I)CMEs ( ) and, as such, represent only a substructure of the total ICME interval (e.g., ).
+As listed in Table , EUHFORIA projected the CME magnetic ejecta to arrive at Solar Orbiter on June 6 around 08:00 (CME1) and 23:00 (CME2).
+These arrival times are about 16 and 25 h earlier than actual observations at 0.52 au, and about 12 and 14 h earlier compared to the prediction based on DBEM.
+The reasons behind these discrepancies can be diverse: Most notably, an approximated and nonhomogeneous solar wind solution along the CME propagation direction in EUHFORIA might have affected the CME arrival time prediction with respect to Solar Orbiter observations and DBEM predictions, for example by influencing the CME drag and expansion and, as a consequence, the whole CME propagation (e.g., ).
+The limited observational data available both in situ and close to the Sun most likely also contribute to making the modeling of the CME events subject to larger uncertainties.
+Regardless of the large uncertainties in the prediction of the CME arrival times, EUHFORIA simulations provide useful insights on the 3D evolution of the CME magnetic structures (Fig.
+), and provide support for the interpretation of Solar Orbiter/MAG time series, thanks to the contextualization of the in situ 1D time series into a 3D, time-dependent picture.
+By comparing EUHFORIA results at the Solar Orbiter position with in situ RPW and MAG data, it is straightforward to note a number of relevant features that are well reproduced in the simulation.
+First, the EUHFORIA modeled and RPW inferred solar wind speed and number density are in generally good agreement before the arrival of CME1 and throughout the two CMEs transit (top two panels of Fig.
+).
+The discrepancies between observations and simulations after the CME2 passage (with EUHFORIA not capturing the faster and less dense stream instead observed by Solar Orbiter) are due to the well-known poor ability of EUHFORIA to reproduce solar wind HSSs (as recently investigated by numerous authors, e.g., ; ; , and which, however, is expected to have had a limited effect on the CME dynamics, and little influence on the modeled CME arrival times at Solar Orbiter, because of the HSS arrival after the end of CME2).
+Second, the remarkable intensifications observed by MAG in the total magnetic field B profile, in correspondence with the passage of CME1 and CME2 (along with the B reduced region in between) are very well predicted by EUHFORIA (third panel of Fig.
+).
+Third, the sign of the modeled magnetic field radial component B R (fourth panel of Fig.
+) well matches that observed at Solar Orbiter, particularly for CME2 (positive B R ), while less well for CME1 (which is characterized by a slightly negative B R in Solar Orbiter/MAG data, contrary to what is obtained from EUHFORIA simulations).
+It is worth however noting that the prediction of the sign of B R is particularly delicate due to the very flat configuration of the HCS modeled at the location of Solar Orbiter.
+As a result, a spacecraft crossing only a few degrees above or below the flux rope axis would detect opposite B R signs.
+In EUHFORIA the HCS does not cross Solar Orbiter, but rather it moves tangentially to the spacecraft (no change in B R sign is detected), differently from what is observed in MAG data, which rather suggest a crossing of the HCS (from negative to positive B R ) between CME1 and CME2.
+Such discrepancies can be naturally interpreted as the result of the modeling uncertainties related to the CME initial direction and the HCS 3D configuration.
+Finally, the sign of the modeled magnetic field tangential component B T (fifth panel of Fig.
+), corresponding to the direction of the axial field in the case of low-inclination flux ropes, also matches observations well: In this case, CME1 is characterized by an axial field toward positive _placeholder_formula_ (namely in the westward direction), and CME2 by an axial field toward negative _placeholder_formula_ (namely in the eastward direction).
+The agreement between the modeled and observed B N (sixth panel of Fig.
+) is less good, particularly for the period associated with CME1, which in MAG data appears characterized by a negative B N more intense in the back part of the structure while in EUHFORIA a clear rotation from south to north is visible (although the majority of the structure is characterized by a negative B N ).
+A rotation from negative to positive B N (south to north) is observable in CME2, which is consistent with Solar Orbiter/MAG observations.
+4.
+- Discussion and interpretation The opposite handedness of the two successive ICMEs, as shown by the spectra of the normalized magnetic helicity σ m used as a diagnostic parameter of the intrinsic chirality of their helical cores, has important consequences on their possible interaction.
+The two structures are indeed characterized by opposite magnetic polarities at their interface, with CME1 having a dominant northward magnetic field component at its trailing edge, while CME2 has a southward magnetic field component at its front.
+A sketch of the magnetic configuration of the two successive CMEs (as observed by MAG and inserted in EUHFORIA simulations) is shown in Fig.
+.
+Therefore, it is expected that when CME2 (propagating at a higher velocity, being immersed in a faster wind flow) catches up to the slower CME1, the oppositely directed magnetic fields of their rear and front come into contact at the interaction region, leading the two CMEs to undergo significant magnetic reconnection.
+Although a successful Walén test (impractical due to the unavailability of high-resolution plasma data during the observational period) would confirm the progression of magnetic reconnection processes, a number of numerical and observational findings favor the scenario in which magnetic reconnection is indeed occurring.
+First, the dip in the total magnetic field B profile at the interface between the two CME structures (on late June 7 2020), both predicted by EUHFORIA and observed by Solar Orbiter/MAG (third panel of Fig.
+), might be induced by magnetic reconnection occurring between regions of opposite polarity at the CME1-CME2 interaction region (see the review by , and references therein).
+Second, the anomalous large magnetic fluctuations associated with ICME1 can be interpreted as driven by the energy released during reconnection between the two magnetic ejecta, according to in situ measurements of two interacting transients sometimes displaying a period of more turbulent magnetic field ( ).
+Third, the EUHFORIA-predicted increase in plasma β within the interaction region (bottom panel of Fig.
+) might also be indicative of reconnection between the magnetic ejecta ( ; ).
+Finally, reconnection might be furthermore manifest by the sunward energetic particle flux enhancement at the CME-CME interaction region (third panel of Fig.
+).
+Recent work suggests indeed that energetic ion events might be explained by local acceleration driven by reconnection processes associated with the interaction/merging of magnetic flux ropes ( , ; , , ; ).
+Interaction of two CMEs may result in the merging of the ejecta into one single, longer structure characterized by a very complex magnetic topology and multiple field rotations ( , ; ).
+Observational evidence for these transient events at 1 au was first reported in .
+Such total coalescence of two CMEs, also referred to as CME-CME “cannibalism”, presents a challenge not only with respect to its identification in in-situ measurements of the resulting merged CME, but also for models that have been developed so far to characterize and describe the magnetic configurations of ICMEs.
+If indeed Solar Orbiter encountered one of these rare solar events (perhaps at an early stage given the close distance to the Sun), it might not be surprising that 3DCORE failed to fit ICME1.
+Perhaps, the CME1 is experiencing a significant reconstructing of its magnetic topology, and thus reorganizing into a more complex configuration, which 3DCORE is not suited to fit.
+Although limitations imposed by data availability and modeling, as well as not having this event observed by other spacecraft (either remotely or locally), leave the interpretation somewhat open, this work paints a convincing picture of this event being the coalescence of two CMEs interacting via magnetic reconnection.
+As an alternative interpretation of the in situ MAG observations, the possibility of Solar Orbiter crossing twice the same ICME should be acknowledged.
+This scenario, first proposed by , arises from assuming the same (left-) handedness for both ICME1 and ICME2, and, in turn, considering these as two different parts of a single ICME engulfing the HCS.
+It is however worth noting that the Crooker’s sketch would require a gradual sector change, whilst both MAG and EPD data rather provide evidence for a quite sharp HCS crossing (Sects.
+– ).
+Notwithstanding, the double crossing of the same ICME appears a plausible and certainly interesting interpretation.
+Even if there is any conclusive evidence that could decide either way between the two scenarios, the observational and modeling findings presented in this paper (both at coronal and heliospheric heights) seem to more significantly support a picture of two ICMEs locally merging via magnetic reconnection processes.
+5.
+- Concluding remarks The first perihelion passage of Solar Orbiter gave the scientific community an unexpected and incredibly complex event of two successive CMEs propagating on the opposite sides of the HCS along which they expand.
+A thorough observational and numerical investigation of this solar event has been carried out in the present paper.
+Both data analysis and modeling provide compelling evidence that the two CMEs are interacting with each other (and possibly also with the HCS), via magnetic reconnection, during their propagation.
+Although it is challenging to check at which distance from the Sun the two CMEs might have begun to magnetically interact (due to the limited coronal observations, which makes it difficult to constrain the CME directions and speeds), both EPD data and EUHFORIA simulations seem to indicate that the two CMEs dynamically collide exactly at the location of Solar Orbiter (central panels of Fig.
+).
+The collision and the consequent magnetic reconnection-related processes should cause the two CMEs to start coalescing in a merged structure that contains material ejected from the Sun during both eruptions and continues to propagate away from the Sun as a single event.
+It is obvious, however, that such a scenario, although supported by various observational and numerical findings, would require multi-spacecraft observations of the same event at different distances from the Sun, and, in turn, at different evolution stages, to be convincingly accepted.
+Observing the same interacting CMEs with pairs of radially aligned spacecraft could indeed give valuable physical insights into the MHD evolution of such peculiar interplanetary structures, allowing astronomers and physicists to gain a better understanding of their interaction and address fundamental questions such as: (i) how and to what extent the CMEs interact on their way toward the outer edges of the heliosphere; (ii) at which distance from the Sun the CME-CME interaction stops and the merging can be considered fully completed; (iii) at the final stage of coalescence what the kinematical and morphological properties of the merged structure are (e.g., expansion, distortion, deformation, orientation, and propagation direction); (iv) how MHD quantities, such as magnetic and cross-helicity and residual energy, evolve during the CME-CME interaction; (v) whether or not the energy released by magnetic reconnection processes that occur at the interface between the two ejecta is able to accelerate particles and at what energies.
+However, the odds of two spacecraft being aligned at the right time are incredibly low.
+Luckily, in June 2020, the Mars Atmosphere and Volatile Evolution Mission (MAVEN, orbiting around 1.4 au), which has a fluxgate magnetometer on board, just happened to be radially aligned with Solar Orbiter, when the two interacting CMEs were launched in their direction.
+Conducting a new analysis of Solar Orbiter’s and MAVEN’s combined data sets for the interplanetary magnetic field during the CMEs’ passage between the two spacecraft (separate by almost 1 au) will be the focus of a follow-up work, as soon as MAVEN data are released (scheduled in mid-February).
+Movies.

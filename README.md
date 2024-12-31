@@ -21,6 +21,18 @@ full context of the observations. It produces standardized catalogues of events 
 instruments, regions, metrics) which can then be exploited in space physics visualization tools such as
 AMDA (http://amda.cdpp.eu/).
 
+## Quick run
+
+website only:
+
+    FLASK_DEBUG=true FLASK_APP=web flask run --host=0.0.0.0
+
+
+with pipeline capabilities:
+
+    docker run --rm --name redis_for_bht -d -p 6379:6379 redis
+    python manage.py run_worker
+
 ## From scratch
 
 ### Install sutime dependencies and update language file
@@ -272,6 +284,19 @@ Or may be try it on a whole directory
 
 Optionally if you want to have AMDA catalogues by satellites, you need to run "SATS_catalogue_generator.py".
 
+### Tips, Tricks and logs
+
+Some raw files where created randomly.
+A new manager tool is available for that:
+
+    python manage.py clean_raws --no-dry-run 3
+
+`3` being the id of the paper we want to clean.
+
+    for i in {1..15} ;do python manage.py clean_raws --no-dry-run $i; done
+
+to erase all papers' unwanted raw files from id 1 to 15.
+
 ## Versioning and git workflows
 
 `VERSION.txt` holds the current project version in a semver model. (Also see `CHANGELOG.md`)
@@ -303,6 +328,9 @@ Any VERSION change is git tagged with `v` prepended. In the later example, that 
 You would be advised to look at `./Dockerfile` for more tips.
 
 STEP 1: install all dependency
+
+1. install system dependencies
+    sudo apt install mvn
 
 1. install pip dependencies
 

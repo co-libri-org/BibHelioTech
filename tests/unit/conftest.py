@@ -188,7 +188,7 @@ def json_step_4():
 
 
 @pytest.fixture(scope="module")
-def sutime_json():
+def sutime2_json():
     data_dir = "ark_67375_WNG-HPV609C7-D"
     ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)
     sutime_json_path = os.path.join(ocr_dir_orig, "res_sutime_2.json")
@@ -271,6 +271,24 @@ def article_pvo():
     with open(pvo_article_path, "r") as file:
         _article_as_str = file.read()
     yield _article_as_str
+
+
+@pytest.fixture(scope="module")
+def ocr_dir_sutime_fails(tmp_path_factory):
+    data_dir = "ocr_dir_sutime_fails"
+    ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)
+    ocr_dir_dest = tmp_path_factory.mktemp("test_dir") / data_dir
+    ocr_dir_test_done = shutil.copytree(ocr_dir_orig, ocr_dir_dest)
+    yield ocr_dir_test_done
+
+
+@pytest.fixture(scope="module")
+def ocr_dir_sutime(tmp_path_factory):
+    data_dir = "ocr_dir_sutime"
+    ocr_dir_orig = os.path.join(current_app.config["BHT_RESOURCES_DIR"], data_dir)
+    ocr_dir_dest = tmp_path_factory.mktemp("test_dir") / data_dir
+    ocr_dir_test_done = shutil.copytree(ocr_dir_orig, ocr_dir_dest)
+    yield ocr_dir_test_done
 
 
 @pytest.fixture(scope="module")
