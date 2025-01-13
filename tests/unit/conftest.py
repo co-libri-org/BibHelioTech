@@ -138,6 +138,16 @@ def hpevents_in_db(hpevents_list, db):
 
 
 @pytest.fixture(scope="module")
+def json_entities_18_8_0():
+    entities18_8_0_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], "raw18_entities_8_0.json"
+    )
+    with open(entities18_8_0_path, "r") as json_file:
+        _entities_step_18_8_0 = json.load(json_file)
+    yield _entities_step_18_8_0
+
+
+@pytest.fixture(scope="module")
 def json_entities_18():
     entities18_path = os.path.join(
         current_app.config["BHT_RESOURCES_DIR"], "raw18_entities.json"
