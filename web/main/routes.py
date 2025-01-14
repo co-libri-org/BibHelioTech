@@ -830,8 +830,9 @@ def catalogs():
     selected_missions_names = []
     for m_id in params["selected_missions"]:
         _m = Mission.query.get(m_id)
-        selected_missions_names.append(_m.name)
-        found_events.extend(_m.hp_events)
+        if _m is not None:
+            selected_missions_names.append(_m.name)
+            found_events.extend(_m.hp_events)
 
     # translate to dict list, then pandas dataframe, and filter
     # then translate back to dict (pd.to_records)
