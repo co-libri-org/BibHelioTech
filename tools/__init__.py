@@ -16,8 +16,18 @@ class JsonAnalyser:
         self.step = step
         self.mode = mode
 
+    def get_maxlength(self, struct_key):
+        """
+        For print formating usage, get the max length among list of values by key
+        """
+        right_padding = 1
+
+        val_lengths = [len(item[struct_key]) for item in self._structs]
+        max_val_lgth = str(max(val_lengths) + right_padding)
+        return max_val_lgth
+
     def dump_sats_instruments(self):
-        """ "
+        """
         Show satellites with their instruments
         """
         # make a list of satellites and get the max length
@@ -252,9 +262,9 @@ class JsonAnalyser:
         line_format = [
             {"name": "start_time", "format": "25"},
             {"name": "stop_time", "format": "25"},
-            {"name": "sat", "format": "20"},
-            {"name": "inst", "format": "10"},
-            {"name": "reg", "format": "20"},
+            {"name": "sat", "format": self.get_maxlength("sat")},
+            {"name": "inst", "format": self.get_maxlength("inst")},
+            {"name": "reg", "format": self.get_maxlength("reg")},
             {"name": "conf", "format": "<6"},
         ]
 
@@ -267,7 +277,7 @@ class JsonAnalyser:
                 _s["sat"],
                 _s["inst"],
                 _s["reg"],
-                f'{_s["conf"]:.4f}',
+                f'{_s["conf"]:.0f}',
             ]
             _str += self.line_dumper(line_format, _values=line_values)
         return _str
@@ -517,7 +527,7 @@ def convert_long_chars(content=None):
     for i in range(len(_content)):
         c = _content[i]
         if len(c.encode("utf-8")) >= 4:
-            _content = _content[:i] + "AA" + _content[i + 1:]
+            _content = _content[:i] + "AA" + _content[i + 1 :]
     return _content
 
 

@@ -15,9 +15,17 @@ from bht.Entities_finder import (
     add_sat_occurrence,
     closest_duration,
     get_sat_syn,
-    duration_to_mission,
+    duration_to_mission, remove_duplicated,
 )
 from bht.databank_reader import DataBank, DataBankSheet
+
+
+class TestEntitiesFinderSteps:
+    def test_remove_duplicated(self, json_entities_18_8_0):
+
+        _json_entities_19 = remove_duplicated(json_entities_18_8_0)
+        assert len(json_entities_18_8_0) == 44
+        assert len(_json_entities_19) == 35
 
 
 class TestEntitiesFinder:
@@ -171,9 +179,7 @@ class TestEntitiesFinder:
         final_with_syns = update_final_synonyms(final_links, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime2_json)
         _ld = [_d for _d in tmp if _d["type"] == "DURATION"]
-        tmp, sat_closest = duration_to_mission(
-            tmp, sat_occ, data_frames
-        )
+        tmp, sat_closest = duration_to_mission(tmp, sat_occ, data_frames)
         for _dict in sat_closest:
             assert _dict[0]["type"] == "sat"
             assert _dict[2]["type"] == "DURATION"
@@ -186,9 +192,7 @@ class TestEntitiesFinder:
         final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
         final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
-        tmp, sat_closest = duration_to_mission(
-            tmp, sat_occ, data_frames
-        )
+        tmp, sat_closest = duration_to_mission(tmp, sat_occ, data_frames)
         for _l in sat_closest:
             assert len(_l) == 3
         assert len(sat_closest) == 11
@@ -197,9 +201,7 @@ class TestEntitiesFinder:
         final_links_3dp = update_final_instruments(final_links_3dp, data_frames)
         final_with_syns = update_final_synonyms(final_links_3dp, data_frames)
         tmp, sat_occ = add_sat_occurrence(final_with_syns, sutime_3dp)
-        tmp, sat_closest = duration_to_mission(
-            tmp, sat_occ, data_frames
-        )
+        tmp, sat_closest = duration_to_mission(tmp, sat_occ, data_frames)
         for _l in sat_closest:
             assert "D" in _l[0].keys()
             assert "R" in _l[0].keys()

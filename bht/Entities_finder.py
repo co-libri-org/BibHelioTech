@@ -3,6 +3,7 @@ import collections
 import copy
 from datetime import *
 from pprint import pprint
+from typing import Dict, List, Tuple
 
 from bht_config import yml_settings
 from bht.DOI_finder import *
@@ -774,7 +775,7 @@ def remove_duplicated(_final_links):
     """Filter lines to have uniq tuple start, stop, mission, instrument, region, conf"""
     _fl = copy.deepcopy(_final_links)
     _fl_df = dicts_to_df(_fl)
-    cols_for_dropping = ["conf", "inst", "reg", "sat", "start_time", "stop_time"]
+    cols_for_dropping = ["inst", "sat", "start_time", "stop_time"]
     _fl_uniq = _fl_df.drop_duplicates(subset=cols_for_dropping)
     return df_to_dicts(_fl_uniq)
 
@@ -787,6 +788,86 @@ def clean_by_timespan(_final_links, dataframes):
     _r_df = _fl_df[_fl_df.apply(in_time_span, axis=1)]
     _r_fl = df_to_dicts(_r_df)
     return _r_fl
+
+def filter_duplicates(data):
+
+    def group_duplicates(data: List[dict]) -> Dict[Tuple, List[dict]]:
+        """
+        Groups entries based on (start_time, stop_time, sat, inst)
+
+        Args:
+            data: List of dictionaries containing the observations
+
+        Returns:
+            Dictionary with identifier tuple as key and list of matching entries as value
+            All entries are returned, including non-duplicates
+        """
+        # Using defaultdict to automatically create an empty list if key doesn't exist
+        groups = defaultdict(list)
+
+        # Process each entry
+        for entry in data:
+            # Skip pipeline metadata entry
+            if not isinstance(entry, dict) or "start_time" not in entry:
+                continue
+
+            # Create identifier tuple
+            identifier = (
+                entry["start_time"],
+                entry["stop_time"],
+                entry["sat"],
+                entry["inst"],
+            )
+
+            # Add complete entry to corresponding group
+            groups[identifier].append(entry)
+
+        # Return all groups, not just duplicates
+        return dict(groups)
+
+    def remove_duplicates(groups: Dict[Tuple, List[dict]]) -> Dict[Tuple, List[dict]]:
+        """
+        Filters groups by keeping only the entry with minimum 'conf' value in each group
+
+        Args:
+            groups: Dictionary with identifier tuple as key and list of entries as value
+
+        Returns:
+            Dictionary with same structure but only one entry per group (minimum conf)
+        """
+        filtered_groups = {}
+
+        for identifier, entries in groups.items():
+            # Find entry with minimum conf value
+            min_conf_entry = min(entries, key=lambda x: x["conf"])
+            # Store only this entry
+            filtered_groups[identifier] = [min_conf_entry]
+
+        return filtered_groups
+
+    def groups_to_list(groups: Dict[Tuple, List[dict]]) -> List[dict]:
+        """
+        Converts the groups dictionary back to a flat list of entries
+
+        Args:
+            groups: Dictionary with identifier tuple as key and list of entries as value
+
+        Returns:
+            List of dictionary entries, in the same format as the original input
+        """
+        # Flatten the list of lists using list comprehension
+        entries = [entry for group in groups.values() for entry in group]
+        return entries
+
+    duplicates = group_duplicates(data)
+
+    uniq = remove_duplicates(duplicates)
+
+    entries = groups_to_list(uniq)
+
+    return entries
+
+
 
 
 def entities_finder(current_OCR_folder, doc_meta_info=None):

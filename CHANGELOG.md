@@ -25,6 +25,10 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [1.0.0] - 2025-01-14 - Latest Pipeline changes
+#### Fixed
+- remove duplicated
+
 ## [0.20.1] - 2024-12-31 - Pipeline changes
 #### Fixed
 #### Changed
