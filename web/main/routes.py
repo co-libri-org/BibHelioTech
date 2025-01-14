@@ -767,7 +767,7 @@ def admin():
     import glob
 
     search_pattern = os.path.join(
-        f"{current_app.config["BHT_DATA_DIR"]}/**/", "raw4_sutime.json"
+        f'{current_app.config["BHT_DATA_DIR"]}/**/', "raw4_sutime.json"
     )
     json_files = glob.glob(search_pattern, recursive=True)
 
