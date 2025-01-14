@@ -225,6 +225,7 @@ def pdf_to_db(file_stream, filename, istex_struct=None):
         paper.set_istex_id(istex_struct["istex_id"])
     return paper.id
 
+#  - - - - - - - - - - - - - - - - - - A P P  C O N F I G U R A T I O N S - - - - - - - - - - - - - - - - - - - - #
 
 @bp.app_template_filter("short_timedelta")
 def short_timedelta(in_timedelta):
@@ -265,6 +266,14 @@ def basename_filter(filename):
         return None
     return os.path.basename(filename)
 
+
+# Add colors as default variable for all template
+@bp.before_request
+def add_css_colors_to_templates():
+    # Mettre CSS_COLORS dans le contexte global des templates
+    current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
+
+#  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
 
 @bp.route("/")
 def index():

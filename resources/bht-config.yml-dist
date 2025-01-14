@@ -10,3 +10,9 @@ BHT_LOGLEVEL_LOGFILE: INFO
 WEB_UPLOAD_DIR: "DATA/web-upload"
 REDIS_URL: "redis://redis:6379/0"
 QUEUES: ["default"]
+
+CSS_COLORS: {
+  #    'app_theme_color': '#FFD700', # prod
+  #    'app_theme_color': '#2ECC71',  # dev
+  'app_theme_color': '#FF4422', # bulk
+}
