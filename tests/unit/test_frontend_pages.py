@@ -9,8 +9,8 @@ from filetype import filetype
 from flask import current_app
 
 from tests.conftest import skip_slow_test
-from web.main.routes import get_file_from_url, file_to_db
-from web.models import Paper
+from web.main.routes import get_file_from_url
+from web.models import Paper, file_to_db
 
 
 class TestFrontUtils:

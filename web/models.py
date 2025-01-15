@@ -1,12 +1,17 @@
 import datetime
+import os
 import os.path
 from enum import StrEnum, auto
 
+import filetype
+from flask import current_app
+
 from requests import session
+from werkzeug.utils import secure_filename
 
 from bht.catalog_tools import catfile_to_rows
 from web import db
-from web.errors import IstexError
+from web.errors import IstexError, FilePathError
 from web.istex_proxy import ark_to_id, get_doc_url
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
@@ -26,6 +31,51 @@ def istexid_to_paper(istex_id):
     paper = db.session.query(Paper).filter_by(istex_id=istex_id).one_or_none()
     return paper
 
+
+def file_to_db(file_stream, filename, istex_struct=None):
+    """
+    Push Paper to db from a pdf stream
+
+    Update Paper's pdf content if exists
+
+    :parameter: file_stream the file content
+    :parameter: filename
+    :return: the paper's id, or None if couldn't do it
+    """
+    filename = secure_filename(filename)
+    upload_dir = current_app.config["WEB_UPLOAD_DIR"]
+    if not os.path.isdir(upload_dir):
+        os.makedirs(upload_dir)
+    _file_path = os.path.join(upload_dir, filename)
+    with open(_file_path, "wb") as _fd:
+        _fd.write(file_stream)
+    if not os.path.isfile(_file_path):
+        raise FilePathError( f"There was an error on {filename} copy")
+    _guessed_filetype = filetype.guess(_file_path)
+    _split_filename = os.path.splitext(filename)
+    _file_type = None
+    if _guessed_filetype and _guessed_filetype.mime == "application/pdf":
+        _file_type = BhtFileType.PDF
+    elif _split_filename[1] in [".cleaned", ".txt"]:
+        _file_type = BhtFileType.TXT
+    else:
+        return None
+    if istex_struct is not None:
+        _paper_title = istex_struct["title"]
+    else:
+        _paper_title = _split_filename[0]
+    paper = Paper.query.filter_by(title=_paper_title).one_or_none()
+    if paper is None:
+        paper = Paper(title=_paper_title)
+
+    # set_file_path() will add and commit paper
+    paper.set_file_path(_file_path, _file_type)
+    if istex_struct is not None:
+        paper.set_doi(istex_struct["doi"])
+        paper.set_ark(istex_struct["ark"])
+        paper.set_pubdate(istex_struct["pub_date"])
+        paper.set_istex_id(istex_struct["istex_id"])
+    return paper.id
 
 # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
 def catfile_to_db(catfile):
@@ -376,3 +426,4 @@ class Paper(db.Model):
         except TypeError:
             has_txt = False
         return has_txt
+

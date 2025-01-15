@@ -6,8 +6,7 @@ from flask import current_app
 
 from selenium import webdriver
 
-from web.main.routes import file_to_db
-
+from web.models import file_to_db
 
 
 @pytest.fixture(scope="module")

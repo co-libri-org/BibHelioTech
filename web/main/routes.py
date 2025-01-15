@@ -3,17 +3,13 @@ import json
 import os
 
 import dateutil.parser as parser
-import numpy as np
 import pandas as pd
 import redis
-import filetype
 import requests
 
 from rq import Queue
 from rq.exceptions import NoSuchJobError
 from rq.job import Job
-
-from werkzeug.utils import secure_filename
 
 from flask import (
     render_template,
@@ -32,7 +28,7 @@ from bht.errors import BhtCsvError
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType, Doi, istexid_to_paper
+from web.models import Paper, Mission, HpEvent, BhtFileType, istexid_to_paper, file_to_db
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -176,54 +172,6 @@ def get_paper_file(paper_id, file_type):
 
     return file_path
 
-
-# TODO: REWRITE rename to file_to_db
-# TODO: REFACTOR insert into models.Paper ?
-# TODO: REWRITE raise exception or send message to calling route to be flashed
-def file_to_db(file_stream, filename, istex_struct=None):
-    """
-    Push Paper to db from a pdf stream
-
-    Update Paper's pdf content if exists
-
-    :parameter: file_stream the file content
-    :parameter: filename
-    :return: the paper's id, or None if couldn't do it
-    """
-    filename = secure_filename(filename)
-    upload_dir = current_app.config["WEB_UPLOAD_DIR"]
-    if not os.path.isdir(upload_dir):
-        os.makedirs(upload_dir)
-    _file_path = os.path.join(upload_dir, filename)
-    with open(_file_path, "wb") as _fd:
-        _fd.write(file_stream)
-    if not os.path.isfile(_file_path):
-        raise FilePathError( f"There was an error on {filename} copy")
-    _guessed_filetype = filetype.guess(_file_path)
-    _split_filename = os.path.splitext(filename)
-    _file_type = None
-    if _guessed_filetype and _guessed_filetype.mime == "application/pdf":
-        _file_type = BhtFileType.PDF
-    elif _split_filename[1] in [".cleaned", ".txt"]:
-        _file_type = BhtFileType.TXT
-    else:
-        return None
-    if istex_struct is not None:
-        _paper_title = istex_struct["title"]
-    else:
-        _paper_title = _split_filename[0]
-    paper = Paper.query.filter_by(title=_paper_title).one_or_none()
-    if paper is None:
-        paper = Paper(title=_paper_title)
-
-    # set_file_path() will add and commit paper
-    paper.set_file_path(_file_path, _file_type)
-    if istex_struct is not None:
-        paper.set_doi(istex_struct["doi"])
-        paper.set_ark(istex_struct["ark"])
-        paper.set_pubdate(istex_struct["pub_date"])
-        paper.set_istex_id(istex_struct["istex_id"])
-    return paper.id
 
 #  - - - - - - - - - - - - - - - - - - A P P  C O N F I G U R A T I O N S - - - - - - - - - - - - - - - - - - - - #
 

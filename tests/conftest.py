@@ -7,8 +7,7 @@ from flask import current_app
 
 from web import create_app
 from web import db as _db
-from web.main.routes import file_to_db
-from web.models import Paper, HpEvent, BhtFileType
+from web.models import Paper, HpEvent, BhtFileType, file_to_db
 
 skip_selenium = pytest.mark.skipif(
     os.environ.get("BHT_SKIP_SELENIUM") is not None
