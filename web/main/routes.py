@@ -198,6 +198,7 @@ def pdf_to_db(file_stream, filename, istex_struct=None):
     with open(_file_path, "wb") as _fd:
         _fd.write(file_stream)
     if not os.path.isfile(_file_path):
+        flash(f"There was an error on {filename} copy", "error")
         return redirect(url_for("main.papers"))
     _guessed_filetype = filetype.guess(_file_path)
     _split_filename = os.path.splitext(filename)
