@@ -180,7 +180,7 @@ def get_paper_file(paper_id, file_type):
 # TODO: REWRITE rename to file_to_db
 # TODO: REFACTOR insert into models.Paper ?
 # TODO: REWRITE raise exception or send message to calling route to be flashed
-def pdf_to_db(file_stream, filename, istex_struct=None):
+def file_to_db(file_stream, filename, istex_struct=None):
     """
     Push Paper to db from a pdf stream
 
@@ -476,7 +476,7 @@ def upload_from_url():
     file_url = request.form.get("file_url")
     if file_url:
         filestream, filename = get_file_from_url(file_url)
-        paper_id = pdf_to_db(filestream, filename)
+        paper_id = file_to_db(filestream, filename)
         flash(f"Uploaded {filename} to paper {paper_id}")
         return redirect(url_for("main.papers"))
     else:
@@ -500,7 +500,7 @@ def istex_upload_id():
         )
     else:
         fs, filename, istex_struct = get_file_from_id(istex_id, doc_type)
-        paper_id = pdf_to_db(fs, filename, istex_struct)
+        paper_id = file_to_db(fs, filename, istex_struct)
         return (
             jsonify(
                 {
@@ -527,7 +527,7 @@ def upload():
     if file.filename == "":
         flash("No selected file")
     elif file and allowed_file(file.filename):
-        pdf_to_db(file.read(), file.filename)
+        file_to_db(file.read(), file.filename)
         flash(f"Uploaded {file.filename}")
     else:
         flash(f"{file.filename} Not allowed")

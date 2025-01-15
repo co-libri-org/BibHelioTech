@@ -6,7 +6,7 @@ from flask import current_app
 
 from selenium import webdriver
 
-from web.main.routes import pdf_to_db
+from web.main.routes import file_to_db
 
 
 
@@ -38,6 +38,6 @@ def paperslist_for_tests():
     )
     for pdf_file in pdf_list:
         with open(pdf_file, "rb", buffering=0) as fp:
-            _id = pdf_to_db(fp.read(), os.path.basename(pdf_file))
+            _id = file_to_db(fp.read(), os.path.basename(pdf_file))
             papers_ids.append(_id)
     yield papers_ids
