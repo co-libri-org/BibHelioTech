@@ -18,6 +18,19 @@ class IstexDoctype(StrEnum):
     TEI = auto()
     CLEANED = auto()
 
+def istex_doc_to_struct(document_json):
+    istex_id = document_json.get("id", None)
+    if istex_id is None:
+        istex_id = document_json.get("_id", None)
+
+    _res_dict = {
+        "istex_id": istex_id,
+        "doi": document_json["doi"][0],
+        "ark": document_json["ark"][0],
+        "title": document_json["title"],
+        "pub_date": document_json["publicationDate"],
+    }
+    return _res_dict
 
 def json_to_hits(istex_json):
     """
@@ -112,14 +125,8 @@ def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
         if _elmnt["extension"] == doc_type.value:
             _url = _elmnt["uri"]
             break
-    _res_dict = {
-        "url": _url,
-        "istex_id": document_json["id"],
-        "doi": document_json["doi"][0],
-        "ark": document_json["ark"][0],
-        "title": document_json["title"],
-        "pub_date": document_json["publicationDate"],
-    }
+    _res_dict = istex_doc_to_struct(document_json)
+    _res_dict['url'] = _url
     return _res_dict
 
 
