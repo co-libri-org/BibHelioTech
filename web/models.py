@@ -1,12 +1,12 @@
 import datetime
 import os
 import os.path
+import sys
 from enum import StrEnum, auto
 
 import filetype
 from flask import current_app
 
-from requests import session
 from werkzeug.utils import secure_filename
 
 from bht.catalog_tools import catfile_to_rows
@@ -31,19 +31,30 @@ def istexid_to_paper(istex_id):
     paper = db.session.query(Paper).filter_by(istex_id=istex_id).one_or_none()
     return paper
 
+def istexdir_to_db(_istex_dir, file_ext="cleaned"):
+    istex_id = os.path.basename(_istex_dir)
+    istex_file = os.path.join(_istex_dir, f"{istex_id}.{file_ext}")
+    json_file = os.path.join(_istex_dir, f"{istex_id}.json")
+    if not os.path.isdir(_istex_dir)\
+        or not os.path.isfile(istex_file)\
+        or not os.path.isfile(json_file):
+        raise FilePathError(f"Istex dir has wrong structure")
+    # read  json in dir
+    # read content
 
-def file_to_db(file_stream, filename, istex_struct=None):
+def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
     """
     Push Paper to db from a pdf stream
 
     Update Paper's pdf content if exists
 
-    :parameter: file_stream the file content
-    :parameter: filename
+    :param upload_dir:
+    :param istex_struct:
+    :param file_stream the file content
+    :param filename
     :return: the paper's id, or None if couldn't do it
     """
     filename = secure_filename(filename)
-    upload_dir = current_app.config["WEB_UPLOAD_DIR"]
     if not os.path.isdir(upload_dir):
         os.makedirs(upload_dir)
     _file_path = os.path.join(upload_dir, filename)
@@ -427,3 +438,7 @@ class Paper(db.Model):
             has_txt = False
         return has_txt
 
+
+if __name__ == "__main__":
+    istex_dir = sys.argv[1]
+    istexdir_to_db(istex_dir)

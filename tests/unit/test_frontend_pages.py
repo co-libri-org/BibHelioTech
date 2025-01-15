@@ -30,7 +30,7 @@ class TestFrontUtils:
     # TODO: TEST  getfilefromurl with no file
     # TODO: TEST  getfilefromurl with wrong file  format
 
-    def test_save_to_db(self, pdf_for_test):
+    def test_save_to_db(self, pdf_for_test, tmp_path_factory):
         """
         GIVEN a file object and a name (from disk file)
         WHEN the save_to_db() is called (in an app_context, see autouse fixture)
@@ -38,14 +38,16 @@ class TestFrontUtils:
         """
         import os
 
+        upload_dir = tmp_path_factory.mktemp("upload_dir")
+
         with open(pdf_for_test, "rb") as _fd:
-            p_id = file_to_db(_fd.read(), os.path.basename(pdf_for_test))
+            p_id = file_to_db(_fd.read(), os.path.basename(pdf_for_test), upload_dir)
         guessed_title = os.path.basename(pdf_for_test).replace(".pdf", "")
         paper = Paper.query.filter_by(title=guessed_title).one_or_none()
         assert paper is not None
         assert paper.id == p_id
         assert paper.pdf_path == os.path.join(
-            current_app.config["WEB_UPLOAD_DIR"], os.path.basename(pdf_for_test)
+            upload_dir, os.path.basename(pdf_for_test)
         )
 
 

@@ -92,10 +92,10 @@ def paper_with_cat(paper_for_test, cat_for_test):
 
 
 @pytest.fixture(scope="function")
-def paper_for_test(pdf_for_test):
+def paper_for_test(pdf_for_test, tmp_path_factory):
     """Add a paper's pdf to db"""
     with open(pdf_for_test, "rb", buffering=0) as fp:
-        paper_id = file_to_db(fp.readall(), os.path.basename(pdf_for_test))
+        paper_id = file_to_db(fp.readall(), os.path.basename(pdf_for_test), tmp_path_factory.mktemp("upload_dir"))
     paper = _db.session.get(Paper, paper_id)
     _db.session.add(paper)
     _db.session.commit()
