@@ -42,7 +42,7 @@ from web.istex_proxy import (
     IstexDoctype,
     ark_to_istex_url,
 )
-from ..errors import IstexError, WebError
+from ..errors import IstexError, WebError, FilePathError
 
 
 class StatusResponse:
@@ -198,8 +198,7 @@ def file_to_db(file_stream, filename, istex_struct=None):
     with open(_file_path, "wb") as _fd:
         _fd.write(file_stream)
     if not os.path.isfile(_file_path):
-        flash(f"There was an error on {filename} copy", "error")
-        return redirect(url_for("main.papers"))
+        raise FilePathError( f"There was an error on {filename} copy")
     _guessed_filetype = filetype.guess(_file_path)
     _split_filename = os.path.splitext(filename)
     _file_type = None
@@ -474,16 +473,19 @@ def papers(name=None):
 def upload_from_url():
     # TODO: REFACTOR merge with istex_upload_id()
     file_url = request.form.get("file_url")
-    if file_url:
-        filestream, filename = get_file_from_url(file_url)
-        paper_id = file_to_db(filestream, filename)
-        flash(f"Uploaded {filename} to paper {paper_id}")
-        return redirect(url_for("main.papers"))
-    else:
+    if file_url is None:
         return Response(
             "No valid parameters for url",
             status=400,
         )
+    filestream, filename = get_file_from_url(file_url)
+    try:
+        paper_id = file_to_db(filestream, filename)
+    except FilePathError:
+        flash(f"Error adding {filename} to db", "error")
+    else:
+        flash(f"Uploaded {filename} to paper {paper_id}")
+    return redirect(url_for("main.papers"))
 
 
 @bp.route("/istex_upload_id", methods=["POST"])
@@ -498,20 +500,25 @@ def istex_upload_id():
             "No valid parameters for url",
             status=400,
         )
-    else:
-        fs, filename, istex_struct = get_file_from_id(istex_id, doc_type)
+    fs, filename, istex_struct = get_file_from_id(istex_id, doc_type)
+    try:
         paper_id = file_to_db(fs, filename, istex_struct)
-        return (
-            jsonify(
-                {
-                    "success": "true",
-                    "istex_id": istex_id,
-                    "paper_id": paper_id,
-                    "filename": filename,
-                }
-            ),
-            201,
+    except FilePathError:
+        return Response(
+            f"There was an error on {filename} copy",
+            status=400,
         )
+    return (
+        jsonify(
+            {
+                "success": "true",
+                "istex_id": istex_id,
+                "paper_id": paper_id,
+                "filename": filename,
+            }
+        ),
+        201,
+    )
 
 
 @bp.route("/upload", methods=["POST"])
@@ -527,8 +534,12 @@ def upload():
     if file.filename == "":
         flash("No selected file")
     elif file and allowed_file(file.filename):
-        file_to_db(file.read(), file.filename)
-        flash(f"Uploaded {file.filename}")
+        try:
+            file_to_db(file.read(), file.filename)
+        except FilePathError:
+            flash(f"Error adding {file.filename} to db", "error")
+        else:
+            flash(f"Uploaded {file.filename}")
     else:
         flash(f"{file.filename} Not allowed")
     return redirect(url_for("main.papers"))
