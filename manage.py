@@ -13,7 +13,7 @@ from flask.cli import FlaskGroup
 from bht.databank_reader import DataBank, DataBankSheet
 from web import create_app, db
 from web.bht_proxy import pipe_paper
-from web.models import catfile_to_db, Mission
+from web.models import catfile_to_db, Mission, istexdir_to_db
 from web.models import Paper, HpEvent
 
 cli = FlaskGroup(create_app=create_app)
@@ -176,6 +176,11 @@ def raws_clean(paper_id, dry_run):
             f.unlink()
             print(f"Removed: {f.name}")
 
+@cli.command("paper_add")
+@click.argument("istex_dir", required=True)
+def paper_add(istex_dir):
+    """Remove from database the record by id"""
+    istexdir_to_db(istex_dir, current_app.config["WEB_UPLOAD_DIR"])
 
 @cli.command("paper_del")
 @click.argument("paper_id", required=True)
