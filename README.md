@@ -21,26 +21,62 @@ full context of the observations. It produces standardized catalogues of events 
 instruments, regions, metrics) which can then be exploited in space physics visualization tools such as
 AMDA (http://amda.cdpp.eu/).
 
+## Manual Installation
+
+Runs with python3.12
+
+### Dependencies
+
+Make sure to fulfill any dependency first:
+
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install --upgrade pip
+    pip install wheel
+    pip install -r requirements.txt
+
+### Install sutime dependencies and update language file
+
+    sudo apt install -y openjdk-8-jdk openjdk-8-jre maven zip
+    sudo update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+    mvn dependency:copy-dependencies -DoutputDirectory=./jars -f $(python -c 'import importlib.util; import pathlib; print(pathlib.Path(importlib.util.find_spec("sutime").origin).parent / "pom.xml")')
+    cd ./resources
+    zip -u ../venv/lib/python3.12/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar   edu/stanford/nlp/models/sutime/english.sutime.txt
+
+you should see the following message, which is ok
+
+```shell
+        zip warning: Local Entry CRC does not match CD: edu/stanford/nlp/models/sutime/english.sutime.txt
+ (deflated 78%)
+ 
+updating: edu/stanford/nlp/models/sutime/english.sutime.txt
+```
+
+
+
 ## Quick run
 
-website only:
+configuration:
+
+    cp resources/bht-config.yml-dist bht-config.yml
+    $(EDITOR) bht-config.yml
+
+    sudo apt-get install apache2-utils
+    htpasswd -c .htpasswd the_user_name
+
+    python manage.py create_db
+
+run website only:
 
     FLASK_DEBUG=true FLASK_APP=web flask run --host=0.0.0.0
 
-
-with pipeline capabilities:
+run with pipeline capabilities:
 
     docker run --rm --name redis_for_bht -d -p 6379:6379 redis
     python manage.py run_worker
 
-## From scratch
-
-### Install sutime dependencies and update language file
-
-    mvn dependency:copy-dependencies -DoutputDirectory=./jars -f $(python -c 'import importlib.util; import pathlib; print(pathlib.Path(importlib.util.find_spec("sutime").origin).parent / "pom.xml")')
-    jar uf ./venv/lib/python3.12/site-packages/sutime/jars/stanford-corenlp-4.0.0-models.jar   ./resources/edu/stanford/nlp/models/sutime/english.sutime.txt
-
-## Docker image building
+## Docker Install
 
 Please, use a recent docker compose plugin version: https://docs.docker.com/compose/install/linux/
 
@@ -93,6 +129,7 @@ Mainly runs flask in debug mode (skipping gunicorn), and
 linking host files to container for live update.
 
 #### FLASK_ENV
+
 This environment variable is deprecated. We wont use it.
 The FLASK_DEBUG var can be set through cli option:
 
@@ -113,7 +150,7 @@ BHT_ENV can take 3 possible values:
 
 If you wish to run the application on the production mode, please make sure you have created the file:
 
-    apt-get install apach2-utils
+    apt-get install apache2-utils
     htpasswd -c .htpasswd the_user_name
 
 ### Running files treatment under ./DATA/
@@ -128,7 +165,7 @@ or run inside container itself
 
     docker compose run --rm web bash
 
-on single  file:
+on single file:
 
     PYTHON_PATH=. python bht -f test-upload/angeo-28-233-2010.pdf
 
@@ -136,16 +173,7 @@ or on the whole DATA/ directory:
 
     PYTHON_PATH=. python bht
 
-
 ## Continuous integration and deployment
-
-Make sure to fulfill any dependency first:
-
-    python3 -m venv venv
-    source venv/bin/activate
-    pip install --upgrade pip
-    pip install wheel
-    pip install -r requirements.txt
 
 ### db migration
 
@@ -173,8 +201,6 @@ then, again
     FLASK_APP=web flask db migrate
 
 and follow with `git add/commit`
-
-
 
 Then, after deployment on server side, change database on the fly:
 
@@ -243,7 +269,7 @@ usage tips:
 
 ## BHT User guide
 
-First Follow previous instruction for 
+First Follow previous instruction for
 
 python environment and dependencies
 
@@ -251,10 +277,8 @@ follow 'manual installation' section, STEP 1 and STEP 2
 
 config files ( ./bht-config.yml,  )
 
-
     cp ./resources/grobid-client-config.json-dist ./grobid-client-config.json
     cp resources/bht-config.yml-dist bht-config.yml
-
 
 Then make sure the GROBID server is running:
 
@@ -280,7 +304,6 @@ Or may be try it on a whole directory
     cp -r DATA/Papers-dist papers
     PYTHONPATH=. python bht -d papers
     find papers/ -cmin -10  -name \*txt
-
 
 Optionally if you want to have AMDA catalogues by satellites, you need to run "SATS_catalogue_generator.py".
 
@@ -330,16 +353,17 @@ You would be advised to look at `./Dockerfile` for more tips.
 STEP 1: install all dependency
 
 1. install system dependencies
-    sudo apt install mvn
+   sudo apt install mvn
 
 1. install pip dependencies
 
-
+```
     python3 -m venv venv
     source venv/bin/activate
     pip install --upgrade pip
     pip install wheel
     pip install -r requirements.txt
+```
 
 1. Install SUTime Java dependencies, more details on: https://pypi.org/project/sutime/
 1. Update the `edu/stanford/nlp/models/sutime/english.sutime.txt` under jars/stanford-corenlp-4.0.0-models.jar/
