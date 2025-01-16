@@ -572,10 +572,8 @@ def bht_status(paper_id):
     return response_object.response, 200
 
 
-@bp.route("/bht_run", methods=["POST"])
-def bht_run():
-    paper_id = request.form["paper_id"]
-    file_type = request.form["file_type"]
+@bp.route("/bht_run/<paper_id>/<file_type>", methods=["GET"])
+def bht_run(paper_id, file_type):
     found_file = get_paper_file(paper_id, file_type.upper())
     if found_file is None:
         flash("No file for that paper.")
