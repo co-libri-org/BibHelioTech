@@ -521,6 +521,8 @@ def bht_status(paper_id):
     else:  # Get task info from task manager
         task_id = paper.task_id
         try:
+            if task_id is None:
+                raise NoSuchJobError
             job = Job.fetch(
                 task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
             )
