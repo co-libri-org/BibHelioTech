@@ -6,7 +6,7 @@ import click
 import redis
 from pathlib import Path
 from rq import Worker
-from flask import current_app
+from flask import current_app, url_for
 from flask_migrate import upgrade
 from flask.cli import FlaskGroup
 
@@ -236,6 +236,56 @@ def paper_run(paper_id):
         _p_id = pipe_paper(paper_id)
     except Exception as e:
         print(f"Couldn't run on paper #{paper_id}")
+
+@cli.command("paper_web_run")
+@click.argument("paper_id", required=True)
+@click.option("-h", "--host-name", required=True, help="Hostname")
+@click.option("-p", "--port-number", required=True, help="Port number")
+@click.option("-U", "--user-name", required=True, help="Auth username")
+@click.option("-P", "--password", required=True, help="Auth password")
+def paper_web_run_cmd(paper_id, host_name, port_number, user_name, password):
+    """Run the latest pipeline on that paper's article through web/RQ"""
+    with  current_app.test_request_context(), current_app.app_context():
+        url_path = url_for('main.bht_run', paper_id=paper_id, file_type="txt", _external=False)
+    status_url = f"http://{host_name}:{port_number}{url_path}"
+    # Send GET request to the URL
+    import requests
+    from requests.auth import HTTPBasicAuth
+    response = requests.get(status_url, auth=HTTPBasicAuth(user_name, password))
+
+    # Check if the request was successful
+    if response.status_code == 202:
+        # Parse the JSON response
+        data = response.json()
+        print(data)  # The JSON content will be in 'data'
+    else:
+        print(f"Failed to retrieve data at {status_url}. Status code: {response.status_code}")
+
+
+
+@cli.command("paper_web_status")
+@click.argument("paper_id", required=True)
+@click.option("-h", "--host-name", required=True, help="Hostname")
+@click.option("-p", "--port-number", required=True, help="Port number")
+@click.option("-U", "--user-name", required=True, help="Auth username")
+@click.option("-P", "--password", required=True, help="Auth password")
+def paper_web_status_cmd(paper_id, host_name, port_number, user_name, password):
+    """Get the running status on that paper's article through web/RQ"""
+    with  current_app.test_request_context(), current_app.app_context():
+        url_path = url_for('main.bht_status', paper_id=paper_id, _external=False)
+    status_url = f"http://{host_name}:{port_number}{url_path}"
+    # Send GET request to the URL
+    import requests
+    from requests.auth import HTTPBasicAuth
+    response = requests.get(status_url, auth=HTTPBasicAuth(user_name, password))
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse the JSON response
+        data = response.json()
+        print(data)  # The JSON content will be in 'data'
+    else:
+        print(f"Failed to retrieve data at {status_url}. Status code: {response.status_code}")
 
 
 @cli.command("paper_run")
