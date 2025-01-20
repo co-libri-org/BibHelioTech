@@ -110,6 +110,14 @@ def final_links_so(data_frames, article_so):
 
 
 @pytest.fixture(scope="module")
+def final_links_image(data_frames, article_image):
+    yield mk_final_links(data_frames, article_image)
+
+@pytest.fixture(scope="module")
+def final_links_polar(data_frames, article_polar):
+    yield mk_final_links(data_frames, article_polar)
+
+@pytest.fixture(scope="module")
 def final_links_eui(data_frames, article_eui):
     yield mk_final_links(data_frames, article_eui)
 
@@ -246,6 +254,28 @@ def article_with_quote():
         _article_as_str = file.read()
     yield _article_as_str
 
+
+@pytest.fixture(scope="module")
+def article_image():
+    """Article with IMAGE occurrences"""
+    article_name = "article_image.txt"
+    article_as_txt_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], article_name
+    )
+    with open(article_as_txt_path, "r") as file:
+        _article_as_str = file.read()
+    yield _article_as_str
+
+@pytest.fixture(scope="module")
+def article_polar():
+    """Article with Polar occurrences"""
+    article_name = "article_polar.txt"
+    article_as_txt_path = os.path.join(
+        current_app.config["BHT_RESOURCES_DIR"], article_name
+    )
+    with open(article_as_txt_path, "r") as file:
+        _article_as_str = file.read()
+    yield _article_as_str
 
 @pytest.fixture(scope="module")
 def article_eui():

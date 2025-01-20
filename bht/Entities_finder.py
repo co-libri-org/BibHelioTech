@@ -268,20 +268,20 @@ def get_sat_syn(sat_name: str, _data_frames: dict):
     sat_dict = _data_frames[DataBankSheet.SATS]
     amda_dict = _data_frames[DataBankSheet.SATS_REG]
 
-    # for k, v in sat_dict.items():
-    #     print(k, v)
+
+    result = None
 
     # join both dict keys in one list, and see if the searched name is in
     main_names = list(sat_dict.keys()) + list(amda_dict.keys())
     if sat_name in main_names:
-        return sat_name
+        result = sat_name
 
     # Now look for main synonymous in the sat_dict
     for main_syn, syns_list in sat_dict.items():
         if sat_name in syns_list:
-            return main_syn
+            result = main_syn
 
-    return None
+    return result
 
 
 def sat_recognition(content_as_str, sats_dict):
@@ -538,7 +538,7 @@ def update_final_synonyms(_final_links, _data_frames):
     for _link in _fl:
         sat_name = _link[0]["text"]
         sat_syn = get_sat_syn(sat_name, _data_frames)
-        _name = _link[0]["text"] = sat_syn
+        _link[0]["text"] = sat_syn
 
     return _fl
 
