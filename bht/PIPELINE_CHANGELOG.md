@@ -28,6 +28,7 @@ Only major refactoring improvements or functional changes should be noted.
 ## [8.2] - 2025-01-xx - Fix errors from bulk
 #### Fixed
 - empty entities bug
+- empty timespan bug
 #### Changes
 #### New
 

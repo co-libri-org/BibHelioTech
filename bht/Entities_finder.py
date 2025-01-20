@@ -572,9 +572,13 @@ def in_time_span(mission_name, start_stop, dataframes):
     from dateutil import parser
 
     # may raise KeyError
-    mission_start, mission_stop = [
-        parser.parse(d) for d in dataframes["time_span"][mission_name]
-    ]
+    try:
+        mission_start, mission_stop = [
+            parser.parse(d) for d in dataframes["time_span"][mission_name]
+        ]
+    except KeyError:
+        # no such mission in timespan table
+        return False
 
     event_start, event_stop = parser.parse(start_stop[0]), parser.parse(start_stop[1])
     if (
