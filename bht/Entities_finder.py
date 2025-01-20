@@ -314,6 +314,10 @@ def sat_recognition(content_as_str, sats_dict):
                 }
             ]
 
+
+    if len(sat_dict_list) == 0:
+        return sat_dict_list
+
     # Sort by text indexes
     sat_dict_list.sort(
         key=lambda matched_dict: (matched_dict["start"], matched_dict["end"])

@@ -25,6 +25,12 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [8.2] - 2025-01-xx - Fix errors from bulk
+#### Fixed
+- empty entities bug
+#### Changes
+#### New
+
 ## [8.1] - 2025-01-13 - Pipeline Optimizations
 #### Fixed
 - remove duplicated now really removes 
