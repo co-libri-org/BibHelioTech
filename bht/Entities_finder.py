@@ -79,7 +79,7 @@ def load_dataframes():
         for compteur_colonne in range(1, len(df_Instruments.iloc[compteur_ligne])):
             if str(df_Instruments.iloc[compteur_ligne, compteur_colonne]) != "nan":
                 if re.search(
-                    "^\{", df_Instruments.iloc[compteur_ligne, compteur_colonne]
+                        "^\{", df_Instruments.iloc[compteur_ligne, compteur_colonne]
                 ):
                     INST_dict[str(df_Instruments.iloc[compteur_ligne, 0])].append(
                         eval(df_Instruments.iloc[compteur_ligne, compteur_colonne])
@@ -241,11 +241,11 @@ def operating_span_checker(sat, durations, SAT_dict, SPAN_dict, published_date):
 
         # check: duration included in operating span
         if (
-            datetime(begin_year, begin_month, begin_day)
-            >= datetime(SPAN_start_year, SPAN_start_month, SPAN_start_day)
+                datetime(begin_year, begin_month, begin_day)
+                >= datetime(SPAN_start_year, SPAN_start_month, SPAN_start_day)
         ) and (
-            datetime(end_year, end_month, end_day)
-            <= datetime(SPAN_stop_year, SPAN_stop_month, SPAN_stop_day)
+                datetime(end_year, end_month, end_day)
+                <= datetime(SPAN_stop_year, SPAN_stop_month, SPAN_stop_day)
         ):
             return True
         else:
@@ -267,7 +267,6 @@ def get_sat_syn(sat_name: str, _data_frames: dict):
     """
     sat_dict = _data_frames[DataBankSheet.SATS]
     amda_dict = _data_frames[DataBankSheet.SATS_REG]
-
 
     result = None
 
@@ -313,7 +312,6 @@ def sat_recognition(content_as_str, sats_dict):
                     "type": "sat",
                 }
             ]
-
 
     if len(sat_dict_list) == 0:
         return sat_dict_list
@@ -453,7 +451,7 @@ def clean_sats_inside_insts(sats_list, insts_list):
         for inst_2 in insts_list:
             if sat_1 != {}:
                 if (inst_2["start"] - 1 <= sat_1["start"]) and (
-                    inst_2["end"] + 1 >= sat_1["end"]
+                        inst_2["end"] + 1 >= sat_1["end"]
                 ):  # is include
                     print(f"Removing {sat_1['text']}")
                     sat_1.clear()
@@ -580,8 +578,8 @@ def in_time_span(mission_name, start_stop, dataframes):
 
     event_start, event_stop = parser.parse(start_stop[0]), parser.parse(start_stop[1])
     if (
-        mission_start <= event_start <= mission_stop
-        or mission_start <= event_stop <= mission_stop
+            mission_start <= event_start <= mission_stop
+            or mission_start <= event_stop <= mission_stop
     ):
         return True
     else:
@@ -684,14 +682,14 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
                 if _temp_to_return[sens_aller]["type"] != "sat":
                     compteur_rang_aller += 1
                     if (
-                        operating_span_checker(
-                            dicts,
-                            _temp_to_return[sens_aller],
-                            sat_dict,
-                            span_dict,
-                            published_date,
-                        )
-                        == True
+                            operating_span_checker(
+                                dicts,
+                                _temp_to_return[sens_aller],
+                                sat_dict,
+                                span_dict,
+                                published_date,
+                            )
+                            == True
                     ):
                         dicts["R"] = compteur_rang_aller
                         dist_list.append(_temp_to_return[sens_aller])
@@ -703,14 +701,14 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
                 if _temp_to_return[sens_retour]["type"] != "sat":
                     compteur_rang_retour += 1
                     if (
-                        operating_span_checker(
-                            dicts,
-                            _temp_to_return[sens_retour],
-                            sat_dict,
-                            span_dict,
-                            published_date,
-                        )
-                        == True
+                            operating_span_checker(
+                                dicts,
+                                _temp_to_return[sens_retour],
+                                sat_dict,
+                                span_dict,
+                                published_date,
+                            )
+                            == True
                     ):
                         dicts["R"] = compteur_rang_retour
                         dist_list.append(_temp_to_return[sens_retour])
@@ -720,7 +718,7 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
             # check of the closest between outward and backward.
             if len(dist_list) == 2:
                 if (abs(dicts["start"] - dist_list[0]["start"])) < (
-                    abs(dicts["start"] - dist_list[1]["start"])
+                        abs(dicts["start"] - dist_list[1]["start"])
                 ):
                     min_dist = abs(dicts["start"] - dist_list[0]["start"])
                     compteur = 0
@@ -792,8 +790,6 @@ def clean_by_timespan(_final_links, dataframes):
     _r_df = _fl_df[_fl_df.apply(in_time_span, axis=1)]
     _r_fl = df_to_dicts(_r_df)
     return _r_fl
-
-
 
 
 def entities_finder(current_OCR_folder, doc_meta_info=None):
@@ -993,15 +989,15 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     compteur = 0
     for elements in founded_regions_list:
         if (
-            elements[0]["text"].lower() in planet_list
-            and elements[1]["text"].lower() in planet_list
+                elements[0]["text"].lower() in planet_list
+                and elements[1]["text"].lower() in planet_list
         ):
             if (
-                elements[0]["text"].lower() != elements[1]["text"].lower()
+                    elements[0]["text"].lower() != elements[1]["text"].lower()
             ):  # deletion of planet/planet pairs when these are different.
                 founded_regions_list[compteur].clear()
         elif (elements[0]["text"].lower() not in planet_list) and (
-            elements[1]["text"].lower() not in planet_list
+                elements[1]["text"].lower() not in planet_list
         ):  # removal of low-level/low-level pairs.
             founded_regions_list[compteur].clear()
         compteur += 1
@@ -1019,7 +1015,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     compteur = 0
     for list_of_dicts in founded_regions_list:
         if (list_of_dicts[0]["text"].lower() not in planet_list) and (
-            list_of_dicts[1]["text"].lower() in planet_list
+                list_of_dicts[1]["text"].lower() in planet_list
         ):
             temp_0 = founded_regions_list[compteur][0]
             temp_1 = founded_regions_list[compteur][1]
@@ -1067,7 +1063,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     compteur = 0
     for i in founded_regions_list:
         compteur_2 = compteur
-        for j in founded_regions_list[compteur + 1 :]:
+        for j in founded_regions_list[compteur + 1:]:
             if j == i:
                 founded_regions_list[compteur_2].clear()
             compteur_2 += 1
@@ -1098,7 +1094,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         compteur = 0
         for i in founded_regions_list:
             compteur_2 = compteur
-            for j in founded_regions_list[compteur + 1 :]:
+            for j in founded_regions_list[compteur + 1:]:
                 if j == i:
                     founded_regions_list[compteur_2].clear()
                 compteur_2 += 1
@@ -1148,7 +1144,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
                 REG_dict[
                     temp_reg[compteur_min][0]["text"][0].upper()
                     + temp_reg[compteur_min][0]["text"][1:]
-                ],
+                    ],
                 temp_reg[compteur_min][1]["text"][0].upper()
                 + temp_reg[compteur_min][1]["text"][1:],
             )  # params = planet name, low level name
@@ -1351,7 +1347,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     # write in file
     with open(
-        os.path.join(current_OCR_folder, "reg_recognition_res.txt"), "w"
+            os.path.join(current_OCR_folder, "reg_recognition_res.txt"), "w"
     ) as final_file:
         for elems in final_amda_list:
             final_file.write(str(elems))
@@ -1392,8 +1388,8 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     catalog_path = os.path.join(current_OCR_folder, catalog_name)
     with open(
-        catalog_path,
-        "w",
+            catalog_path,
+            "w",
     ) as f:
         f.write(cat_as_txt)
 
