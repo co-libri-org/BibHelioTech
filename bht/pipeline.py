@@ -97,45 +97,47 @@ def run_step_entities(dest_pdf_dir, doc_meta_info=None):
     catalog_file = entities_finder(dest_pdf_dir, doc_meta_info)
     return catalog_file
 
-
-def bht_run_file(orig_file, pipeline_result_dir, file_type, doc_meta_info=None):
+def bht_run_file(orig_file, result_base_dir, file_type, doc_meta_info=None):
     """
-    Given a  file of type <file_type>, go through the whole pipeline process and make a catalog
-
+    Given a file of type <file_type>, go through the whole pipeline process and make a catalog
     @param file_type: either pdf or txt or any of BhtFileType
-    @param orig_file:  the sci article in pdf or txt format
-    @param pipeline_result_dir: the root working directory
-    @param doc_meta_info:  dict with paper doi, istex_id, publication_date ...
+    @param orig_file: the sci article in pdf or txt format
+    @param result_base_dir: the root working directory
+    @param doc_meta_info: dict with paper doi, istex_id, publication_date ...
     @return: an HPEvents catalog
     """
+    # Set default steps
+    steps = [
+        PipeStep.MKDIR,
+        PipeStep.FILTER,
+        PipeStep.SUTIME,
+        PipeStep.TIMEFILL,
+        PipeStep.ENTITIES
+    ]
 
-    # 0
-    dest_file_dir = run_step_mkdir(orig_file, pipeline_result_dir, file_type)
-
-    # TODO: REWRITE instead run a run_pipeline() with proper parameters
+    # Add 2 more steps for PDF file
     if file_type == BhtFileType.PDF:
-        # 1
-        run_step_ocr(dest_file_dir)
+        # steps = [PipeStep.MKDIR, PipeStep.OCR, PipeStep.GROBID] + steps[1:]
+        steps.insert(1, PipeStep.OCR)
+        steps.insert(2, PipeStep.GROBID)
 
-        # 2- Generate the XML GROBID file
-        run_step_grobid(dest_file_dir)
+    # Run pipeline, and get catalog file
+    output_container = {}
+    done_steps = run_pipeline(
+        file_path=orig_file,
+        doc_type=file_type,
+        pipe_steps=steps,
+        dest_file_dir=result_base_dir,
+        doc_meta_info=doc_meta_info,
+        output_container=output_container
+    )
 
-    # 3- filter result of the OCR to deletes references, change HHmm4 to HH:mm, etc ...
-    run_step_filter(dest_file_dir)
-
-    # 4- Sutime processing
-    run_step_sutime(dest_file_dir)
-
-    # 5- Times cleaning
-    run_step_timefill(dest_file_dir)
-
-    # 6- Entities recognition, association and writing of HPEvent
-    catalog_file = run_step_entities(dest_file_dir, doc_meta_info)
-
+    # Vérification du fichier de catalogue
+    catalog_file = output_container.get("catalog_file")
     if not os.path.isfile(catalog_file):
         raise BhtResultError(f"No such file {catalog_file}")
-    return catalog_file
 
+    return catalog_file
 
 def bht_run_dir(_base_pdf_dir):
     """
