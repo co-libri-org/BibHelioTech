@@ -245,6 +245,7 @@ def paper_web_run_cmd(paper_id):
     with current_app.test_request_context(), current_app.app_context():
         from web.main.routes import bht_run
         response, status_code = bht_run(paper_id=paper_id, file_type="txt")
+
         if status_code == 202:
             data = response.json  # La réponse Flask contient déjà le JSON
             print(data)
