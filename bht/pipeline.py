@@ -28,13 +28,13 @@ _logger = init_logger()
 
 
 # TODO: REWRITE IstexDocType or BhtFileType ??
-def run_step_mkdir(orig_file: str, result_base_dir: str, doc_type: IstexDoctype) -> str:
+def run_step_mkdir(orig_file: str, pipeline_result_dir: str, doc_type: IstexDoctype) -> str:
     """
     Move a pdf file to same name directory
 
     @param doc_type:
     @param orig_file:
-    @param result_base_dir:
+    @param pipeline_result_dir:
     @return:
     """
     # 0- Move original file to working directory
@@ -43,7 +43,7 @@ def run_step_mkdir(orig_file: str, result_base_dir: str, doc_type: IstexDoctype)
         raise (BhtPipelineError(f"Such doctype not managed {doc_type}"))
     filename = os.path.basename(orig_file)
     split_filename = os.path.splitext(filename)
-    dest_dir = os.path.join(result_base_dir, split_filename[0])
+    dest_dir = os.path.join(pipeline_result_dir, split_filename[0])
     if doc_type == IstexDoctype.PDF:
         dest_file = os.path.join(dest_dir, filename)
     elif doc_type in [IstexDoctype.TXT, IstexDoctype.CLEANED]:
@@ -98,19 +98,19 @@ def run_step_entities(dest_pdf_dir, doc_meta_info=None):
     return catalog_file
 
 
-def bht_run_file(orig_file, result_base_dir, file_type, doc_meta_info=None):
+def bht_run_file(orig_file, pipeline_result_dir, file_type, doc_meta_info=None):
     """
     Given a  file of type <file_type>, go through the whole pipeline process and make a catalog
 
     @param file_type: either pdf or txt or any of BhtFileType
     @param orig_file:  the sci article in pdf or txt format
-    @param result_base_dir: the root working directory
+    @param pipeline_result_dir: the root working directory
     @param doc_meta_info:  dict with paper doi, istex_id, publication_date ...
     @return: an HPEvents catalog
     """
 
     # 0
-    dest_file_dir = run_step_mkdir(orig_file, result_base_dir, file_type)
+    dest_file_dir = run_step_mkdir(orig_file, pipeline_result_dir, file_type)
 
     # TODO: REWRITE instead run a run_pipeline() with proper parameters
     if file_type == BhtFileType.PDF:
