@@ -28,13 +28,13 @@ _logger = init_logger()
 
 
 # TODO: REWRITE IstexDocType or BhtFileType ??
-def run_step_mkdir(orig_file: str, pipeline_result_dir: str, doc_type: IstexDoctype) -> str:
+def run_step_mkdir(orig_file: str, pipeline_root_dir: str, doc_type: IstexDoctype) -> str:
     """
-    Move a pdf file to same name directory
+    Move a pdf or txt file to same name directory
 
     @param doc_type:
     @param orig_file:
-    @param pipeline_result_dir:
+    @param pipeline_root_dir:
     @return:
     """
     # 0- Move original file to working directory
@@ -43,7 +43,7 @@ def run_step_mkdir(orig_file: str, pipeline_result_dir: str, doc_type: IstexDoct
         raise (BhtPipelineError(f"Such doctype not managed {doc_type}"))
     filename = os.path.basename(orig_file)
     split_filename = os.path.splitext(filename)
-    dest_dir = os.path.join(pipeline_result_dir, split_filename[0])
+    dest_dir = os.path.join(pipeline_root_dir, split_filename[0])
     if doc_type == IstexDoctype.PDF:
         dest_file = os.path.join(dest_dir, filename)
     elif doc_type in [IstexDoctype.TXT, IstexDoctype.CLEANED]:
@@ -100,6 +100,7 @@ def run_step_entities(dest_pdf_dir, doc_meta_info=None):
 def bht_run_file(orig_file, result_base_dir, file_type, doc_meta_info=None):
     """
     Given a file of type <file_type>, go through the whole pipeline process and make a catalog
+
     @param file_type: either pdf or txt or any of BhtFileType
     @param orig_file: the sci article in pdf or txt format
     @param result_base_dir: the root working directory
@@ -124,7 +125,7 @@ def bht_run_file(orig_file, result_base_dir, file_type, doc_meta_info=None):
     # Run pipeline, and get catalog file
     output_container = {}
     done_steps = run_pipeline(
-        file_path=orig_file,
+        orig_file=orig_file,
         doc_type=file_type,
         pipe_steps=steps,
         dest_file_dir=result_base_dir,
@@ -194,17 +195,19 @@ def bht_run_dir(_base_pdf_dir):
                     )  # entities recognition and association + writing of HPEvent
 
 
-def run_pipeline(file_path, doc_type, pipe_steps=(), pipeline_result_dir=None, dest_file_dir=None, doc_meta_info=None,
+def run_pipeline(orig_file, doc_type, pipe_steps=(), pipeline_root_dir=None, dest_file_dir=None, doc_meta_info=None,
                  output_container=None):
     """
 
 
+    @param orig_file: original scientifique article (txt or pdf file)
+    @param doc_type: is it a txt or pdf file
+    @param pipe_steps: pipeline steps to run
+    @param pipeline_root_dir: root directory where to make subdirectory for this pipeline
+    @param dest_file_dir: pipeline output directory in case of steps after step_mkdir
     @param doc_meta_info:  contains doi and pub_date
-    @param dest_file_dir:
-    @param doc_type:
-    @param file_path:
-    @param pipe_steps:
-    @return:
+    @param output_container: dictionnary to store alternate return values ("catalog_file" key for ex.)
+    @return: done_steps
     """
     done_steps = []
     # Choose all steps if none or empty
@@ -216,9 +219,9 @@ def run_pipeline(file_path, doc_type, pipe_steps=(), pipeline_result_dir=None, d
             raise (BhtPipelineError(f"No such step >>>> {s} <<<<<"))
 
     if PipeStep.MKDIR in pipe_steps:
-        pipeline_result_dir = pipeline_result_dir or yml_settings["BHT_DATA_DIR"]
+        pipeline_root_dir = pipeline_root_dir or yml_settings["BHT_DATA_DIR"]
         dest_file_dir = run_step_mkdir(
-            file_path, pipeline_result_dir, doc_type=doc_type
+            orig_file, pipeline_root_dir, doc_type=doc_type
         )
         done_steps.append(PipeStep.MKDIR)
 

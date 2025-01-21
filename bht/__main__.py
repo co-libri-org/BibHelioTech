@@ -89,7 +89,7 @@ if __name__ == "__main__":
             sys.exit()
         done_steps = run_pipeline(
             doc_meta_info={"doi": args.doi, "pub_date": args.pub_date},
-            file_path=args.txt_file,
+            orig_file=args.txt_file,
             doc_type=BhtFileType.TXT,
             pipe_steps=pipe_steps,
         )
@@ -101,7 +101,7 @@ if __name__ == "__main__":
             doc_meta_info={"doi": args.doi},
             # TODO: pub_date=args.pub_date,
             dest_file_dir=args.pipe_dir,
-            file_path=None,
+            orig_file=None,
             doc_type=None,
             pipe_steps=pipe_steps,
         )
@@ -128,7 +128,7 @@ if __name__ == "__main__":
             ]
         done_steps = run_pipeline(
             doc_meta_info={"doi": istex_struct["doi"]},
-            file_path=filepath,
+            orig_file=filepath,
             doc_type=doc_type,
             pipe_steps=pipe_steps,
         )
