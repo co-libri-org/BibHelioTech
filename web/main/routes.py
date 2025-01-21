@@ -571,7 +571,6 @@ def bht_status(paper_id):
         # TODO: END CUTTING
     return response_object.response, 200
 
-
 @bp.route("/bht_run/<paper_id>/<file_type>", methods=["GET"])
 def bht_run(paper_id, file_type):
     found_file = get_paper_file(paper_id, file_type.upper())

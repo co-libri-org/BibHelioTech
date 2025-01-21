@@ -247,11 +247,11 @@ def paper_web_run_cmd(paper_id, host_name, port_number, user_name, password):
     """Run the latest pipeline on that paper's article through web/RQ"""
     with  current_app.test_request_context(), current_app.app_context():
         url_path = url_for('main.bht_run', paper_id=paper_id, file_type="txt", _external=False)
-    status_url = f"http://{host_name}:{port_number}{url_path}"
+    run_url = f"http://{host_name}:{port_number}{url_path}"
     # Send GET request to the URL
     import requests
     from requests.auth import HTTPBasicAuth
-    response = requests.get(status_url, auth=HTTPBasicAuth(user_name, password))
+    response = requests.get(run_url, auth=HTTPBasicAuth(user_name, password))
 
     # Check if the request was successful
     if response.status_code == 202:
@@ -259,7 +259,7 @@ def paper_web_run_cmd(paper_id, host_name, port_number, user_name, password):
         data = response.json()
         print(data)  # The JSON content will be in 'data'
     else:
-        print(f"Failed to retrieve data at {status_url}. Status code: {response.status_code}")
+        print(f"Failed to retrieve data at {run_url}. Status code: {response.status_code}")
 
 
 

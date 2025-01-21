@@ -192,9 +192,7 @@ def bht_run_dir(_base_pdf_dir):
                     )  # entities recognition and association + writing of HPEvent
 
 
-def run_pipeline(
-    file_path, doc_type, pipe_steps=(), dest_file_dir=None, doc_meta_info=None
-):
+def run_pipeline( file_path, doc_type, pipe_steps=(), dest_file_dir=None, doc_meta_info=None ):
     """
 
 
