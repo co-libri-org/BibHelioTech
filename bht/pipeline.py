@@ -147,7 +147,7 @@ def bht_run_dir(_base_pdf_dir):
     for folders_or_pdf in os.listdir(_base_pdf_dir):
         folders_or_pdf_path = os.path.join(_base_pdf_dir, folders_or_pdf)
         if folders_or_pdf.endswith(
-            ".pdf"
+                ".pdf"
         ):  # If '.pdf' on "Papers" folder --> paper not treated --> processing paper treatment.
             # create the directory under the same name as the paper.
             os.makedirs(os.path.join(_base_pdf_dir, folders_or_pdf.replace(".pdf", "")))
@@ -192,7 +192,8 @@ def bht_run_dir(_base_pdf_dir):
                     )  # entities recognition and association + writing of HPEvent
 
 
-def run_pipeline( file_path, doc_type, pipe_steps=(), dest_file_dir=None, doc_meta_info=None ):
+def run_pipeline(file_path, doc_type, pipe_steps=(), pipeline_result_dir=None, dest_file_dir=None, doc_meta_info=None,
+                 output_container=None):
     """
 
 
@@ -213,8 +214,9 @@ def run_pipeline( file_path, doc_type, pipe_steps=(), dest_file_dir=None, doc_me
             raise (BhtPipelineError(f"No such step >>>> {s} <<<<<"))
 
     if PipeStep.MKDIR in pipe_steps:
+        pipeline_result_dir = pipeline_result_dir or yml_settings["BHT_DATA_DIR"]
         dest_file_dir = run_step_mkdir(
-            file_path, yml_settings["BHT_DATA_DIR"], doc_type=doc_type
+            file_path, pipeline_result_dir, doc_type=doc_type
         )
         done_steps.append(PipeStep.MKDIR)
 
@@ -239,7 +241,10 @@ def run_pipeline( file_path, doc_type, pipe_steps=(), dest_file_dir=None, doc_me
         done_steps.append(PipeStep.TIMEFILL)
 
     if PipeStep.ENTITIES in pipe_steps:
-        run_step_entities(dest_file_dir, doc_meta_info)
+        catalog_file = run_step_entities(dest_file_dir, doc_meta_info)
+        # Store catalog_file in the result container, if provided
+        if output_container is not None:
+            output_container["catalog_file"] = catalog_file
         done_steps.append(PipeStep.ENTITIES)
 
     return done_steps
