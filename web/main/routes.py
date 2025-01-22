@@ -25,6 +25,7 @@ from flask import (
 )
 
 from bht.errors import BhtCsvError
+from bht.pipeline import PipeStep
 from tools import StepLighter
 from . import bp
 from web import db
@@ -571,9 +572,9 @@ def bht_status(paper_id):
         # TODO: END CUTTING
     return response_object.response, 200
 
-
-@bp.route("/bht_run/<paper_id>/<file_type>", methods=["GET"])
-def bht_run(paper_id, file_type):
+@bp.route("/bht_run/<paper_id>/<file_type>", defaults={"pipeline_start_step": PipeStep.TIMEFILL}, methods=["GET"])
+@bp.route("/bht_run/<paper_id>/<file_type>/<pipeline_start_step>", methods=["GET"])
+def bht_run(paper_id, file_type, pipeline_start_step):
     found_file = get_paper_file(paper_id, file_type.upper())
     if found_file is None:
         flash("No file for that paper.")
@@ -584,7 +585,7 @@ def bht_run(paper_id, file_type):
         q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
         task = q.enqueue(
             get_pipe_callback(test=current_app.config["TESTING"]),
-            args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type),
+            args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type, pipeline_start_step),
             job_timeout=600,
         )
     except redis.connection.ConnectionError:

@@ -30,13 +30,13 @@ def get_pipe_callback(test=True, fail=False):
         return pipe_paper
 
 
-def pipe_paper_failed(_p_id, _b_dir, _ft):
+def pipe_paper_failed(_p_id, _b_dir, _ft, _f_s):
     """Raise exception after a random num of seconds"""
     num_secs = random_sleep(min_secs=5, max_secs=20)
     raise WebError(f"Failed after {num_secs} seconds")
 
 
-def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_secs=20):
+def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, first_step=0, min_secs=5, max_secs=20):
     """Spend time a random num of seconds
 
     @return: num seconds spent
@@ -45,10 +45,10 @@ def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_sec
 
 
 # TODO: REFACTOR should this go to a models.paper.method() ?
-def pipe_paper(paper_id, basedir=None, file_type=None):
+def pipe_paper(paper_id, pipeline_root_dir=None, file_type=None, pipeline_start_step=0):
     """From a paper id create the catalog
 
-    - find the corresponding pdf file
+    - find the corresponding cleaned (or pdf) file
     - pass it to the bht pipeline
     - store the resulting catalog
     - update db
@@ -56,19 +56,19 @@ def pipe_paper(paper_id, basedir=None, file_type=None):
     """
     _paper = db.session.get(Paper, paper_id)
     # Set pipeline defaults if it has txt file only
-    if basedir is None or file_type is None:
+    if pipeline_root_dir is None or file_type is None:
         if not _paper.has_txt:
-            raise BhtPathError("Set pipeline defaults only if paper has txt file ")
-    if basedir is None:
-        basedir = os.path.dirname(_paper.txt_path)
+            raise BhtPathError("Set pipeline defaults only if paper has txt file")
+    if pipeline_root_dir is None:
+        pipeline_root_dir = os.path.dirname(_paper.txt_path)
     if file_type is None:
         file_type = BhtFileType.TXT
 
     # TODO: REFACTOR better call models.paper.get_file()
     if file_type == BhtFileType.PDF and _paper.has_pdf:
-        file_path = _paper.pdf_path
+        paper_raw_file = _paper.pdf_path
     elif file_type == BhtFileType.TXT and _paper.has_txt:
-        file_path = _paper.txt_path
+        paper_raw_file = _paper.txt_path
     else:
         raise FilePathError(
             f"No such file for paper {paper_id} \n"
@@ -77,10 +77,9 @@ def pipe_paper(paper_id, basedir=None, file_type=None):
             f"and type {file_type}: hastxt={_paper.has_txt} haspdf={_paper.has_pdf}"
         )
     _doc_meta_info = {"doi": _paper.doi, "pub_date": _paper.publication_date}
-    catalogfile = bht_run_file(file_path, basedir, file_type, _doc_meta_info)
-    # cat_in_db= _paper.cat_in_db
+    catalogfile = bht_run_file(paper_raw_file, pipeline_root_dir, file_type, _doc_meta_info, pipeline_start_step)
     _paper.set_cat_path(catalogfile)
+    # cat_in_db= _paper.cat_in_db
     # if cat_in_db:
     #     _paper.push_cat(force=True)
-    # TODO: return real result
     return _paper.id
