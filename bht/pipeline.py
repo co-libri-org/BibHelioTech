@@ -71,7 +71,7 @@ class PipeStep(IntEnum):
 
     def __str__(self):
         """String representation of the step."""
-        return f"{self.value} {self.name:8} {self.description()}"
+        return f'{self.value} {self.name:8} "{self.description()}"'
 
 _logger = init_logger()
 

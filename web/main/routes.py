@@ -574,7 +574,7 @@ def bht_status(paper_id):
 
 @bp.route("/bht_run/<paper_id>/<file_type>", defaults={"pipeline_start_step": PipeStep.TIMEFILL}, methods=["GET"])
 @bp.route("/bht_run/<paper_id>/<file_type>/<pipeline_start_step>", methods=["GET"])
-def bht_run(paper_id, file_type, pipeline_start_step):
+def bht_run(paper_id, file_type, pipeline_start_step=0):
     found_file = get_paper_file(paper_id, file_type.upper())
     if found_file is None:
         flash("No file for that paper.")

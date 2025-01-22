@@ -11,6 +11,7 @@ from flask_migrate import upgrade
 from flask.cli import FlaskGroup
 
 from bht.databank_reader import DataBank, DataBankSheet
+from bht.pipeline import PipeStep
 from web import create_app, db
 from web.bht_proxy import pipe_paper
 from web.models import catfile_to_db, Mission, istexdir_to_db
@@ -240,11 +241,18 @@ def paper_run(paper_id):
 
 @cli.command("paper_web_run")
 @click.argument("paper_id", required=True)
-def paper_web_run_cmd(paper_id):
+@click.option(
+    "--start-step",
+    type=click.Choice([ps.name for ps in list(PipeStep)], case_sensitive=True),
+    default=PipeStep.MKDIR.name,
+    help="Optional start step"
+)
+def paper_web_run_cmd(paper_id, start_step):
     """Run the latest pipeline on that paper's article through web/RQ"""
+    start_step = PipeStep[start_step]
     with current_app.test_request_context(), current_app.app_context():
         from web.main.routes import bht_run
-        response, status_code = bht_run(paper_id=paper_id, file_type="txt")
+        response, status_code = bht_run(paper_id=paper_id, file_type="txt", pipeline_start_step=start_step)
 
         if status_code == 202:
             data = response.json  # La réponse Flask contient déjà le JSON
