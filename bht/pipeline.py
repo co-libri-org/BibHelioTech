@@ -53,18 +53,6 @@ class PipeStep(IntEnum):
         return list(cls)[list(cls).index(start_step):]
 
     @classmethod
-    def filtered_pipeline(cls, start_step, exclude):
-        """
-        Combine from_step and exclude_steps to return a filtered pipeline.
-
-        :param start_step: The starting step (int or PipeStep).
-        :param exclude: Steps to exclude (int, PipeStep, or list of them).
-        :return: A list of filtered PipeSteps.
-        """
-        partial_steps = cls.from_step(start_step)
-        return cls.exclude_steps(exclude=[step for step in partial_steps if step in exclude])
-
-    @classmethod
     def descriptions(cls):
         """Return a dictionary of step descriptions."""
         return {
@@ -104,16 +92,16 @@ def run_step_mkdir(orig_file: str, pipeline_root_dir: str, doc_type: IstexDoctyp
         raise (BhtPipelineError(f"Such doctype not managed {doc_type}"))
     filename = os.path.basename(orig_file)
     split_filename = os.path.splitext(filename)
-    dest_dir = os.path.join(pipeline_root_dir, split_filename[0])
+    pipeline_paper_dir = os.path.join(pipeline_root_dir, split_filename[0])
     if doc_type == IstexDoctype.PDF:
-        dest_file = os.path.join(dest_dir, filename)
+        dest_file = os.path.join(pipeline_paper_dir, filename)
     elif doc_type in [IstexDoctype.TXT, IstexDoctype.CLEANED]:
-        dest_file = os.path.join(dest_dir, "out_text.txt")
+        dest_file = os.path.join(pipeline_paper_dir, "out_text.txt")
     else:
         raise BhtPipelineError("Wrong IstexDoctype")
-    os.makedirs(dest_dir, exist_ok=True)
+    os.makedirs(pipeline_paper_dir, exist_ok=True)
     shutil.copy(orig_file, dest_file)
-    return dest_dir
+    return pipeline_paper_dir
 
 
 def run_step_ocr(dest_pdf_dir):
@@ -169,15 +157,21 @@ def bht_run_file(paper_raw_file, pipeline_root_dir, file_type, doc_meta_info=Non
     @param pipeline_start_step: pipeline_step to start with
     @return: an HPEvents catalog
     """
+    # Initialize pipe steps list
     pipe_steps = PipeStep.from_step(pipeline_start_step)
-    # Set pipe_steps list
+
+    # Dont run OCR and GROBID steps if not processing pdf file
     if file_type != BhtFileType.PDF:
         pipe_steps = PipeStep.exclude_steps(pipe_steps, [PipeStep.OCR, PipeStep.GROBID])
 
+    # Include the first step or run_pipeline wont know about pipeline_paper_dir
+    # TODO: wrong design !
+    if PipeStep.MKDIR not in pipe_steps:
+        pipe_steps.insert(0, PipeStep.MKDIR)
 
     # Run pipeline, and get catalog file
     output_container = {}
-    done_steps = run_pipeline(
+    run_pipeline(
         orig_file=paper_raw_file,
         doc_type=file_type,
         pipe_steps=pipe_steps,
