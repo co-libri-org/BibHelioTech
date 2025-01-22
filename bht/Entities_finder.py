@@ -79,7 +79,7 @@ def load_dataframes():
         for compteur_colonne in range(1, len(df_Instruments.iloc[compteur_ligne])):
             if str(df_Instruments.iloc[compteur_ligne, compteur_colonne]) != "nan":
                 if re.search(
-                    "^\{", df_Instruments.iloc[compteur_ligne, compteur_colonne]
+                        "^\{", df_Instruments.iloc[compteur_ligne, compteur_colonne]
                 ):
                     INST_dict[str(df_Instruments.iloc[compteur_ligne, 0])].append(
                         eval(df_Instruments.iloc[compteur_ligne, compteur_colonne])
@@ -241,11 +241,11 @@ def operating_span_checker(sat, durations, SAT_dict, SPAN_dict, published_date):
 
         # check: duration included in operating span
         if (
-            datetime(begin_year, begin_month, begin_day)
-            >= datetime(SPAN_start_year, SPAN_start_month, SPAN_start_day)
+                datetime(begin_year, begin_month, begin_day)
+                >= datetime(SPAN_start_year, SPAN_start_month, SPAN_start_day)
         ) and (
-            datetime(end_year, end_month, end_day)
-            <= datetime(SPAN_stop_year, SPAN_stop_month, SPAN_stop_day)
+                datetime(end_year, end_month, end_day)
+                <= datetime(SPAN_stop_year, SPAN_stop_month, SPAN_stop_day)
         ):
             return True
         else:
@@ -268,20 +268,19 @@ def get_sat_syn(sat_name: str, _data_frames: dict):
     sat_dict = _data_frames[DataBankSheet.SATS]
     amda_dict = _data_frames[DataBankSheet.SATS_REG]
 
-    # for k, v in sat_dict.items():
-    #     print(k, v)
+    result = None
 
     # join both dict keys in one list, and see if the searched name is in
     main_names = list(sat_dict.keys()) + list(amda_dict.keys())
     if sat_name in main_names:
-        return sat_name
+        result = sat_name
 
     # Now look for main synonymous in the sat_dict
     for main_syn, syns_list in sat_dict.items():
         if sat_name in syns_list:
-            return main_syn
+            result = main_syn
 
-    return None
+    return result
 
 
 def sat_recognition(content_as_str, sats_dict):
@@ -313,6 +312,9 @@ def sat_recognition(content_as_str, sats_dict):
                     "type": "sat",
                 }
             ]
+
+    if len(sat_dict_list) == 0:
+        return sat_dict_list
 
     # Sort by text indexes
     sat_dict_list.sort(
@@ -449,7 +451,7 @@ def clean_sats_inside_insts(sats_list, insts_list):
         for inst_2 in insts_list:
             if sat_1 != {}:
                 if (inst_2["start"] - 1 <= sat_1["start"]) and (
-                    inst_2["end"] + 1 >= sat_1["end"]
+                        inst_2["end"] + 1 >= sat_1["end"]
                 ):  # is include
                     print(f"Removing {sat_1['text']}")
                     sat_1.clear()
@@ -534,7 +536,7 @@ def update_final_synonyms(_final_links, _data_frames):
     for _link in _fl:
         sat_name = _link[0]["text"]
         sat_syn = get_sat_syn(sat_name, _data_frames)
-        _name = _link[0]["text"] = sat_syn
+        _link[0]["text"] = sat_syn
 
     return _fl
 
@@ -570,14 +572,18 @@ def in_time_span(mission_name, start_stop, dataframes):
     from dateutil import parser
 
     # may raise KeyError
-    mission_start, mission_stop = [
-        parser.parse(d) for d in dataframes["time_span"][mission_name]
-    ]
+    try:
+        mission_start, mission_stop = [
+            parser.parse(d) for d in dataframes["time_span"][mission_name]
+        ]
+    except KeyError:
+        # no such mission in timespan table
+        return False
 
     event_start, event_stop = parser.parse(start_stop[0]), parser.parse(start_stop[1])
     if (
-        mission_start <= event_start <= mission_stop
-        or mission_start <= event_stop <= mission_stop
+            mission_start <= event_start <= mission_stop
+            or mission_start <= event_stop <= mission_stop
     ):
         return True
     else:
@@ -680,14 +686,14 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
                 if _temp_to_return[sens_aller]["type"] != "sat":
                     compteur_rang_aller += 1
                     if (
-                        operating_span_checker(
-                            dicts,
-                            _temp_to_return[sens_aller],
-                            sat_dict,
-                            span_dict,
-                            published_date,
-                        )
-                        == True
+                            operating_span_checker(
+                                dicts,
+                                _temp_to_return[sens_aller],
+                                sat_dict,
+                                span_dict,
+                                published_date,
+                            )
+                            == True
                     ):
                         dicts["R"] = compteur_rang_aller
                         dist_list.append(_temp_to_return[sens_aller])
@@ -699,14 +705,14 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
                 if _temp_to_return[sens_retour]["type"] != "sat":
                     compteur_rang_retour += 1
                     if (
-                        operating_span_checker(
-                            dicts,
-                            _temp_to_return[sens_retour],
-                            sat_dict,
-                            span_dict,
-                            published_date,
-                        )
-                        == True
+                            operating_span_checker(
+                                dicts,
+                                _temp_to_return[sens_retour],
+                                sat_dict,
+                                span_dict,
+                                published_date,
+                            )
+                            == True
                     ):
                         dicts["R"] = compteur_rang_retour
                         dist_list.append(_temp_to_return[sens_retour])
@@ -716,7 +722,7 @@ def closest_duration(_temp, _final_links, data_frames, published_date):
             # check of the closest between outward and backward.
             if len(dist_list) == 2:
                 if (abs(dicts["start"] - dist_list[0]["start"])) < (
-                    abs(dicts["start"] - dist_list[1]["start"])
+                        abs(dicts["start"] - dist_list[1]["start"])
                 ):
                     min_dist = abs(dicts["start"] - dist_list[0]["start"])
                     compteur = 0
@@ -788,86 +794,6 @@ def clean_by_timespan(_final_links, dataframes):
     _r_df = _fl_df[_fl_df.apply(in_time_span, axis=1)]
     _r_fl = df_to_dicts(_r_df)
     return _r_fl
-
-def filter_duplicates(data):
-
-    def group_duplicates(data: List[dict]) -> Dict[Tuple, List[dict]]:
-        """
-        Groups entries based on (start_time, stop_time, sat, inst)
-
-        Args:
-            data: List of dictionaries containing the observations
-
-        Returns:
-            Dictionary with identifier tuple as key and list of matching entries as value
-            All entries are returned, including non-duplicates
-        """
-        # Using defaultdict to automatically create an empty list if key doesn't exist
-        groups = defaultdict(list)
-
-        # Process each entry
-        for entry in data:
-            # Skip pipeline metadata entry
-            if not isinstance(entry, dict) or "start_time" not in entry:
-                continue
-
-            # Create identifier tuple
-            identifier = (
-                entry["start_time"],
-                entry["stop_time"],
-                entry["sat"],
-                entry["inst"],
-            )
-
-            # Add complete entry to corresponding group
-            groups[identifier].append(entry)
-
-        # Return all groups, not just duplicates
-        return dict(groups)
-
-    def remove_duplicates(groups: Dict[Tuple, List[dict]]) -> Dict[Tuple, List[dict]]:
-        """
-        Filters groups by keeping only the entry with minimum 'conf' value in each group
-
-        Args:
-            groups: Dictionary with identifier tuple as key and list of entries as value
-
-        Returns:
-            Dictionary with same structure but only one entry per group (minimum conf)
-        """
-        filtered_groups = {}
-
-        for identifier, entries in groups.items():
-            # Find entry with minimum conf value
-            min_conf_entry = min(entries, key=lambda x: x["conf"])
-            # Store only this entry
-            filtered_groups[identifier] = [min_conf_entry]
-
-        return filtered_groups
-
-    def groups_to_list(groups: Dict[Tuple, List[dict]]) -> List[dict]:
-        """
-        Converts the groups dictionary back to a flat list of entries
-
-        Args:
-            groups: Dictionary with identifier tuple as key and list of entries as value
-
-        Returns:
-            List of dictionary entries, in the same format as the original input
-        """
-        # Flatten the list of lists using list comprehension
-        entries = [entry for group in groups.values() for entry in group]
-        return entries
-
-    duplicates = group_duplicates(data)
-
-    uniq = remove_duplicates(duplicates)
-
-    entries = groups_to_list(uniq)
-
-    return entries
-
-
 
 
 def entities_finder(current_OCR_folder, doc_meta_info=None):
@@ -1067,15 +993,15 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     compteur = 0
     for elements in founded_regions_list:
         if (
-            elements[0]["text"].lower() in planet_list
-            and elements[1]["text"].lower() in planet_list
+                elements[0]["text"].lower() in planet_list
+                and elements[1]["text"].lower() in planet_list
         ):
             if (
-                elements[0]["text"].lower() != elements[1]["text"].lower()
+                    elements[0]["text"].lower() != elements[1]["text"].lower()
             ):  # deletion of planet/planet pairs when these are different.
                 founded_regions_list[compteur].clear()
         elif (elements[0]["text"].lower() not in planet_list) and (
-            elements[1]["text"].lower() not in planet_list
+                elements[1]["text"].lower() not in planet_list
         ):  # removal of low-level/low-level pairs.
             founded_regions_list[compteur].clear()
         compteur += 1
@@ -1093,7 +1019,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     compteur = 0
     for list_of_dicts in founded_regions_list:
         if (list_of_dicts[0]["text"].lower() not in planet_list) and (
-            list_of_dicts[1]["text"].lower() in planet_list
+                list_of_dicts[1]["text"].lower() in planet_list
         ):
             temp_0 = founded_regions_list[compteur][0]
             temp_1 = founded_regions_list[compteur][1]
@@ -1141,7 +1067,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
     compteur = 0
     for i in founded_regions_list:
         compteur_2 = compteur
-        for j in founded_regions_list[compteur + 1 :]:
+        for j in founded_regions_list[compteur + 1:]:
             if j == i:
                 founded_regions_list[compteur_2].clear()
             compteur_2 += 1
@@ -1172,7 +1098,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
         compteur = 0
         for i in founded_regions_list:
             compteur_2 = compteur
-            for j in founded_regions_list[compteur + 1 :]:
+            for j in founded_regions_list[compteur + 1:]:
                 if j == i:
                     founded_regions_list[compteur_2].clear()
                 compteur_2 += 1
@@ -1222,7 +1148,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
                 REG_dict[
                     temp_reg[compteur_min][0]["text"][0].upper()
                     + temp_reg[compteur_min][0]["text"][1:]
-                ],
+                    ],
                 temp_reg[compteur_min][1]["text"][0].upper()
                 + temp_reg[compteur_min][1]["text"][1:],
             )  # params = planet name, low level name
@@ -1425,7 +1351,7 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     # write in file
     with open(
-        os.path.join(current_OCR_folder, "reg_recognition_res.txt"), "w"
+            os.path.join(current_OCR_folder, "reg_recognition_res.txt"), "w"
     ) as final_file:
         for elems in final_amda_list:
             final_file.write(str(elems))
@@ -1466,8 +1392,8 @@ def entities_finder(current_OCR_folder, doc_meta_info=None):
 
     catalog_path = os.path.join(current_OCR_folder, catalog_name)
     with open(
-        catalog_path,
-        "w",
+            catalog_path,
+            "w",
     ) as f:
         f.write(cat_as_txt)
 

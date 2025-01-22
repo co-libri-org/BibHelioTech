@@ -115,6 +115,22 @@ class TestEntitiesFinder:
         for fl in new_final_links:
             assert len(fl[1]["text"]) < 2
 
+    def test_update_final_syns_image(self, final_links_image, data_frames):
+        final_with_syns = update_final_synonyms(final_links_image, data_frames)
+        image_found = False
+        for _l in final_with_syns:
+            if _l[0]["text"] == 'IMAGE':
+                image_found = True
+        assert image_found
+
+    def test_update_final_syns_polar(self, final_links_polar, data_frames):
+        final_with_syns = update_final_synonyms(final_links_polar, data_frames)
+        polar_found = False
+        for _l in final_with_syns:
+            if _l[0]["text"] == 'POLAR':
+                polar_found = True
+        assert polar_found
+
     def test_update_final_instr_eui(self, final_links_eui, data_frames):
         final_with_syns = update_final_synonyms(final_links_eui, data_frames)
         new_final_links = update_final_instruments(final_with_syns, data_frames)
