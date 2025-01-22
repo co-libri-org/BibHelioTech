@@ -25,10 +25,11 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [1.1.0-bulk] - 2025-01-xx - First Bulk prototype
+## [1.2.0] - 2025-01-22 - First Bulk prototype
 #### Fixed
-#### Changed
+- pipeline bugs
 #### New
+- cli commands bulk run pipeline on files
 
 ## [1.0.0] - 2025-01-14 - Latest Pipeline changes
 #### Fixed
