@@ -15,7 +15,7 @@ from web.models import BhtFileType
 
 
 class PipeStep(IntEnum):
-    MKDIR = auto()
+    MKDIR = 0
     OCR = auto()
     GROBID = auto()
     FILTER = auto()
@@ -23,6 +23,67 @@ class PipeStep(IntEnum):
     TIMEFILL = auto()
     ENTITIES = auto()
 
+    @classmethod
+    def full_pipe_steps(cls):
+        """Return all steps of the pipeline in order"""
+        return list(cls)
+
+
+    @classmethod
+    def exclude_steps(cls, pipeline, exclude):
+        """
+        Exclude specific steps from the given pipeline.
+        :param pipeline: A list of PipeStep to filter.
+        :param exclude: Steps to exclude (int, PipeStep, or list of them).
+        :return: Filtered pipeline.
+        """
+        if not isinstance(exclude, list):
+            exclude = [exclude]
+        exclude = [cls(step) if isinstance(step, int) else step for step in exclude]
+        return [step for step in pipeline if step not in exclude]
+
+
+    @classmethod
+    def from_step(cls, start_step):
+        """Return the pipeline starting from a specific step (accepts int or PipeStep)."""
+        if isinstance(start_step, int):
+            start_step = cls(start_step)
+        if start_step not in cls:
+            raise ValueError(f"Invalid step: {start_step}")
+        return list(cls)[list(cls).index(start_step):]
+
+    @classmethod
+    def filtered_pipeline(cls, start_step, exclude):
+        """
+        Combine from_step and exclude_steps to return a filtered pipeline.
+
+        :param start_step: The starting step (int or PipeStep).
+        :param exclude: Steps to exclude (int, PipeStep, or list of them).
+        :return: A list of filtered PipeSteps.
+        """
+        partial_steps = cls.from_step(start_step)
+        return cls.exclude_steps(exclude=[step for step in partial_steps if step in exclude])
+
+    @classmethod
+    def descriptions(cls):
+        """Return a dictionary of step descriptions."""
+        return {
+            cls.MKDIR: "Create necessary directories for the pipeline.",
+            cls.OCR: "Perform OCR on the document to extract text.",
+            cls.GROBID: "Use GROBID to extract structured metadata.",
+            cls.FILTER: "Filter and clean the extracted data.",
+            cls.SUTIME: "Run SUTime for temporal information extraction.",
+            cls.TIMEFILL: "Fill in missing temporal data.",
+            cls.ENTITIES: "Extract named entities from the text."
+        }
+
+    def description(self):
+        """Get the description for a specific step."""
+        return self.descriptions().get(self, "No description available.")
+
+    def __str__(self):
+        """String representation of the step."""
+        return f"{self.value} {self.name:8} {self.description()}"
 
 _logger = init_logger()
 
@@ -97,7 +158,7 @@ def run_step_entities(dest_pdf_dir, doc_meta_info=None):
     catalog_file = entities_finder(dest_pdf_dir, doc_meta_info)
     return catalog_file
 
-def bht_run_file(paper_raw_file, pipeline_root_dir, file_type, doc_meta_info=None):
+def bht_run_file(paper_raw_file, pipeline_root_dir, file_type, doc_meta_info=None, pipeline_start_step=0):
     """
     Given a file of type <file_type>, go through the whole pipeline process and make a catalog
 
@@ -105,29 +166,21 @@ def bht_run_file(paper_raw_file, pipeline_root_dir, file_type, doc_meta_info=Non
     @param paper_raw_file: the sci article in pdf or txt format
     @param pipeline_root_dir: the root working directory for all papers' pipelines 
     @param doc_meta_info: dict with paper doi, istex_id, publication_date ...
+    @param pipeline_start_step: pipeline_step to start with
     @return: an HPEvents catalog
     """
-    # Set default steps
-    steps = [
-        PipeStep.MKDIR,
-        PipeStep.FILTER,
-        PipeStep.SUTIME,
-        PipeStep.TIMEFILL,
-        PipeStep.ENTITIES
-    ]
+    pipe_steps = PipeStep.from_step(pipeline_start_step)
+    # Set pipe_steps list
+    if file_type != BhtFileType.PDF:
+        pipe_steps = PipeStep.exclude_steps(pipe_steps, [PipeStep.OCR, PipeStep.GROBID])
 
-    # Add 2 more steps for PDF file
-    if file_type == BhtFileType.PDF:
-        # steps = [PipeStep.MKDIR, PipeStep.OCR, PipeStep.GROBID] + steps[1:]
-        steps.insert(1, PipeStep.OCR)
-        steps.insert(2, PipeStep.GROBID)
 
     # Run pipeline, and get catalog file
     output_container = {}
     done_steps = run_pipeline(
         orig_file=paper_raw_file,
         doc_type=file_type,
-        pipe_steps=steps,
+        pipe_steps=pipe_steps,
         pipeline_root_dir=pipeline_root_dir,
         doc_meta_info=doc_meta_info,
         output_container=output_container

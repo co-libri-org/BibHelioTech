@@ -30,13 +30,13 @@ def get_pipe_callback(test=True, fail=False):
         return pipe_paper
 
 
-def pipe_paper_failed(_p_id, _b_dir, _ft):
+def pipe_paper_failed(_p_id, _b_dir, _ft, _f_s):
     """Raise exception after a random num of seconds"""
     num_secs = random_sleep(min_secs=5, max_secs=20)
     raise WebError(f"Failed after {num_secs} seconds")
 
 
-def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_secs=20):
+def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, first_step=0, min_secs=5, max_secs=20):
     """Spend time a random num of seconds
 
     @return: num seconds spent
@@ -45,7 +45,7 @@ def pipe_paper_mocked(p_id=None, b_dir=None, file_type=None, min_secs=5, max_sec
 
 
 # TODO: REFACTOR should this go to a models.paper.method() ?
-def pipe_paper(paper_id, pipeline_root_dir=None, file_type=None):
+def pipe_paper(paper_id, pipeline_root_dir=None, file_type=None, pipeline_start_step=0):
     """From a paper id create the catalog
 
     - find the corresponding cleaned (or pdf) file
@@ -77,10 +77,9 @@ def pipe_paper(paper_id, pipeline_root_dir=None, file_type=None):
             f"and type {file_type}: hastxt={_paper.has_txt} haspdf={_paper.has_pdf}"
         )
     _doc_meta_info = {"doi": _paper.doi, "pub_date": _paper.publication_date}
-    catalogfile = bht_run_file(paper_raw_file, pipeline_root_dir, file_type, _doc_meta_info)
-    # cat_in_db= _paper.cat_in_db
+    catalogfile = bht_run_file(paper_raw_file, pipeline_root_dir, file_type, _doc_meta_info, pipeline_start_step)
     _paper.set_cat_path(catalogfile)
+    # cat_in_db= _paper.cat_in_db
     # if cat_in_db:
     #     _paper.push_cat(force=True)
-    # TODO: return real result
     return _paper.id
