@@ -139,15 +139,12 @@ function updateAllStatuses() {
 function setBhtRunOnClick() {
     $('.run-bht').on('click', function() {
         let paper_id = $(this).data('paper_id');
+        let file_type = $(this).data('file_type');
         const statusElmtId = '#bht-status-' + paper_id;
         $(statusElmtId).fadeOut(200).fadeIn(200);
         $.ajax({
-                url: '/bht_run',
-                data: {
-                    paper_id: paper_id,
-                    file_type: $(this).data('file_type')
-                },
-                method: 'POST'
+                url: `/bht_run/${paper_id}/${file_type}`,
+                method: 'GET'
             })
             .done((res) => {
                 toggleWrapper(res, "disable");

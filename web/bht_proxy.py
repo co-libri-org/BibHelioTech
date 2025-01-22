@@ -70,7 +70,7 @@ def pipe_paper(paper_id, basedir=None, file_type=None):
     elif file_type == BhtFileType.TXT and _paper.has_txt:
         file_path = _paper.txt_path
     else:
-        raise PdfFileError(
+        raise FilePathError(
             f"No such file for paper {paper_id} \n"
             f"pdf: {_paper.pdf_path}"
             f"txt: {_paper.txt_path}"

@@ -1,13 +1,20 @@
 import datetime
+import json
+import os
 import os.path
+import sys
 from enum import StrEnum, auto
+from json import JSONDecodeError
+from pprint import pprint
 
-from requests import session
+import filetype
+
+from werkzeug.utils import secure_filename
 
 from bht.catalog_tools import catfile_to_rows
 from web import db
-from web.errors import IstexError
-from web.istex_proxy import ark_to_id, get_doc_url
+from web.errors import IstexError, FilePathError
+from web.istex_proxy import ark_to_id, get_doc_url, istex_doc_to_struct
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
 
@@ -25,6 +32,79 @@ class BhtFileType(StrEnum):
 def istexid_to_paper(istex_id):
     paper = db.session.query(Paper).filter_by(istex_id=istex_id).one_or_none()
     return paper
+
+
+def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
+    """
+    Read a dir containing a .cleaned file and a .json file with meta info
+    Add the file in database for later processing
+    """
+    istex_id = os.path.basename(_istex_dir)
+    istex_file_name = f"{istex_id}.{file_ext}"
+    istex_file_path = os.path.join(_istex_dir, istex_file_name)
+    json_file_path = os.path.join(_istex_dir, f"{istex_id}.json")
+    if not os.path.isdir(_istex_dir) \
+            or not os.path.isfile(istex_file_path) \
+            or not os.path.isfile(json_file_path):
+        raise FilePathError(f"Istex dir has wrong structure")
+    # read  json in dir
+    with open(json_file_path) as json_fp:
+        try:
+            document_json = json.load(json_fp)
+        except JSONDecodeError:
+            print(f"Couldnt read json file {json_file_path}")
+            return None
+
+    istex_struct = istex_doc_to_struct(document_json)
+
+    with open(istex_file_path) as _ifd:
+        file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+
+def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
+    """
+    Push Paper to db from a pdf stream
+
+    Update Paper's pdf content if exists
+
+    :param upload_dir:
+    :param istex_struct:
+    :param file_stream the file content
+    :param filename
+    :return: the paper's id, or None if couldn't do it
+    """
+    filename = secure_filename(filename)
+    if not os.path.isdir(upload_dir):
+        os.makedirs(upload_dir)
+    _file_path = os.path.join(upload_dir, filename)
+    with open(_file_path, "wb") as _fd:
+        _fd.write(file_stream)
+    if not os.path.isfile(_file_path):
+        raise FilePathError(f"There was an error on {filename} copy")
+    _guessed_filetype = filetype.guess(_file_path)
+    _split_filename = os.path.splitext(filename)
+    _file_type = None
+    if _guessed_filetype and _guessed_filetype.mime == "application/pdf":
+        _file_type = BhtFileType.PDF
+    elif _split_filename[1] in [".cleaned", ".txt"]:
+        _file_type = BhtFileType.TXT
+    else:
+        return None
+    if istex_struct is not None:
+        _paper_title = istex_struct["title"]
+    else:
+        _paper_title = _split_filename[0]
+    paper = Paper.query.filter_by(title=_paper_title).one_or_none()
+    if paper is None:
+        paper = Paper(title=_paper_title)
+
+    # set_file_path() will add and commit paper
+    paper.set_file_path(_file_path, _file_type)
+    if istex_struct is not None:
+        paper.set_doi(istex_struct["doi"])
+        paper.set_ark(istex_struct["ark"])
+        paper.set_pubdate(istex_struct["pub_date"])
+        paper.set_istex_id(istex_struct["istex_id"])
+    return paper.id
 
 
 # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
@@ -70,17 +150,17 @@ class HpEvent(db.Model):
 
     # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
     def __init__(
-        self,
-        start_time: str,
-        stop_time: str,
-        doi: str,
-        sats: str,
-        insts: str,
-        regs: str,
-        conf: float = None,
-        d: int = None,
-        r: int = None,
-        **kwargs,
+            self,
+            start_time: str,
+            stop_time: str,
+            doi: str,
+            sats: str,
+            insts: str,
+            regs: str,
+            conf: float = None,
+            d: int = None,
+            r: int = None,
+            **kwargs,
     ):
         self.start_date = datetime.datetime.strptime(start_time, DATE_FORMAT)
         self.stop_date = datetime.datetime.strptime(stop_time, DATE_FORMAT)
@@ -111,8 +191,8 @@ class HpEvent(db.Model):
         r_dict = {
             "id": self.id,
             "start_date": datetime.datetime.strftime(self.start_date, DATE_FORMAT)[
-                0:-3
-            ],
+                          0:-3
+                          ],
             "stop_date": datetime.datetime.strftime(self.stop_date, DATE_FORMAT)[0:-3],
             "duration": duration,
             "duration_str": duration_str,
@@ -376,3 +456,4 @@ class Paper(db.Model):
         except TypeError:
             has_txt = False
         return has_txt
+

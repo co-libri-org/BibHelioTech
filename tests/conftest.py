@@ -7,8 +7,7 @@ from flask import current_app
 
 from web import create_app
 from web import db as _db
-from web.main.routes import pdf_to_db
-from web.models import Paper, HpEvent, BhtFileType
+from web.models import Paper, HpEvent, BhtFileType, file_to_db
 
 skip_selenium = pytest.mark.skipif(
     os.environ.get("BHT_SKIP_SELENIUM") is not None
@@ -93,10 +92,10 @@ def paper_with_cat(paper_for_test, cat_for_test):
 
 
 @pytest.fixture(scope="function")
-def paper_for_test(pdf_for_test):
+def paper_for_test(pdf_for_test, tmp_path_factory):
     """Add a paper's pdf to db"""
     with open(pdf_for_test, "rb", buffering=0) as fp:
-        paper_id = pdf_to_db(fp.readall(), os.path.basename(pdf_for_test))
+        paper_id = file_to_db(fp.readall(), os.path.basename(pdf_for_test), tmp_path_factory.mktemp("upload_dir"))
     paper = _db.session.get(Paper, paper_id)
     _db.session.add(paper)
     _db.session.commit()

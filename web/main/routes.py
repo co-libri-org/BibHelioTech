@@ -3,17 +3,13 @@ import json
 import os
 
 import dateutil.parser as parser
-import numpy as np
 import pandas as pd
 import redis
-import filetype
 import requests
 
 from rq import Queue
 from rq.exceptions import NoSuchJobError
 from rq.job import Job
-
-from werkzeug.utils import secure_filename
 
 from flask import (
     render_template,
@@ -32,7 +28,7 @@ from bht.errors import BhtCsvError
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType, Doi, istexid_to_paper
+from web.models import Paper, Mission, HpEvent, BhtFileType, istexid_to_paper, file_to_db
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -42,7 +38,7 @@ from web.istex_proxy import (
     IstexDoctype,
     ark_to_istex_url,
 )
-from ..errors import IstexError, WebError
+from ..errors import IstexError, WebError, FilePathError
 
 
 class StatusResponse:
@@ -177,54 +173,7 @@ def get_paper_file(paper_id, file_type):
     return file_path
 
 
-# TODO: REWRITE rename to file_to_db
-# TODO: REFACTOR insert into models.Paper ?
-# TODO: REWRITE raise exception or send message to calling route to be flashed
-def pdf_to_db(file_stream, filename, istex_struct=None):
-    """
-    Push Paper to db from a pdf stream
-
-    Update Paper's pdf content if exists
-
-    :parameter: file_stream the file content
-    :parameter: filename
-    :return: the paper's id, or None if couldn't do it
-    """
-    filename = secure_filename(filename)
-    upload_dir = current_app.config["WEB_UPLOAD_DIR"]
-    if not os.path.isdir(upload_dir):
-        os.makedirs(upload_dir)
-    _file_path = os.path.join(upload_dir, filename)
-    with open(_file_path, "wb") as _fd:
-        _fd.write(file_stream)
-    if not os.path.isfile(_file_path):
-        return redirect(url_for("main.papers"))
-    _guessed_filetype = filetype.guess(_file_path)
-    _split_filename = os.path.splitext(filename)
-    _file_type = None
-    if _guessed_filetype and _guessed_filetype.mime == "application/pdf":
-        _file_type = BhtFileType.PDF
-    elif _split_filename[1] in [".cleaned", ".txt"]:
-        _file_type = BhtFileType.TXT
-    else:
-        return None
-    if istex_struct is not None:
-        _paper_title = istex_struct["title"]
-    else:
-        _paper_title = _split_filename[0]
-    paper = Paper.query.filter_by(title=_paper_title).one_or_none()
-    if paper is None:
-        paper = Paper(title=_paper_title)
-
-    # set_file_path() will add and commit paper
-    paper.set_file_path(_file_path, _file_type)
-    if istex_struct is not None:
-        paper.set_doi(istex_struct["doi"])
-        paper.set_ark(istex_struct["ark"])
-        paper.set_pubdate(istex_struct["pub_date"])
-        paper.set_istex_id(istex_struct["istex_id"])
-    return paper.id
-
+#  - - - - - - - - - - - - - - - - - - A P P  C O N F I G U R A T I O N S - - - - - - - - - - - - - - - - - - - - #
 
 @bp.app_template_filter("short_timedelta")
 def short_timedelta(in_timedelta):
@@ -265,6 +214,14 @@ def basename_filter(filename):
         return None
     return os.path.basename(filename)
 
+
+# Add colors as default variable for all template
+@bp.before_request
+def add_css_colors_to_templates():
+    # Mettre CSS_COLORS dans le contexte global des templates
+    current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
+
+#  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
 
 @bp.route("/")
 def index():
@@ -464,16 +421,19 @@ def papers(name=None):
 def upload_from_url():
     # TODO: REFACTOR merge with istex_upload_id()
     file_url = request.form.get("file_url")
-    if file_url:
-        filestream, filename = get_file_from_url(file_url)
-        paper_id = pdf_to_db(filestream, filename)
-        flash(f"Uploaded {filename} to paper {paper_id}")
-        return redirect(url_for("main.papers"))
-    else:
+    if file_url is None:
         return Response(
             "No valid parameters for url",
             status=400,
         )
+    filestream, filename = get_file_from_url(file_url)
+    try:
+        paper_id = file_to_db(filestream, filename, upload_dir=current_app.config["WEB_UPLOAD_DIR"])
+    except FilePathError:
+        flash(f"Error adding {filename} to db", "error")
+    else:
+        flash(f"Uploaded {filename} to paper {paper_id}")
+    return redirect(url_for("main.papers"))
 
 
 @bp.route("/istex_upload_id", methods=["POST"])
@@ -488,20 +448,25 @@ def istex_upload_id():
             "No valid parameters for url",
             status=400,
         )
-    else:
-        fs, filename, istex_struct = get_file_from_id(istex_id, doc_type)
-        paper_id = pdf_to_db(fs, filename, istex_struct)
-        return (
-            jsonify(
-                {
-                    "success": "true",
-                    "istex_id": istex_id,
-                    "paper_id": paper_id,
-                    "filename": filename,
-                }
-            ),
-            201,
+    fs, filename, istex_struct = get_file_from_id(istex_id, doc_type)
+    try:
+        paper_id = file_to_db(fs, filename, current_app.config["WEB_UPLOAD_DIR"], istex_struct)
+    except FilePathError:
+        return Response(
+            f"There was an error on {filename} copy",
+            status=400,
         )
+    return (
+        jsonify(
+            {
+                "success": "true",
+                "istex_id": istex_id,
+                "paper_id": paper_id,
+                "filename": filename,
+            }
+        ),
+        201,
+    )
 
 
 @bp.route("/upload", methods=["POST"])
@@ -517,8 +482,12 @@ def upload():
     if file.filename == "":
         flash("No selected file")
     elif file and allowed_file(file.filename):
-        pdf_to_db(file.read(), file.filename)
-        flash(f"Uploaded {file.filename}")
+        try:
+            file_to_db(file.read(), file.filename, upload_dir=current_app.config["WEB_UPLOAD_DIR"])
+        except FilePathError:
+            flash(f"Error adding {file.filename} to db", "error")
+        else:
+            flash(f"Uploaded {file.filename}")
     else:
         flash(f"{file.filename} Not allowed")
     return redirect(url_for("main.papers"))
@@ -552,6 +521,8 @@ def bht_status(paper_id):
     else:  # Get task info from task manager
         task_id = paper.task_id
         try:
+            if task_id is None:
+                raise NoSuchJobError
             job = Job.fetch(
                 task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
             )
@@ -601,10 +572,8 @@ def bht_status(paper_id):
     return response_object.response, 200
 
 
-@bp.route("/bht_run", methods=["POST"])
-def bht_run():
-    paper_id = request.form["paper_id"]
-    file_type = request.form["file_type"]
+@bp.route("/bht_run/<paper_id>/<file_type>", methods=["GET"])
+def bht_run(paper_id, file_type):
     found_file = get_paper_file(paper_id, file_type.upper())
     if found_file is None:
         flash("No file for that paper.")
@@ -767,7 +736,7 @@ def admin():
     import glob
 
     search_pattern = os.path.join(
-        f"{current_app.config["BHT_DATA_DIR"]}/**/", "raw4_sutime.json"
+        f'{current_app.config["BHT_DATA_DIR"]}/**/', "raw4_sutime.json"
     )
     json_files = glob.glob(search_pattern, recursive=True)
 
@@ -830,8 +799,9 @@ def catalogs():
     selected_missions_names = []
     for m_id in params["selected_missions"]:
         _m = Mission.query.get(m_id)
-        selected_missions_names.append(_m.name)
-        found_events.extend(_m.hp_events)
+        if _m is not None:
+            selected_missions_names.append(_m.name)
+            found_events.extend(_m.hp_events)
 
     # translate to dict list, then pandas dataframe, and filter
     # then translate back to dict (pd.to_records)

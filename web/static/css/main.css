@@ -1,3 +1,7 @@
+.bg-app-theme {
+    background-color: var(--app-theme-color) !important;
+}
+
 tr {
     vertical-align: baseline;
 }

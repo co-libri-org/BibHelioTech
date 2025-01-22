@@ -6,8 +6,7 @@ from flask import current_app
 
 from selenium import webdriver
 
-from web.main.routes import pdf_to_db
-
+from web.models import file_to_db
 
 
 @pytest.fixture(scope="module")
@@ -25,7 +24,7 @@ def firefox_driver():
 
 
 @pytest.fixture(scope="session")
-def paperslist_for_tests():
+def paperslist_for_tests(tmp_path_factory):
     """Add to db a list of pdf papers found in DATA/Papers-dist/ dir
 
     :return: list of papers id from db
@@ -38,6 +37,6 @@ def paperslist_for_tests():
     )
     for pdf_file in pdf_list:
         with open(pdf_file, "rb", buffering=0) as fp:
-            _id = pdf_to_db(fp.read(), os.path.basename(pdf_file))
+            _id = file_to_db(fp.read(), os.path.basename(pdf_file), tmp_path_factory.mktemp("upload_dir"))
             papers_ids.append(_id)
     yield papers_ids
