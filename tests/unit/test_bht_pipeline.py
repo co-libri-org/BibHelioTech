@@ -18,7 +18,7 @@ class TestBhtPipeline:
     def test_pipeline(self, ocr_dir_test):
         pipe_steps = [PipeStep.OCR, PipeStep.GROBID]
         res_steps = run_pipeline(
-            "path", doc_type=IstexDoctype.TXT, pipe_steps=pipe_steps, dest_file_dir=ocr_dir_test
+            "path", doc_type=IstexDoctype.TXT, pipe_steps=pipe_steps, pipeline_paper_dir=ocr_dir_test
         )
         assert res_steps == pipe_steps
 

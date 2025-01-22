@@ -79,6 +79,7 @@ if __name__ == "__main__":
         pipe_steps = [PipeStep[p] for p in args.pipe_steps]
 
     if args.pdf_file:
+        #TODO change with run_pipeline()
         bht_run_file(args.pdf_file, papers_dir, BhtFileType.PDF)
     elif args.txt_file:
         if not args.doi:
@@ -100,7 +101,7 @@ if __name__ == "__main__":
         done_steps = run_pipeline(
             doc_meta_info={"doi": args.doi},
             # TODO: pub_date=args.pub_date,
-            dest_file_dir=args.pipe_dir,
+            pipeline_paper_dir=args.pipe_dir,
             orig_file=None,
             doc_type=None,
             pipe_steps=pipe_steps,

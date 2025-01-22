@@ -97,13 +97,13 @@ def run_step_entities(dest_pdf_dir, doc_meta_info=None):
     catalog_file = entities_finder(dest_pdf_dir, doc_meta_info)
     return catalog_file
 
-def bht_run_file(orig_file, result_base_dir, file_type, doc_meta_info=None):
+def bht_run_file(paper_raw_file, pipeline_root_dir, file_type, doc_meta_info=None):
     """
     Given a file of type <file_type>, go through the whole pipeline process and make a catalog
 
     @param file_type: either pdf or txt or any of BhtFileType
-    @param orig_file: the sci article in pdf or txt format
-    @param result_base_dir: the root working directory
+    @param paper_raw_file: the sci article in pdf or txt format
+    @param pipeline_root_dir: the root working directory for all papers' pipelines 
     @param doc_meta_info: dict with paper doi, istex_id, publication_date ...
     @return: an HPEvents catalog
     """
@@ -125,10 +125,10 @@ def bht_run_file(orig_file, result_base_dir, file_type, doc_meta_info=None):
     # Run pipeline, and get catalog file
     output_container = {}
     done_steps = run_pipeline(
-        orig_file=orig_file,
+        orig_file=paper_raw_file,
         doc_type=file_type,
         pipe_steps=steps,
-        dest_file_dir=result_base_dir,
+        pipeline_root_dir=pipeline_root_dir,
         doc_meta_info=doc_meta_info,
         output_container=output_container
     )
@@ -195,7 +195,7 @@ def bht_run_dir(_base_pdf_dir):
                     )  # entities recognition and association + writing of HPEvent
 
 
-def run_pipeline(orig_file, doc_type, pipe_steps=(), pipeline_root_dir=None, dest_file_dir=None, doc_meta_info=None,
+def run_pipeline(orig_file, doc_type, pipe_steps=(), pipeline_root_dir=None, pipeline_paper_dir=None, doc_meta_info=None,
                  output_container=None):
     """
 
@@ -204,7 +204,7 @@ def run_pipeline(orig_file, doc_type, pipe_steps=(), pipeline_root_dir=None, des
     @param doc_type: is it a txt or pdf file
     @param pipe_steps: pipeline steps to run
     @param pipeline_root_dir: root directory where to make subdirectory for this pipeline
-    @param dest_file_dir: pipeline output directory in case of steps after step_mkdir
+    @param pipeline_paper_dir: pipeline output directory in case of steps after step_mkdir
     @param doc_meta_info:  contains doi and pub_date
     @param output_container: dictionnary to store alternate return values ("catalog_file" key for ex.)
     @return: done_steps
@@ -220,33 +220,33 @@ def run_pipeline(orig_file, doc_type, pipe_steps=(), pipeline_root_dir=None, des
 
     if PipeStep.MKDIR in pipe_steps:
         pipeline_root_dir = pipeline_root_dir or yml_settings["BHT_DATA_DIR"]
-        dest_file_dir = run_step_mkdir(
+        pipeline_paper_dir = run_step_mkdir(
             orig_file, pipeline_root_dir, doc_type=doc_type
         )
         done_steps.append(PipeStep.MKDIR)
 
     if PipeStep.OCR in pipe_steps:
-        run_step_ocr(dest_file_dir)
+        run_step_ocr(pipeline_paper_dir)
         done_steps.append(PipeStep.OCR)
 
     if PipeStep.GROBID in pipe_steps:
-        run_step_grobid(dest_file_dir)
+        run_step_grobid(pipeline_paper_dir)
         done_steps.append(PipeStep.GROBID)
 
     if PipeStep.FILTER in pipe_steps:
-        run_step_filter(dest_file_dir)
+        run_step_filter(pipeline_paper_dir)
         done_steps.append(PipeStep.FILTER)
 
     if PipeStep.SUTIME in pipe_steps:
-        run_step_sutime(dest_file_dir)
+        run_step_sutime(pipeline_paper_dir)
         done_steps.append(PipeStep.SUTIME)
 
     if PipeStep.TIMEFILL in pipe_steps:
-        run_step_timefill(dest_file_dir)
+        run_step_timefill(pipeline_paper_dir)
         done_steps.append(PipeStep.TIMEFILL)
 
     if PipeStep.ENTITIES in pipe_steps:
-        catalog_file = run_step_entities(dest_file_dir, doc_meta_info)
+        catalog_file = run_step_entities(pipeline_paper_dir, doc_meta_info)
         # Store catalog_file in the result container, if provided
         if output_container is not None:
             output_container["catalog_file"] = catalog_file
