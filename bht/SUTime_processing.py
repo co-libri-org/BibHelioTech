@@ -160,6 +160,8 @@ def durations_to_prevdate(json_list):
         if "type" not in _s.keys() or _s["type"] != "DURATION":
             continue
         value = _s["value"]
+        from pprint import pprint
+        pprint(_s)
         begin_date = parser.parse(value["begin"])
         end_date = parser.parse(value["end"])
         to_print = f"{begin_date} -> {end_date}"
@@ -376,6 +378,12 @@ class SUTimeTransformer:
                 entry.clear()
         self._filter_empty()
 
+    def _normalize_24h_time(self):
+        for entry in self.json_list:
+            if entry["type"] == "DURATION":
+                for key in ["begin", "end"]:
+                    entry["value"][key] = re.sub(r'T24:00', 'T23:59', entry["value"][key])
+
     def transform(self):
         self._replace_current_year()
         raw_dumper.dump_to_raw(self.json_list, "Current Year to XXXX", self.ocr_folder)
@@ -392,6 +400,9 @@ class SUTimeTransformer:
         shortdate_rewriting_step(self.json_list)
         raw_dumper.dump_to_raw(self.json_list, "Date rewriting: short date to whole month DURATION", self.ocr_folder)
 
+        self._normalize_24h_time()
+        raw_dumper.dump_to_raw(self.json_list, "Normalize 24:00 to 23:59", self.ocr_folder)
+
         self.json_list = durations_to_prevdate(self.json_list)
         raw_dumper.dump_to_raw(self.json_list, "DURATION gets Previous date", self.ocr_folder)
 
@@ -399,10 +410,11 @@ class SUTimeTransformer:
         raw_dumper.dump_to_raw(self.json_list, "Change type DATE to DURATION", self.ocr_folder)
 
         self._standardize_formats()
-        raw_dumper.dump_to_raw(self.json_list, "Remove all but DURATION, add midnight", self.ocr_folder)
-        raw_dumper.dump_to_raw(self.json_list, "Do some .000 magic", self.ocr_folder)
-        raw_dumper.dump_to_raw(self.json_list, "Remove wrong date format", self.ocr_folder)
-        raw_dumper.dump_to_raw(self.json_list, "Remove not DURATION", self.ocr_folder)
+        raw_dumper.dump_to_raw(self.json_list, "Standardize formats (DURATIONS, .000, wrong date) ", self.ocr_folder)
+        # raw_dumper.dump_to_raw(self.json_list, "Remove all but DURATION, add midnight", self.ocr_folder)
+        # raw_dumper.dump_to_raw(self.json_list, "Do some .000 magic", self.ocr_folder)
+        # raw_dumper.dump_to_raw(self.json_list, "Remove wrong date format", self.ocr_folder)
+        # raw_dumper.dump_to_raw(self.json_list, "Remove not DURATION", self.ocr_folder)
 
         output_file = os.path.join(self.ocr_folder, "res_sutime_2.json")
         with open(output_file, "w") as f:
