@@ -160,11 +160,8 @@ def durations_to_prevdate(json_list):
         if "type" not in _s.keys() or _s["type"] != "DURATION":
             continue
         value = _s["value"]
-        from pprint import pprint
-        pprint(_s)
         begin_date = parser.parse(value["begin"])
         end_date = parser.parse(value["end"])
-        to_print = f"{begin_date} -> {end_date}"
         # either only end_date is set, so set begin to be the same
         if date_is_today(begin_date) and not date_is_today(end_date):
             set_duration_day(_s, end_date, keys=("begin",))
@@ -383,6 +380,8 @@ class SUTimeTransformer:
             if entry["type"] == "DURATION":
                 for key in ["begin", "end"]:
                     entry["value"][key] = re.sub(r'T24:00', 'T23:59', entry["value"][key])
+                    entry["value"][key] = re.sub(r'(0\d)(\d{2})', r'\1:\2', entry["value"][key])
+
 
     def transform(self):
         self._replace_current_year()

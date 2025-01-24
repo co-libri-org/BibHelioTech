@@ -17,9 +17,10 @@ def content_filter(content):
     content = re.sub("\n{1,5}", " ", content)  # remove all \n
 
     content = re.sub(r"UT ", r" UT ", content)  # replace "22:02UT" by "22:02 UT"
-    content = re.sub(r" UT ", r" UTC", content)  # replace "22:02 UT" by "22:02 UTC"
+    content = re.sub(r" UT ", r" UTC ", content)  # replace "22:02 UT" by "22:02 UTC"
 
     # HHmm to HH:mm
+    content = re.sub(r'([0-9]{2})([0-9]{2})\s*(UT|UTC)', r'\1:\2 \3', content)
     content = re.sub(r"([0-9]{2})([0-9]{2})(\:[0-9]{2})", r"\1:\2\3", content)
     # 20240307: this one is remove because rewriting years "2011 to 2014" becomes "20:11 - 20:14"
     # content = re.sub(
