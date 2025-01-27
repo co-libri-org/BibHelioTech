@@ -143,10 +143,26 @@ class SUTimeTransformer:
     def _filter_empty(self):
         self.json_list = [entry for entry in self.json_list if entry]
 
+
     def _clear_if_match(self, dicts, pattern, key="value"):
-        """Utility function to clear dictionary if a regex pattern matches."""
-        if re.search(pattern, str(dicts.get(key, ""))):
-            dicts.clear()
+        """Utility function to clear dictionary if a regex pattern matches.
+
+        Handles both string values and dictionary values with 'begin' and 'end' keys.
+        """
+        value = dicts.get(key, "")
+
+        if isinstance(value, str):
+            # If the value is a string, apply the regex pattern directly
+            if re.search(pattern, value):
+                dicts.clear()
+
+        elif isinstance(value, dict):
+            # If the value is a dictionary with 'begin' and 'end', apply the regex to both
+            begin_match = re.search(pattern, value.get("begin", ""))
+            end_match = re.search(pattern, value.get("end", ""))
+
+            if begin_match or end_match:
+                dicts.clear()
 
     def _remove_today_date(self):
         """Special case: Remove today's date from all dictionaries in json_list."""
@@ -169,9 +185,10 @@ class SUTimeTransformer:
             ("-WE$", "value"),
             ("-W", "value"),
             (".*Q.*", "value"),
-            ("MO$|AF$|EV$|NI$", "value"),
+            ("TXX$|FA$|MO$|AF$|EV$|NI$", "value"),
             ("-FA$|-SU$|-SP$|-WI$", "value"),
             ("^[0-9]{4}$", "value"),
+            (r"^-?[0-9][0-9X][0-9X]X$", "value"), # "-04XX|186X|188X|18XX|190X|192X|195X|196X|19XX ... "
             (r"^\\+.*", "value"),
         ]
 
