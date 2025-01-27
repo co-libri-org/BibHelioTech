@@ -19,105 +19,14 @@ def SUTime_treatement(current_OCR_folder, sutime):
     file = open(current_OCR_folder + "/" + "out_filtered_text.txt", "r")
     input_content = file.read()
 
-    test_list = sutime.parse(input_content)  # Analysis of the whole text by SUTime
-    raw_dumper.dump_to_raw(test_list, "Raw sutime output", current_OCR_folder)
+    sutime_structs_list = sutime.parse(input_content)  # Analysis of the whole text by SUTime
+    raw_dumper.dump_to_raw(sutime_structs_list, "Raw sutime output", current_OCR_folder)
 
-    compteur = 0
-    for dicts in test_list:
-        try:
-            # removal of useless values
-            if re.search(
-                    "PRESENT_REF", str(dicts["value"])
-            ):  # remove times of type "..._REF"
-                dicts.clear()
-            elif re.search(
-                    "FUTURE_REF", str(dicts["value"])
-            ):  # remove times of type "..._REF"
-                dicts.clear()
-            elif re.search(
-                    "PAST_REF", str(dicts["value"])
-            ):  # remove times of type "..._REF"
-                dicts.clear()
-            elif re.search(
-                    "P.*", str(dicts["value"])
-            ):  # remove times of types like PXS.XS,PTXS,TOM,PTAH,PXD,PXW,PXY
-                dicts.clear()
-            elif re.search(
-                    "^([^0-9]*)$", str(dicts["text"])
-            ):  # remove times that do not contain digit (like 'today', 'dusk', 'the night', etc...)
-                dicts.clear()
-            elif re.search(
-                    "-WE$", str(dicts["value"])
-            ):  # remove times of type XXXX-WX-WE (weeks/weekend)
-                dicts.clear()
-            elif re.search(
-                    "-W", str(dicts["value"])
-            ):  # remove times of type XXXX-WX-WE (weeks/weekend)
-                dicts.clear()
-            elif re.search(
-                    ".*Q.*", str(dicts["value"])
-            ):  # remove times of type QX (Quarters)
-                dicts.clear()
-            elif re.search(
-                    "MO$", str(dicts["value"])
-            ):  # remove times of type MO (morning)
-                dicts.clear()
-            elif re.search(
-                    "AF$", str(dicts["value"])
-            ):  # remove times of type AF (afternoon)
-                dicts.clear()
-            elif re.search(
-                    "EV$", str(dicts["value"])
-            ):  # remove times of type EV (evening)
-                dicts.clear()
-            elif re.search(
-                    "NI$", str(dicts["value"])
-            ):  # remove times of type NI (night)
-                dicts.clear()
-            elif re.search(
-                    "-FA$", str(dicts["value"])
-            ):  # remove times of type FA (autumn)
-                dicts.clear()
-            elif re.search(
-                    "-SU$", str(dicts["value"])
-            ):  # remove times of type SU (summer)
-                dicts.clear()
-            elif re.search(
-                    "-SP$", str(dicts["value"])
-            ):  # remove times of type SP (spring)
-                dicts.clear()
-            elif re.search(
-                    "-WI$", str(dicts["value"])
-            ):  # remove times of type WI (winter)
-                dicts.clear()
-            elif re.search(
-                    "^[0-9]{4}$", str(dicts["value"])
-            ):  # remove years alone (value : "2004")
-                dicts.clear()
-            elif re.search(r"^\+.*", str(dicts["value"])):  # remove +XXXX alone
-                dicts.clear()
-            elif re.search(
-                    str(str(date.today()).replace("-", "-")), dicts["value"]
-            ):  # remove date if it's today
-                dicts["value"] = re.sub(
-                    str(str(date.today()).replace("-", "-")), "", dicts["value"]
-                )
-                dicts["timex-value"] = re.sub(
-                    str(str(date.today()).replace("-", "-")), "", dicts["timex-value"]
-                )
-                if dicts["value"] == "":
-                    dicts.clear()
-        except:
-            continue
-        compteur += 1
-
-    test_list = [i for i in test_list if i != {}]  # remove empty dictionaries
-
-    raw_dumper.dump_to_raw(test_list, "Filtering sutime by values", current_OCR_folder)
+    raw_dumper.dump_to_raw(sutime_structs_list, "Filtering sutime by values", current_OCR_folder)
 
     res_file = open(current_OCR_folder + "/" + "res_sutime.json", "w")
     res_file.write(
-        json.dumps(test_list, sort_keys=True, indent=4)
+        json.dumps(sutime_structs_list, sort_keys=True, indent=4)
     )  # write the result in a file
 
     file.close()
@@ -233,6 +142,48 @@ class SUTimeTransformer:
 
     def _filter_empty(self):
         self.json_list = [entry for entry in self.json_list if entry]
+
+    def _clear_if_match(self, dicts, pattern, key="value"):
+        """Utility function to clear dictionary if a regex pattern matches."""
+        if re.search(pattern, str(dicts.get(key, ""))):
+            dicts.clear()
+
+    def _remove_today_date(self):
+        """Special case: Remove today's date from all dictionaries in json_list."""
+        today_str = str(date.today())
+        for dicts in self.json_list:
+            if today_str in str(dicts.get("value", "")):
+                dicts["value"] = re.sub(today_str, "", dicts["value"])
+                dicts["timex-value"] = re.sub(today_str, "", dicts.get("timex-value", ""))
+                if not dicts["value"]:
+                    dicts.clear()
+
+        # Remove empty dictionaries
+        self.json_list = [i for i in self.json_list if i]
+
+    def _remove_unparsable_patterns(self):
+        patterns = [
+            ("PRESENT_REF|FUTURE_REF|PAST_REF", "value"),
+            ("P.*", "value"),
+            ("^([^0-9]*)$", "text"),
+            ("-WE$", "value"),
+            ("-W", "value"),
+            (".*Q.*", "value"),
+            ("MO$|AF$|EV$|NI$", "value"),
+            ("-FA$|-SU$|-SP$|-WI$", "value"),
+            ("^[0-9]{4}$", "value"),
+            (r"^\\+.*", "value"),
+        ]
+
+        for dicts in self.json_list:
+            try:
+                for pattern, key in patterns:
+                    self._clear_if_match(dicts, pattern, key)
+            except Exception as e:
+                print(f"Error processing dict: {e}")
+
+        # Remove empty dictionaries
+        self.json_list = [i for i in self.json_list if i]
 
     def _replace_current_year(self):
         for entry in self.json_list:
@@ -384,6 +335,12 @@ class SUTimeTransformer:
 
 
     def transform(self):
+        self._remove_unparsable_patterns()
+        raw_dumper.dump_to_raw(self.json_list, "First Filter: Remove Unreadable Patterns", self.ocr_folder)
+
+        self._remove_today_date()
+        raw_dumper.dump_to_raw(self.json_list, "Remove date today", self.ocr_folder)
+
         self._replace_current_year()
         raw_dumper.dump_to_raw(self.json_list, "Current Year to XXXX", self.ocr_folder)
 
