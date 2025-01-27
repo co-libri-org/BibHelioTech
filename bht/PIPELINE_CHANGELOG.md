@@ -25,11 +25,13 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [8.2] - 2025-01-xx - Fix errors from bulk
+## [8.3] - 2025-01-xx - Fix errors from bulk
 #### Fixed
 - empty entities bug
 - empty timespan bug
+- remove unparsable patterns
 #### Changes
+- refactored SUTime filters
 #### New
 
 ## [8.1] - 2025-01-13 - Pipeline Optimizations

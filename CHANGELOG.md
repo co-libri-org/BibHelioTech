@@ -25,9 +25,10 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [1.3.0-bulk] - 2025-01-xx - Partial bulk by CLI
+## [1.3.1-bulk] - 2025-01-xx - Partial bulk by CLI
 #### Fixed
 #### Changed
+- Pipeline refactoring
 #### New
 
 ## [1.2.0] - 2025-01-22 - First Bulk prototype
