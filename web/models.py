@@ -124,17 +124,13 @@ def catfile_to_db(catfile):
         db.session.add(hpevent)
         db.session.commit()
 
-class TaskStruct():
+class TaskStruct:
     """
     Represents the status of a paper processing task
     """
-    status: str
-    started_at: Optional[datetime] = None
-    stopped_at: Optional[datetime] = None
-    elapsed_time: str = ""
+    task_started: Optional[datetime] = None
+    task_stopped: Optional[datetime] = None
     pipeline_version: str = ""
-    message: str = ""
-    alt_message: str = ""
 
     def __init__(self, paper: 'Paper'):
         self.paper_id = paper.id
