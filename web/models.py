@@ -6,6 +6,7 @@ import sys
 from enum import StrEnum, auto
 from json import JSONDecodeError
 from pprint import pprint
+from typing import Optional
 
 import filetype
 
@@ -123,6 +124,61 @@ def catfile_to_db(catfile):
         db.session.add(hpevent)
         db.session.commit()
 
+class TaskStruct():
+    """
+    Represents the status of a paper processing task
+    """
+    status: str
+    started_at: Optional[datetime] = None
+    stopped_at: Optional[datetime] = None
+    elapsed_time: str = ""
+    pipeline_version: str = ""
+    message: str = ""
+    alt_message: str = ""
+
+    def __init__(self, paper: 'Paper'):
+        self.paper_id = paper.id
+        # self.ppl_ver = ppl_ver
+        self.task_status = paper.task_status
+        self.task_started = paper.task_started
+        self.task_stopped = paper.task_stopped
+        self.cat_is_processed = paper.has_cat and paper.cat_in_db
+
+    @property
+    def task_elapsed(self):
+        if self.task_status == "started":
+            _elapsed = str(datetime.datetime.now() - self.task_started).split(".")[0]
+        elif self.task_status in ["finished", "failed"]:
+            _elapsed = str(self.task_stopped - self.task_started).split(".")[0]
+        else:
+            _elapsed = ""
+        return _elapsed
+
+    @property
+    def message(self):
+        if self.task_status is None:
+            _message = "No job run yet"
+        else:
+            _message = f"{self.task_status:9} {self.task_elapsed}"
+        return _message
+
+    @property
+    def alt_message(self):
+        if self.task_started is not None:
+            _task_started_str = self.task_started.strftime('%Y-%m-%dT%H:%M:%S')
+        else:
+            _task_started_str = "(no time info)"
+        if self.task_stopped is not None:
+            _task_stopped_str = self.task_stopped.strftime('%Y-%m-%dT%H:%M:%S')
+        else:
+            _task_stopped_str = "(no time info)"
+
+        _alt_message="no alt message"
+        if self.task_status in ["started", "finished", "failed"]:
+            _alt_message = f"Started {_task_started_str}"
+        elif self.task_status in ["queued"]:
+            _alt_message = f"Waiting since {_task_started_str}"
+        return _alt_message
 
 class Catalog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -302,6 +358,12 @@ class Paper(db.Model):
         cat:       {self.cat_path}
         cat_in_db: {self.cat_in_db}
         pipe_ver:  {self.pipeline_version}>"""
+
+
+    @property
+    def task_struct(self):
+        """Build a struct with tasks"""
+        return TaskStruct(self)
 
     def set_task_id(self, task_id):
         self.task_id = task_id
