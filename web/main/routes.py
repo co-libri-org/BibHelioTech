@@ -50,17 +50,19 @@ class StatusResponse:
     """
 
     def __init__(
-        self,
-        status: str = "success",
-        paper_id: int = None,
-        ppl_ver: str = None,
-        task_status: str = None,
-        task_started: datetime = None,
-        task_stopped: datetime = None,
-        cat_is_processed: bool = None,
-        message: str = None,
-        alt_message: str = None,
+            self,
+            paper: 'Paper' = None,
+            status: str = "success",
+            paper_id: int = None,
+            ppl_ver: str = None,
+            task_status: str = None,
+            task_started: datetime = None,
+            task_stopped: datetime = None,
+            cat_is_processed: bool = None,
+            message: str = None,
+            alt_message: str = None,
     ):
+        self.paper=paper
         self.status = status
         self.paper_id = paper_id
         self.ppl_ver = ppl_ver
@@ -90,14 +92,14 @@ class StatusResponse:
         return {
             "status": self.status,
             "data": {
-                "paper_id": self.paper_id,
-                "ppl_ver": self.ppl_ver,
-                "task_status": self.task_status,
-                "task_started": self.task_started_str,
-                "task_stopped": self.task_stopped_str,
-                "cat_is_processed": self.cat_is_processed,
-                "message": self.message,
-                "alt_message": self.alt_message,
+                "paper_id": self.paper.id,
+                "ppl_ver": self.paper.task_struct.pipeline_version,
+                "task_status": self.paper.task_struct.task_status,
+                "task_started": self.paper.task_struct.task_started,
+                "task_stopped": self.paper.task_struct.task_stopped,
+                "cat_is_processed": self.paper.has_cat and self.paper.cat_in_db,
+                "message": self.paper.task_struct.message,
+                "alt_message": self.paper.task_struct.alt_message,
             },
         }
 
@@ -119,9 +121,9 @@ class StatusResponse:
 def allowed_file(filename):
     # TODO: REFACTOR use models.FileType instead
     return (
-        "." in filename
-        and filename.rsplit(".", 1)[1].lower()
-        in current_app.config["ALLOWED_EXTENSIONS"]
+            "." in filename
+            and filename.rsplit(".", 1)[1].lower()
+            in current_app.config["ALLOWED_EXTENSIONS"]
     )
 
 
@@ -221,6 +223,7 @@ def basename_filter(filename):
 def add_css_colors_to_templates():
     # Mettre CSS_COLORS dans le contexte global des templates
     current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
+
 
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
 
@@ -503,14 +506,14 @@ def bht_status(paper_id):
 
     # TODO: REFACTOR cut and delegate to Paper and Task models
     # Get task info from db if task has finished
-    if paper.task_status == "finished" or paper.task_status == "failed":
+    if paper.task_status in ["finished", "failed"]:
         message = f"Paper task = {paper.task_status}"
         try:
             elapsed = str(paper.task_stopped - paper.task_started).split(".")[0]
         except Exception as e:
             current_app.logger.error(f"Got error on paper task date: {e}")
             elapsed = ""
-        response_object = StatusResponse(
+        response_object = StatusResponse( paper=paper,
             paper_id=paper.id,
             task_status=paper.task_status,
             task_started=paper.task_started,
@@ -545,7 +548,7 @@ def bht_status(paper_id):
             paper.set_task_status(task_status)
             paper.set_task_started(task_started)
             paper.set_task_stopped(job.ended_at)
-            response_object = StatusResponse(
+            response_object = StatusResponse( paper=paper,
                 paper_id=paper.id,
                 task_status=task_status,
                 task_started=task_started,
@@ -554,14 +557,14 @@ def bht_status(paper_id):
                 message=f"{task_status} {elapsed}",
             )
         except NoSuchJobError:
-            response_object = StatusResponse(
+            response_object = StatusResponse( paper=paper,
                 paper_id=paper.id,
                 task_status="undefined",
                 message="No job run yet",
                 alt_message="No pipeline was run on that paper",
             )
         except redis.connection.ConnectionError:
-            response_object = StatusResponse(
+            response_object = StatusResponse( paper=paper,
                 status="failed",
                 paper_id=paper.id,
                 message="Redis Cnx Err",
@@ -571,6 +574,7 @@ def bht_status(paper_id):
 
         # TODO: END CUTTING
     return response_object.response, 200
+
 
 @bp.route("/bht_run/<paper_id>/<file_type>", defaults={"pipeline_start_step": PipeStep.TIMEFILL}, methods=["GET"])
 @bp.route("/bht_run/<paper_id>/<file_type>/<pipeline_start_step>", methods=["GET"])
@@ -589,7 +593,7 @@ def bht_run(paper_id, file_type, pipeline_start_step=0):
             job_timeout=600,
         )
     except redis.connection.ConnectionError:
-        response_object = StatusResponse(
+        response_object = StatusResponse( paper=None,
             status="failed",
             paper_id=int(paper_id),
             message="Failed, no Redis",
@@ -603,7 +607,7 @@ def bht_run(paper_id, file_type, pipeline_start_step=0):
     paper.set_cat_path(None)
     # TODO: CUT END
 
-    response_object = StatusResponse(
+    response_object = StatusResponse( paper=paper,
         status="success", task_status="queued", paper_id=paper.id
     )
     return response_object.response, 202
@@ -615,7 +619,7 @@ def istex_test():
     from web.istex_proxy import json_to_hits
 
     with open(
-        os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
+            os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
     ) as fp:
         istex_list = json_to_hits(json.load(fp))
     return render_template("istex.html", istex_list=istex_list)
@@ -654,9 +658,9 @@ def istex():
         json_content = r.json()
         istex_list = json_to_hits(json_content)
     except (
-        requests.exceptions.MissingSchema,
-        requests.exceptions.InvalidURL,
-        requests.exceptions.ConnectionError,
+            requests.exceptions.MissingSchema,
+            requests.exceptions.InvalidURL,
+            requests.exceptions.ConnectionError,
     ):
         flash(f"Could not connect to <{istex_req_url}>", "error")
         return redirect(url_for("main.istex"))
@@ -728,7 +732,6 @@ def events(ref_name, ref_id):
 
 @bp.route("/admin", methods=["GET"])
 def admin():
-
     # build a list of papers with catalogs not already inserted in db
     _catalogs = [
         paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
