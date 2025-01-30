@@ -131,8 +131,9 @@ class TaskStruct:
 
     def __init__(self, paper: 'Paper'):
         self.paper = paper
-        self.task_started = paper.task_started
-        self.task_stopped = paper.task_stopped
+        self.pipeline_version = self.paper.pipeline_version
+        self.task_started = None if paper.task_started is None else paper.task_started.replace(tzinfo=datetime.timezone.utc)
+        self.task_stopped = None if paper.task_stopped is None else paper.task_stopped.replace(tzinfo=datetime.timezone.utc)
         self.cat_is_processed = paper.has_cat and paper.cat_in_db
 
     @property
@@ -146,7 +147,7 @@ class TaskStruct:
     @property
     def task_elapsed(self):
         if self.task_status == "started":
-            _elapsed = str(datetime.datetime.now() - self.task_started).split(".")[0]
+            _elapsed = str(datetime.datetime.now(datetime.UTC) - self.task_started).split(".")[0]
         elif self.task_status in ["finished", "failed"]:
             _elapsed = str(self.task_stopped - self.task_started).split(".")[0]
         else:
