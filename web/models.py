@@ -2,10 +2,8 @@ import datetime
 import json
 import os
 import os.path
-import sys
 from enum import StrEnum, auto
 from json import JSONDecodeError
-from pprint import pprint
 from typing import Optional
 
 import filetype
@@ -25,7 +23,6 @@ class BhtFileType(StrEnum):
     PDF = auto()
     TXT = auto()
     CAT = auto()
-
 
 # TOOLS TO INSERT IN MODELS METHODS
 
@@ -133,12 +130,18 @@ class TaskStruct:
     pipeline_version: str = ""
 
     def __init__(self, paper: 'Paper'):
-        self.paper_id = paper.id
-        # self.ppl_ver = ppl_ver
-        self.task_status = paper.task_status
+        self.paper = paper
         self.task_started = paper.task_started
         self.task_stopped = paper.task_stopped
         self.cat_is_processed = paper.has_cat and paper.cat_in_db
+
+    @property
+    def task_status(self):
+        if self.paper.task_status in ["queued", "started", "finished", "failed"]:
+            return self.paper.task_status
+        else:
+            return "undefined"
+
 
     @property
     def task_elapsed(self):
@@ -152,7 +155,7 @@ class TaskStruct:
 
     @property
     def message(self):
-        if self.task_status is None:
+        if self.task_status == "undefined":
             _message = "No job run yet"
         else:
             _message = f"{self.task_status:9} {self.task_elapsed}"
