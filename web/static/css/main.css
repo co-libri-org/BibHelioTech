@@ -202,13 +202,13 @@ input.success{
     background-color: white !important;
 }
 .bht-status {
-    align-items: center; /* Centrage vertical du contenu */
-    margin: 3px;
-    height: 100%;
+    text-align: justify;
+    font-family: monospace;
+    font-size: 0.85em;
+    display: inline-block;
+    width: 100%;
     border: 1pt solid transparent;
     color: black;
-    display: inline-block;
-    align-items: center;
     border-radius: 5pt;
     padding: 6px;
 }

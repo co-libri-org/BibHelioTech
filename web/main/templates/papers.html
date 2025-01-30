@@ -30,7 +30,7 @@
     <thead>
     <tr>
         <th scope="col" style="width: 20px">Id</th>
-        <th scope="col" style="width: 580px;">Title</th>
+        <th scope="col" >Title</th>
         <th scope="col" style="width: 40px;">del</th>
         <th scope="col" style="width: 40px;">pdf</th>
         <th scope="col" style="width: 40px;">txt</th>
@@ -103,7 +103,7 @@
         </td>
         <td style="width: 150px;">
             <span class="bht-status {{paper.task_status}}" title="{{paper.task_struct.alt_message}}" id="bht-status-{{paper.id}}">
-                {{paper.task_struct.message}}</span>
+                {{paper.task_struct.message.replace(" ", "&nbsp;") | safe }}</span>
             <span class="spinner-border spinner-border-sm text-warning d-none" id="spinner-{{paper.id}}"></span>
         </td>
     </tr>
