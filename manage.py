@@ -19,6 +19,44 @@ from web.models import Paper, HpEvent
 
 cli = FlaskGroup(create_app=create_app)
 
+@cli.command("rq_show")
+@click.argument("status", required=True)
+def rq_show(status):
+    """Show all jobs with given status"""
+    from rq import Queue
+    from rq.worker import Worker
+    from rq.registry import FailedJobRegistry
+    from rq.registry import FinishedJobRegistry
+
+    available_statuses = ['queued', 'started', 'finished', 'failed']
+    if status not in available_statuses:
+        print(f"Please choose status into {available_statuses}")
+
+    redis_conn = redis.from_url(current_app.config["REDIS_URL"])
+    if status == "queued":
+        queue = Queue('default', connection=redis_conn)
+        jobs = queue.jobs
+        if len(jobs) == 0:
+            print("No queued jobs")
+        else:
+            for j in jobs:
+                print(j)
+    elif status == "started":
+        workers = Worker.all(connection=redis_conn)
+        if len(workers) == 0:
+            print("No started jobs")
+        else:
+            for worker in workers:
+                print(f"Worker: {worker.name}, Job en cours: {worker.get_current_job()}")
+    elif status == "finished":
+        finished_registry = FinishedJobRegistry('default', connection=redis_conn)
+        finished_jobs = finished_registry.get_job_ids()
+        print(finished_jobs)
+    elif status=="failed":
+        failed_registry = FailedJobRegistry('default', connection=redis_conn)
+        failed_jobs = failed_registry.get_job_ids()
+        print(failed_jobs)
+
 
 @cli.command("databank_show")
 def databank_show():
