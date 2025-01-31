@@ -116,10 +116,32 @@ def run_worker():
 
 
 @cli.command("papers_list")
-def papers_list():
-    """Show all papers contained in database"""
-    for p in Paper.query.all():
-        print(p)
+@click.option("--long", is_flag=True, default=False, help="Show long version of paper details")
+@click.option("--cat-in-db", type=bool, default=None, help="Filter papers by cat_in_db (True/False)")
+@click.option("--task-status", type=str, default=None, help="Filter papers by task_status (e.g., 'failed')")
+@click.option("--istex-id", type=str, default=None, help="Filter papers by task_status (e.g., 'failed')")
+@click.option("--has-cat", type=bool, default=None, help="Filter papers by has_cat (file existence)")
+def papers_list(long, cat_in_db, task_status, istex_id, has_cat):
+    """Show all papers contained in the database, with optional filters."""
+
+    query = Paper.query  # Commence avec la requête de base
+
+    if cat_in_db is not None:
+        query = query.filter(Paper.cat_in_db.is_(cat_in_db))
+
+    if task_status:
+        query = query.filter(Paper.task_status == task_status)
+
+    if istex_id:
+        query = query.filter(Paper.istex_id == istex_id)
+
+    papers = query.all()
+
+    if has_cat is not None:
+        papers = [p for p in papers if p.has_cat == has_cat]
+
+    for p in papers:
+        print(repr(p) if long else str(p))
 
 
 @cli.command("paper_update")

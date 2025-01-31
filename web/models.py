@@ -24,6 +24,7 @@ class BhtFileType(StrEnum):
     TXT = auto()
     CAT = auto()
 
+
 # TOOLS TO INSERT IN MODELS METHODS
 
 
@@ -57,6 +58,7 @@ def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
 
     with open(istex_file_path) as _ifd:
         file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+
 
 def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
     """
@@ -121,6 +123,7 @@ def catfile_to_db(catfile):
         db.session.add(hpevent)
         db.session.commit()
 
+
 class TaskStruct:
     """
     Represents the status of a paper processing task
@@ -132,8 +135,10 @@ class TaskStruct:
     def __init__(self, paper: 'Paper'):
         self.paper = paper
         self.pipeline_version = self.paper.pipeline_version
-        self.task_started = None if paper.task_started is None else paper.task_started.replace(tzinfo=datetime.timezone.utc)
-        self.task_stopped = None if paper.task_stopped is None else paper.task_stopped.replace(tzinfo=datetime.timezone.utc)
+        self.task_started = None if paper.task_started is None else paper.task_started.replace(
+            tzinfo=datetime.timezone.utc)
+        self.task_stopped = None if paper.task_stopped is None else paper.task_stopped.replace(
+            tzinfo=datetime.timezone.utc)
         self.cat_is_processed = paper.has_cat and paper.cat_in_db
 
     @property
@@ -142,7 +147,6 @@ class TaskStruct:
             return self.paper.task_status
         else:
             return "undefined"
-
 
     @property
     def task_elapsed(self):
@@ -173,12 +177,13 @@ class TaskStruct:
         else:
             _task_stopped_str = "(no time info)"
 
-        _alt_message="no alt message"
+        _alt_message = "no alt message"
         if self.task_status in ["started", "finished", "failed"]:
             _alt_message = f"Started {_task_started_str}"
         elif self.task_status in ["queued"]:
             _alt_message = f"Waiting since {_task_started_str}"
         return _alt_message
+
 
 class Catalog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -357,8 +362,17 @@ class Paper(db.Model):
         txt:       {self.txt_path}
         cat:       {self.cat_path}
         cat_in_db: {self.cat_in_db}
+        task_status: {self.task_status}
+        task_started: {self.task_started}
+        task_stopped: {self.task_stopped}
         pipe_ver:  {self.pipeline_version}>"""
 
+    def __str__(self):
+        return (f"<Paper #{self.id}"
+                f" '{self.title[:20]}...'"
+                f" has_cat:{self.has_cat:5}"
+                f" task_status:{self.task_status}"
+                f" pipe_ver:{self.pipeline_version}>")
 
     @property
     def task_struct(self):
@@ -518,4 +532,3 @@ class Paper(db.Model):
         except TypeError:
             has_txt = False
         return has_txt
-
