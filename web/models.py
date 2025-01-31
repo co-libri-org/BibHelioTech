@@ -370,10 +370,12 @@ class Paper(db.Model):
     def __str__(self):
         title = f"'{self.title[:20]}...'"
         status = f"'{self.task_status}'"
+        started = str(self.task_started)[:19] if self.task_started is not None else "-"*19
+        stopped = str(self.task_stopped)[:19] if self.task_stopped is not None else "-"*19
         return (f"<Paper #{self.id:<5}"
                 f" {title:25}"
                 f" has_cat:{self.has_cat:2}"
-                f" status:{status:10}"
+                f" status:{status:10} {started:20} -> {stopped:20}"
                 f" version: {self.pipeline_version}>")
 
     @property
