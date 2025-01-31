@@ -150,6 +150,9 @@ class TaskStruct:
 
     @property
     def task_elapsed(self):
+        if type(self.task_started) is  not datetime.datetime or \
+            type(self.task_stopped) is  not datetime.datetime :
+            return "no time"
         if self.task_status == "started":
             _elapsed = str(datetime.datetime.now(datetime.UTC) - self.task_started).split(".")[0]
         elif self.task_status in ["finished", "failed"]:
