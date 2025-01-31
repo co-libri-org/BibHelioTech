@@ -121,7 +121,8 @@ def run_worker():
 @click.option("--task-status", type=str, default=None, help="Filter papers by task_status (e.g., 'failed')")
 @click.option("--istex-id", type=str, default=None, help="Filter papers by task_status (e.g., 'failed')")
 @click.option("--has-cat", type=bool, default=None, help="Filter papers by has_cat (file existence)")
-def papers_list(long, cat_in_db, task_status, istex_id, has_cat):
+@click.option("--version", type=str, default=None, help="Filter papers by version number")
+def papers_list(long, cat_in_db, task_status, istex_id, has_cat, version):
     """Show all papers contained in the database, with optional filters."""
 
     query = Paper.query  # Commence avec la requête de base
@@ -136,6 +137,9 @@ def papers_list(long, cat_in_db, task_status, istex_id, has_cat):
         query = query.filter(Paper.istex_id == istex_id)
 
     papers = query.all()
+
+    if version is not None:
+        papers = [p for p in papers if p.pipeline_version == version]
 
     if has_cat is not None:
         papers = [p for p in papers if p.has_cat == has_cat]

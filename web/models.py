@@ -368,11 +368,13 @@ class Paper(db.Model):
         pipe_ver:  {self.pipeline_version}>"""
 
     def __str__(self):
-        return (f"<Paper #{self.id}"
-                f" '{self.title[:20]}...'"
-                f" has_cat:{self.has_cat:5}"
-                f" task_status:{self.task_status}"
-                f" pipe_ver:{self.pipeline_version}>")
+        title = f"'{self.title[:20]}...'"
+        status = f"'{self.task_status}'"
+        return (f"<Paper #{self.id:<5}"
+                f" {title:25}"
+                f" has_cat:{self.has_cat:2}"
+                f" status:{status:10}"
+                f" version: {self.pipeline_version}>")
 
     @property
     def task_struct(self):
