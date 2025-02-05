@@ -1,6 +1,6 @@
 {% extends "base_page.html" %}
 {%  block more_head %}
-<title> {{papers_list | length}} Papers - {{base_title}}</title>
+<title> {{papers.items | length}} Papers - {{base_title}}</title>
 {%  endblock %}
 {% block content %}
 <div class="row">
@@ -26,6 +26,18 @@
     V{{config.BHT_PIPELINE_VERSION}}</a>
     available </h5>
 
+
+
+<div id="pagination_menu">
+    Page {{ papers.page }} / {{ papers.pages }} ({{ papers.total }} items total)
+{% if papers.has_prev %}
+    <a class="btn btn-warning" href="{{ url_for('main.papers', page=papers.prev_num) }}" title="Previous {{config.PER_PAGE}} Papers"><<</a>
+{% endif %}
+{% if papers.has_next %}
+    <a class="btn btn-warning" href="{{ url_for('main.papers', page=papers.next_num) }}" title="Next {{config.PER_PAGE}} Papers">>></a>
+{% endif %}
+</div>
+
 <table class="table-hover table">
     <thead>
     <tr>
@@ -41,7 +53,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for paper in papers_list %}
+    {% for paper in papers.items %}
     <tr>
         <th scope="row" class="td_num">
             <a class="btn btn-warning paper-id" href="{{url_for('main.paper_show', paper_id=paper.id)}}"
@@ -119,7 +131,7 @@
 
     $(document).ready(function() {
     setBhtRunOnClick();
-<!--    updateAllStatuses();-->
+    updateAllStatuses();
     });
 
 </script>

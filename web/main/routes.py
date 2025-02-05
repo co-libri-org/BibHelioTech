@@ -449,8 +449,14 @@ def enlighted_json():
 def papers(name=None):
     if not name:
         # get all uploaded pdf stored in db
-        papers_list = db.session.query(Paper).all()
-        return render_template("papers.html", papers_list=papers_list)
+        # papers_list = db.session.query(Paper).all()
+        page = request.args.get('page', 1, type=int)
+        papers = Paper.query.paginate(
+            page=page,
+            per_page=current_app.config["PER_PAGE"],
+            error_out=False
+        )
+        return render_template("papers.html", papers=papers)
     else:
         flash("Uploaded " + name)
         return redirect(url_for("main.papers"))
