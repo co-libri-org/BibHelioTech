@@ -243,7 +243,8 @@ input.success{
     font-size: 20px;
     padding: 0 !important;
     font-weight: 400 !important;
-    width: 35px !important;
+    width: auto !important;  /* au lieu de 35px */
+    min-width: 35px;        /* optionnel: garde une taille minimum */
 }
 
 .btn.btn-version,
