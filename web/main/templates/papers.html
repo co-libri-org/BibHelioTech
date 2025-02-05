@@ -28,8 +28,9 @@
     available </h5>
 
 
-<div id="pagination_menu">
-    Page {{ papers.page }} / {{ papers.pages }} ({{ papers.total }} items total)
+Page {{ papers.page }} / {{ papers.pages }} ({{ papers.total }} items total)
+
+<div class="pagination_menu">
     {% if papers.has_prev %}
     <a class="btn btn-warning" href="{{ url_for('main.papers', page=papers.prev_num) }}"
        title="Previous {{config.PER_PAGE}} Papers"><<</a>
@@ -125,6 +126,17 @@
     {%endfor%}
     </tbody>
 </table>
+<div class="pagination_menu">
+    {% if papers.has_prev %}
+    <a class="btn btn-warning" href="{{ url_for('main.papers', page=papers.prev_num) }}"
+       title="Previous {{config.PER_PAGE}} Papers"><<</a>
+    {% endif %}
+    {% if papers.has_next %}
+    <a class="btn btn-warning" href="{{ url_for('main.papers', page=papers.next_num) }}"
+       title="Next {{config.PER_PAGE}} Papers">>></a>
+    {% endif %}
+</div>
+Page {{ papers.page }} / {{ papers.pages }} ({{ papers.total }} items total)
 
 {%endblock%}
 
