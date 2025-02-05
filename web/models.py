@@ -130,62 +130,17 @@ class TaskStruct:
     """
     task_started: Optional[datetime] = None
     task_stopped: Optional[datetime] = None
-    pipeline_version: str = ""
 
     def __init__(self, paper: 'Paper'):
         self.paper = paper
-        self.pipeline_version = self.paper.pipeline_version
         self.task_started = None if paper.task_started is None else paper.task_started.replace(
             tzinfo=datetime.timezone.utc)
         self.task_stopped = None if paper.task_stopped is None else paper.task_stopped.replace(
             tzinfo=datetime.timezone.utc)
         self.cat_is_processed = paper.has_cat and paper.cat_in_db
 
-    @property
-    def task_status(self):
-        if self.paper.task_status in ["queued", "started", "finished", "failed"]:
-            return self.paper.task_status
-        else:
-            return "undefined"
 
-    @property
-    def task_elapsed(self):
-        if type(self.task_started) is  not datetime.datetime or \
-            type(self.task_stopped) is  not datetime.datetime :
-            return "no time"
-        if self.task_status == "started":
-            _elapsed = str(datetime.datetime.now(datetime.UTC) - self.task_started).split(".")[0]
-        elif self.task_status in ["finished", "failed"]:
-            _elapsed = str(self.task_stopped - self.task_started).split(".")[0]
-        else:
-            _elapsed = ""
-        return _elapsed
 
-    @property
-    def message(self):
-        if self.task_status == "undefined":
-            _message = "No job run yet"
-        else:
-            _message = f"{self.task_status:9} {self.task_elapsed}"
-        return _message
-
-    @property
-    def alt_message(self):
-        if self.task_started is not None:
-            _task_started_str = self.task_started.strftime('%Y-%m-%dT%H:%M:%S')
-        else:
-            _task_started_str = "(no time info)"
-        if self.task_stopped is not None:
-            _task_stopped_str = self.task_stopped.strftime('%Y-%m-%dT%H:%M:%S')
-        else:
-            _task_stopped_str = "(no time info)"
-
-        _alt_message = "no alt message"
-        if self.task_status in ["started", "finished", "failed"]:
-            _alt_message = f"Started {_task_started_str}"
-        elif self.task_status in ["queued"]:
-            _alt_message = f"Waiting since {_task_started_str}"
-        return _alt_message
 
 
 class Catalog(db.Model):
@@ -380,11 +335,6 @@ class Paper(db.Model):
                 f" has_cat:{self.has_cat:2}"
                 f" status:{status:10} {started:20} -> {stopped:20}"
                 f" version: {self.pipeline_version}>")
-
-    @property
-    def task_struct(self):
-        """Build a struct with tasks"""
-        return TaskStruct(self)
 
     def set_task_id(self, task_id):
         self.task_id = task_id

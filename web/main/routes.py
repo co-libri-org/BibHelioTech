@@ -59,33 +59,68 @@ class StatusResponse:
             task_started: datetime = None,
             task_stopped: datetime = None,
             cat_is_processed: bool = None,
-            message: str = None,
-            alt_message: str = None,
+            message: str ="",
+            alt_message: str = "",
     ):
         self.paper=paper
         self.status = status
         self.paper_id = paper_id
         self.ppl_ver = ppl_ver
-        self.task_status = task_status
         self.task_started = task_started
         self.task_stopped = task_stopped
         self.cat_is_processed = cat_is_processed
-        self.message = message
-        self.alt_message = alt_message
-        if task_started is not None:
-            self.task_started_str = task_started.strftime('%Y-%m-%dT%H:%M:%S')
-        else:
-            self.task_started_str = "(no time info)"
-        if task_stopped is not None:
-            self.task_stopped_str = task_stopped.strftime('%Y-%m-%dT%H:%M:%S')
-        else:
-            self.task_stopped_str = "(no time info)"
+        self._message = message
+        self._alt_message = alt_message
+        self._task_status = task_status
 
-        if task_status in ["started", "finished", "failed"] and alt_message is None:
-            self.alt_message = f"Started {self.task_started_str}"
+    @property
+    def task_status(self):
+        if self._task_status in ["queued", "started", "finished", "failed"]:
+            return self._task_status
+        else:
+            return "undefined"
 
-        elif task_status in ["queued"] and alt_message is None:
-            self.alt_message = f"Waiting since {self.task_started_str}"
+    @property
+    def message(self):
+        if self._message != "":
+            return self._message
+        if self.task_status == "undefined":
+            _message = "No job run yet"
+        else:
+            _message = f"{self.task_status:9} {self.task_elapsed}"
+        return _message
+
+    @property
+    def alt_message(self):
+        if self._alt_message != "":
+            return self._alt_message
+
+        if self.task_started is not None:
+            _task_started_str = self.task_started.strftime('%Y-%m-%dT%H:%M:%S')
+        else:
+            _task_started_str = "(no time info)"
+
+
+        _alt_message = "no alt message"
+        if self.task_status in ["started", "finished", "failed"]:
+            _alt_message = f"Started {_task_started_str}"
+        elif self.task_status in ["queued"]:
+            _alt_message = f"Waiting since {_task_started_str}"
+        return _alt_message
+
+
+    @property
+    def task_elapsed(self):
+        if type(self.task_started) is  not datetime.datetime or \
+                type(self.task_stopped) is  not datetime.datetime :
+            return "no time"
+        if self.task_status == "started":
+            _elapsed = str(datetime.datetime.now(datetime.UTC) - self.task_started).split(".")[0]
+        elif self.task_status in ["finished", "failed"]:
+            _elapsed = str(self.task_stopped - self.task_started).split(".")[0]
+        else:
+            _elapsed = ""
+        return _elapsed
 
     @property
     def _response(self):
@@ -93,13 +128,13 @@ class StatusResponse:
             "status": self.status,
             "data": {
                 "paper_id": self.paper.id,
-                "ppl_ver": self.paper.task_struct.pipeline_version,
-                "task_status": self.paper.task_struct.task_status,
-                "task_started": self.paper.task_struct.task_started,
-                "task_stopped": self.paper.task_struct.task_stopped,
+                "ppl_ver": self.paper.pipeline_version,
+                "task_status": self.paper.task_status,
+                "task_started": self.paper.task_started,
+                "task_stopped": self.paper.task_stopped,
                 "cat_is_processed": self.paper.has_cat and self.paper.cat_in_db,
-                "message": self.paper.task_struct.message,
-                "alt_message": self.paper.task_struct.alt_message,
+                "message": self.message,
+                "alt_message": self.alt_message,
             },
         }
 
@@ -554,7 +589,6 @@ def bht_status(paper_id):
                 task_started=task_started,
                 ppl_ver=current_app.config["BHT_PIPELINE_VERSION"],
                 cat_is_processed=paper.has_cat and paper.cat_in_db,
-                message=f"{task_status} {elapsed}",
             )
         except NoSuchJobError:
             response_object = StatusResponse( paper=paper,
