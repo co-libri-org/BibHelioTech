@@ -22,27 +22,29 @@
 <hr class="mt-4 mb-4">
 <h5 class="d-flex justify-content-center align-items-center p-3 ">
     bht pipeline
-    <a class="btn btn-warning btn-version" href="{{url_for('main.changelog', module='pipeline')}}" title="Please see CHANGELOG for changes">
-    V{{config.BHT_PIPELINE_VERSION}}</a>
+    <a class="btn btn-warning btn-version" href="{{url_for('main.changelog', module='pipeline')}}"
+       title="Please see CHANGELOG for changes">
+        V{{config.BHT_PIPELINE_VERSION}}</a>
     available </h5>
-
 
 
 <div id="pagination_menu">
     Page {{ papers.page }} / {{ papers.pages }} ({{ papers.total }} items total)
-{% if papers.has_prev %}
-    <a class="btn btn-warning" href="{{ url_for('main.papers', page=papers.prev_num) }}" title="Previous {{config.PER_PAGE}} Papers"><<</a>
-{% endif %}
-{% if papers.has_next %}
-    <a class="btn btn-warning" href="{{ url_for('main.papers', page=papers.next_num) }}" title="Next {{config.PER_PAGE}} Papers">>></a>
-{% endif %}
+    {% if papers.has_prev %}
+    <a class="btn btn-warning" href="{{ url_for('main.papers', page=papers.prev_num) }}"
+       title="Previous {{config.PER_PAGE}} Papers"><<</a>
+    {% endif %}
+    {% if papers.has_next %}
+    <a class="btn btn-warning" href="{{ url_for('main.papers', page=papers.next_num) }}"
+       title="Next {{config.PER_PAGE}} Papers">>></a>
+    {% endif %}
 </div>
 
 <table class="table-hover table">
     <thead>
     <tr>
         <th scope="col" style="width: 20px">Id</th>
-        <th scope="col" >Title</th>
+        <th scope="col">Title</th>
         <th scope="col" style="width: 40px;">del</th>
         <th scope="col" style="width: 40px;">pdf</th>
         <th scope="col" style="width: 40px;">txt</th>
@@ -85,7 +87,8 @@
             {%set cat_txt = paper.pipeline_version %}
             <a class="btn btn-warning cat-link position-relative" id="cat-link-{{paper.id}}"
                href="{{url_for('main.cat', paper_id=paper.id)}}"
-               title="Get catalog file {{paper.pipeline_version}} {{' (not in db)' if not paper.cat_in_db}}" {{disabled(not paper.has_cat)}}>{{cat_txt}}
+               title="Get catalog file {{paper.pipeline_version}} {{' (not in db)' if not paper.cat_in_db}}"
+               {{disabled(not paper.has_cat)}}>{{cat_txt}}
                 {% if paper.has_cat and not paper.cat_in_db %}
                 {%set circle_visibility = "visible"%}
                 {% else %}
