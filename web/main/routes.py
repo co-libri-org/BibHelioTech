@@ -41,116 +41,85 @@ from web.istex_proxy import (
 )
 from ..errors import IstexError, WebError, FilePathError
 
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Optional
+from flask import jsonify
 
+
+@dataclass
 class StatusResponse:
-    """
-    In response to a get_status api request,
-    instantiate an object with arguments,
-    then return the jsonified dictionnary as expected by the request
-    """
+    """Handles status response formatting for API requests"""
 
-    def __init__(
-            self,
-            paper: 'Paper' = None,
-            status: str = "success",
-            paper_id: int = None,
-            ppl_ver: str = None,
-            task_status: str = None,
-            task_started: datetime = None,
-            task_stopped: datetime = None,
-            cat_is_processed: bool = None,
-            message: str ="",
-            alt_message: str = "",
-    ):
-        self.paper=paper
-        self.status = status
-        self.paper_id = paper_id
-        self.ppl_ver = ppl_ver
-        self.task_started = task_started
-        self.task_stopped = task_stopped
-        self.cat_is_processed = cat_is_processed
-        self._message = message
-        self._alt_message = alt_message
-        self._task_status = task_status
+    VALID_STATUSES = {"queued", "started", "finished", "failed"}
 
-    @property
-    def task_status(self):
-        if self._task_status in ["queued", "started", "finished", "failed"]:
-            return self._task_status
-        else:
-            return "undefined"
+    paper: Optional['Paper'] = None
+    status: str = "success"
+    paper_id: Optional[int] = None
+    ppl_ver: Optional[str] = None
+    task_status: Optional[str] = None
+    task_started: Optional[datetime] = None
+    task_stopped: Optional[datetime] = None
+    cat_is_processed: Optional[bool] = None
+    message: str = ""
+    alt_message: str = ""
 
-    @property
-    def message(self):
-        if self._message != "":
-            return self._message
-        if self.task_status == "undefined":
-            _message = "No job run yet"
-        else:
-            _message = f"{self.task_status:9} {self.task_elapsed}"
-        return _message
+    def __post_init__(self):
+        if not (self.paper or self.paper_id):
+            raise ValueError("Either paper or paper_id must be provided")
 
-    @property
-    def alt_message(self):
-        if self._alt_message != "":
-            return self._alt_message
+    def _format_task_status(self) -> str:
+        return self.task_status if self.task_status in self.VALID_STATUSES else "undefined"
 
-        if self.task_started is not None:
-            _task_started_str = self.task_started.strftime('%Y-%m-%dT%H:%M:%S')
-        else:
-            _task_started_str = "(no time info)"
-
-
-        _alt_message = "no alt message"
-        if self.task_status in ["started", "finished", "failed"]:
-            _alt_message = f"Started {_task_started_str}"
-        elif self.task_status in ["queued"]:
-            _alt_message = f"Waiting since {_task_started_str}"
-        return _alt_message
-
-
-    @property
-    def task_elapsed(self):
-        if type(self.task_started) is  not datetime.datetime or \
-                type(self.task_stopped) is  not datetime.datetime :
+    def _calculate_elapsed_time(self) -> str:
+        if not isinstance(self.task_started, datetime) or not isinstance(self.task_stopped, datetime):
             return "no time"
-        if self.task_status == "started":
-            _elapsed = str(datetime.datetime.now(datetime.UTC) - self.task_started).split(".")[0]
-        elif self.task_status in ["finished", "failed"]:
-            _elapsed = str(self.task_stopped - self.task_started).split(".")[0]
-        else:
-            _elapsed = ""
-        return _elapsed
 
-    @property
-    def _response(self):
-        return {
-            "status": self.status,
-            "data": {
-                "paper_id": self.paper.id,
-                "ppl_ver": self.paper.pipeline_version,
-                "task_status": self.paper.task_status,
-                "task_started": self.paper.task_started,
-                "task_stopped": self.paper.task_stopped,
-                "cat_is_processed": self.paper.has_cat and self.paper.cat_in_db,
-                "message": self.message,
-                "alt_message": self.alt_message,
-            },
-        }
+        if self.task_status == "started":
+            elapsed = datetime.now(datetime.UTC) - self.task_started
+        elif self.task_status in ["finished", "failed"]:
+            elapsed = self.task_stopped - self.task_started
+        else:
+            return ""
+
+        return str(elapsed).split(".")[0]
+
+    def _format_message(self) -> str:
+        if self.message:
+            return self.message
+
+        if self._format_task_status() == "undefined":
+            return "No job run yet"
+
+        return f"{self.task_status:9} {self._calculate_elapsed_time()}"
+
+    def _format_alt_message(self) -> str:
+        if self.alt_message:
+            return self.alt_message
+
+        started_str = self.task_started.strftime('%Y-%m-%dT%H:%M:%S') if self.task_started else "(no time info)"
+
+        if self.task_status in ["started", "finished", "failed"]:
+            return f"Started {started_str}"
+        elif self.task_status == "queued":
+            return f"Waiting since {started_str}"
+
+        return "no alt message"
 
     @property
     def response(self):
-        return jsonify(self._response)
+        data = {
+            "paper_id": self.paper.id if self.paper else self.paper_id,
+            "ppl_ver": self.paper.pipeline_version if self.paper else self.ppl_ver,
+            "task_status": self._format_task_status(),
+            "task_started": self.task_started,
+            "task_stopped": self.task_stopped,
+            "cat_is_processed": self.cat_is_processed,
+            "message": self._format_message(),
+            "alt_message": self._format_alt_message()
+        }
+        return jsonify({"status": self.status, "data": data})
 
-    def to_dict(self):
-        return self._response
-
-    def to_json_string(self):
-        import json
-        return json.dumps(self._response, indent=4)
-
-    def set_ppl_ver(self, ppl_ver):
-        self.ppl_ver = ppl_ver
 
 
 def allowed_file(filename):
@@ -639,7 +608,7 @@ def bht_run(paper_id, file_type, pipeline_start_step=0):
             message="Failed, no Redis",
             alt_message="System to run tasks is unreachable",
         )
-        return response_object.json, 503
+        return response_object.response, 503
 
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
