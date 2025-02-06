@@ -91,7 +91,7 @@ class StatusResponse:
             return ""
 
         _current_time = datetime.now(ZoneInfo("Europe/Paris"))
-        if self.task_status == "started":
+        if self.task_status in ["started", "queued"]:
             elapsed = _current_time - self.task_started
 
         elif self.task_status in ["finished", "failed"] and  isinstance(self.task_stopped, datetime):
