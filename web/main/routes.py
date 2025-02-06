@@ -53,21 +53,34 @@ class StatusResponse:
 
     VALID_STATUSES = {"queued", "started", "finished", "failed"}
 
+    status: str
     http_code: int = 200
     paper: Optional['Paper'] = None
-    status: str = "success"
     paper_id: Optional[int] = None
     ppl_ver: Optional[str] = None
     task_status: Optional[str] = None
     task_started: Optional[datetime] = None
     task_stopped: Optional[datetime] = None
-    cat_is_processed: Optional[bool] = None
+    cat_is_processed: Optional[bool] = False
     message: str = ""
     alt_message: str = ""
 
     def __post_init__(self):
+        if self.status not in  ["success", "failed"]:
+            raise ValueError(f"response status must be failed or success, not {self.status}")
+
         if not (self.paper or self.paper_id):
-            raise ValueError("Either paper or paper_id must be provided")
+            raise ValueError("paper_id must be provided if paper is None")
+
+        # set fields from paper if not set by constructor
+        if self.paper is not None:
+            self.paper_id = self.paper_id or self.paper.id
+            self.ppl_ver = self.ppl_ver or self.paper.pipeline_version
+            self.task_status = self.task_status or self.paper.task_status
+            self.task_started = self.task_started or self.paper.task_started
+            self.task_stopped = self.task_stopped or self.paper.task_stopped
+            self.cat_is_processed = self.paper.has_cat and self.paper.cat_in_db
+
 
     def _format_task_status(self) -> str:
         return self.task_status if self.task_status in self.VALID_STATUSES else "undefined"
@@ -110,8 +123,8 @@ class StatusResponse:
     @property
     def response(self):
         data = {
-            "paper_id": self.paper.id if self.paper else self.paper_id,
-            "ppl_ver": self.paper.pipeline_version if self.paper else self.ppl_ver,
+            "paper_id": self.paper_id,
+            "ppl_ver": self.ppl_ver,
             "task_status": self._format_task_status(),
             "task_started": self.task_started,
             "task_stopped": self.task_stopped,
