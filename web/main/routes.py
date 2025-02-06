@@ -514,15 +514,8 @@ def bht_status(paper_id):
         flash(f"No such paper {paper_id}")
         return redirect(url_for("main.papers"))  #
 
-    # TODO: REFACTOR cut and delegate to Paper and Task models
     # Get task info from db if task has finished
     if paper.task_status in ["finished", "failed"]:
-        message = f"Paper task = {paper.task_status}"
-        try:
-            elapsed = str(paper.task_stopped - paper.task_started).split(".")[0]
-        except Exception as e:
-            current_app.logger.error(f"Got error on paper task date: {e}")
-            elapsed = ""
         response_object = StatusResponse( paper=paper,
             paper_id=paper.id,
             task_status=paper.task_status,
@@ -530,7 +523,6 @@ def bht_status(paper_id):
             ppl_ver=paper.pipeline_version,
             task_stopped=paper.task_stopped,
             cat_is_processed=paper.has_cat and paper.cat_in_db,
-            message=f"{paper.task_status} {elapsed}",
         )
     else:  # Get task info from task manager
         task_id = paper.task_id
@@ -544,15 +536,11 @@ def bht_status(paper_id):
 
             if task_status == "started":
                 task_started = job.started_at
-                elapsed = str(datetime.datetime.utcnow() - task_started).split(".")[0]
             elif task_status in ["finished", "failed"]:
                 task_started = job.started_at
-                elapsed = str(job.ended_at - task_started).split(".")[0]
             elif task_status == "queued":
                 task_started = job.enqueued_at
-                elapsed = ""
             else:
-                # TODO: send a response object
                 raise WebError(f"Unknown status {task_status}")
 
             paper.set_task_status(task_status)
@@ -581,7 +569,6 @@ def bht_status(paper_id):
             )
             return response_object.response, 503
 
-        # TODO: END CUTTING
     return response_object.response, 200
 
 
