@@ -551,7 +551,9 @@ def bht_status(paper_id):
             )
             task_status = job.get_status(refresh=True).value
 
-            if task_status in ["started", "finished"]:
+            # even if we entered that case with status in ["queued", "started"] it can have changed in the mean time
+            # so we need to also test  "finished" and "failed" statuses
+            if task_status in ["started", "finished", "failed"]:
                 task_started = job.started_at
             elif task_status == "queued":
                 task_started = job.enqueued_at
