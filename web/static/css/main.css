@@ -209,9 +209,9 @@ input.success{
 .bht-status {
     text-align: justify;
     font-family: monospace;
-    font-size: 0.85em;
+    font-size: 0.80em;
     display: inline-block;
-    width: 100%;
+    width: 80%;
     border: 1pt solid transparent;
     color: black;
     border-radius: 5pt;
