@@ -121,7 +121,6 @@ class StatusResponse:
         return jsonify({"status": self.status, "data": data})
 
 
-
 def allowed_file(filename):
     # TODO: REFACTOR use models.FileType instead
     return (
@@ -511,20 +510,23 @@ def upload():
 def bht_status(paper_id):
     paper = db.session.get(Paper, paper_id)
     if paper is None:
-        flash(f"No such paper {paper_id}")
-        return redirect(url_for("main.papers"))  #
+        response_object, html_code = StatusResponse(paper_id=paper_id,
+                                                    message=f"",
+                                                    alt_message=f"No such paper {paper_id}",
+                                                    ), 200
+
 
     # Get task info from db if task has finished
-    if paper.task_status in ["finished", "failed"]:
-        response_object = StatusResponse( paper=paper,
-            paper_id=paper.id,
-            task_status=paper.task_status,
-            task_started=paper.task_started,
-            ppl_ver=paper.pipeline_version,
-            task_stopped=paper.task_stopped,
-            cat_is_processed=paper.has_cat and paper.cat_in_db,
-        )
-    else:  # Get task info from task manager
+    elif paper.task_status in ["finished", "failed"]:
+        response_object, html_code = StatusResponse(paper=paper,
+                                                    paper_id=paper.id,
+                                                    task_status=paper.task_status,
+                                                    task_started=paper.task_started,
+                                                    ppl_ver=paper.pipeline_version,
+                                                    task_stopped=paper.task_stopped,
+                                                    cat_is_processed=paper.has_cat and paper.cat_in_db,
+                                                    ), 200
+    else:  # Get task info from task manager if queued or running
         task_id = paper.task_id
         try:
             if task_id is None:
@@ -546,37 +548,36 @@ def bht_status(paper_id):
             paper.set_task_status(task_status)
             paper.set_task_started(task_started)
             paper.set_task_stopped(job.ended_at)
-            response_object = StatusResponse( paper=paper,
-                paper_id=paper.id,
-                task_status=task_status,
-                task_started=task_started,
-                ppl_ver=current_app.config["BHT_PIPELINE_VERSION"],
-                cat_is_processed=paper.has_cat and paper.cat_in_db,
-            )
+            response_object, html_code = StatusResponse(paper=paper,
+                                                        paper_id=paper.id,
+                                                        task_status=task_status,
+                                                        task_started=task_started,
+                                                        ppl_ver=current_app.config["BHT_PIPELINE_VERSION"],
+                                                        cat_is_processed=paper.has_cat and paper.cat_in_db,
+                                                        ), 200
         except WebError as e:
-            response_object = StatusResponse(paper=paper,
-                                         paper_id=paper.id,
-                                         task_status="undefined",
-                                         message="Web error",
-                                         alt_message=e.message,
-                                         )
+            response_object, html_code = StatusResponse(paper=paper,
+                                                        paper_id=paper.id,
+                                                        task_status="undefined",
+                                                        message="Web error",
+                                                        alt_message=e.message,
+                                                        ), 503
         except NoSuchJobError:
-            response_object = StatusResponse( paper=paper,
-                paper_id=paper.id,
-                task_status="undefined",
-                message="No job run yet",
-                alt_message="No pipeline was run on that paper",
-            )
+            response_object, html_code = StatusResponse(paper=paper,
+                                                        paper_id=paper.id,
+                                                        task_status="undefined",
+                                                        message="No job run yet",
+                                                        alt_message="No pipeline was run on that paper",
+                                                        ), 503
         except redis.connection.ConnectionError:
-            response_object = StatusResponse( paper=paper,
-                status="failed",
-                paper_id=paper.id,
-                message="Redis Cnx Err",
-                alt_message="Database to read tasks status is unreachable",
-            )
-            return response_object.response, 503
+            response_object, html_code = StatusResponse(paper=paper,
+                                                        status="failed",
+                                                        paper_id=paper.id,
+                                                        message="Redis Cnx Err",
+                                                        alt_message="Database to read tasks status is unreachable",
+                                                        ), 503
 
-    return response_object.response, 200
+    return response_object.response, html_code
 
 
 @bp.route("/bht_run/<paper_id>/<file_type>", defaults={"pipeline_start_step": PipeStep.TIMEFILL}, methods=["GET"])
@@ -596,12 +597,12 @@ def bht_run(paper_id, file_type, pipeline_start_step=0):
             job_timeout=600,
         )
     except redis.connection.ConnectionError:
-        response_object = StatusResponse( paper=None,
-            status="failed",
-            paper_id=int(paper_id),
-            message="Failed, no Redis",
-            alt_message="System to run tasks is unreachable",
-        )
+        response_object = StatusResponse(paper=None,
+                                         status="failed",
+                                         paper_id=int(paper_id),
+                                         message="Failed, no Redis",
+                                         alt_message="System to run tasks is unreachable",
+                                         )
         return response_object.response, 503
 
     paper = db.session.get(Paper, paper_id)
@@ -610,9 +611,9 @@ def bht_run(paper_id, file_type, pipeline_start_step=0):
     paper.set_cat_path(None)
     # TODO: CUT END
 
-    response_object = StatusResponse( paper=paper,
-        status="success", task_status="queued", paper_id=paper.id
-    )
+    response_object = StatusResponse(paper=paper,
+                                     status="success", task_status="queued", paper_id=paper.id
+                                     )
     return response_object.response, 202
 
 
