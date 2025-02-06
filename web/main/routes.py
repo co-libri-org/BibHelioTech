@@ -66,7 +66,7 @@ class StatusResponse:
     alt_message: str = ""
 
     def __post_init__(self):
-        if self.status not in  ["success", "failed"]:
+        if self.status not in ["success", "failed"]:
             raise ValueError(f"response status must be failed or success, not {self.status}")
 
         if not (self.paper or self.paper_id):
@@ -80,7 +80,6 @@ class StatusResponse:
             self.task_started = self.task_started or self.paper.task_started
             self.task_stopped = self.task_stopped or self.paper.task_stopped
             self.cat_is_processed = self.paper.has_cat and self.paper.cat_in_db
-
 
     def _format_task_status(self) -> str:
         return self.task_status if self.task_status in self.VALID_STATUSES else "undefined"
@@ -525,22 +524,20 @@ def bht_status(paper_id):
     paper = db.session.get(Paper, paper_id)
     if paper is None:
         response_object = StatusResponse(paper_id=paper_id,
-                                         message=f"",
+                                         message=f"No such paper {paper_id}",
                                          alt_message=f"No such paper {paper_id}",
-                                         http_code=200)
+                                         status="failed",
+                                         http_code=404)
 
 
-    # Get task info from db if task has finished
+    # Get task info from db
     elif paper.task_status in ["finished", "failed"]:
         response_object = StatusResponse(paper=paper,
-                                         paper_id=paper.id,
-                                         task_status=paper.task_status,
-                                         task_started=paper.task_started,
-                                         ppl_ver=paper.pipeline_version,
-                                         task_stopped=paper.task_stopped,
-                                         cat_is_processed=paper.has_cat and paper.cat_in_db,
+                                         status="success",
                                          http_code=200)
-    else:  # Get task info from task manager if queued or running
+    # Or Get task info from task manager
+    else:  # task_status in ["queued", "started"]:
+
         task_id = paper.task_id
         try:
             if task_id is None:
@@ -548,47 +545,41 @@ def bht_status(paper_id):
             job = Job.fetch(
                 task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
             )
-            task_status = job.get_status(refresh=True)
+            task_status = job.get_status(refresh=True).value
 
-            if task_status == "started":
-                task_started = job.started_at
-            elif task_status in ["finished", "failed"]:
+            if task_status in ["started", "finished"]:
                 task_started = job.started_at
             elif task_status == "queued":
                 task_started = job.enqueued_at
             else:
-                raise WebError(f"Unknown status {task_status}")
+                # TODO
+                raise WebError(f"Unmanaged task status >>{task_status}<<")
 
+            # Update paper's info in db
             paper.set_task_status(task_status)
             paper.set_task_started(task_started)
             paper.set_task_stopped(job.ended_at)
             response_object = StatusResponse(paper=paper,
-                                             paper_id=paper.id,
-                                             task_status=task_status,
-                                             task_started=task_started,
-                                             ppl_ver=current_app.config["BHT_PIPELINE_VERSION"],
-                                             cat_is_processed=paper.has_cat and paper.cat_in_db,
+                                             status="success",
                                              http_code=200)
-        except WebError as e:
-            response_object = StatusResponse(paper=paper,
-                                             paper_id=paper.id,
-                                             task_status="undefined",
-                                             message="Web error",
-                                             alt_message=e.message,
-                                             http_code=503)
         except NoSuchJobError:
             response_object = StatusResponse(paper=paper,
-                                             paper_id=paper.id,
-                                             task_status="undefined",
                                              message="No job run yet",
                                              alt_message="No pipeline was run on that paper",
+                                             status="failed",
                                              http_code=503)
         except redis.connection.ConnectionError:
             response_object = StatusResponse(paper=paper,
-                                             status="failed",
-                                             paper_id=paper.id,
                                              message="Redis Cnx Err",
                                              alt_message="Database to read tasks status is unreachable",
+                                             status="failed",
+                                             http_code=503)
+        # Paper exists, but task_status is unknown
+        except WebError as e:
+            response_object = StatusResponse(paper=paper,
+                                             message=e.message,
+                                             alt_message=f"Paper id: {paper_id}, task status: {paper.task_status}",
+                                             status="failed",
                                              http_code=503)
 
     return response_object.response
