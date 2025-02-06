@@ -1,23 +1,23 @@
 {% extends "base_table.html" %}
 {% block more_head %}
 {{ super () }}
-<title> {{catalogs | length}} Catalogs pending - {{base_title}}</title>
+<title> {{papers.items | length}} Catalogs pending - {{base_title}}</title>
 {%  endblock %}
 {% block content %}
 {#
 Show a list of catalogs files not already inserted in db
 --------------------------------------------------------
 #}
-{% if not catalogs|length == 0 %}
-<h4>{{catalogs | length}} Catalogs to add in database:</h4>
+{% if not papers.items|length == 0 %}
+<h4>{{papers.items | length}} Catalogs to add in database:</h4>
 <table class="table-hover table">
-    {% for paper in catalogs %}
+    {% for paper in papers %}
     <tr>
         <td class="col-4 text-truncate" style="max-width: 550px;" title="{{paper.ark}}">
             {{paper.title}}
         </td>
         <td class="col-6">
-            <button class="btn btn-warning add-catalog position-relative" data-paper_id="{{paper.id}}">add in db
+            <button class="btn btn-warning add-catalog position-relative" data-paper_id="{{paper.id}}"  {% if not paper.has_cat %}disabled{% endif %}>add in db
                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                 </span>
             </button>
@@ -27,6 +27,7 @@ Show a list of catalogs files not already inserted in db
 </table>
 <hr class="mt-2 mb-3">
 {% endif %}
+{% include '_papers_pagination.html' %}
 {%  endblock content %}
 
 {% block scripts %}

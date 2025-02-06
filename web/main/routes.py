@@ -436,12 +436,12 @@ def papers(name=None):
         # get all uploaded pdf stored in db
         # papers_list = db.session.query(Paper).all()
         page = request.args.get('page', 1, type=int)
-        papers = Paper.query.paginate(
+        _papers = Paper.query.paginate(
             page=page,
             per_page=current_app.config["PER_PAGE"],
             error_out=False
         )
-        return render_template("papers.html", papers=papers)
+        return render_template("papers.html", papers=_papers)
     else:
         flash("Uploaded " + name)
         return redirect(url_for("main.papers"))
@@ -748,13 +748,16 @@ def events(ref_name, ref_id):
 @bp.route("/admin", methods=["GET"])
 def admin():
     # build a list of papers with catalogs not already inserted in db
-    _catalogs = [
-        paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
-    ]
+    page = request.args.get('page', 1, type=int)
+    _paginated_papers = Paper.query.filter_by(cat_in_db=False).paginate(
+        page=page,
+        per_page=current_app.config["PER_PAGE"],
+        error_out=False
+    )
 
 
     return render_template(
-        "admin.html", catalogs=_catalogs
+        "admin.html", papers=_paginated_papers
     )
 
 
