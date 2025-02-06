@@ -772,8 +772,11 @@ def admin():
             for _s in structs:
                 if _s["type"] != "DURATION" or _s["text"] in ["8327-8338", "0004-6361"]:
                     continue
-                date_begin = parser.parse(_s["value"]["begin"])
-                date_end = parser.parse(_s["value"]["end"])
+                try:
+                    date_begin = parser.parse(_s["value"]["begin"])
+                    date_end = parser.parse(_s["value"]["end"])
+                except parser.ParserError:
+                    continue
                 delta_time = date_end - date_begin
                 new_structs.append(
                     {
