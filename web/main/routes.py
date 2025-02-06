@@ -553,6 +553,13 @@ def bht_status(paper_id):
                 ppl_ver=current_app.config["BHT_PIPELINE_VERSION"],
                 cat_is_processed=paper.has_cat and paper.cat_in_db,
             )
+        except WebError as e:
+            response_object = StatusResponse(paper=paper,
+                                         paper_id=paper.id,
+                                         task_status="undefined",
+                                         message="Web error",
+                                         alt_message=e.message,
+                                         )
         except NoSuchJobError:
             response_object = StatusResponse( paper=paper,
                 paper_id=paper.id,
