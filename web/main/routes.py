@@ -1,6 +1,6 @@
-import datetime
 import json
 import os
+from zoneinfo import ZoneInfo
 
 import dateutil.parser as parser
 import pandas as pd
@@ -19,7 +19,6 @@ from flask import (
     redirect,
     url_for,
     send_file,
-    jsonify,
     Response,
     send_from_directory,
 )
@@ -42,7 +41,7 @@ from web.istex_proxy import (
 from ..errors import IstexError, WebError, FilePathError
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from flask import jsonify
 
@@ -59,8 +58,6 @@ class StatusResponse:
     paper_id: Optional[int] = None
     ppl_ver: Optional[str] = None
     task_status: Optional[str] = None
-    task_started: Optional[datetime] = None
-    task_stopped: Optional[datetime] = None
     cat_is_processed: Optional[bool] = False
     message: str = ""
     alt_message: str = ""
@@ -77,20 +74,27 @@ class StatusResponse:
             self.paper_id = self.paper_id or self.paper.id
             self.ppl_ver = self.ppl_ver or self.paper.pipeline_version
             self.task_status = self.task_status or self.paper.task_status
-            self.task_started = self.task_started or self.paper.task_started
-            self.task_stopped = self.task_stopped or self.paper.task_stopped
+            self.task_started = self.paper.task_started
+            self.task_stopped = self.paper.task_stopped
             self.cat_is_processed = self.paper.has_cat and self.paper.cat_in_db
+
+        if isinstance(self.task_started, datetime):
+            self.task_started = self.task_started.replace(tzinfo=timezone.utc).astimezone(ZoneInfo("Europe/Paris"))
+        if isinstance(self.task_stopped, datetime):
+            self.task_stopped = self.task_stopped.replace(tzinfo=timezone.utc).astimezone(ZoneInfo("Europe/Paris"))
 
     def _format_task_status(self) -> str:
         return self.task_status if self.task_status in self.VALID_STATUSES else "undefined"
 
     def _calculate_elapsed_time(self) -> str:
-        if not isinstance(self.task_started, datetime) or not isinstance(self.task_stopped, datetime):
-            return "no time"
+        if not isinstance(self.task_started, datetime):
+            return ""
 
+        _current_time = datetime.now(ZoneInfo("Europe/Paris"))
         if self.task_status == "started":
-            elapsed = datetime.now(datetime.UTC) - self.task_started
-        elif self.task_status in ["finished", "failed"]:
+            elapsed = _current_time - self.task_started
+
+        elif self.task_status in ["finished", "failed"] and  isinstance(self.task_stopped, datetime):
             elapsed = self.task_stopped - self.task_started
         else:
             return ""
