@@ -777,7 +777,7 @@ def admin():
                     date_end = parser.parse(_s["value"]["end"])
                 except parser.ParserError:
                     continue
-                delta_time = date_end - date_begin
+                delta_time = date_end.replace(tzinfo=timezone.utc) - date_begin.replace(tzinfo=timezone.utc)
                 new_structs.append(
                     {
                         "paper_title": paper.title,
