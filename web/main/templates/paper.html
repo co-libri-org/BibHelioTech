@@ -48,7 +48,7 @@
     </tr>
     <tr>
         <th>cat file:</th>
-        {% if paper.has_txt %}
+        {% if paper.has_cat %}
         <td class="paper_attr_yes">
             <a title="get cat file" href="{{url_for('main.cat', paper_id=paper.id)}}">{{paper.cat_path | basename}}</a>
         </td>
