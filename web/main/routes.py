@@ -749,7 +749,9 @@ def events(ref_name, ref_id):
 def admin():
     # build a list of papers with catalogs not already inserted in db
     page = request.args.get('page', 1, type=int)
-    _paginated_papers = Paper.query.filter_by(cat_in_db=False).paginate(
+    _query = Paper.query.filter(Paper.cat_in_db==False, Paper.cat_path !='None')
+
+    _paginated_papers = _query.paginate(
         page=page,
         per_page=current_app.config["PER_PAGE"],
         error_out=False
