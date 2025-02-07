@@ -16,6 +16,12 @@ Show a list of catalogs files not already inserted in db
 <table class="table-hover table">
     {% for paper in papers %}
     <tr>
+        <th scope="row" class="td_num">
+            <a class="btn btn-warning paper-id" href="{{url_for('main.paper_show', paper_id=paper.id)}}"
+               title="Show paper #{{paper.id}}">
+                {{paper.id}}
+            </a>
+        </th>
         <td class="col-4 text-truncate" style="max-width: 550px;" title="{{paper.ark}}">
             {{paper.title}}
         </td>
