@@ -453,8 +453,8 @@ def papers():
         state_dict[state] = 0
 
     # Transform to a list of dicts
-    state_stats = [{'class': k, 'tag': k, 'value': state_dict[k]} for k in valid_states]
-    state_stats.append({'class': 'undefined', 'tag': 'not run', 'value': state_dict['undefined']})
+    state_stats = [{'status': k, 'tag': k, 'value': state_dict[k]} for k in valid_states]
+    state_stats.append({'status': 'undefined', 'tag': 'not run', 'value': state_dict['undefined']})
 
 
 

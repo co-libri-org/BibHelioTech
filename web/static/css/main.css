@@ -199,10 +199,14 @@ input.success{
 .status-link {
 text-decoration: none;
 }
+button.stat-status.active {
+    border: 1pt solid #505050;
+}
+
 button.stat-status:hover {
-border: 1pt solid grey;
+    border: 1pt solid #505050;
     filter: brightness(110%); /* Makes it 15% darker */
-    }
+}
 
 .pagination_menu {
     display: flex;
