@@ -10,6 +10,9 @@ Show a list of catalogs files not already inserted in db
 #}
 {% if not papers.items|length == 0 %}
 <h4>{{papers.total }} Catalogs to add in database:</h4>
+{% with url_value = 'main.admin' %}
+{% include '_papers_pagination.html' %}
+{% endwith %}
 <table class="table-hover table">
     {% for paper in papers %}
     <tr>
