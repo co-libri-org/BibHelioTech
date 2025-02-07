@@ -1,47 +1,43 @@
 {% extends "base_page.html" %}
+{% macro status_active(state) %}{% if  state['status'] == requested_status %}active{% endif %}{% endmacro %}
 {%  block more_head %}
-<title> {{papers_list | length}} Papers - {{base_title}}</title>
+<title> {{papers.total}} Papers - {{base_title}}</title>
 {%  endblock %}
 {% block content %}
-<div class="row">
-    <div class="col">
-        <h4>Upload new File</h4>
-        <form action={{url_for('main.upload')}} method=post enctype=multipart/form-data>
-            <input type=file name=file>
-            <input type=submit value=Upload>
-        </form>
-    </div>
-    <div class="col">
-        <h4>Upload from URL</h4>
-        <form action={{url_for('main.upload_from_url')}} method=post enctype=multipart/form-data>
-            <input type=url name=pdf_url>
-            <input type=submit value=Upload>
-        </form>
-    </div>
-</div>
-<hr class="mt-4 mb-4">
 <h5 class="d-flex justify-content-center align-items-center p-3 ">
     bht pipeline
-    <a class="btn btn-warning btn-version" href="{{url_for('main.changelog', module='pipeline')}}" title="Please see CHANGELOG for changes">
-    V{{config.BHT_PIPELINE_VERSION}}</a>
+    <a class="btn btn-warning btn-version" href="{{url_for('main.changelog', module='pipeline')}}"
+       title="Please see CHANGELOG for changes">
+        V{{config.BHT_PIPELINE_VERSION}}</a>
     available </h5>
+
+<div id="state_stats" class="mb-4">
+    {% for state in state_stats%}
+    <a class="status-link" href="{{url_for('main.papers', requested_status=state['status'])}}">
+        <button class="stat-status {{state['status']}} {{status_active(state)}}" title="">{{state['value']}} {{state['tag']}}</button>
+    </a>
+    {% endfor %}
+</div>
+{% with url_value = 'main.papers' , insert='top', requested_status=requested_status%}
+    {% include '_papers_pagination.html' %}
+{% endwith %}
 
 <table class="table-hover table">
     <thead>
     <tr>
         <th scope="col" style="width: 20px">Id</th>
-        <th scope="col" style="width: 580px;">Title</th>
+        <th scope="col">Title</th>
         <th scope="col" style="width: 40px;">del</th>
         <th scope="col" style="width: 40px;">pdf</th>
         <th scope="col" style="width: 40px;">txt</th>
         <th scope="col" style="width: 40px;">cat</th>
         <th scope="col" style="width: 40px;">run pdf</th>
         <th scope="col" style="width: 40px;">run txt</th>
-        <th scope="col" style="width: 150px;">status</th>
+        <th scope="col" style="width: 190px;">status</th>
     </tr>
     </thead>
     <tbody>
-    {% for paper in papers_list %}
+    {% for paper in papers.items %}
     <tr>
         <th scope="row" class="td_num">
             <a class="btn btn-warning paper-id" href="{{url_for('main.paper_show', paper_id=paper.id)}}"
@@ -73,7 +69,8 @@
             {%set cat_txt = paper.pipeline_version %}
             <a class="btn btn-warning cat-link position-relative" id="cat-link-{{paper.id}}"
                href="{{url_for('main.cat', paper_id=paper.id)}}"
-               title="Get catalog file {{paper.pipeline_version}} {{' (not in db)' if not paper.cat_in_db}}" {{disabled(not paper.has_cat)}}>{{cat_txt}}
+               title="Get catalog file {{paper.pipeline_version}} {{' (not in db)' if not paper.cat_in_db}}"
+               {{disabled(not paper.has_cat)}}>{{cat_txt}}
                 {% if paper.has_cat and not paper.cat_in_db %}
                 {%set circle_visibility = "visible"%}
                 {% else %}
@@ -101,14 +98,18 @@
                 run
             </button>
         </td>
-        <td style="width: 150px;">
-            <span class="bht-status" id="bht-status-{{paper.id}}"></span>
+        <td style="width: 190px;">
+            <span class="bht-status {{paper.task_status}}" title="" id="bht-status-{{paper.id}}"></span>
             <span class="spinner-border spinner-border-sm text-warning d-none" id="spinner-{{paper.id}}"></span>
         </td>
     </tr>
     {%endfor%}
     </tbody>
 </table>
+
+{% with url_value = 'main.papers' , insert='top', requested_status=requested_status%}
+    {% include '_papers_pagination.html' %}
+{% endwith %}
 
 {%endblock%}
 

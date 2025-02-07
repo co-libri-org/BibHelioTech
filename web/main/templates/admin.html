@@ -1,23 +1,34 @@
 {% extends "base_table.html" %}
 {% block more_head %}
 {{ super () }}
-<title> {{catalogs | length}} Catalogs pending - {{base_title}}</title>
+<title> {{papers.total }} Catalogs pending - {{base_title}}</title>
 {%  endblock %}
 {% block content %}
 {#
 Show a list of catalogs files not already inserted in db
 --------------------------------------------------------
 #}
-{% if not catalogs|length == 0 %}
-<h4>{{catalogs | length}} Catalogs to add in database:</h4>
+{% if not papers.items|length == 0 %}
+<h4>{{papers.total }} Catalogs to add in database:</h4>
+{% with url_value = 'main.admin' , insert='top'%}
+{% include '_papers_pagination.html' %}
+{% endwith %}
 <table class="table-hover table">
-    {% for paper in catalogs %}
+    {% for paper in papers %}
     <tr>
+        <th scope="row" class="td_num">
+            <a class="btn btn-warning paper-id" href="{{url_for('main.paper_show', paper_id=paper.id)}}"
+               title="Show paper #{{paper.id}}">
+                {{paper.id}}
+            </a>
+        </th>
         <td class="col-4 text-truncate" style="max-width: 550px;" title="{{paper.ark}}">
             {{paper.title}}
         </td>
         <td class="col-6">
-            <button class="btn btn-warning add-catalog position-relative" data-paper_id="{{paper.id}}">add in db
+            <button class="btn btn-warning add-catalog position-relative" data-paper_id="{{paper.id}}"
+             {% if not paper.has_cat %}disabled{% endif %}>
+                add in db
                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                 </span>
             </button>
@@ -25,37 +36,10 @@ Show a list of catalogs files not already inserted in db
     </tr>
     {% endfor %}
 </table>
-<hr class="mt-2 mb-3">
 {% endif %}
-<h4>{{sutime_structs | length}} Sutime strings:</h4>
-<table id="sutime-str-table" class="table-hover table">
-    <thead>
-    <tr>
-        <th scope="col">Paper</th>
-        <th scope="col">Text</th>
-        <th scope="col">DeltaTime</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for st_str in sutime_structs %}
-    <tr>
-        <td class="col">
-            <a class="btn btn-warning paper-id"
-               href="{{url_for('main.paper_pipeline', paper_id=st_str.paper_id, step_num=4, pipeline_mode='sutime', disp_mode='analysed')}}"
-               title="Show paper {{st_str.paper_name}}&#013;{{st_str.paper_title}}">
-                {{st_str.paper_id}}
-            </a>
-        </td>
-        <td class="col">
-            {{st_str.text}}
-        </td>
-        <td class="col">
-            {{st_str.delta_time}}
-        </td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% with url_value = 'main.admin', insert='bottom' %}
+    {% include '_papers_pagination.html' %}
+{% endwith %}
 {%  endblock content %}
 
 {% block scripts %}
@@ -67,12 +51,6 @@ Show a list of catalogs files not already inserted in db
         // For each un-added catalog button, attach callback:
         $('.add-catalog').on('click', push_catalog );
 
-        new DataTable('#sutime-str-table', {
-            ordering: true,
-            order: [],
-            searching: false,
-            paging: false,
-        });
     });
 </script>
 {%  endblock %}

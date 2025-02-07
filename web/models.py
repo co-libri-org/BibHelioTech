@@ -2,10 +2,9 @@ import datetime
 import json
 import os
 import os.path
-import sys
 from enum import StrEnum, auto
 from json import JSONDecodeError
-from pprint import pprint
+from typing import Optional
 
 import filetype
 
@@ -59,6 +58,7 @@ def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
 
     with open(istex_file_path) as _ifd:
         file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+
 
 def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
     """
@@ -122,6 +122,25 @@ def catfile_to_db(catfile):
         hpevent = HpEvent(**hpevent_dict)
         db.session.add(hpevent)
         db.session.commit()
+
+
+class TaskStruct:
+    """
+    Represents the status of a paper processing task
+    """
+    task_started: Optional[datetime] = None
+    task_stopped: Optional[datetime] = None
+
+    def __init__(self, paper: 'Paper'):
+        self.paper = paper
+        self.task_started = None if paper.task_started is None else paper.task_started.replace(
+            tzinfo=datetime.timezone.utc)
+        self.task_stopped = None if paper.task_stopped is None else paper.task_stopped.replace(
+            tzinfo=datetime.timezone.utc)
+        self.cat_is_processed = paper.has_cat and paper.cat_in_db
+
+
+
 
 
 class Catalog(db.Model):
@@ -301,7 +320,21 @@ class Paper(db.Model):
         txt:       {self.txt_path}
         cat:       {self.cat_path}
         cat_in_db: {self.cat_in_db}
+        task_status: {self.task_status}
+        task_started: {self.task_started}
+        task_stopped: {self.task_stopped}
         pipe_ver:  {self.pipeline_version}>"""
+
+    def __str__(self):
+        title = f"'{self.title[:20]}...'"
+        status = f"'{self.task_status}'"
+        started = str(self.task_started)[:19] if self.task_started is not None else "-"*19
+        stopped = str(self.task_stopped)[:19] if self.task_stopped is not None else "-"*19
+        return (f"<Paper #{self.id:<5}"
+                f" {title:25}"
+                f" has_cat:{self.has_cat:2}"
+                f" status:{status:10} {started:20} -> {stopped:20}"
+                f" version: {self.pipeline_version}>")
 
     def set_task_id(self, task_id):
         self.task_id = task_id
@@ -456,4 +489,3 @@ class Paper(db.Model):
         except TypeError:
             has_txt = False
         return has_txt
-

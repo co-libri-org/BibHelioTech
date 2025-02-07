@@ -1,6 +1,6 @@
-import datetime
 import json
 import os
+from zoneinfo import ZoneInfo
 
 import dateutil.parser as parser
 import pandas as pd
@@ -11,6 +11,8 @@ from rq import Queue
 from rq.exceptions import NoSuchJobError
 from rq.job import Job
 
+from sqlalchemy import func
+
 from flask import (
     render_template,
     current_app,
@@ -19,7 +21,6 @@ from flask import (
     redirect,
     url_for,
     send_file,
-    jsonify,
     Response,
     send_from_directory,
 )
@@ -41,87 +42,110 @@ from web.istex_proxy import (
 )
 from ..errors import IstexError, WebError, FilePathError
 
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Optional
+from flask import jsonify
 
+
+@dataclass
 class StatusResponse:
-    """
-    In response to a get_status api request,
-    instantiate an object with arguments,
-    then return the jsonified dictionnary as expected by the request
-    """
+    """Handles status response formatting for API requests"""
 
-    def __init__(
-        self,
-        status: str = "success",
-        paper_id: int = None,
-        ppl_ver: str = None,
-        task_status: str = None,
-        task_started: datetime = None,
-        task_stopped: datetime = None,
-        cat_is_processed: bool = None,
-        message: str = None,
-        alt_message: str = None,
-    ):
-        self.status = status
-        self.paper_id = paper_id
-        self.ppl_ver = ppl_ver
-        self.task_status = task_status
-        self.task_started = task_started
-        self.task_stopped = task_stopped
-        self.cat_is_processed = cat_is_processed
-        self.message = message
-        self.alt_message = alt_message
-        if task_started is not None:
-            self.task_started_str = task_started.strftime('%Y-%m-%dT%H:%M:%S')
+    VALID_STATUSES = {"queued", "started", "finished", "failed"}
+
+    status: str
+    http_code: int = 200
+    paper: Optional['Paper'] = None
+    paper_id: Optional[int] = None
+    ppl_ver: Optional[str] = None
+    task_status: Optional[str] = None
+    cat_is_processed: Optional[bool] = False
+    message: str = ""
+    alt_message: str = ""
+
+    def __post_init__(self):
+        if self.status not in ["success", "failed"]:
+            raise ValueError(f"response status must be failed or success, not {self.status}")
+
+        if not (self.paper or self.paper_id):
+            raise ValueError("paper_id must be provided if paper is None")
+
+        # set fields from paper if not set by constructor
+        if self.paper is not None:
+            self.paper_id = self.paper_id or self.paper.id
+            self.ppl_ver = self.ppl_ver or self.paper.pipeline_version
+            self.task_status = self.task_status or self.paper.task_status
+            self.task_started = self.paper.task_started
+            self.task_stopped = self.paper.task_stopped
+            self.cat_is_processed = self.paper.has_cat and self.paper.cat_in_db
+
+        if isinstance(self.task_started, datetime):
+            self.task_started = self.task_started.replace(tzinfo=timezone.utc).astimezone(ZoneInfo("Europe/Paris"))
+        if isinstance(self.task_stopped, datetime):
+            self.task_stopped = self.task_stopped.replace(tzinfo=timezone.utc).astimezone(ZoneInfo("Europe/Paris"))
+
+    def _format_task_status(self) -> str:
+        return self.task_status if self.task_status in self.VALID_STATUSES else "undefined"
+
+    def _calculate_elapsed_time(self) -> str:
+        if not isinstance(self.task_started, datetime):
+            return ""
+
+        _current_time = datetime.now(ZoneInfo("Europe/Paris"))
+        if self.task_status in ["started", "queued"]:
+            elapsed = _current_time - self.task_started
+
+        elif self.task_status in ["finished", "failed"] and  isinstance(self.task_stopped, datetime):
+            elapsed = self.task_stopped - self.task_started
         else:
-            self.task_started_str = "(no time info)"
-        if task_stopped is not None:
-            self.task_stopped_str = task_stopped.strftime('%Y-%m-%dT%H:%M:%S')
-        else:
-            self.task_stopped_str = "(no time info)"
+            return ""
 
-        if task_status in ["started", "finished", "failed"] and alt_message is None:
-            self.alt_message = f"Started {self.task_started_str}"
+        return str(elapsed).split(".")[0]
 
-        elif task_status in ["queued"] and alt_message is None:
-            self.alt_message = f"Waiting since {self.task_started_str}"
+    def _format_message(self) -> str:
+        if self.message:
+            return self.message
 
-    @property
-    def _response(self):
-        return {
-            "status": self.status,
-            "data": {
-                "paper_id": self.paper_id,
-                "ppl_ver": self.ppl_ver,
-                "task_status": self.task_status,
-                "task_started": self.task_started_str,
-                "task_stopped": self.task_stopped_str,
-                "cat_is_processed": self.cat_is_processed,
-                "message": self.message,
-                "alt_message": self.alt_message,
-            },
-        }
+        if self._format_task_status() == "undefined":
+            return "No job run yet"
+
+        return f"{self.task_status:9} {self._calculate_elapsed_time()}"
+
+    def _format_alt_message(self) -> str:
+        if self.alt_message:
+            return self.alt_message
+
+        started_str = self.task_started.strftime('%Y-%m-%dT%H:%M:%S') if self.task_started else "(no time info)"
+
+        if self.task_status in ["started", "finished", "failed"]:
+            return f"Started {started_str}"
+        elif self.task_status == "queued":
+            return f"Waiting since {started_str}"
+
+        return ""
 
     @property
     def response(self):
-        return jsonify(self._response)
-
-    def to_dict(self):
-        return self._response
-
-    def to_json_string(self):
-        import json
-        return json.dumps(self._response, indent=4)
-
-    def set_ppl_ver(self, ppl_ver):
-        self.ppl_ver = ppl_ver
+        data = {
+            "paper_id": self.paper_id,
+            "ppl_ver": self.ppl_ver,
+            "task_status": self._format_task_status(),
+            "task_started": self.task_started,
+            "task_stopped": self.task_stopped,
+            "cat_is_processed": self.cat_is_processed,
+            "message": self._format_message(),
+            "alt_message": self._format_alt_message()
+        }
+        return jsonify({"status": self.status, "data": data}), self.http_code
 
 
 def allowed_file(filename):
     # TODO: REFACTOR use models.FileType instead
     return (
-        "." in filename
-        and filename.rsplit(".", 1)[1].lower()
-        in current_app.config["ALLOWED_EXTENSIONS"]
+            "." in filename
+            and filename.rsplit(".", 1)[1].lower()
+            in current_app.config["ALLOWED_EXTENSIONS"]
     )
 
 
@@ -221,6 +245,7 @@ def basename_filter(filename):
 def add_css_colors_to_templates():
     # Mettre CSS_COLORS dans le contexte global des templates
     current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
+
 
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
 
@@ -406,16 +431,47 @@ def enlighted_json():
     return response
 
 
-@bp.route("/papers/<name>")
 @bp.route("/papers")
-def papers(name=None):
-    if not name:
-        # get all uploaded pdf stored in db
-        papers_list = db.session.query(Paper).all()
-        return render_template("papers.html", papers_list=papers_list)
-    else:
-        flash("Uploaded " + name)
+def papers():
+    requested_status = request.args.get('requested_status', None)
+
+    if requested_status not in ["queued", "started", "finished", "failed", "undefined", None]:
+        flash(f"Status {requested_status} is not valid", "warning")
         return redirect(url_for("main.papers"))
+
+    # make some statistics by pipeline job status
+    state_counts = db.session.query(Paper.task_status, func.count(Paper.id)).group_by(Paper.task_status).all()
+
+    # Add the 'undefined' state
+    valid_states = ['finished', 'queued', 'started', 'failed']
+    state_dict = {state: count for state, count in state_counts if state in valid_states}
+    undefined_count = sum(count for state, count in state_counts if state not in valid_states)
+    state_dict['undefined'] = undefined_count
+    for state in valid_states:
+        if state in state_dict.keys():
+            continue
+        state_dict[state] = 0
+
+    # Transform to a list of dicts
+    state_stats = [{'status': k, 'tag': k, 'value': state_dict[k]} for k in valid_states]
+    state_stats.append({'status': 'undefined', 'tag': 'not run', 'value': state_dict['undefined']})
+
+
+
+
+    # get all uploaded pdf stored in db
+    # papers_list = db.session.query(Paper).all()
+    page = request.args.get('page', 1, type=int)
+    if requested_status is not None:
+        _query = Paper.query.filter_by(task_status=requested_status)
+    else:
+        _query = Paper.query
+    _papers = _query.paginate(
+        page=page,
+        per_page=current_app.config["PER_PAGE"],
+        error_out=False
+    )
+    return render_template("papers.html", papers=_papers, state_stats=state_stats, requested_status=requested_status)
 
 
 @bp.route("/upload_from_url", methods=["POST"])
@@ -498,83 +554,72 @@ def upload():
 def bht_status(paper_id):
     paper = db.session.get(Paper, paper_id)
     if paper is None:
-        flash(f"No such paper {paper_id}")
-        return redirect(url_for("main.papers"))  #
+        response_object = StatusResponse(paper_id=paper_id,
+                                         message=f"No such paper {paper_id}",
+                                         alt_message=f"No such paper {paper_id}",
+                                         status="failed",
+                                         http_code=404)
 
-    # TODO: REFACTOR cut and delegate to Paper and Task models
-    # Get task info from db if task has finished
-    if paper.task_status == "finished" or paper.task_status == "failed":
-        message = f"Paper task = {paper.task_status}"
-        try:
-            elapsed = str(paper.task_stopped - paper.task_started).split(".")[0]
-        except Exception as e:
-            current_app.logger.error(f"Got error on paper task date: {e}")
-            elapsed = ""
-        response_object = StatusResponse(
-            paper_id=paper.id,
-            task_status=paper.task_status,
-            task_started=paper.task_started,
-            ppl_ver=paper.pipeline_version,
-            task_stopped=paper.task_stopped,
-            cat_is_processed=paper.has_cat and paper.cat_in_db,
-            message=f"{paper.task_status} {elapsed}",
-        )
-    else:  # Get task info from task manager
+
+    # Get task info from db
+    elif paper.task_status in ["finished", "failed", None]:
+        response_object = StatusResponse(paper=paper,
+                                         status="success",
+                                         http_code=200)
+    # Or Get task info from task manager
+    else:
+        # task_status is in ["queued", "started"] but can change before next if
+
         task_id = paper.task_id
         try:
-            if task_id is None:
-                raise NoSuchJobError
             job = Job.fetch(
                 task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
             )
-            task_status = job.get_status(refresh=True)
+            task_status = job.get_status(refresh=True).value
 
-            if task_status == "started":
+            # even if we entered that case with status in ["queued", "started"] it can have changed in the mean time
+            # so we need to also test  "finished" and "failed" statuses
+            if task_status in ["started", "finished", "failed"]:
                 task_started = job.started_at
-                elapsed = str(datetime.datetime.utcnow() - task_started).split(".")[0]
-            elif task_status in ["finished", "failed"]:
-                task_started = job.started_at
-                elapsed = str(job.ended_at - task_started).split(".")[0]
             elif task_status == "queued":
                 task_started = job.enqueued_at
-                elapsed = ""
             else:
-                # TODO: send a response object
-                raise WebError(f"Unknown status {task_status}")
+                # TODO
+                raise WebError(f"Unmanaged task status >>{task_status}<<")
 
+            # Update paper's info in db
             paper.set_task_status(task_status)
             paper.set_task_started(task_started)
             paper.set_task_stopped(job.ended_at)
-            response_object = StatusResponse(
-                paper_id=paper.id,
-                task_status=task_status,
-                task_started=task_started,
-                ppl_ver=current_app.config["BHT_PIPELINE_VERSION"],
-                cat_is_processed=paper.has_cat and paper.cat_in_db,
-                message=f"{task_status} {elapsed}",
-            )
+            response_object = StatusResponse(paper=paper,
+                                             status="success",
+                                             http_code=200)
         except NoSuchJobError:
-            response_object = StatusResponse(
-                paper_id=paper.id,
-                task_status="undefined",
-                message="No job run yet",
-                alt_message="No pipeline was run on that paper",
-            )
+            response_object = StatusResponse(paper=paper,
+                                             message="Job Id Error",
+                                             alt_message=f"No such job id {task_id} was found",
+                                             status="failed",
+                                             http_code=503)
         except redis.connection.ConnectionError:
-            response_object = StatusResponse(
-                status="failed",
-                paper_id=paper.id,
-                message="Redis Cnx Err",
-                alt_message="Database to read tasks status is unreachable",
-            )
-            return response_object.response, 503
+            response_object = StatusResponse(paper=paper,
+                                             message="Redis Cnx Err",
+                                             alt_message="Database to read tasks status is unreachable",
+                                             status="failed",
+                                             http_code=503)
+        # Paper exists, but task_status is unknown
+        except WebError as e:
+            response_object = StatusResponse(paper=paper,
+                                             message=e.message,
+                                             alt_message=f"Paper id: {paper_id}, task status: {paper.task_status}",
+                                             status="failed",
+                                             http_code=503)
 
-        # TODO: END CUTTING
-    return response_object.response, 200
+    return response_object.response
 
-@bp.route("/bht_run/<paper_id>/<file_type>", defaults={"pipeline_start_step": PipeStep.TIMEFILL}, methods=["GET"])
+
+@bp.route("/bht_run/<paper_id>/<file_type>", defaults={"pipeline_start_step": PipeStep.MKDIR}, methods=["GET"])
 @bp.route("/bht_run/<paper_id>/<file_type>/<pipeline_start_step>", methods=["GET"])
-def bht_run(paper_id, file_type, pipeline_start_step):
+def bht_run(paper_id, file_type, pipeline_start_step=0):
     found_file = get_paper_file(paper_id, file_type.upper())
     if found_file is None:
         flash("No file for that paper.")
@@ -589,13 +634,13 @@ def bht_run(paper_id, file_type, pipeline_start_step):
             job_timeout=600,
         )
     except redis.connection.ConnectionError:
-        response_object = StatusResponse(
-            status="failed",
-            paper_id=int(paper_id),
-            message="Failed, no Redis",
-            alt_message="System to run tasks is unreachable",
-        )
-        return response_object.json, 503
+        response_object = StatusResponse(paper=None,
+                                         status="failed",
+                                         paper_id=int(paper_id),
+                                         message="Failed, no Redis",
+                                         alt_message="System to run tasks is unreachable",
+                                         http_code=503)
+        return response_object.response
 
     paper = db.session.get(Paper, paper_id)
     paper.set_task_id(task.get_id())
@@ -603,10 +648,10 @@ def bht_run(paper_id, file_type, pipeline_start_step):
     paper.set_cat_path(None)
     # TODO: CUT END
 
-    response_object = StatusResponse(
-        status="success", task_status="queued", paper_id=paper.id
-    )
-    return response_object.response, 202
+    response_object = StatusResponse(paper=paper,
+                                     status="success", task_status="queued", paper_id=paper.id,
+                                     http_code=202)
+    return response_object.response
 
 
 @bp.route("/istex_test", methods=["GET"])
@@ -615,7 +660,7 @@ def istex_test():
     from web.istex_proxy import json_to_hits
 
     with open(
-        os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
+            os.path.join(current_app.config["BHT_DATA_DIR"], "api.istex.fr.json")
     ) as fp:
         istex_list = json_to_hits(json.load(fp))
     return render_template("istex.html", istex_list=istex_list)
@@ -654,9 +699,9 @@ def istex():
         json_content = r.json()
         istex_list = json_to_hits(json_content)
     except (
-        requests.exceptions.MissingSchema,
-        requests.exceptions.InvalidURL,
-        requests.exceptions.ConnectionError,
+            requests.exceptions.MissingSchema,
+            requests.exceptions.InvalidURL,
+            requests.exceptions.ConnectionError,
     ):
         flash(f"Could not connect to <{istex_req_url}>", "error")
         return redirect(url_for("main.istex"))
@@ -728,52 +773,19 @@ def events(ref_name, ref_id):
 
 @bp.route("/admin", methods=["GET"])
 def admin():
-
     # build a list of papers with catalogs not already inserted in db
-    _catalogs = [
-        paper for paper in Paper.query.filter_by(cat_in_db=False).all() if paper.has_cat
-    ]
+    page = request.args.get('page', 1, type=int)
+    _query = Paper.query.filter(Paper.cat_in_db==False, Paper.cat_path !='None')
 
-    import glob
-
-    search_pattern = os.path.join(
-        f'{current_app.config["BHT_DATA_DIR"]}/**/', "raw4_sutime.json"
+    _paginated_papers = _query.paginate(
+        page=page,
+        per_page=current_app.config["PER_PAGE"],
+        error_out=False
     )
-    json_files = glob.glob(search_pattern, recursive=True)
 
-    _sutime_structs = []
-    for json_f in json_files:
-        paper_name = os.path.dirname(json_f).split("/")[-1]
-        paper = istexid_to_paper(paper_name)
-        if paper is None:
-            continue
-        else:
-            paper_id = paper.id
-        with open(json_f) as of:
-            structs = json.load(of)
-            structs.pop()
-            new_structs = []
-            for _s in structs:
-                if _s["type"] != "DURATION" or _s["text"] in ["8327-8338", "0004-6361"]:
-                    continue
-                date_begin = parser.parse(_s["value"]["begin"])
-                date_end = parser.parse(_s["value"]["end"])
-                delta_time = date_end - date_begin
-                new_structs.append(
-                    {
-                        "paper_title": paper.title,
-                        "paper_id": paper.id,
-                        "paper_name": paper_name,
-                        "text": _s["text"],
-                        "value": _s["value"],
-                        "delta_time": delta_time,
-                    }
-                )
-            _sutime_structs.extend(new_structs)
-    _sorted_structs = sorted(_sutime_structs, key=lambda x: x["delta_time"])
 
     return render_template(
-        "admin.html", catalogs=_catalogs, sutime_structs=_sorted_structs
+        "admin.html", papers=_paginated_papers
     )
 
 

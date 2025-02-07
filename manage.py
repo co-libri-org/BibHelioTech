@@ -11,12 +11,51 @@ from flask_migrate import upgrade
 from flask.cli import FlaskGroup
 
 from bht.databank_reader import DataBank, DataBankSheet
+from bht.pipeline import PipeStep
 from web import create_app, db
 from web.bht_proxy import pipe_paper
 from web.models import catfile_to_db, Mission, istexdir_to_db
 from web.models import Paper, HpEvent
 
 cli = FlaskGroup(create_app=create_app)
+
+@cli.command("rq_show")
+@click.argument("status", required=True)
+def rq_show(status):
+    """Show all jobs with given status"""
+    from rq import Queue
+    from rq.worker import Worker
+    from rq.registry import FailedJobRegistry
+    from rq.registry import FinishedJobRegistry
+
+    available_statuses = ['queued', 'started', 'finished', 'failed']
+    if status not in available_statuses:
+        print(f"Please choose status into {available_statuses}")
+
+    redis_conn = redis.from_url(current_app.config["REDIS_URL"])
+    if status == "queued":
+        queue = Queue('default', connection=redis_conn)
+        jobs = queue.jobs
+        if len(jobs) == 0:
+            print("No queued jobs")
+        else:
+            for j in jobs:
+                print(j)
+    elif status == "started":
+        workers = Worker.all(connection=redis_conn)
+        if len(workers) == 0:
+            print("No started jobs")
+        else:
+            for worker in workers:
+                print(f"Worker: {worker.name}, Job en cours: {worker.get_current_job()}")
+    elif status == "finished":
+        finished_registry = FinishedJobRegistry('default', connection=redis_conn)
+        finished_jobs = finished_registry.get_job_ids()
+        print(finished_jobs)
+    elif status=="failed":
+        failed_registry = FailedJobRegistry('default', connection=redis_conn)
+        failed_jobs = failed_registry.get_job_ids()
+        print(failed_jobs)
 
 
 @cli.command("databank_show")
@@ -77,10 +116,36 @@ def run_worker():
 
 
 @cli.command("papers_list")
-def papers_list():
-    """Show all papers contained in database"""
-    for p in Paper.query.all():
-        print(p)
+@click.option("--long", is_flag=True, default=False, help="Show long version of paper details")
+@click.option("--cat-in-db", type=bool, default=None, help="Filter papers by cat_in_db (True/False)")
+@click.option("--task-status", type=str, default=None, help="Filter papers by task_status (e.g., 'failed')")
+@click.option("--istex-id", type=str, default=None, help="Filter papers by task_status (e.g., 'failed')")
+@click.option("--has-cat", type=bool, default=None, help="Filter papers by has_cat (file existence)")
+@click.option("--version", type=str, default=None, help="Filter papers by version number")
+def papers_list(long, cat_in_db, task_status, istex_id, has_cat, version):
+    """Show all papers contained in the database, with optional filters."""
+
+    query = Paper.query  # Commence avec la requête de base
+
+    if cat_in_db is not None:
+        query = query.filter(Paper.cat_in_db.is_(cat_in_db))
+
+    if task_status:
+        query = query.filter(Paper.task_status == task_status)
+
+    if istex_id:
+        query = query.filter(Paper.istex_id == istex_id)
+
+    papers = query.all()
+
+    if version is not None:
+        papers = [p for p in papers if p.pipeline_version == version]
+
+    if has_cat is not None:
+        papers = [p for p in papers if p.has_cat == has_cat]
+
+    for p in papers:
+        print(repr(p) if long else str(p))
 
 
 @cli.command("paper_update")
@@ -240,11 +305,18 @@ def paper_run(paper_id):
 
 @cli.command("paper_web_run")
 @click.argument("paper_id", required=True)
-def paper_web_run_cmd(paper_id):
+@click.option(
+    "--start-step",
+    type=click.Choice([ps.name for ps in list(PipeStep)], case_sensitive=True),
+    default=PipeStep.MKDIR.name,
+    help="Optional start step"
+)
+def paper_web_run_cmd(paper_id, start_step):
     """Run the latest pipeline on that paper's article through web/RQ"""
+    start_step = PipeStep[start_step]
     with current_app.test_request_context(), current_app.app_context():
         from web.main.routes import bht_run
-        response, status_code = bht_run(paper_id=paper_id, file_type="txt")
+        response, status_code = bht_run(paper_id=paper_id, file_type="txt", pipeline_start_step=start_step)
 
         if status_code == 202:
             data = response.json  # La réponse Flask contient déjà le JSON

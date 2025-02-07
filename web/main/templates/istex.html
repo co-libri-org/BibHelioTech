@@ -3,7 +3,26 @@
 <title>Istex Request - {{base_title}}</title>
 {%  endblock %}
 {% block content %}
+<div class="row">
+    <h4>Direct Upload</h4>
+    <div class="col">
+        <h5>from new File</h5>
+        <form action={{url_for('main.upload')}} method=post enctype=multipart/form-data>
+            <input type=file name=file>
+            <input type=submit value=Upload>
+        </form>
+    </div>
+    <div class="col">
+        <h5>from URL</h5>
+        <form action={{url_for('main.upload_from_url')}} method=post enctype=multipart/form-data>
+            <input type=url name=pdf_url>
+            <input type=submit value=Upload>
+        </form>
+    </div>
+</div>
+<hr class="mt-4 mb-4">
 <form method="post" action="{{url_for('main.istex')}}">
+    <h4>Istex Request</h4>
     <div class="row mb-4">
         <div class="col-12">
             <input class="form-control" type="url" size="100%" name=istex_req_url placeholder="istex request url">

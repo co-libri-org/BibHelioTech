@@ -195,36 +195,62 @@ input.success{
 /* PAPERS LIST */
 /*
 */
+
+.status-link {
+text-decoration: none;
+}
+button.stat-status.active {
+    border: 1pt solid #505050;
+}
+
+button.stat-status:hover {
+    border: 1pt solid #505050;
+    filter: brightness(110%); /* Makes it 15% darker */
+}
+
+.pagination_menu {
+    display: flex;
+    justify-content: space-between;
+}
 .bht-status:hover {
     height: 100%;
     cursor: help;
     border: 1pt solid lightgrey;
     background-color: white !important;
 }
-.bht-status {
-    align-items: center; /* Centrage vertical du contenu */
-    margin: 3px;
-    height: 100%;
+.bht-status, .stat-status {
+    text-align: justify;
+    font-family: monospace;
+    font-size: 0.80em;
     border: 1pt solid transparent;
     color: black;
-    display: inline-block;
-    align-items: center;
     border-radius: 5pt;
     padding: 6px;
 }
-.bht-status.queued{
+.stat-status {
+    border: 1pt solid lightgrey;
+}
+.bht-status {
+    display: inline-block;
+    width: 80%;
+}
+.bht-status.queued,
+.stat-status.queued{
     /* queued is blue */
     background-color: #cce6ff;
 }
-.bht-status.undefined {
+.bht-status.undefined ,
+.stat-status.undefined {
     color: #505050;
     background-color: #eaeaea;
 }
-.bht-status.started {
+.bht-status.started ,
+.stat-status.started {
     /* started is green */
     background-color: #ccffdd;
 }
-.bht-status.failed{
+.bht-status.failed,
+.stat-status.failed{
     /* failed is red */
     background-color: #ff9999;
     font-weight: 400;
@@ -238,7 +264,8 @@ input.success{
     font-size: 20px;
     padding: 0 !important;
     font-weight: 400 !important;
-    width: 35px !important;
+    width: auto !important;  /* au lieu de 35px */
+    min-width: 35px;        /* optionnel: garde une taille minimum */
 }
 
 .btn.btn-version,

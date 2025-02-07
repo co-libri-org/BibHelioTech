@@ -25,11 +25,22 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [1.3.3] - 2025-02-07 - Partial bulk by CLI
+#### Fixed
+- Status display
+#### Changed
+- Pipeline refactoring
+- Web status refactoring
+#### New
+- Filtering by status
+- Add pagination for many pages
+
 ## [1.2.0] - 2025-01-22 - First Bulk prototype
 #### Fixed
 - pipeline bugs
 #### New
 - cli commands bulk run pipeline on files
+- allow partial pipeline through web
 
 ## [1.0.0] - 2025-01-14 - Latest Pipeline changes
 #### Fixed

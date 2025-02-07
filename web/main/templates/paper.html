@@ -17,7 +17,7 @@
             {{disabled(not paper.has_txt)}}>
         Run <b>{{config.BHT_PIPELINE_VERSION}}</b>
     </button>
-    <span class="bht-status" id="bht-status-{{paper.id}}"></span>
+    <span class="bht-status" id="bht-status-{{paper.id}}" style="width: 140px;"></span>
     <span class="spinner-border spinner-border-sm text-warning d-none" id="spinner-{{paper.id}}"></span>
 </div>
 <table id="paper_keys" class="table table-striped">
@@ -48,7 +48,7 @@
     </tr>
     <tr>
         <th>cat file:</th>
-        {% if paper.has_txt %}
+        {% if paper.has_cat %}
         <td class="paper_attr_yes">
             <a title="get cat file" href="{{url_for('main.cat', paper_id=paper.id)}}">{{paper.cat_path | basename}}</a>
         </td>
@@ -78,7 +78,7 @@
     </tr>
     <tr>
         <th>doi:</th>
-        <td>{{paper.doi}}</td>
+        <td><a href="http://doi.org/{{paper.doi}}">{{paper.doi}}</a></td>
     </tr>
     <tr>
         <th>ark:</th>
