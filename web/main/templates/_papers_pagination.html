@@ -1,6 +1,9 @@
 
 {% if papers.pages > 1 %}
+{% if insert == 'top' %}
     Page {{ papers.page }} / {{ papers.pages }} ({{ papers.total }} total papers)
+{% elif insert == 'bottom' %}
+    <hr class="mt-2 mb-3">
 {% endif %}
 
 <div class="pagination_menu">
@@ -14,3 +17,9 @@
        title="Next {{config.PER_PAGE}} Papers">>></a>
     {% endif %}
 </div>
+{% if insert == 'top' %}
+    <hr class="mt-2 mb-3">
+{% elif insert == 'bottom' %}
+    Page {{ papers.page }} / {{ papers.pages }} ({{ papers.total }} total papers)
+{% endif %}
+{% endif %}

@@ -27,7 +27,7 @@
         V{{config.BHT_PIPELINE_VERSION}}</a>
     available </h5>
 
-{% with url_value = 'main.papers' %}
+{% with url_value = 'main.papers' , insert='top'%}
     {% include '_papers_pagination.html' %}
 {% endwith %}
 
@@ -116,7 +116,7 @@
     </tbody>
 </table>
 
-{% with url_value = 'main.papers' %}
+{% with url_value = 'main.papers' , insert='bottom'%}
     {% include '_papers_pagination.html' %}
 {% endwith %}
 

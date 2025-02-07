@@ -10,7 +10,7 @@ Show a list of catalogs files not already inserted in db
 #}
 {% if not papers.items|length == 0 %}
 <h4>{{papers.total }} Catalogs to add in database:</h4>
-{% with url_value = 'main.admin' %}
+{% with url_value = 'main.admin' , insert='top'%}
 {% include '_papers_pagination.html' %}
 {% endwith %}
 <table class="table-hover table">
@@ -36,9 +36,8 @@ Show a list of catalogs files not already inserted in db
     </tr>
     {% endfor %}
 </table>
-<hr class="mt-2 mb-3">
 {% endif %}
-{% with url_value = 'main.admin' %}
+{% with url_value = 'main.admin', insert='bottom' %}
     {% include '_papers_pagination.html' %}
 {% endwith %}
 {%  endblock content %}
