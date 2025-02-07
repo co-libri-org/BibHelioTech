@@ -12,10 +12,12 @@
 
 <div id="state_stats" class="mb-4">
     {% for state in state_stats%}
-    <span class="stat-status {{state['class']}}" title="">{{state['value']}} {{state['tag']}}</span>
+    <a class="status-link" href="{{url_for('main.papers', requested_status=state['class'])}}">
+        <button class="stat-status {{state['class']}}" title="">{{state['value']}} {{state['tag']}}</button>
+    </a>
     {% endfor %}
 </div>
-{% with url_value = 'main.papers' , insert='top'%}
+{% with url_value = 'main.papers' , insert='top', requested_status=requested_status%}
     {% include '_papers_pagination.html' %}
 {% endwith %}
 
@@ -104,7 +106,7 @@
     </tbody>
 </table>
 
-{% with url_value = 'main.papers' , insert='bottom'%}
+{% with url_value = 'main.papers' , insert='top', requested_status=requested_status%}
     {% include '_papers_pagination.html' %}
 {% endwith %}
 

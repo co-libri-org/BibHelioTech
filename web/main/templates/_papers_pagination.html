@@ -8,12 +8,12 @@
 
 <div class="pagination_menu">
     {% if papers.has_prev %}
-    <a class="btn btn-warning" href="{{ url_for(url_value, page=papers.prev_num) }}"
+    <a class="btn btn-warning" href="{{ url_for(url_value, page=papers.prev_num, requested_status=requested_status) }}"
        title="Previous {{config.PER_PAGE}} Papers"><<</a>
     {% endif %}
     &nbsp;
     {% if papers.has_next %}
-    <a class="btn btn-warning" href="{{ url_for(url_value, page=papers.next_num) }}"
+    <a class="btn btn-warning" href="{{ url_for(url_value, page=papers.next_num, requested_status=requested_status) }}"
        title="Next {{config.PER_PAGE}} Papers">>></a>
     {% endif %}
 </div>

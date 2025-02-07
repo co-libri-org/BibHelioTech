@@ -433,12 +433,17 @@ def enlighted_json():
 
 @bp.route("/papers")
 def papers():
+    requested_status = request.args.get('requested_status', None)
+
+    if requested_status not in ["queued", "started", "finished", "failed", "undefined", None]:
+        flash(f"Status {requested_status} is not valid", "warning")
+        return redirect(url_for("main.papers"))
 
     # make some statistics by pipeline job status
     state_counts = db.session.query(Paper.task_status, func.count(Paper.id)).group_by(Paper.task_status).all()
 
     # Add the 'undefined' state
-    valid_states = ['queued', 'started', 'failed', 'finished']
+    valid_states = ['finished', 'queued', 'started', 'failed']
     state_dict = {state: count for state, count in state_counts if state in valid_states}
     undefined_count = sum(count for state, count in state_counts if state not in valid_states)
     state_dict['undefined'] = undefined_count
@@ -457,12 +462,16 @@ def papers():
     # get all uploaded pdf stored in db
     # papers_list = db.session.query(Paper).all()
     page = request.args.get('page', 1, type=int)
-    _papers = Paper.query.paginate(
+    if requested_status is not None:
+        _query = Paper.query.filter_by(task_status=requested_status)
+    else:
+        _query = Paper.query
+    _papers = _query.paginate(
         page=page,
         per_page=current_app.config["PER_PAGE"],
         error_out=False
     )
-    return render_template("papers.html", papers=_papers, state_stats=state_stats)
+    return render_template("papers.html", papers=_papers, state_stats=state_stats, requested_status=requested_status)
 
 
 @bp.route("/upload_from_url", methods=["POST"])

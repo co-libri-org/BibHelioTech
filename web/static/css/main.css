@@ -196,6 +196,14 @@ input.success{
 /*
 */
 
+.status-link {
+text-decoration: none;
+}
+button.stat-status:hover {
+border: 1pt solid grey;
+    filter: brightness(110%); /* Makes it 15% darker */
+    }
+
 .pagination_menu {
     display: flex;
     justify-content: space-between;
