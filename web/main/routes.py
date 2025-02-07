@@ -121,7 +121,7 @@ class StatusResponse:
         elif self.task_status == "queued":
             return f"Waiting since {started_str}"
 
-        return "no alt message"
+        return ""
 
     @property
     def response(self):
@@ -535,17 +535,16 @@ def bht_status(paper_id):
 
 
     # Get task info from db
-    elif paper.task_status in ["finished", "failed"]:
+    elif paper.task_status in ["finished", "failed", None]:
         response_object = StatusResponse(paper=paper,
                                          status="success",
                                          http_code=200)
     # Or Get task info from task manager
-    else:  # task_status in ["queued", "started"]:
+    else:
+        # task_status is in ["queued", "started"] but can change before next if
 
         task_id = paper.task_id
         try:
-            if task_id is None:
-                raise NoSuchJobError
             job = Job.fetch(
                 task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
             )
@@ -570,8 +569,8 @@ def bht_status(paper_id):
                                              http_code=200)
         except NoSuchJobError:
             response_object = StatusResponse(paper=paper,
-                                             message="No job run yet",
-                                             alt_message="No pipeline was run on that paper",
+                                             message="Job Id Error",
+                                             alt_message=f"No such job id {task_id} was found",
                                              status="failed",
                                              http_code=503)
         except redis.connection.ConnectionError:
