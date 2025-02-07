@@ -3,23 +3,6 @@
 <title> {{papers.total}} Papers - {{base_title}}</title>
 {%  endblock %}
 {% block content %}
-<div class="row">
-    <div class="col">
-        <h4>Upload new File</h4>
-        <form action={{url_for('main.upload')}} method=post enctype=multipart/form-data>
-            <input type=file name=file>
-            <input type=submit value=Upload>
-        </form>
-    </div>
-    <div class="col">
-        <h4>Upload from URL</h4>
-        <form action={{url_for('main.upload_from_url')}} method=post enctype=multipart/form-data>
-            <input type=url name=pdf_url>
-            <input type=submit value=Upload>
-        </form>
-    </div>
-</div>
-<hr class="mt-4 mb-4">
 <h5 class="d-flex justify-content-center align-items-center p-3 ">
     bht pipeline
     <a class="btn btn-warning btn-version" href="{{url_for('main.changelog', module='pipeline')}}"
