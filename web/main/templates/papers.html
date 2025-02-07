@@ -27,7 +27,9 @@
         V{{config.BHT_PIPELINE_VERSION}}</a>
     available </h5>
 
-{% include '_papers_pagination.html' %}
+{% with url_value = 'main.papers' %}
+    {% include '_papers_pagination.html' %}
+{% endwith %}
 
 <table class="table-hover table">
     <thead>
@@ -114,7 +116,9 @@
     </tbody>
 </table>
 
-{% include '_papers_pagination.html' %}
+{% with url_value = 'main.papers' %}
+    {% include '_papers_pagination.html' %}
+{% endwith %}
 
 {%endblock%}
 

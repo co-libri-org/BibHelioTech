@@ -17,7 +17,9 @@ Show a list of catalogs files not already inserted in db
             {{paper.title}}
         </td>
         <td class="col-6">
-            <button class="btn btn-warning add-catalog position-relative" data-paper_id="{{paper.id}}"  {% if not paper.has_cat %}disabled{% endif %}>add in db
+            <button class="btn btn-warning add-catalog position-relative" data-paper_id="{{paper.id}}"
+             {% if not paper.has_cat %}disabled{% endif %}>
+                add in db
                 <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                 </span>
             </button>
@@ -27,7 +29,9 @@ Show a list of catalogs files not already inserted in db
 </table>
 <hr class="mt-2 mb-3">
 {% endif %}
-{% include '_papers_pagination.html' %}
+{% with url_value = 'main.admin' %}
+    {% include '_papers_pagination.html' %}
+{% endwith %}
 {%  endblock content %}
 
 {% block scripts %}
