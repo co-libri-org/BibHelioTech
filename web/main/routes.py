@@ -11,6 +11,8 @@ from rq import Queue
 from rq.exceptions import NoSuchJobError
 from rq.job import Job
 
+from sqlalchemy import func
+
 from flask import (
     render_template,
     current_app,
@@ -432,19 +434,35 @@ def enlighted_json():
 @bp.route("/papers/<name>")
 @bp.route("/papers")
 def papers(name=None):
-    if not name:
-        # get all uploaded pdf stored in db
-        # papers_list = db.session.query(Paper).all()
-        page = request.args.get('page', 1, type=int)
-        _papers = Paper.query.paginate(
-            page=page,
-            per_page=current_app.config["PER_PAGE"],
-            error_out=False
-        )
-        return render_template("papers.html", papers=_papers)
-    else:
+    if name is not None:
         flash("Uploaded " + name)
         return redirect(url_for("main.papers"))
+
+    # make some statistics by pipeline job status
+    state_counts = db.session.query(Paper.task_status, func.count(Paper.id)).group_by(Paper.task_status).all()
+
+    # Add the 'undefined' state
+    valid_states = ['queued', 'started', 'failed', 'finished']
+    state_dict = {state: count for state, count in state_counts if state in valid_states}
+    undefined_count = sum(count for state, count in state_counts if state not in valid_states)
+    state_dict['undefined'] = undefined_count
+    for state in valid_states:
+        if state in state_dict.keys():
+            continue
+        state_dict[state] = 0
+
+
+
+
+    # get all uploaded pdf stored in db
+    # papers_list = db.session.query(Paper).all()
+    page = request.args.get('page', 1, type=int)
+    _papers = Paper.query.paginate(
+        page=page,
+        per_page=current_app.config["PER_PAGE"],
+        error_out=False
+    )
+    return render_template("papers.html", papers=_papers, state_stats=state_dict)
 
 
 @bp.route("/upload_from_url", methods=["POST"])

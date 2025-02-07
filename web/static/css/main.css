@@ -206,30 +206,39 @@ input.success{
     border: 1pt solid lightgrey;
     background-color: white !important;
 }
-.bht-status {
+.bht-status, .stat-status {
     text-align: justify;
     font-family: monospace;
     font-size: 0.80em;
-    display: inline-block;
-    width: 80%;
     border: 1pt solid transparent;
     color: black;
     border-radius: 5pt;
     padding: 6px;
 }
-.bht-status.queued{
+.stat-status {
+    border: 1pt solid lightgrey;
+}
+.bht-status {
+    display: inline-block;
+    width: 80%;
+}
+.bht-status.queued,
+.stat-status.queued{
     /* queued is blue */
     background-color: #cce6ff;
 }
-.bht-status.undefined {
+.bht-status.undefined ,
+.stat-status.undefined {
     color: #505050;
     background-color: #eaeaea;
 }
-.bht-status.started {
+.bht-status.started ,
+.stat-status.started {
     /* started is green */
     background-color: #ccffdd;
 }
-.bht-status.failed{
+.bht-status.failed,
+.stat-status.failed{
     /* failed is red */
     background-color: #ff9999;
     font-weight: 400;
