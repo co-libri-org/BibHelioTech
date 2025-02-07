@@ -451,6 +451,10 @@ def papers(name=None):
             continue
         state_dict[state] = 0
 
+    # Transform to a list of dicts
+    state_stats = [{'class': k, 'tag': k, 'value': state_dict[k]} for k in valid_states]
+    state_stats.append({'class': 'undefined', 'tag': 'not run', 'value': state_dict['undefined']})
+
 
 
 
@@ -462,7 +466,7 @@ def papers(name=None):
         per_page=current_app.config["PER_PAGE"],
         error_out=False
     )
-    return render_template("papers.html", papers=_papers, state_stats=state_dict)
+    return render_template("papers.html", papers=_papers, state_stats=state_stats)
 
 
 @bp.route("/upload_from_url", methods=["POST"])
