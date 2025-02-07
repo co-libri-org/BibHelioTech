@@ -1,7 +1,7 @@
 {% extends "base_table.html" %}
 {% block more_head %}
 {{ super () }}
-<title> {{papers.items | length}} Catalogs pending - {{base_title}}</title>
+<title> {{papers.total }} Catalogs pending - {{base_title}}</title>
 {%  endblock %}
 {% block content %}
 {#
