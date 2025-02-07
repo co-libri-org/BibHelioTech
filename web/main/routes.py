@@ -431,12 +431,8 @@ def enlighted_json():
     return response
 
 
-@bp.route("/papers/<name>")
 @bp.route("/papers")
-def papers(name=None):
-    if name is not None:
-        flash("Uploaded " + name)
-        return redirect(url_for("main.papers"))
+def papers():
 
     # make some statistics by pipeline job status
     state_counts = db.session.query(Paper.task_status, func.count(Paper.id)).group_by(Paper.task_status).all()
