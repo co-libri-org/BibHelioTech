@@ -9,7 +9,7 @@ Show a list of catalogs files not already inserted in db
 --------------------------------------------------------
 #}
 {% if not papers.items|length == 0 %}
-<h4>{{papers.items | length}} Catalogs to add in database:</h4>
+<h4>{{papers.total }} Catalogs to add in database:</h4>
 <table class="table-hover table">
     {% for paper in papers %}
     <tr>
