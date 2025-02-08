@@ -200,7 +200,19 @@ class HpEvent(db.Model):
 
         return r_str
 
-    def get_dict(self):
+
+    @classmethod
+    def get_events_dicts(cls, events):
+        """From an event list to a list of event's dict with maxconf calculation once only """
+        if not events:
+            return []
+
+        # dynamical max_conf calculation on the whole database
+        max_conf = max(event.conf for event in events if event.conf is not None) if events else 1
+
+        return [event.get_dict(max_conf) for event in events]
+
+    def get_dict(self, max_conf):
         td = self.stop_date - self.start_date
         duration = datetime.timedelta(days=td.days, seconds=td.seconds, microseconds=0)
         hours_str = f"{duration}"[-8:]
@@ -224,8 +236,6 @@ class HpEvent(db.Model):
             "r": self.r,
         }
         # normalize conf index on the whole database
-        all_events = HpEvent.query.all()
-        max_conf = max([_e.conf for _e in all_events])
         r_dict["nconf"] = 1.0 - r_dict["conf"] / max_conf
         return r_dict
 

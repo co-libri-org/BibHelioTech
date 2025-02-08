@@ -96,7 +96,7 @@ class StatusResponse:
         if self.task_status in ["started", "queued"]:
             elapsed = _current_time - self.task_started
 
-        elif self.task_status in ["finished", "failed"] and  isinstance(self.task_stopped, datetime):
+        elif self.task_status in ["finished", "failed"] and isinstance(self.task_stopped, datetime):
             elapsed = self.task_stopped - self.task_started
         else:
             return ""
@@ -456,9 +456,6 @@ def papers():
     state_stats = [{'status': k, 'tag': k, 'value': state_dict[k]} for k in valid_states]
     state_stats.append({'status': 'undefined', 'tag': 'not run', 'value': state_dict['undefined']})
 
-
-
-
     # get all uploaded pdf stored in db
     # papers_list = db.session.query(Paper).all()
     page = request.args.get('page', 1, type=int)
@@ -740,7 +737,7 @@ def events(ref_name, ref_id):
         found_events = paper.get_events()
 
     # translate events to dict list
-    events_dict_list = [_e.get_dict() for _e in found_events]
+    events_dict_list = HpEvent.get_events_dicts(found_events)
 
     # now get some stats and pack as dict
     processed_papers = Paper.query.filter_by(cat_in_db=True).all()
@@ -775,14 +772,13 @@ def events(ref_name, ref_id):
 def admin():
     # build a list of papers with catalogs not already inserted in db
     page = request.args.get('page', 1, type=int)
-    _query = Paper.query.filter(Paper.cat_in_db==False, Paper.cat_path !='None')
+    _query = Paper.query.filter(Paper.cat_in_db == False, Paper.cat_path != 'None')
 
     _paginated_papers = _query.paginate(
         page=page,
         per_page=current_app.config["PER_PAGE"],
         error_out=False
     )
-
 
     return render_template(
         "admin.html", papers=_paginated_papers
@@ -803,9 +799,6 @@ def catalogs():
         params["duration_max"] = int(request.form.get("duration-max"))
         params["duration_min"] = int(request.form.get("duration-min"))
         params["nconf_min"] = float(request.form.get("nconf-min"))
-    else:
-        # get params from session
-        pass
 
     # look for events corresponding to selected missions
     found_events = []
@@ -818,16 +811,16 @@ def catalogs():
 
     # translate to dict list, then pandas dataframe, and filter
     # then translate back to dict (pd.to_records)
-    _events_dicts = [_e.get_dict() for _e in found_events]
-    if len(_events_dicts) > 0:
-        _events_df = pd.DataFrame.from_records(_events_dicts)
+    events_dict_list = HpEvent.get_events_dicts(found_events)
+    if len(events_dict_list) > 0:
+        _events_df = pd.DataFrame.from_records(events_dict_list)
         min_timedelta = pd.Timedelta(minutes=params["duration_min"])
         max_timedelta = pd.Timedelta(minutes=params["duration_max"])
         _events_df = _events_df[_events_df["duration"] < max_timedelta]
         _events_df = _events_df[_events_df["duration"] > min_timedelta]
         _events_df = _events_df[_events_df["nconf"] > params["nconf_min"]]
 
-        _events_dicts = _events_df.to_records()
+        events_dict_list = _events_df.to_records()
 
     # for web display, rebuild all missions as dict, with only fields we need
     _missions = [
@@ -840,15 +833,15 @@ def catalogs():
 
     _db_stats = {
         "total_events": len(found_events),
-        "filtered_events": len(_events_dicts),
+        "filtered_events": len(events_dict_list),
         "selected_missions": selected_missions_names,
     }
 
     return render_template(
         "catalogs.html",
         missions=_missions,
-        events=_events_dicts,
-        events_ids=",".join([str(_e.id) for _e in _events_dicts]),
+        events=events_dict_list,
+        events_ids=",".join([str(_e.id) for _e in events_dict_list]),
         db_stats=_db_stats,
         params=params,
     )
@@ -902,8 +895,9 @@ def api_catalogs_txt():
         catalog_name = f"web_request_{today}"
         events_ids = events_ids.split(",")
         events_list = []
-        for e_id in events_ids:
-            events_list.append(db.session.get(HpEvent, e_id).get_dict())
+        # Optimised sqlalchemy request
+        events_list = HpEvent.query.filter(HpEvent.id.in_(events_ids)).all()
+        events_dict_list = HpEvent.get_events_dicts(events_list)
     elif mission_id:
         mission = db.session.get(Mission, mission_id) if mission_id else None
         catalog_name = mission.name
@@ -912,18 +906,14 @@ def api_catalogs_txt():
                 f"No valid parameters for url: {mission_id} {mission}",
                 status=400,
             )
-        # TODO: REFACTOR extract to method and merge common code with api_catalogs
-        events_list = [
-            event.get_dict()
-            for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
-                HpEvent.start_date
-            )
-        ]
+        events_dict_list = HpEvent.get_events_dicts(
+            HpEvent.query.filter_by(mission_id=mission_id).order_by(HpEvent.start_date)
+        )
     else:
         flash(f"Missing arguments 'mission_id' or 'events_ids[]' empty", "warning")
         return redirect(url_for("main.catalogs"))
     catalog_txt_stream = rows_to_catstring(
-        events_list,
+        events_dict_list,
         catalog_name,
         columns=[
             "start_time",
