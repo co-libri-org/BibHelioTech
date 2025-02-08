@@ -854,33 +854,33 @@ def catalogs():
     )
 
 
-@bp.route("/api/catalogs", methods=["GET"])
-def api_catalogs():
-    """Get the events list for a given mission
-    :parameter: mission_id  in get request
-    :return: list of events as dict
-    """
-    mission_id = request.args.get("mission_id")
-    mission = Mission.query.get(mission_id)
-    # TODO: REFACTOR extract to event model method and merge common code with api_catalog_txt
-    events_list = [
-        event.get_dict()
-        for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
-            HpEvent.start_date
-        )
-    ]
-    response_object = {
-        "status": "success",
-        "data": {
-            "events": events_list,
-            "mission": {
-                "id": mission.id,
-                "name": mission.name,
-                "num_events": len(mission.hp_events),
-            },
-        },
-    }
-    return jsonify(response_object)
+# @bp.route("/api/catalogs", methods=["GET"])
+# def api_catalogs():
+#     """Get the events list for a given mission
+#     :parameter: mission_id  in get request
+#     :return: list of events as dict
+#     """
+#     mission_id = request.args.get("mission_id")
+#     mission = Mission.query.get(mission_id)
+#     # TODO: REFACTOR extract to event model method and merge common code with api_catalog_txt
+#     events_list = [
+#         event.get_dict()
+#         for event in HpEvent.query.filter_by(mission_id=mission_id).order_by(
+#             HpEvent.start_date
+#         )
+#     ]
+#     response_object = {
+#         "status": "success",
+#         "data": {
+#             "events": events_list,
+#             "mission": {
+#                 "id": mission.id,
+#                 "name": mission.name,
+#                 "num_events": len(mission.hp_events),
+#             },
+#         },
+#     }
+#     return jsonify(response_object)
 
 
 @bp.route("/api/catalogs/txt", methods=["GET"])
