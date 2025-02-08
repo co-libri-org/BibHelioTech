@@ -115,12 +115,13 @@ def catfile_to_db(catfile):
 
     :return: nothing
     """
-    for hpevent_dict in catfile_to_rows(catfile):
-        # skip if row is empty
-        if not hpevent_dict:
-            continue
-        hpevent = HpEvent(**hpevent_dict)
-        db.session.add(hpevent)
+    with db.session.no_autoflush:
+        for hpevent_dict in catfile_to_rows(catfile):
+            # skip if row is empty
+            if not hpevent_dict:
+                continue
+            hpevent = HpEvent(**hpevent_dict)
+            db.session.add(hpevent)
         db.session.commit()
 
 
