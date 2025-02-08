@@ -898,7 +898,7 @@ def api_catalogs_txt():
     events_ids = request.args.get("events_ids")
     mission_id = request.args.get("mission_id")
     if events_ids:
-        today = datetime.datetime.now().strftime("%Y%M%dT%H%m%S")
+        today = datetime.now().strftime("%Y%M%dT%H%m%S")
         catalog_name = f"web_request_{today}"
         events_ids = events_ids.split(",")
         events_list = []
