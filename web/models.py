@@ -432,14 +432,15 @@ class Paper(db.Model):
         db.session.add(self)
         db.session.commit()
 
+
     def clean_events(self):
         """
-        Remove the list of events with same doi as our's
-        #TODO: should be better to set a new relationship between HpEvent and Paper models
-        @return:  None
+        Remove the list of events with the same DOI as ours.
+        TODO: it might be better to set a relationship between HpEvent and Paper models.
+
+        @return: None
         """
-        for _e in self.get_events():
-            db.session.delete(_e)
+        db.session.query(HpEvent).filter(HpEvent.doi.has(doi=self.doi)).delete(synchronize_session=False)
         self.cat_in_db = False
         db.session.commit()
 
