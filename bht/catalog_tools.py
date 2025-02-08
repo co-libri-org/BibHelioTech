@@ -246,7 +246,8 @@ def catfile_to_rows(catfile):
         )
     except pd.errors.EmptyDataError:
         return []
-    my_df.fillna("", inplace=True)
+    # my_df.fillna("", inplace=True)
+    my_df = my_df.astype(str).fillna("")
     for row in my_df.values.tolist():
         hpevent_dict = row_to_dict(row)
         hpeventdict_list.append(hpevent_dict)
