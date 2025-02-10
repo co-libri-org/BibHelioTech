@@ -25,6 +25,13 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [1.4.2-bulk] - 2025-02-xx - Refactor Events Requests
+#### Fixed
+#### Changed
+- NConf calculation optimized
+- Missions sorting on catalogs page
+#### New
+
 ## [1.3.3] - 2025-02-07 - Partial bulk by CLI
 #### Fixed
 - Status display

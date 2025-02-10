@@ -224,33 +224,27 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
 
     return r_string
 
-
 def catfile_to_rows(catfile):
-    """Get all rows of a catalog file as  dict
-       -  read each line, rid of comments
-       -  create a hp_event_dict
+    """Get all rows of a catalog file as dict.
 
-       Trick: we may get catfiles with different number of columns.
-           sometimes  6 (start, stop, doi, mission, instruments, region)
-           sometimes 12 ( ..., D, R, SO, occur_sat, nb_durations, conf)
+    - Reads each line, removes comments
+    - Converts each row to a dictionary with dynamic column mapping
 
-       This is the reason of row_to_dict() usage
-
-    @param catfile: file containing the catalog, rows of fields space separated.
-    :return: hpevent_dict list
+    @param catfile: file containing the catalog (space-separated fields)
+    @return: List of hpevent_dict
     """
-    hpeventdict_list = []
     try:
-        my_df = pd.read_csv(
-            catfile, delimiter="\s+", comment="#", quotechar='"', header=None
-        )
+        my_df = pd.read_csv(catfile, delimiter=r"\s+", comment="#", quotechar='"', header=None)
     except pd.errors.EmptyDataError:
         return []
-    my_df.fillna("", inplace=True)
-    for row in my_df.values.tolist():
-        hpevent_dict = row_to_dict(row)
-        hpeventdict_list.append(hpevent_dict)
-    return hpeventdict_list
+
+    my_df = my_df.astype(str).fillna("")
+
+    return [
+        dict(zip(hpevent_keys_ordered[:len(row)], row))
+        for row in my_df.itertuples(index=False, name=None)
+    ]
+
 
 
 def dicts_to_df(_final_links):

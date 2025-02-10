@@ -115,12 +115,13 @@ def catfile_to_db(catfile):
 
     :return: nothing
     """
-    for hpevent_dict in catfile_to_rows(catfile):
-        # skip if row is empty
-        if not hpevent_dict:
-            continue
-        hpevent = HpEvent(**hpevent_dict)
-        db.session.add(hpevent)
+    with db.session.no_autoflush:
+        for hpevent_dict in catfile_to_rows(catfile):
+            # skip if row is empty
+            if not hpevent_dict:
+                continue
+            hpevent = HpEvent(**hpevent_dict)
+            db.session.add(hpevent)
         db.session.commit()
 
 
@@ -200,7 +201,19 @@ class HpEvent(db.Model):
 
         return r_str
 
-    def get_dict(self):
+
+    @classmethod
+    def get_events_dicts(cls, events):
+        """From an event list to a list of event's dict with maxconf calculation once only """
+        if not events:
+            return []
+
+        # dynamical max_conf calculation on the whole database
+        max_conf = max(event.conf for event in events if event.conf is not None) if events else 1
+
+        return [event.get_dict(max_conf) for event in events]
+
+    def get_dict(self, max_conf):
         td = self.stop_date - self.start_date
         duration = datetime.timedelta(days=td.days, seconds=td.seconds, microseconds=0)
         hours_str = f"{duration}"[-8:]
@@ -224,8 +237,6 @@ class HpEvent(db.Model):
             "r": self.r,
         }
         # normalize conf index on the whole database
-        all_events = HpEvent.query.all()
-        max_conf = max([_e.conf for _e in all_events])
         r_dict["nconf"] = 1.0 - r_dict["conf"] / max_conf
         return r_dict
 
@@ -422,14 +433,15 @@ class Paper(db.Model):
         db.session.add(self)
         db.session.commit()
 
+
     def clean_events(self):
         """
-        Remove the list of events with same doi as our's
-        #TODO: should be better to set a new relationship between HpEvent and Paper models
-        @return:  None
+        Remove the list of events with the same DOI as ours.
+        TODO: it might be better to set a relationship between HpEvent and Paper models.
+
+        @return: None
         """
-        for _e in self.get_events():
-            db.session.delete(_e)
+        db.session.query(HpEvent).filter(HpEvent.doi.has(doi=self.doi)).delete(synchronize_session=False)
         self.cat_in_db = False
         db.session.commit()
 

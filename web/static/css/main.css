@@ -75,18 +75,42 @@ padding: 1px 2px !important;
 //                     CATALOGS FORM
 // -----------------------------------------------------------------------
 
-label.mission-catalog {
 
-}
-
-.mission-catalog > span {
-float: right;
+.mission-catalog {
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+*/
+    /*
+    overflow: hidden;
+    text-overflow: ellipsis;
+    */
 }
 .mission-catalog {
     width:100%;
+    min-width: 120px;
+    height: 40px;
     text-align: left !important;
-    margin-bottom: 8px;
-    margin-right: 5px;
+    margin-bottom: 3px;
+    position: relative;
+    font-size: 15px;
+}
+.mission-catalog > .badge {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%); /* Centre verticalement */
+    background: #eee;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+}
+
+
+.mission-catalog > span {
+    float: right;
 }
 .mission-catalog:hover{
     border: solid 1pt black !important ;
@@ -132,6 +156,22 @@ font-weight: 500;
 .number-bold {
 font-size=1.2em;
 font-weight: 500;
+}
+
+.btn-sort.active ,
+.btn-sort:hover {
+    border: 1pt solid black !important;
+    background: white;
+    }
+.btn-sort {
+    border: 1pt solid lightgrey !important;
+    background-color: white;
+    padding 0;
+    border-radius: 3pt;
+    background: #eee;
+
+    margin-left: 5px; /* Espacement entre les boutons */
+    margin-right: 5px; /* Espacement entre les boutons */
 }
 
 /* ---------------------------------------------------------------------- */
