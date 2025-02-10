@@ -1,0 +1,24 @@
+{% extends "base_page.html" %}
+{%  block more_head %}
+<title>Statistics</title>
+{%  endblock %}
+{% block content %}
+    <div class="container mt-5">
+        <div id="plot-container" class="text-center">
+            <div id="spinner" class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Chargement...</span>
+            </div>
+            <img id="plot-image" src="" class="img-fluid" style="display:none;">
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+    $(document).ready(function() {
+    });
+</script>
+{%  endblock %}

@@ -847,6 +847,10 @@ def catalogs():
     )
 
 
+@bp.route("/statistics")
+def statistics():
+    return render_template("statistics.html")
+
 # @bp.route("/api/catalogs", methods=["GET"])
 # def api_catalogs():
 #     """Get the events list for a given mission
