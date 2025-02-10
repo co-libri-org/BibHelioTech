@@ -851,6 +851,34 @@ def catalogs():
 def statistics():
     return render_template("statistics.html")
 
+#  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
+
+@bp.route("/api/nconf_dist_graph")
+def api_nconf_dist_graph():
+    import matplotlib
+    matplotlib.use('Agg')  # À placer AVANT les autres imports matplotlib
+    import matplotlib.pyplot as plt
+    import io
+    import base64
+    events_dict_list = HpEvent.get_events_dicts(HpEvent.query.all())
+    df = pd.DataFrame(events_dict_list)
+
+    plt.ioff()
+    # Création du plot
+    plt.figure(figsize=(10, 6))
+    plt.hist(df['nconf'], bins=100, edgecolor='black')
+    plt.title('NConf Distribution Values')
+    plt.xlabel('NConf')
+    plt.ylabel('Frequency')
+
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue()).decode('utf8')
+    plt.close()
+
+    return jsonify({'plot_url': f'data:image/png;base64,{plot_url}'})
+
 # @bp.route("/api/catalogs", methods=["GET"])
 # def api_catalogs():
 #     """Get the events list for a given mission

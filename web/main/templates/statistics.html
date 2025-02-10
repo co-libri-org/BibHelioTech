@@ -18,7 +18,20 @@
 {% block scripts %}
 <script>
 
-    $(document).ready(function() {
+$(document).ready(function() {
+    $.ajax({
+        url: '{{url_for("main.api_nconf_dist_graph")}}',
+        method: 'GET',
+        success: function(data) {
+            $('#spinner').hide();
+            $('#plot-image')
+                .attr('src', data.plot_url)
+                .show();
+        },
+        error: function() {
+            $('#spinner').html('Erreur de chargement');
+        }
     });
+});
 </script>
 {%  endblock %}
