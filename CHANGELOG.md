@@ -25,7 +25,12 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [1.4.2-bulk] - 2025-02-xx - Refactor Events Requests
+## [1.5.0-bulk] - 2025-02-xx - Stats reports
+#### Fixed
+#### Changed
+#### New
+
+# [1.4.2] - 2025-02-10 - Refactor Events Requests
 #### Fixed
 #### Changed
 - NConf calculation optimized
