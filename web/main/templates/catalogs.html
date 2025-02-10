@@ -50,8 +50,12 @@ Show missions found in db as clickable buttons, triggering mission's events disp
             </div>
         </div>
     </div>
-    <h4 class="d-inline-block mt-5 mb-3">Available Missions:</h4>
-    <div class="row">
+    <h4 class="d-inline-block mt-5 mb-3">Available Missions :</h4>
+    <button id="missions-alpha-asc" class="btn btn-warning mission-sort" > Alpha ASC </button>
+    <button id="missions-alpha-dsc" class="btn btn-warning mission-sort" > Alpha DSC </button>
+    <button id="missions-num-asc" class="btn btn-warning mission-sort" > Num ASC </button>
+    <button id="missions-num-dsc" class="btn btn-warning mission-sort" > Num DSC </button>
+    <div class="row" id="catalogs-row">
         {% for mission in missions %}
         {% if mission.id in params.selected_missions %}
         {%set checked = "checked"%}
@@ -69,15 +73,15 @@ Show missions found in db as clickable buttons, triggering mission's events disp
         {% endfor %}
     </div>
 
-        <hr class="mt-3 mb-3">
-        <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
-        <button id="download-catalog"
-                class='btn btn-warning'
-                title="Download as as HPevents catalog">
-            <a href="{{url_for('main.api_catalogs_txt',events_ids= events_ids)}} ">
-                Download
-            </a>
-        </button>
+    <hr class="mt-3 mb-3">
+    <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
+    <button id="download-catalog"
+            class='btn btn-warning'
+            title="Download as as HPevents catalog">
+        <a href="{{url_for('main.api_catalogs_txt',events_ids= events_ids)}} ">
+            Download
+        </a>
+    </button>
 </form>
 <hr class="mt-2 mb-3">
 {#
@@ -125,7 +129,68 @@ Show found events after form submit
             duration_input.siblings("label").children("span").html(duration_str);
     }
 
+
+    function sort_num(asc) {
+        let $container = $("#catalogs-row");
+
+        let $items = $container.children(".col-2").get(); // Récupère une liste JS
+
+        $items.sort(function (a, b) {
+            let numA = parseInt($(a).find(".badge").text().trim(), 10) || 0;
+            let numB = parseInt($(b).find(".badge").text().trim(), 10) || 0;
+            return asc ? numA - numB : numB - numA;
+        });
+
+        $container.append($items); // Réinsère les éléments triés dans le bon ordre
+    }
+
+
+function sort_alpha(asc) {
+    let $container = $("#catalogs-row");
+    let $items = $container.children(".col-2").get();
+
+    $items.sort(function (a, b) {
+        let textA = $(a).find("label").contents().filter(function () {
+            return this.nodeType === 3; // Sélectionne uniquement les nœuds de texte
+        }).text().trim();
+
+        let textB = $(b).find("label").contents().filter(function () {
+            return this.nodeType === 3; // Sélectionne uniquement les nœuds de texte
+        }).text().trim();
+
+        if (textA < textB) {
+            return asc ? -1 : 1;
+        }
+        if (textA > textB) {
+            return asc ? 1 : -1;
+        }
+        return 0;
+    });
+
+    $container.append($items);
+}
+
+
     $(document).ready(function() {
+
+        $('#missions-num-asc').on('click', function (event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+            sort_num(true);
+        });
+        $('#missions-num-dsc').on('click', function (event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+            sort_num(false);
+        });
+
+        $('#missions-alpha-asc').on('click', function (event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+            sort_alpha(true);
+        });
+        $('#missions-alpha-dsc').on('click', function (event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+            sort_alpha(false);
+        });
+
 
         // Any duration input span label should be updated at start
         $('input.filter-input[type="number"]').each( function(){
@@ -155,6 +220,8 @@ Show found events after form submit
         });
 
     });
+
+
 
 </script>
 {%  endblock %}

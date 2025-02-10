@@ -107,6 +107,11 @@ padding: 1px 2px !important;
     text-align: center;
 }
 
+.mission-sort {
+    padding: 0px !important;
+}
+
+
 
 .mission-catalog > span {
     float: right;
