@@ -51,10 +51,10 @@ Show missions found in db as clickable buttons, triggering mission's events disp
         </div>
     </div>
     <h4 class="d-inline-block mt-5 mb-3">Available Missions :</h4>
-    <button id="missions-alpha-asc" class="btn btn-warning mission-sort" > Alpha ASC </button>
-    <button id="missions-alpha-dsc" class="btn btn-warning mission-sort" > Alpha DSC </button>
-    <button id="missions-num-asc" class="btn btn-warning mission-sort" > Num ASC </button>
-    <button id="missions-num-dsc" class="btn btn-warning mission-sort" > Num DSC </button>
+    <button id="missions-alpha-asc" class="btn-sort" > Alpha ASC </button>
+    <button id="missions-alpha-dsc" class="btn-sort" > Alpha DSC </button>
+    <button id="missions-num-asc" class="btn-sort" > Num ASC </button>
+    <button id="missions-num-dsc" class="btn-sort" > Num DSC </button>
     <div class="row" id="catalogs-row">
         {% for mission in missions %}
         {% if mission.id in params.selected_missions %}
@@ -172,24 +172,35 @@ function sort_alpha(asc) {
 
 
     $(document).ready(function() {
+        function handleSortClick(event, sortFunction, ascending) {
+            event.preventDefault(); // Empêche le rechargement de la page
+            $('.btn-sort').removeClass('active');
+            $(this).addClass('active', 500);
+            sortFunction(ascending);
+        }
+
+
+        // For any 'missions sort' button, set the sorting on click
 
         $('#missions-num-asc').on('click', function (event) {
-            event.preventDefault(); // Empêche le rechargement de la page
-            sort_num(true);
+            handleSortClick.call(this, event, sort_num, true);
         });
+
         $('#missions-num-dsc').on('click', function (event) {
-            event.preventDefault(); // Empêche le rechargement de la page
-            sort_num(false);
+            handleSortClick.call(this, event, sort_num, false);
         });
 
         $('#missions-alpha-asc').on('click', function (event) {
-            event.preventDefault(); // Empêche le rechargement de la page
-            sort_alpha(true);
+            handleSortClick.call(this, event, sort_alpha, true);
         });
+
         $('#missions-alpha-dsc').on('click', function (event) {
-            event.preventDefault(); // Empêche le rechargement de la page
-            sort_alpha(false);
+            handleSortClick.call(this, event, sort_alpha, false);
         });
+
+        // at last, simulate click on one button
+        $('#missions-num-asc').click();
+
 
 
         // Any duration input span label should be updated at start
