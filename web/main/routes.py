@@ -853,20 +853,30 @@ def statistics():
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
 
-@bp.route("/api/nconf_dist_graph")
+@bp.route("/api/nconf_dist_graph", methods=["POST"])
 def api_nconf_dist_graph():
+    params = {}
+    params["bins"] =  int(request.json.get("bins"))
+    params["nconf_max"] = float(request.json.get("nconf-max"))
+    params["nconf_min"] = float(request.json.get("nconf-min"))
+
     import matplotlib
-    matplotlib.use('Agg')  # À placer AVANT les autres imports matplotlib
+    matplotlib.use('Agg')  # Prevent no gui error
     import matplotlib.pyplot as plt
     import io
     import base64
+
     events_dict_list = HpEvent.get_events_dicts(HpEvent.query.all())
     df = pd.DataFrame(events_dict_list)
 
+
+    df=  df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
+
+    # Prevent no gui error
     plt.ioff()
-    # Création du plot
+    # Create plot
     plt.figure(figsize=(10, 6))
-    plt.hist(df['nconf'], bins=100, edgecolor='black')
+    plt.hist(df['nconf'], bins=params['bins'], edgecolor='black')
     plt.title('NConf Distribution Values')
     plt.xlabel('NConf')
     plt.ylabel('Frequency')

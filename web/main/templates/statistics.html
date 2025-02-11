@@ -3,14 +3,16 @@
 <title>Statistics</title>
 {%  endblock %}
 {% block content %}
-    <div class="container mt-5">
-        <div id="plot-container" class="text-center">
-            <div id="spinner" class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Chargement...</span>
-            </div>
-            <img id="plot-image" src="" class="img-fluid" style="display:none;">
+
+<div class="container mt-5">
+    <button id="load-nconf-dist"> click me </button>
+    <div id="plot-container" class="text-center">
+        <div id="spinner" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement...</span>
         </div>
+        <img id="plot-image" src="" class="img-fluid" style="display:none;">
     </div>
+</div>
 
 
 {% endblock %}
@@ -18,20 +20,33 @@
 {% block scripts %}
 <script>
 
-$(document).ready(function() {
-    $.ajax({
-        url: '{{url_for("main.api_nconf_dist_graph")}}',
-        method: 'GET',
-        success: function(data) {
-            $('#spinner').hide();
-            $('#plot-image')
-                .attr('src', data.plot_url)
-                .show();
-        },
-        error: function() {
-            $('#spinner').html('Erreur de chargement');
-        }
+    function load_nconf_dist  (){
+        $('#spinner').show();
+        let params = {
+            bins: 200,
+            "nconf-min": 0.8,
+            "nconf-max": 0.999
+        };
+        $.ajax({
+            url: '{{url_for("main.api_nconf_dist_graph")}}',
+            method: 'POST',
+            data: JSON.stringify(params),
+            contentType: 'application/json; charset=utf-8',
+            success: function(data) {
+                $('#spinner').hide();
+                $('#plot-image')
+                    .attr('src', data.plot_url)
+                    .show();
+            },
+            error: function() {
+                $('#spinner').html('Erreur de chargement');
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $('#spinner').hide();
+        $('#load-nconf-dist').on('click', load_nconf_dist);
     });
-});
 </script>
 {%  endblock %}
