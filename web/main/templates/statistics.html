@@ -7,7 +7,7 @@
 <div class="container mt-5">
 
     <h4 class="mb-3 d-inline-block">NConf distribution :</h4>
-    <button id="load-nconf-dist">Load Plot</button>
+    <button id="load-nconf-dist" class="btn btn-warning" title="Load NConf distribution">Plot</button>
     <div class="row">
         <div class="col">
             <div class="form-group">
@@ -33,11 +33,11 @@
             </div>
         </div>
     </div>
-    <div id="plot-container" class="text-center">
-        <div id="spinner" class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Chargement...</span>
+    <div id="nconf-plot-container" class="text-center">
+        <div id="nconf-spinner" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
         </div>
-        <img id="plot-image" src="" class="img-fluid" style="display:none;">
+        <img id="nconf-plot-image" src="" class="img-fluid" style="display:none;">
     </div>
 </div>
 
@@ -48,7 +48,7 @@
 <script>
 
     function load_nconf_dist  (){
-        $('#spinner').show();
+        $('#nconf-spinner').show();
         let params = {
             bins: parseInt($('#duration-min').val()),
             "nconf-min": parseFloat($('#nconf-min').val()),
@@ -60,20 +60,21 @@
             data: JSON.stringify(params),
             contentType: 'application/json; charset=utf-8',
             success: function(data) {
-                $('#spinner').hide();
-                $('#plot-image')
+                $('#nconf-spinner').hide();
+                $('#nconf-plot-image')
                     .attr('src', data.plot_url)
                     .show();
             },
             error: function() {
-                $('#spinner').html('Erreur de chargement');
+                $('#nconf-spinner').html('Erreur de chargement');
             }
         });
     }
 
     $(document).ready(function() {
-        $('#spinner').hide();
         $('#load-nconf-dist').on('click', load_nconf_dist);
+        $('#nconf-spinner').hide();
+        load_nconf_dist();
     });
 </script>
 {%  endblock %}

@@ -879,7 +879,7 @@ def api_nconf_dist_graph():
     # Create plot
     plt.figure(figsize=(15, 6))
     plt.hist(df['nconf'], bins=params['bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black', linewidth=0.5)
-    plt.title('NConf Distribution Values')
+    plt.title(f"NConf Distribution ({params['nconf_min']} to {params['nconf_max']})")
     plt.xlabel('NConf')
     plt.ylabel('Frequency')
 
