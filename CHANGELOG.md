@@ -25,10 +25,11 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [1.5.0-bulk] - 2025-02-xx - Stats reports
+## [1.5.1-bulk] - 2025-02-xx - Stats reports
 #### Fixed
 #### Changed
 #### New
+- Plot NConf distribution
 
 # [1.4.2] - 2025-02-10 - Refactor Events Requests
 #### Fixed
