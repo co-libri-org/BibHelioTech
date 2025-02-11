@@ -849,16 +849,19 @@ def catalogs():
 
 @bp.route("/statistics")
 def statistics():
-    return render_template("statistics.html")
+    params = {"bins": 100,
+              "nconf_min": 0.8,
+              "nconf_max": 0.999}
+    return render_template("statistics.html", params=params)
+
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
 
 @bp.route("/api/nconf_dist_graph", methods=["POST"])
 def api_nconf_dist_graph():
-    params = {}
-    params["bins"] =  int(request.json.get("bins"))
-    params["nconf_max"] = float(request.json.get("nconf-max"))
-    params["nconf_min"] = float(request.json.get("nconf-min"))
+    params = {"bins": int(request.json.get("bins")),
+              "nconf_max": float(request.json.get("nconf-max")),
+              "nconf_min": float(request.json.get("nconf-min"))}
 
     import matplotlib
     matplotlib.use('Agg')  # Prevent no gui error
@@ -869,13 +872,12 @@ def api_nconf_dist_graph():
     events_dict_list = HpEvent.get_events_dicts(HpEvent.query.all())
     df = pd.DataFrame(events_dict_list)
 
-
-    df=  df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
+    df = df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
 
     # Prevent no gui error
     plt.ioff()
     # Create plot
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(15, 6))
     plt.hist(df['nconf'], bins=params['bins'], edgecolor='black')
     plt.title('NConf Distribution Values')
     plt.xlabel('NConf')
@@ -888,6 +890,7 @@ def api_nconf_dist_graph():
     plt.close()
 
     return jsonify({'plot_url': f'data:image/png;base64,{plot_url}'})
+
 
 # @bp.route("/api/catalogs", methods=["GET"])
 # def api_catalogs():
