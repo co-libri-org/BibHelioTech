@@ -849,8 +849,8 @@ def catalogs():
 
 @bp.route("/statistics")
 def statistics():
-    params = {"bins": 100,
-              "nconf_min": 0.8,
+    params = {"bins": 200,
+              "nconf_min": 0.95,
               "nconf_max": 0.999}
     return render_template("statistics.html", params=params)
 
@@ -878,7 +878,7 @@ def api_nconf_dist_graph():
     plt.ioff()
     # Create plot
     plt.figure(figsize=(15, 6))
-    plt.hist(df['nconf'], bins=params['bins'], edgecolor='black')
+    plt.hist(df['nconf'], bins=params['bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black', linewidth=0.5)
     plt.title('NConf Distribution Values')
     plt.xlabel('NConf')
     plt.ylabel('Frequency')

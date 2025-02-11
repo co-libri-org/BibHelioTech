@@ -50,9 +50,9 @@
     function load_nconf_dist  (){
         $('#spinner').show();
         let params = {
-            bins: 200,
-            "nconf-min": 0.8,
-            "nconf-max": 0.999
+            bins: parseInt($('#duration-min').val()),
+            "nconf-min": parseFloat($('#nconf-min').val()),
+            "nconf-max": parseFloat($('#nconf-max').val())
         };
         $.ajax({
             url: '{{url_for("main.api_nconf_dist_graph")}}',
