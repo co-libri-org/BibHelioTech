@@ -247,7 +247,34 @@ def add_css_colors_to_templates():
     current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
 
 
+# Optimizing sql requests to be done once only
+cached_events = None
+cached_nconf = None
+
+
+def load_data():
+    _cached_events=[]
+    for p in Paper.query.all():
+        _cached_events.append({"paper_id": p.id, "num_events": len(p.get_events())})
+    _cached_nconf = HpEvent.get_events_dicts(HpEvent.query.all())
+    return _cached_events, _cached_nconf
+
+
+# @bp.before_app_request
+# def initialize_data():
+#     global cached_events
+#     global cached_nconf
+#     cached_events, cached_nconf  = load_data()
+
+
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
+@bp.route('/reload-data')
+def reload_data():
+    global cached_events
+    global cached_nconf
+    cached_events, cached_nconf  = load_data()
+    return 'Data loaded'
+
 
 @bp.route("/")
 def index():
@@ -873,17 +900,15 @@ def api_papers_events_graph():
     import io
     import base64
 
-    papers_events = []
-    for p in Paper.query.all():
-        papers_events.append({"paper_id": p.id, "num_events": len(p.get_events())})
+    global cached_events
 
-    df = pd.DataFrame(papers_events)
+    df = pd.DataFrame(cached_events)
     df = df[(df['num_events'] >= params['events_min']) & (df['num_events'] <= params['events_max'])]
 
     # Prevent no gui error
     plt.ioff()
     # Create plot
-    plt.figure(figsize=(15, 5))
+    plt.figure(figsize=(15, 6))
     plt.hist(df['num_events'], bins=params['events_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
              linewidth=0.5)
     plt.title(f"Events Distribution")
@@ -912,15 +937,15 @@ def api_nconf_dist_graph():
     import io
     import base64
 
-    events_dict_list = HpEvent.get_events_dicts(HpEvent.query.all())
-    df = pd.DataFrame(events_dict_list)
+    global cached_nconf
+    df = pd.DataFrame(cached_nconf)
 
     df = df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
 
     # Prevent no gui error
     plt.ioff()
     # Create plot
-    plt.figure(figsize=(15, 5))
+    plt.figure(figsize=(15, 6))
     plt.hist(df['nconf'], bins=params['nconf_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
              linewidth=0.5)
     plt.title(f"NConf Distribution ({params['nconf_min']} to {params['nconf_max']})")
@@ -928,6 +953,7 @@ def api_nconf_dist_graph():
     plt.ylabel('Frequency')
 
     img = io.BytesIO()
+    plt.tight_layout()
     plt.savefig(img, format='png')
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue()).decode('utf8')
