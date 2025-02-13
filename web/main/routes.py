@@ -851,7 +851,10 @@ def catalogs():
 def statistics():
     params = {"nconf_bins": 200,
               "nconf_min": 0.95,
-              "nconf_max": 0.999}
+              "nconf_max": 0.999,
+              "events_bins": 200,
+              "events_min": 0,
+              "events_max": 10000}
     return render_template("statistics.html", params=params)
 
 
@@ -859,10 +862,9 @@ def statistics():
 
 @bp.route("/api/papers_events_graph", methods=["POST"])
 def api_papers_events_graph():
-
-    # params = {"bins": int(request.json.get("bins"))}
-    params = {"papers_bins": 200}
-
+    params = {"events_bins": int(request.json.get("events-bins")),
+              "events_max": float(request.json.get("events-max")),
+              "events_min": float(request.json.get("events-min"))}
 
     import matplotlib
 
@@ -876,14 +878,14 @@ def api_papers_events_graph():
         papers_events.append({"paper_id": p.id, "num_events": len(p.get_events())})
 
     df = pd.DataFrame(papers_events)
-
-    # df = df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
+    df = df[(df['num_events'] >= params['events_min']) & (df['num_events'] <= params['events_max'])]
 
     # Prevent no gui error
     plt.ioff()
     # Create plot
     plt.figure(figsize=(15, 6))
-    plt.hist(df['num_events'], bins=params['papers_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black', linewidth=0.5)
+    plt.hist(df['num_events'], bins=params['events_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
+             linewidth=0.5)
     plt.title(f"Events Distribution")
     plt.xlabel('Num Events')
     plt.ylabel('Frequency')
@@ -918,7 +920,8 @@ def api_nconf_dist_graph():
     plt.ioff()
     # Create plot
     plt.figure(figsize=(15, 6))
-    plt.hist(df['nconf'], bins=params['nconf_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black', linewidth=0.5)
+    plt.hist(df['nconf'], bins=params['nconf_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
+             linewidth=0.5)
     plt.title(f"NConf Distribution ({params['nconf_min']} to {params['nconf_max']})")
     plt.xlabel('NConf')
     plt.ylabel('Frequency')

@@ -6,37 +6,37 @@
 
 <div class="container mt-5">
     <h4 class="mb-3 d-inline-block">Papers/Events distribution :</h4>
-    <button id="load-papers-dist" class="btn btn-warning" title="Load Papers distribution">Plot</button>
+    <button id="load-events-dist" class="btn btn-warning" title="Load Events distribution">Plot</button>
     <div class="row">
         <div class="col">
             <div class="form-group">
-                <label for="papers-bins" title="Sampling number">Bins: <span class="duration-val"></span></label>
-                <input class="form-control filter-input" id="papers-bins" name="papers-bins" type="number"
-                       value="{{params.papers_bins}}"/>
+                <label for="events-bins" title="Sampling number">Bins: <span class="duration-val"></span></label>
+                <input class="form-control filter-input" id="events-bins" name="events-bins" type="number"
+                       value="{{params.events_bins}}"/>
             </div>
         </div>
         <div class="col">
             <div class="form-group">
-                <label for="papers-min">Min Papers</label>
-                <input class="form-control filter-input" id="papers-min" name="papers-min" type="number"
-                       value="{{params.papers_min}}"
+                <label for="events-min">Min Events</label>
+                <input class="form-control filter-input" id="events-min" name="events-min" type="number"
+                       value="{{params.events_min}}"
                        placeholder="0" step="1" min="0" max="10000"/>
             </div>
         </div>
         <div class="col">
             <div class="form-group">
-                <label for="papers-min">Max Papers</label>
-                <input class="form-control filter-input" id="papers-max" name="papers-max" type="number"
-                       value="{{params.papers_max}}"
+                <label for="events-min">Max Events</label>
+                <input class="form-control filter-input" id="events-max" name="events-max" type="number"
+                       value="{{params.events_max}}"
                        placeholder="10000" step="1" min="0" max="10000"/>
             </div>
         </div>
     </div>
-    <div id="papers-plot-container" class="text-center">
-        <div id="papers-spinner" class="spinner-border text-primary" role="status">
+    <div id="events-plot-container" class="text-center">
+        <div id="events-spinner" class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
-        <img id="papers-plot-image" src="" class="img-fluid" style="display:none;">
+        <img id="events-plot-image" src="" class="img-fluid" style="display:none;">
     </div>
 
     <h4 class="mb-3 d-inline-block">NConf distribution :</h4>
@@ -104,8 +104,8 @@
             }
         });
     }
-    function load_papers_dist  (){
-        load_plot_wrapper('papers',
+    function load_events_dist  (){
+        load_plot_wrapper('events',
                   '{{url_for("main.api_papers_events_graph")}}');
     }
     function load_nconf_dist  (){
@@ -114,8 +114,8 @@
     }
 
     $(document).ready(function() {
-        $('#papers-spinner').hide();
-        $('#load-papers-dist').on('click', load_papers_dist);
+        $('#events-spinner').hide();
+        $('#load-events-dist').on('click', load_events_dist);
         $('#nconf-spinner').hide();
         $('#load-nconf-dist').on('click', load_nconf_dist);
     });
