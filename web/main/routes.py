@@ -883,14 +883,15 @@ def api_papers_events_graph():
     # Prevent no gui error
     plt.ioff()
     # Create plot
-    plt.figure(figsize=(15, 6))
+    plt.figure(figsize=(15, 5))
     plt.hist(df['num_events'], bins=params['events_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
              linewidth=0.5)
     plt.title(f"Events Distribution")
-    plt.xlabel('Num Events')
-    plt.ylabel('Frequency')
+    plt.xlabel('Events')
+    plt.ylabel('Papers')
 
     img = io.BytesIO()
+    plt.tight_layout()
     plt.savefig(img, format='png')
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue()).decode('utf8')
@@ -919,7 +920,7 @@ def api_nconf_dist_graph():
     # Prevent no gui error
     plt.ioff()
     # Create plot
-    plt.figure(figsize=(15, 6))
+    plt.figure(figsize=(15, 5))
     plt.hist(df['nconf'], bins=params['nconf_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
              linewidth=0.5)
     plt.title(f"NConf Distribution ({params['nconf_min']} to {params['nconf_max']})")

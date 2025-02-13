@@ -32,11 +32,12 @@
             </div>
         </div>
     </div>
-    <div id="events-plot-container" class="text-center">
+    <div id="events-plot-container" class="text-center" style=" min-width:1500px; min-height:400px;">
         <div id="events-spinner" class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
         <img id="events-plot-image" src="" class="img-fluid" style="display:none;">
+        &nbsp;
     </div>
 
     <h4 class="mb-3 d-inline-block">NConf distribution :</h4>
@@ -66,7 +67,7 @@
             </div>
         </div>
     </div>
-    <div id="nconf-plot-container" class="text-center">
+    <div id="nconf-plot-container" class="text-center" style=" min-width:1500px; min-height:400px;">
         <div id="nconf-spinner" class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
@@ -82,18 +83,20 @@
 
     function load_plot_wrapper(prefix, flask_api_url){
         html_prefix = '#'+prefix;
+        $(html_prefix+'-plot-image').hide();
         $(html_prefix+'-spinner').show();
         let params = {};
         params[prefix+"-bins"] = parseInt($(html_prefix+'-bins').val());
         params[prefix+"-min"] = parseFloat($(html_prefix+'-min').val());
         params[prefix+"-max"] = parseFloat($(html_prefix+'-max').val());
-        console.log(params)
         $.ajax({
             url: flask_api_url,
             method: 'POST',
             data: JSON.stringify(params),
             contentType: 'application/json; charset=utf-8',
             success: function(data) {
+                console.log("Setting "+html_prefix);
+                console.log("Results of "+flask_api_url);
                 $(html_prefix+'-spinner').hide();
                 $(html_prefix+'-plot-image')
                     .attr('src', data.plot_url)
