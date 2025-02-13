@@ -25,18 +25,16 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [1.5.1-bulk] - 2025-02-xx - Stats reports
-#### Fixed
-#### Changed
+## [1.5.2] - 2025-02-13 - Stats reports
 #### New
 - Plot NConf distribution
+- Plot Events distribution
+- Cached data mechanism
 
 # [1.4.2] - 2025-02-10 - Refactor Events Requests
-#### Fixed
 #### Changed
 - NConf calculation optimized
 - Missions sorting on catalogs page
-#### New
 
 ## [1.3.3] - 2025-02-07 - Partial bulk by CLI
 #### Fixed
