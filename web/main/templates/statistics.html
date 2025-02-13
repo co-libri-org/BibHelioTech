@@ -1,0 +1,132 @@
+{% extends "base_page.html" %}
+{%  block more_head %}
+<title>Statistics</title>
+{%  endblock %}
+{% block content %}
+
+<div class="container mt-5">
+    <h4 class="mb-3 d-inline-block">Papers/Events distribution :</h4>
+    <div class="row align-items-end">
+        <div class="col">
+            <div class="form-group">
+                <label for="events-bins" title="Sampling number">Bins: <span class="duration-val"></span></label>
+                <input class="form-control filter-input" id="events-bins" name="events-bins" type="number"
+                       value="{{params.events_bins}}"/>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="events-min">Min Events</label>
+                <input class="form-control filter-input" id="events-min" name="events-min" type="number"
+                       value="{{params.events_min}}"
+                       placeholder="0" step="1" min="0" max="10000"/>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="events-min">Max Events</label>
+                <input class="form-control filter-input" id="events-max" name="events-max" type="number"
+                       value="{{params.events_max}}"
+                       placeholder="10000" step="1" min="0" max="10000"/>
+            </div>
+        </div>
+        <div class="col d-flex justify-content-end align-items-start">
+            <button id="load-events-dist" class="btn btn-warning plot-btn" title="Load Events distribution">Plot</button>
+        </div>
+    </div>
+    <div id="events-plot-container" class="text-center plot-container">
+        <div id="events-spinner" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <img id="events-plot-image" src="" class="img-fluid" style="display:none;">
+        &nbsp;
+    </div>
+
+    <hr class="mt-5 mb-3">
+
+    <h4 class="mb-3 d-inline-block">NConf distribution :</h4>
+    <div class="row align-items-end">
+        <div class="col">
+            <div class="form-group">
+                <label for="nconf-bins" title="Sampling number">Bins: <span class="duration-val"></span></label>
+                <input class="form-control filter-input" id="nconf-bins" name="nconf-bins" type="number"
+                       value="{{params.nconf_bins}}"/>
+            </div>
+        </div>
+        <div class="col">
+           <div class="form-group">
+                <label for="nconf-min">Min NConf [0.0, 1.0]</label>
+                <input class="form-control filter-input" id="nconf-min" name="nconf-min" type="number"
+                       value="{{params.nconf_min}}"
+                       placeholder="0.8" step="0.01" min="0.0" max="1.0"/>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="nconf-min">Max NConf [0.0, 1.0]</label>
+                <input class="form-control filter-input" id="nconf-max" name="nconf-max" type="number"
+                       value="{{params.nconf_max}}"
+                       placeholder="0.999" step="0.01" min="0.0" max="1.0"/>
+            </div>
+        </div>
+        <div class="col d-flex justify-content-end align-items-start">
+            <button id="load-nconf-dist" class="btn btn-warning plot-btn" title="Load NConf distribution">Plot</button>
+        </div>
+    </div>
+    <div id="nconf-plot-container" class="text-center plot-container">
+        <div id="nconf-spinner" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <img id="nconf-plot-image" src="" class="img-fluid" style="display:none;">
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+    function load_plot_wrapper(prefix, flask_api_url){
+        html_prefix = '#'+prefix;
+        $(html_prefix+'-plot-image').hide();
+        $(html_prefix+'-spinner').show();
+        let params = {};
+        params[prefix+"-bins"] = parseInt($(html_prefix+'-bins').val());
+        params[prefix+"-min"] = parseFloat($(html_prefix+'-min').val());
+        params[prefix+"-max"] = parseFloat($(html_prefix+'-max').val());
+        $.ajax({
+            url: flask_api_url,
+            method: 'POST',
+            data: JSON.stringify(params),
+            contentType: 'application/json; charset=utf-8',
+            success: function(data) {
+                console.log("Setting "+html_prefix);
+                console.log("Results of "+flask_api_url);
+                $(html_prefix+'-spinner').hide();
+                $(html_prefix+'-plot-image')
+                    .attr('src', data.plot_url)
+                    .show();
+            },
+            error: function() {
+                $(html_prefix+'-spinner').html('Error');
+            }
+        });
+    }
+    function load_events_dist  (){
+        load_plot_wrapper('events',
+                  '{{url_for("main.api_papers_events_graph")}}');
+    }
+    function load_nconf_dist  (){
+        load_plot_wrapper('nconf',
+                  '{{url_for("main.api_nconf_dist_graph")}}');
+    }
+
+    $(document).ready(function() {
+        $('#events-spinner').hide();
+        $('#load-events-dist').on('click', load_events_dist);
+        $('#nconf-spinner').hide();
+        $('#load-nconf-dist').on('click', load_nconf_dist);
+    });
+</script>
+{%  endblock %}

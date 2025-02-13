@@ -247,7 +247,34 @@ def add_css_colors_to_templates():
     current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
 
 
+# Optimizing sql requests to be done once only
+cached_events = None
+cached_nconf = None
+
+
+def load_data():
+    _cached_events=[]
+    for p in Paper.query.all():
+        _cached_events.append({"paper_id": p.id, "num_events": len(p.get_events())})
+    _cached_nconf = HpEvent.get_events_dicts(HpEvent.query.all())
+    return _cached_events, _cached_nconf
+
+
+# @bp.before_app_request
+# def initialize_data():
+#     global cached_events
+#     global cached_nconf
+#     cached_events, cached_nconf  = load_data()
+
+
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
+@bp.route('/reload-data')
+def reload_data():
+    global cached_events
+    global cached_nconf
+    cached_events, cached_nconf  = load_data()
+    return 'Data loaded'
+
 
 @bp.route("/")
 def index():
@@ -845,6 +872,94 @@ def catalogs():
         db_stats=_db_stats,
         params=params,
     )
+
+
+@bp.route("/statistics")
+def statistics():
+    params = {"nconf_bins": 200,
+              "nconf_min": 0.95,
+              "nconf_max": 0.999,
+              "events_bins": 200,
+              "events_min": 0,
+              "events_max": 10000}
+    return render_template("statistics.html", params=params)
+
+
+#  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
+
+@bp.route("/api/papers_events_graph", methods=["POST"])
+def api_papers_events_graph():
+    params = {"events_bins": int(request.json.get("events-bins")),
+              "events_max": float(request.json.get("events-max")),
+              "events_min": float(request.json.get("events-min"))}
+
+    import matplotlib
+
+    matplotlib.use('Agg')  # Prevent no gui error
+    import matplotlib.pyplot as plt
+    import io
+    import base64
+
+    global cached_events
+
+    df = pd.DataFrame(cached_events)
+    df = df[(df['num_events'] >= params['events_min']) & (df['num_events'] <= params['events_max'])]
+
+    # Prevent no gui error
+    plt.ioff()
+    # Create plot
+    plt.figure(figsize=(15, 6))
+    plt.hist(df['num_events'], bins=params['events_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
+             linewidth=0.5)
+    plt.title(f"Events Distribution")
+    plt.xlabel('Events')
+    plt.ylabel('Papers')
+
+    img = io.BytesIO()
+    plt.tight_layout()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue()).decode('utf8')
+    plt.close()
+
+    return jsonify({'plot_url': f'data:image/png;base64,{plot_url}'})
+
+
+@bp.route("/api/nconf_dist_graph", methods=["POST"])
+def api_nconf_dist_graph():
+    params = {"nconf_bins": int(request.json.get("nconf-bins")),
+              "nconf_max": float(request.json.get("nconf-max")),
+              "nconf_min": float(request.json.get("nconf-min"))}
+
+    import matplotlib
+    matplotlib.use('Agg')  # Prevent no gui error
+    import matplotlib.pyplot as plt
+    import io
+    import base64
+
+    global cached_nconf
+    df = pd.DataFrame(cached_nconf)
+
+    df = df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
+
+    # Prevent no gui error
+    plt.ioff()
+    # Create plot
+    plt.figure(figsize=(15, 6))
+    plt.hist(df['nconf'], bins=params['nconf_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
+             linewidth=0.5)
+    plt.title(f"NConf Distribution ({params['nconf_min']} to {params['nconf_max']})")
+    plt.xlabel('NConf')
+    plt.ylabel('Frequency')
+
+    img = io.BytesIO()
+    plt.tight_layout()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue()).decode('utf8')
+    plt.close()
+
+    return jsonify({'plot_url': f'data:image/png;base64,{plot_url}'})
 
 
 # @bp.route("/api/catalogs", methods=["GET"])

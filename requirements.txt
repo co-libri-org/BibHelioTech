@@ -30,3 +30,4 @@ selenium
 alembic
 SQLAlchemy
 markdown
+matplotlib

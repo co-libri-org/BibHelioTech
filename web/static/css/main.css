@@ -328,3 +328,15 @@ button.stat-status:hover {
     color: red !important;
     font-weight: bold;
 }
+
+/* ----------------------------P L O T S--------------------------------- */
+.plot-container {
+    margin: 1em 0;
+    border: solid lightgrey 1pt;
+    border-radius: 3pt;
+    min-width:1200px;
+    min-height:350px;
+}
+.plot-btn {
+    padding: 1em;
+}
