@@ -849,7 +849,7 @@ def catalogs():
 
 @bp.route("/statistics")
 def statistics():
-    params = {"bins": 200,
+    params = {"nconf_bins": 200,
               "nconf_min": 0.95,
               "nconf_max": 0.999}
     return render_template("statistics.html", params=params)
@@ -857,9 +857,49 @@ def statistics():
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
 
+@bp.route("/api/papers_events_graph", methods=["POST"])
+def api_papers_events_graph():
+
+    # params = {"bins": int(request.json.get("bins"))}
+    params = {"papers_bins": 200}
+
+
+    import matplotlib
+
+    matplotlib.use('Agg')  # Prevent no gui error
+    import matplotlib.pyplot as plt
+    import io
+    import base64
+
+    papers_events = []
+    for p in Paper.query.all():
+        papers_events.append({"paper_id": p.id, "num_events": len(p.get_events())})
+
+    df = pd.DataFrame(papers_events)
+
+    # df = df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
+
+    # Prevent no gui error
+    plt.ioff()
+    # Create plot
+    plt.figure(figsize=(15, 6))
+    plt.hist(df['num_events'], bins=params['papers_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black', linewidth=0.5)
+    plt.title(f"Events Distribution")
+    plt.xlabel('Num Events')
+    plt.ylabel('Frequency')
+
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue()).decode('utf8')
+    plt.close()
+
+    return jsonify({'plot_url': f'data:image/png;base64,{plot_url}'})
+
+
 @bp.route("/api/nconf_dist_graph", methods=["POST"])
 def api_nconf_dist_graph():
-    params = {"bins": int(request.json.get("bins")),
+    params = {"nconf_bins": int(request.json.get("nconf-bins")),
               "nconf_max": float(request.json.get("nconf-max")),
               "nconf_min": float(request.json.get("nconf-min"))}
 
@@ -878,7 +918,7 @@ def api_nconf_dist_graph():
     plt.ioff()
     # Create plot
     plt.figure(figsize=(15, 6))
-    plt.hist(df['nconf'], bins=params['bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black', linewidth=0.5)
+    plt.hist(df['nconf'], bins=params['nconf_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black', linewidth=0.5)
     plt.title(f"NConf Distribution ({params['nconf_min']} to {params['nconf_max']})")
     plt.xlabel('NConf')
     plt.ylabel('Frequency')

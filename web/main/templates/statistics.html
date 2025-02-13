@@ -5,15 +5,48 @@
 {% block content %}
 
 <div class="container mt-5">
+    <h4 class="mb-3 d-inline-block">Papers/Events distribution :</h4>
+    <button id="load-papers-dist" class="btn btn-warning" title="Load Papers distribution">Plot</button>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label for="papers-bins" title="Sampling number">Bins: <span class="duration-val"></span></label>
+                <input class="form-control filter-input" id="papers-bins" name="papers-bins" type="number"
+                       value="{{params.papers_bins}}"/>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="papers-min">Min Papers</label>
+                <input class="form-control filter-input" id="papers-min" name="papers-min" type="number"
+                       value="{{params.papers_min}}"
+                       placeholder="0" step="1" min="0" max="10000"/>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="papers-min">Max Papers</label>
+                <input class="form-control filter-input" id="papers-max" name="papers-max" type="number"
+                       value="{{params.papers_max}}"
+                       placeholder="10000" step="1" min="0" max="10000"/>
+            </div>
+        </div>
+    </div>
+    <div id="papers-plot-container" class="text-center">
+        <div id="papers-spinner" class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <img id="papers-plot-image" src="" class="img-fluid" style="display:none;">
+    </div>
 
     <h4 class="mb-3 d-inline-block">NConf distribution :</h4>
     <button id="load-nconf-dist" class="btn btn-warning" title="Load NConf distribution">Plot</button>
     <div class="row">
         <div class="col">
             <div class="form-group">
-                <label for="duration-min" title="Sampling number">Bins: <span class="duration-val"></span></label>
-                <input class="form-control filter-input" id="duration-min" name="duration-min" type="number"
-                       value="{{params.bins}}"/>
+                <label for="nconf-bins" title="Sampling number">Bins: <span class="duration-val"></span></label>
+                <input class="form-control filter-input" id="nconf-bins" name="nconf-bins" type="number"
+                       value="{{params.nconf_bins}}"/>
             </div>
         </div>
         <div class="col">
@@ -47,34 +80,44 @@
 {% block scripts %}
 <script>
 
-    function load_nconf_dist  (){
-        $('#nconf-spinner').show();
-        let params = {
-            bins: parseInt($('#duration-min').val()),
-            "nconf-min": parseFloat($('#nconf-min').val()),
-            "nconf-max": parseFloat($('#nconf-max').val())
-        };
+    function load_plot_wrapper(prefix, flask_api_url){
+        html_prefix = '#'+prefix;
+        $(html_prefix+'-spinner').show();
+        let params = {};
+        params[prefix+"-bins"] = parseInt($(html_prefix+'-bins').val());
+        params[prefix+"-min"] = parseFloat($(html_prefix+'-min').val());
+        params[prefix+"-max"] = parseFloat($(html_prefix+'-max').val());
+        console.log(params)
         $.ajax({
-            url: '{{url_for("main.api_nconf_dist_graph")}}',
+            url: flask_api_url,
             method: 'POST',
             data: JSON.stringify(params),
             contentType: 'application/json; charset=utf-8',
             success: function(data) {
-                $('#nconf-spinner').hide();
-                $('#nconf-plot-image')
+                $(html_prefix+'-spinner').hide();
+                $(html_prefix+'-plot-image')
                     .attr('src', data.plot_url)
                     .show();
             },
             error: function() {
-                $('#nconf-spinner').html('Erreur de chargement');
+                $(html_prefix+'-spinner').html('Error');
             }
         });
     }
+    function load_papers_dist  (){
+        load_plot_wrapper('papers',
+                  '{{url_for("main.api_papers_events_graph")}}');
+    }
+    function load_nconf_dist  (){
+        load_plot_wrapper('nconf',
+                  '{{url_for("main.api_nconf_dist_graph")}}');
+    }
 
     $(document).ready(function() {
-        $('#load-nconf-dist').on('click', load_nconf_dist);
+        $('#papers-spinner').hide();
+        $('#load-papers-dist').on('click', load_papers_dist);
         $('#nconf-spinner').hide();
-        load_nconf_dist();
+        $('#load-nconf-dist').on('click', load_nconf_dist);
     });
 </script>
 {%  endblock %}
