@@ -25,13 +25,19 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [1.6.0] - 2025-02-20 - Enhance Display
+#### Changed
+- Pages with many events load faster
+- New catalog format more AMDA compliant
+- Download catalog through POST and modal dialog
+
 ## [1.5.2] - 2025-02-13 - Stats reports
 #### New
 - Plot NConf distribution
 - Plot Events distribution
 - Cached data mechanism
 
-# [1.4.2] - 2025-02-10 - Refactor Events Requests
+## [1.4.2] - 2025-02-10 - Refactor Events Requests
 #### Changed
 - NConf calculation optimized
 - Missions sorting on catalogs page
