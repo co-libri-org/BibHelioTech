@@ -868,7 +868,7 @@ def catalogs():
         "catalogs.html",
         missions=_missions,
         events=events_dict_list,
-        events_ids=",".join([str(_e.id) for _e in events_dict_list]),
+        events_ids=[int(_e.id) for _e in events_dict_list],
         db_stats=_db_stats,
         params=params,
     )
@@ -991,7 +991,7 @@ def api_nconf_dist_graph():
 #     return jsonify(response_object)
 
 
-@bp.route("/api/catalogs/txt", methods=["GET"])
+@bp.route("/api/catalogs/txt", methods=["POST", "GET"])
 def api_catalogs_txt():
     """Download the txt version of the catalog for the given mission
 
@@ -1003,12 +1003,16 @@ def api_catalogs_txt():
     :parameter: mission_id  in get request
     :return: catalog text file as attachment
     """
-    events_ids = request.args.get("events_ids")
-    mission_id = request.args.get("mission_id")
+    if request.method == "POST":
+        events_ids = request.json.get("events-ids")
+        mission_id = None
+    else: #request.method=="GET":
+        events_ids = request.args.get("events_ids")
+        events_ids = events_ids.split(",")
+        mission_id = request.args.get("mission_id")
     if events_ids:
         today = datetime.now().strftime("%Y%M%dT%H%m%S")
         catalog_name = f"web_request_{today}"
-        events_ids = events_ids.split(",")
         events_list = []
         # Optimised sqlalchemy request
         events_list = HpEvent.query.filter(HpEvent.id.in_(events_ids)).all()
@@ -1056,7 +1060,6 @@ def api_catalogs_txt():
         fd.write(catalog_txt_stream)
         fd.close()
     return send_file(file_path, as_attachment=True, download_name=file_name)
-
 
 @bp.route("/api/push_catalog", methods=["POST"])
 def api_push_catalog():
