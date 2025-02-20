@@ -174,7 +174,7 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
 
     # Print catalog's general header
     date_now = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
-    r_string = f"""
+    r_string = f"""\
     # Name: {catalog_name};
     # BibHelioTechVersion: V{yml_settings["BHT_PIPELINE_VERSION"]};
     # Creation Date: {date_now};
@@ -192,9 +192,9 @@ def rows_to_catstring(events_list, catalog_name, columns=None):
     r_string = textwrap.dedent(r_string)
 
     # Print parameters header
-    for i, c in enumerate(columns):
+    for i, c in enumerate(columns[2:]):
         v = hpevent_parameters[c]
-        r_string += f'# Parameter {i}: id:column{i}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
+        r_string += f'# Parameter {i+1}: id:column{i+1}; name: {v["col_name"]}; size:{v["size"]}; type:{v["type"]};\n'
 
     if len(events_list) == 0:
         return r_string
