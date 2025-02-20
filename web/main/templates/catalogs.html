@@ -4,6 +4,28 @@
 <title> {{events | length}} Events to display - {{base_title}}</title>
 {% endblock %}
 {% block content %}
+<div id="download-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Catalog Ready</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+          <div id="modal-spinner" class="text-center spinner-border text-warning" role="status">
+              <span class="visually-hidden">Loading...</span>
+          </div>
+          <p id="modal-body"></p>
+      </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-warning" id="download-catalog" >Download</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% if db_stats.filtered_events > 0 %}
 <blockquote class="text-center">
     <p class="lead fs-4 mb-0">
@@ -80,10 +102,10 @@ Show missions found in db as clickable buttons, triggering mission's events disp
 
     <hr class="mt-3 mb-3">
     <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
-    <button id="download-catalog"
+    <button id="make-catalog"
             class='btn btn-warning'
             title="Download as as HPevents catalog">
-            Download
+            Make Catalog
     </button>
 </form>
 <hr class="mt-2 mb-3">
@@ -124,7 +146,7 @@ Show found events after form submit
         $('#show-events-btn').addClass('to-submit', 500);
         $('#show-events-btn').toggle( "fade");
         $('#show-events-btn').toggle( "fade");
-        $('#download-catalog').attr('disabled', 'disabled');
+        $('#make-catalog').attr('disabled', 'disabled');
     }
 
     function update_duration_span(duration_input){
@@ -220,17 +242,29 @@ Show found events after form submit
         // Any check event should turn show 'events button' to color
         $('.filter-input[type=checkbox]').change( enable_submit);
 
-        // Now Deal with the download button
-        $('#download-catalog').on('click',  function (event) {
-            event.preventDefault(); // prevents page reloading for any sort btn
+        // Now Deal with the 'make catalog' button:
+        // 1- request for the catalog url with parameters as POST
+        // 2- open a modal dialog window with a link to download file
+        //
+        $('#make-catalog').on('click',  function (event) {
+            // build a selected mission name list
+            const selected_mission_names = "{{db_stats.selected_missions|join(', ')}}";
+            event.preventDefault();
             let params = {};
             params["events-ids"] = {{events_ids}};
             fetch_url = '{{url_for('main.api_catalogs_txt')}}';
+            $('.modal-title').html("Catalog Building ... ");
+            $("#download-catalog").attr('disabled', 'disabled');
+            $('#modal-spinner').show();
+            $('#modal-body').hide();
+            const dl_modal = new bootstrap.Modal('#download-modal');
+            dl_modal.show();
             fetch(fetch_url, {
                 "method": "POST",
                 "headers": {"Content-Type": "application/json"},
                 "body": JSON.stringify(params),
-            }).then( res  => {
+            })
+            .then( res  => {
                 //console.log(res.headers);
                 // Extract filename from response headers
                 const header = res.headers.get('Content-Disposition');
@@ -239,17 +273,18 @@ Show found events after form submit
                 return res.blob() ;
             })
             .then(blob => {
-                // Get the download url and simulate an <a> clicking
+                // Get the download url from response's blob, insert in modal window
                 var url = window.URL.createObjectURL(blob);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                //alert("Hey, download here "+filename+" "+url);
-                 }
-            );
+                var a = $('#download-catalog');
+                a.attr('href', url);
+                a.attr('download' , filename);
+                a.removeAttr('disabled');
+
+                $('.modal-title').html("Catalog Ready");
+                $('#modal-body').html("Missions:<br><br>"+selected_mission_names);
+                $('#modal-spinner').hide();
+                $('#modal-body').show();
+            });
        }); // end click on #download-catalog-button
 
         // Sortable table
