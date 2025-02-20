@@ -25,6 +25,13 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [1.8.0-bulk] - 2025-03-xx - Enhance DB and Pipelines
+
+## [1.7.0-bulk] - 2025-0x-xx - Front updates
+#### New
+#### Changed
+#### Fixed
+
 ## [1.6.0] - 2025-02-20 - Enhance Display
 #### Changed
 - Pages with many events load faster
