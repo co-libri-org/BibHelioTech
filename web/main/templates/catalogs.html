@@ -4,7 +4,7 @@
 <title> {{events | length}} Events to display - {{base_title}}</title>
 {% endblock %}
 {% block content %}
-<div id="download-modal" class="modal" tabindex="-1" role="dialog">
+<div id="download-modal" class="modal fade" tabindex="-1"   role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -47,8 +47,10 @@ Show missions found in db as clickable buttons, triggering mission's events disp
 -----------------------------------------------------------------------------------
 #}
 <form id="catalog-filter" action="{{url_for('main.catalogs')}}" method="post">
-    <h4 class="mb-3 d-inline-block">Filters:</h4>
     <div class="row">
+        <div class="col">
+            <h4 class="mb-3 d-inline-block">Filters:</h4>
+        </div>
         <div class="col">
             <div class="form-group">
                 <label for="duration-min">Min duration: <span class="duration-val"></span></label>
@@ -68,45 +70,46 @@ Show missions found in db as clickable buttons, triggering mission's events disp
                 <label for="nconf-min">Min NConf (0.0 - 1.0)</label>
                 <input class="form-control filter-input" id="nconf-min" name="nconf-min" type="number"
                        value="{{params.nconf_min}}"
-                       placeholder="1.0" step="0.01" min="0.0" max="1.0"/>
+                       placeholder="1.0" step="0.0000001" min="0.0" max="1.0"/>
             </div>
         </div>
     </div>
     <hr class="mt-3 mb-3">
     <div id="missions-menu" class="mb-4 mt-4 d-flex justify-content-between align-items-center">
         <h4 >Available Missions :</h4>
+        <div>
+            <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
+            <button id="make-catalog"
+                    class='btn btn-warning'
+                    title="Download as as HPevents catalog">
+                Make Catalog
+            </button>
+        </div>
         <div class="btn-group">
-            <button id="missions-alpha-asc" class="btn-sort" > Alpha ASC </button>
-            <button id="missions-alpha-dsc" class="btn-sort" > Alpha DSC </button>
-            <button id="missions-num-asc" class="btn-sort" > Num ASC </button>
-            <button id="missions-num-dsc" class="btn-sort" > Num DSC </button>
+            <button id="missions-alpha-asc" class="btn-sort" title="Sort mission by asc alphabetical order"> Alpha &UpTeeArrow; </button>
+            <button id="missions-alpha-dsc" class="btn-sort" title="Sort mission by desc alphabetical order"> Alpha &DownTeeArrow; </button>
+            <button id="missions-num-asc" class="btn-sort" title="Sort mission by asc numerical order"> Num &UpTeeArrow; </button>
+            <button id="missions-num-dsc" class="btn-sort" title="Sort mission by desc numerical order"> Num &DownTeeArrow; </button>
         </div>
     </div>
     <div class="row" id="catalogs-row">
         {% for mission in missions %}
-        {% if mission.id in params.selected_missions %}
-        {%set checked = "checked"%}
-        {% else %}
-        {%set checked = ""%}
-        {% endif %}
-        <div class="col-2">
-            <label class="btn mission-catalog" title="Show {{mission.num_events}} events for mission {{mission.name}}">
-                <input name="missions" type="checkbox" {{ checked }} class="filter-input form-check-input"
-                       value="{{mission.id}}">
-                {{mission.name}}
-                <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
-            </label>
-        </div>
+            {% if mission.id in params.selected_missions %}
+                {%set checked = "checked"%}
+            {% else %}
+                {%set checked = ""%}
+            {% endif %}
+            <div class="col-2">
+                <label class="btn mission-catalog" title="Show {{mission.num_events}} events for mission {{mission.name}}">
+                    <input name="missions" type="checkbox" {{ checked }} class="filter-input form-check-input"
+                           value="{{mission.id}}">
+                    {{mission.name}}
+                    <span class="badge bg-light border text-dark">{{mission.num_events}}</span>
+                </label>
+            </div>
         {% endfor %}
     </div>
 
-    <hr class="mt-3 mb-3">
-    <input class='btn btn-warning' id="show-events-btn" type="submit" value="Show Events" disabled/>
-    <button id="make-catalog"
-            class='btn btn-warning'
-            title="Download as as HPevents catalog">
-            Make Catalog
-    </button>
 </form>
 <hr class="mt-2 mb-3">
 {#
@@ -242,6 +245,8 @@ Show found events after form submit
         // Any check event should turn show 'events button' to color
         $('.filter-input[type=checkbox]').change( enable_submit);
 
+        const dl_modal = new bootstrap.Modal('#download-modal');
+
         // Now Deal with the 'make catalog' button:
         // 1- request for the catalog url with parameters as POST
         // 2- open a modal dialog window with a link to download file
@@ -257,7 +262,6 @@ Show found events after form submit
             $("#download-catalog").attr('disabled', 'disabled');
             $('#modal-spinner').show();
             $('#modal-body').hide();
-            const dl_modal = new bootstrap.Modal('#download-modal');
             dl_modal.show();
             fetch(fetch_url, {
                 "method": "POST",
@@ -285,7 +289,12 @@ Show found events after form submit
                 $('#modal-spinner').hide();
                 $('#modal-body').show();
             });
-       }); // end click on #download-catalog-button
+       }); // end click on #make-catalog
+
+       // Close modal window after downloading file
+       $('#download-catalog').on('click', function(){
+          dl_modal.hide();
+       });
 
         // Sortable table
         //new DataTable('#events-table', {

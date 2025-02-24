@@ -251,6 +251,7 @@ def add_css_colors_to_templates():
 cached_events = None
 cached_nconf = None
 
+first_request = True
 
 def load_data():
     _cached_events=[]
@@ -260,11 +261,15 @@ def load_data():
     return _cached_events, _cached_nconf
 
 
-# @bp.before_app_request
-# def initialize_data():
-#     global cached_events
-#     global cached_nconf
-#     cached_events, cached_nconf  = load_data()
+
+@bp.before_request
+def initialize_data():
+    global first_request
+    if first_request:
+        global cached_events
+        global cached_nconf
+        cached_events, cached_nconf  = load_data()
+        first_request = False
 
 
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #

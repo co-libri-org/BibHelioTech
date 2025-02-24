@@ -244,7 +244,7 @@ def raws_clean(paper_id, dry_run):
 @cli.command("paper_add")
 @click.argument("istex_dir", required=True)
 def paper_add(istex_dir):
-    """Remove from database the record by id"""
+    """Add paper by directory"""
     istexdir_to_db(istex_dir, current_app.config["WEB_UPLOAD_DIR"])
 
 @cli.command("paper_del")
