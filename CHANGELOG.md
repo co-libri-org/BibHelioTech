@@ -30,6 +30,8 @@ Only major refactoring improvements or functional changes should be noted.
 #### Changed
 - catalog file header
 - catalogs/page front design
+- move events stats
+- empty instr. becomes single space 
 
 ## [1.6.0] - 2025-02-20 - Enhance Display
 #### Changed
