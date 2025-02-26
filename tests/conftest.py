@@ -249,6 +249,19 @@ def hpevent_dict_for_test():
     }
     return hpevent_dict
 
+@pytest.fixture(scope="module")
+def hpevent_dict_for_test_new():
+    hpevent_dict = {
+        "start_time": "2007-07-16T19:50:00.000",
+        "stop_time": "2007-07-16T20:18:00.000",
+        "doi": "https://doi.org/10.1029/2010JA015404",
+        "sats": "THEMIS-A",
+        "insts": "FGM-ESA",
+        "regs": "Earth.Magnetosheath",
+        "conf": 1000
+    }
+    return hpevent_dict
+
 
 @pytest.fixture(scope="module")
 def catalog_row_6fields():

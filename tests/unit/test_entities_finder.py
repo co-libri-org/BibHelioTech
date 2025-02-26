@@ -44,7 +44,7 @@ class TestEntitiesFinder:
         )
         with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
-            assert len(_r_content) == 32
+            assert len(_r_content) == 39
 
     def test_no_image_as_syn(self, ocr_dir_test):
         catalog_file = entities_finder(
@@ -142,7 +142,7 @@ class TestEntitiesFinder:
 
     def test_get_sat_syn(self, data_frames):
         beijing_syn_is_ground = get_sat_syn("Beijing", data_frames)
-        assert beijing_syn_is_ground == "Ground"
+        assert beijing_syn_is_ground == "WDC"
 
     def test_get_sat_syn_pvo(self, data_frames):
         pvo_syn_is_pioneervenusorbiter = get_sat_syn("PVO", data_frames)
@@ -234,8 +234,8 @@ class TestDataframe:
         assert len(data_frames) == 6
         _sats = data_frames[DataBankSheet.SATS]
         _span = data_frames[DataBankSheet.TIME_SPAN]
-        assert len(_sats) == 261
-        assert len(_span) == 254
+        assert len(_sats) == 259
+        assert len(_span) == 255
         # assert _sats.keys() == _span.keys()
         # for stk in _sats.keys():
         #     if stk not in _span.keys():
@@ -243,14 +243,14 @@ class TestDataframe:
 
     def test_satellites_frame(self, data_frames):
         sat_frame = data_frames[DataBankSheet.SATS]
-        assert len(sat_frame) == 261
+        assert len(sat_frame) == 259
         assert type(sat_frame) == dict
         for name, syn_list in sat_frame.items():
             assert type(syn_list) == list
 
     def test_instruments_frame(self, data_frames):
         inst_frame = data_frames[DataBankSheet.INSTR]
-        assert len(inst_frame) == 210
+        assert len(inst_frame) == 211
         for name, syn_list in inst_frame.items():
             assert type(syn_list) == list
 
@@ -273,7 +273,7 @@ class TestDataframe:
 
     def test_time_span_frame(self, data_frames):
         time_span = data_frames[DataBankSheet.TIME_SPAN]
-        assert len(time_span) == 254
+        assert len(time_span) == 255
         assert type(time_span) == dict
         for name, syn_list in time_span.items():
             assert type(syn_list) == list

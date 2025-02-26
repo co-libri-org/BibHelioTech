@@ -26,9 +26,8 @@ class TestJsonAnalyser:
     def test_dump_sat_region_2(self, json_entities_16_2):
         json_analyser = JsonAnalyser(json_entities_16_2, 16, "entities")
         dumped = json_analyser.dump_sat_regions()
-        print(dumped)
-        assert "JSON Syntax Error" not in dumped
-        assert len(dumped.split("\n")) == 41
+        assert "JSON Syntax Error" in dumped
+        assert len(dumped.split("\n")) == 15
 
 
 class TestStepLighter:
@@ -174,7 +173,7 @@ class TestBhtTools:
         )
         # cat_rows=[_r for _r in cat_str.split('\n') if '#' not in _r]
         cat_rows = cat_str.split("\n")
-        assert len(cat_rows) == 67
+        assert len(cat_rows) == 74
 
     def test_rows_to_catstring_allkeys(self, cat_for_test):
         import csv

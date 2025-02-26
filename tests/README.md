@@ -24,7 +24,7 @@ or allow ISTEX tests if you have IP authorisation
     BHT_SKIP_ISTEX=False python -m pytest tests
     # defaults to False, that is it wont run istex tests
 
-or allow Selenium functionnal tests if available
+or allow Selenium functional tests if available
 
     BHT_SKIP_SELENIUM=False python -m pytest tests
     # defaults to False, that is it wont run selenium tests

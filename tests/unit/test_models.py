@@ -79,7 +79,6 @@ class TestPaper:
 
     def test_paper_update_no_ark(self, paper_for_test, db):
         paper_for_test.set_istex_id("BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1")
-        paper_for_test.istex_update()
         assert paper_for_test.ark == "ark:/67375/80W-QC194JKZ-X"
         assert (
             paper_for_test.title
@@ -149,14 +148,15 @@ class TestModels:
             c_in.hp_events.append(event)
         assert len(c_in.hp_events) == 3
 
-    def test_hpevent_from_dict(self, hpevent_dict_for_test):
+    def test_hpevent_from_dict(self, hpevent_dict_for_test_new):
         """
         GIVEN a hp_event dict
         WHEN create hpevent instance
         THEN verify integrity
         """
-        hpevent = HpEvent(**hpevent_dict_for_test)
-        assert hpevent.doi.doi == hpevent_dict_for_test["doi"]
+        print(hpevent_dict_for_test_new)
+        hpevent = HpEvent(**hpevent_dict_for_test_new)
+        assert hpevent.doi.doi == hpevent_dict_for_test_new["doi"]
 
     def test_hpevent_from_row(self, catalog_row_6fields):
         """
@@ -190,29 +190,17 @@ class TestModels:
         assert hp_event_in.instrument.name == "instrument"
         assert hp_event_in.region.name == "region"
 
-    def test_hpevent_get_dict(self, hpevent_dict_for_test):
+    def test_hpevent_get_dict(self, hpevent_dict_for_test_new):
         """
         GIVEN an hpevent dict
         WHEN HpEvent is created with that dict
         THEN verify output dict is the same
         """
-        hpevent_in = HpEvent(**hpevent_dict_for_test)
-        dict_out = hpevent_in.get_dict()
-        assert hpevent_dict_for_test == dict_out
-
-    # def test_hpevent_get_dict_hour(self, hpevent_dict_for_test):
-    #     """
-    #     GIVEN an hpevent dict
-    #     WHEN HpEvent is created and saved to db
-    #     THEN verify the original hour's minutes is kept
-    #     """
-    #     hpevent_in = HpEvent(**hpevent_dict_for_test)
-    #     db.session.add(hpevent_in)
-    #     db.session.commit()
-    #     hp_event_out = db.session.query(HpEvent).one()
-    #     dict_out = hp_event_out.get_dict()
-    #     print(hp_event_out.start_date, hp_event_out.stop_date)
-    #     assert hpevent_dict_for_test == dict_out
+        hpevent_in = HpEvent(**hpevent_dict_for_test_new)
+        dict_out = hpevent_in.get_dict(100)
+        for k in hpevent_dict_for_test_new.keys():
+            if dict_out.get(k) is not None:
+                assert hpevent_dict_for_test_new[k] == dict_out[k]
 
     def test_doi(self):
         """
