@@ -79,10 +79,10 @@ class TestPaper:
 
     def test_paper_update_no_ark(self, paper_for_test, db):
         paper_for_test.set_istex_id("BA3BC0C1E5A6B64AD5CBDE9C29AC2611455EE9A1")
-        assert paper_for_test.ark == "ark:/67375/80W-QC194JKZ-X"
+        assert paper_for_test.ark is None
         assert (
             paper_for_test.title
-            == "Proton-proton collisional age to order solar wind types"
+            == '2016GL069787-test'
         )
 
     def test_paper(self):

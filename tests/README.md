@@ -1,4 +1,12 @@
+prerequisites
 
+    source venv/bin/activate
+    pip install -r requirements.txt
+
+basic run
+
+    pytest
+    
 
 alternately, run with ini file
 

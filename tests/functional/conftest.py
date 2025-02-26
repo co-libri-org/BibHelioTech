@@ -23,8 +23,8 @@ def firefox_driver():
     yield driver
 
 
-@pytest.fixture(scope="session")
-def paperslist_for_tests(tmp_path_factory):
+@pytest.fixture(scope="function")
+def paperslist_for_tests(tmp_path_factory, db):
     """Add to db a list of pdf papers found in DATA/Papers-dist/ dir
 
     :return: list of papers id from db

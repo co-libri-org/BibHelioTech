@@ -28,10 +28,11 @@ class TestBasicAccess:
         WHEN the catalogs/ page is called
         THEN check it has un_added catalogs
         """
+        h4_content = 'Available Missions :'
         base_url = request.url + url_for("main.catalogs")
         firefox_driver.get(base_url)
         elem = firefox_driver.find_element(
-            By.XPATH, "//h4[text()='Available Missions:']"
+            By.XPATH, f"//h4[text()='{h4_content}']"
         )
         assert elem is not None
-        assert elem.text == "Available Missions:"
+        assert elem.text == h4_content

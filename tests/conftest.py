@@ -53,9 +53,9 @@ def app():
     _ctx.pop()
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def db(app):
-    """Session-wide test database."""
+    """function-wide test database."""
     # db_file = current_app.config["SQLALCHEMY_DATABASE_URI"].split("sqlite:///")[1]
     # if os.path.exists(db_file):
     #     os.remove(db_file)

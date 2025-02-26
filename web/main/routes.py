@@ -64,6 +64,8 @@ class StatusResponse:
     cat_is_processed: Optional[bool] = False
     message: str = ""
     alt_message: str = ""
+    task_started: datetime = ""
+    task_stopped: datetime = ""
 
     def __post_init__(self):
         if self.status not in ["success", "failed"]:
