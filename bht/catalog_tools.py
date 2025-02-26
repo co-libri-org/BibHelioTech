@@ -141,6 +141,10 @@ def dict_to_string(event_dict, values_lengths=None):
         if _k == 'insts' and _key_value in ['', 'nan']:
             _key_value = ' '
 
+        if _k == 'doi' and 'http' not in _key_value:
+            _key_value = f"https://doi.org/{_key_value}"
+            _key_length += 16
+
         # Now format the string depending on its type
         if _key_type == "date" or _k == "doi":
             _r_str += f"{_key_value:{_key_length}}"
