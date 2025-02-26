@@ -1,0 +1,35 @@
+<blockquote class="text-center">
+    {% if paper %}
+    <p class="lead fs-4 mb-0">
+        {{events | length }} Events for the paper
+        <a class="btn btn-warning paper-id" href="{{url_for('main.paper_show', paper_id=paper.id)}}"
+           title="Show paper #{{paper.id}}">
+            {{paper.id}}
+        </a>
+        with pipeline
+        <a class="btn btn-warning btn-version" href="{{url_for('main.changelog', module='pipeline')}}"
+           title="Please see CHANGELOG for changes">
+            V{{paper.pipeline_version}}
+        </a>
+    </p>
+    <p class="fs-4 mb-0 fw-bolder">
+        "{{paper.title}}
+    </p>
+    {% elif db_stats.num_events > 0 %}
+    <blockquote class="text-center">
+        <p class="lead fs-4 mb-0">
+            {{db_stats.num_papers}} Papers processed to find
+        </p>
+        <p class="lead fs-4 mb-0">
+            {{db_stats.num_events}} Events across {{db_stats.num_missions}} Missions
+        </p>
+        <p class="lead fs-4 mb-0">
+            from {{db_stats.global_start}} to {{db_stats.global_stop}}
+        </p>
+    </blockquote>
+    {% else %}
+    <p class="lead fs-4 mb-0">
+        <span class="fw-bold">{{events | length }}</span> Events in whole database
+    </p>
+    {% endif %}
+</blockquote>

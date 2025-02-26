@@ -272,6 +272,35 @@ def initialize_data():
         first_request = False
 
 
+#  - - - - - - - - - - - - - - - - - - - - U T I L S - - - - - - - - - - - - - - - - - - - - - - - - #
+def db_stats():
+    all_events = HpEvent.query.all()
+    processed_papers = Paper.query.filter_by(cat_in_db=True).all()
+    all_missions = Mission.query.all()
+    if len(all_events) > 1:
+        events_start_dates_asc = sorted(
+            [_e.start_date for _e in all_events], reverse=False
+        )
+        events_stop_dates_dsc = sorted(
+            [_e.stop_date for _e in all_events], reverse=True
+        )
+        global_start = events_start_dates_asc[0].strftime("%Y-%m-%d")
+        global_stop = events_stop_dates_dsc[0].strftime("%Y-%m-%d")
+    else:
+        global_start = ""
+        global_stop = ""
+
+    _db_stats = {
+        "num_events": len(all_events),
+        "num_papers": len(processed_papers),
+        "num_missions": len(all_missions),
+        "global_start": global_start,
+        "global_stop": global_stop,
+    }
+
+    return _db_stats
+
+
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
 @bp.route('/reload-data')
 def reload_data():
@@ -771,29 +800,7 @@ def events(ref_name, ref_id):
     # translate events to dict list
     events_dict_list = HpEvent.get_events_dicts(found_events)
 
-    # now get some stats and pack as dict
-    processed_papers = Paper.query.filter_by(cat_in_db=True).all()
-    all_missions = Mission.query.all()
-    if len(all_events) > 1:
-        events_start_dates_asc = sorted(
-            [_e.start_date for _e in all_events], reverse=False
-        )
-        events_stop_dates_dsc = sorted(
-            [_e.stop_date for _e in all_events], reverse=True
-        )
-        global_start = events_start_dates_asc[0].strftime("%Y-%m-%d")
-        global_stop = events_stop_dates_dsc[0].strftime("%Y-%m-%d")
-    else:
-        global_start = ""
-        global_stop = ""
-
-    _db_stats = {
-        "num_events": len(all_events),
-        "num_papers": len(processed_papers),
-        "num_missions": len(all_missions),
-        "global_start": global_start,
-        "global_stop": global_stop,
-    }
+    _db_stats = db_stats()
 
     return render_template(
         "events.html", events=events_dict_list, paper=paper, db_stats=_db_stats
@@ -887,7 +894,8 @@ def statistics():
               "events_bins": 200,
               "events_min": 0,
               "events_max": 10000}
-    return render_template("statistics.html", params=params)
+    _db_stats = db_stats()
+    return render_template("statistics.html", params=params, db_stats=_db_stats)
 
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
