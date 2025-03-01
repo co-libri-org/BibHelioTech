@@ -79,7 +79,11 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", skip_if_exists=Tr
         except JSONDecodeError:
             print(f"Couldn't read json file {json_file}")
             return None
-    istex_struct = istex_doc_to_struct(document_json)
+    try:
+        istex_struct = istex_doc_to_struct(document_json)
+    except KeyError as e:
+        return {'status': 'failed', 'reason': str(e)}
+
     paper = Paper.query.filter_by(istex_id = istex_struct['istex_id'] ).one_or_none()
     if paper is None:
         istex_struct['status'] = "added"

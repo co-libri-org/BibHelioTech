@@ -255,7 +255,11 @@ def papers_add_from_subset(subset_dir):
     json_files = glob.glob(os.path.join(subset_dir, "*/*json"))
     for i, j in enumerate(json_files):
         istex_struct = istexjson_to_db(j, current_app.config["WEB_UPLOAD_DIR"], skip_if_exists=True)
-        print(f"{i}/{len(json_files)}", istex_struct['istex_id'], istex_struct['status'])
+        print(f"{i}/{len(json_files)}", end=" ")
+        if istex_struct['status'] == 'failed':
+            print(j, istex_struct['reason'])
+        else:
+            print(istex_struct['istex_id'], istex_struct['status'])
 
 @cli.command("paper_del")
 @click.argument("paper_id", required=True)
