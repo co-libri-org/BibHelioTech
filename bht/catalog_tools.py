@@ -136,6 +136,16 @@ def dict_to_string(event_dict, values_lengths=None):
         _key_length = 0 if values_lengths is None else values_lengths[_k]
         _key_type = hpevent_parameters[_k]["type"]
         _key_value = event_dict[_k]
+        # Set instrument to "<empty_space>" when no instruments
+        # AMDA Need
+        if _k == 'insts' and _key_value in ['', 'nan']:
+            _key_value = ' '
+
+        if _k == 'doi' and 'http' not in _key_value:
+            _key_value = f"https://doi.org/{_key_value}"
+            _key_length += 16
+
+        # Now format the string depending on its type
         if _key_type == "date" or _k == "doi":
             _r_str += f"{_key_value:{_key_length}}"
         elif _key_type == "char":
