@@ -26,7 +26,10 @@ Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
 
-## [1.7.2-bulk] - 2025-02-24 - Fixes before bulk import
+## [1.7.3-bulk] - 2025-03-01 - Fixes before bulk import
+#### New
+- bulk add from subset
+
 #### Changed
 - catalog file header
 - catalogs/page front design
