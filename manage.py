@@ -1,3 +1,4 @@
+import glob
 import os
 import shutil
 import sys
@@ -14,7 +15,7 @@ from bht.databank_reader import DataBank, DataBankSheet
 from bht.pipeline import PipeStep
 from web import create_app, db
 from web.bht_proxy import pipe_paper
-from web.models import catfile_to_db, Mission, istexdir_to_db
+from web.models import catfile_to_db, Mission, istexdir_to_db, istexjson_to_db
 from web.models import Paper, HpEvent
 
 cli = FlaskGroup(create_app=create_app)
@@ -246,6 +247,19 @@ def raws_clean(paper_id, dry_run):
 def paper_add(istex_dir):
     """Add paper by directory"""
     istexdir_to_db(istex_dir, current_app.config["WEB_UPLOAD_DIR"])
+
+@cli.command("papers_add_from_subset")
+@click.argument("subset_dir", required=True)
+def papers_add_from_subset(subset_dir):
+    """Add all papers contained in an istex subset directory"""
+    json_files = glob.glob(os.path.join(subset_dir, "*/*json"))
+    for i, j in enumerate(json_files):
+        istex_struct = istexjson_to_db(j, current_app.config["WEB_UPLOAD_DIR"], skip_if_exists=True)
+        print(f"{i}/{len(json_files)}", end=" ")
+        if istex_struct['status'] == 'failed':
+            print(j, istex_struct['reason'])
+        else:
+            print(istex_struct['istex_id'], istex_struct['status'])
 
 @cli.command("paper_del")
 @click.argument("paper_id", required=True)

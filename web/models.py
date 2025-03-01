@@ -7,12 +7,13 @@ from json import JSONDecodeError
 from typing import Optional
 
 import filetype
+from sqlalchemy.exc import IntegrityError
 
 from werkzeug.utils import secure_filename
 
 from bht.catalog_tools import catfile_to_rows
 from web import db
-from web.errors import IstexError, FilePathError
+from web.errors import IstexError, FilePathError, DbError
 from web.istex_proxy import ark_to_id, get_doc_url, istex_doc_to_struct
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%f"
@@ -59,12 +60,56 @@ def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
     with open(istex_file_path) as _ifd:
         file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
 
+def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", skip_if_exists=True):
+    """
+    Read the json meta-info file of an istex directory
+        get the article file
+        add to db for late usage
+
+    :param skip_if_exists:
+    :param json_file:
+    :param upload_dir:
+    :param file_ext:
+    :return:
+    """
+    if not os.path.isfile(json_file):
+        raise FilePathError(f"Couldn't find {json_file}")
+    with open(json_file) as json_fp:
+        try:
+            document_json = json.load(json_fp)
+        except JSONDecodeError:
+            print(f"Couldn't read json file {json_file}")
+            return None
+    try:
+        istex_struct = istex_doc_to_struct(document_json)
+    except KeyError as e:
+        return {'status': 'failed', 'reason': str(e)}
+
+    paper = Paper.query.filter_by(istex_id = istex_struct['istex_id'] ).one_or_none()
+    if paper is None:
+        istex_struct['status'] = "added"
+    elif  type(paper) == Paper:
+        if skip_if_exists:
+            istex_struct['status'] = "skipped"
+            return istex_struct
+        else:
+            istex_struct['status'] = "updated"
+    istex_file_path = json_file.replace("json", file_ext)
+    istex_file_name = os.path.basename(istex_file_path)
+    with open(istex_file_path) as _ifd:
+        try:
+            file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+        except DbError as e:
+            return {'status': 'failed', 'reason': str(e)}
+    return istex_struct
 
 def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
     """
     Push Paper to db from a pdf stream
+    (update Paper's pdf content if exists)
 
-    Update Paper's pdf content if exists
+        - write content to destination file
+        - add new Paper object to db
 
     :param upload_dir:
     :param istex_struct:
@@ -100,10 +145,14 @@ def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
     # set_file_path() will add and commit paper
     paper.set_file_path(_file_path, _file_type)
     if istex_struct is not None:
-        paper.set_doi(istex_struct["doi"])
-        paper.set_ark(istex_struct["ark"])
-        paper.set_pubdate(istex_struct["pub_date"])
-        paper.set_istex_id(istex_struct["istex_id"])
+        try:
+            paper.set_doi(istex_struct["doi"])
+            paper.set_ark(istex_struct["ark"])
+            paper.set_pubdate(istex_struct["pub_date"])
+            paper.set_istex_id(istex_struct["istex_id"])
+        except IntegrityError:
+            db.session.rollback()
+            raise DbError("Uniq field already exists")
     return paper.id
 
 

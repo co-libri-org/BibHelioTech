@@ -24,6 +24,10 @@ class WebResultError(WebError):
 
     pass
 
+class DbError(Exception):
+    """Db error"""
+    pass
+
 
 class IstexError(Exception):
     def __init__(self, message="ISTEX Error"):
