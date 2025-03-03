@@ -357,6 +357,26 @@ def paper_web_status_cmd(paper_id):
         else:
             print(f"Failed to get status for paper {paper_id}. Status code: {status_code}")
 
+@cli.command("paper_web_status_all")
+def paper_web_status_all():
+    """Trigger a status api GET on started or queued papers
+    so there task status is updated
+    """
+    from web.main.routes import bht_status
+    from datetime import datetime
+    from time import sleep
+    while True:
+        queued_papers = Paper.query.filter(Paper.task_status.in_(['started', 'queued'])).all()
+        sleep(1)
+        time_now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        interval = f"{queued_papers[0].id} to {queued_papers[-1].id}"
+        msg = f"{time_now} Triggering {len(queued_papers)} papers from {interval}: "
+        for p in queued_papers:
+            print(f"{msg} id: {p.id} status: {p.task_status}", end="\r")
+            with current_app.test_request_context(), current_app.app_context():
+                response, status_code = bht_status(paper_id=p.id)
+                # print(response.json)
+
 
 @cli.command("paper_run")
 @click.argument("paper_id", required=True)
