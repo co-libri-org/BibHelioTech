@@ -20,6 +20,7 @@ from web.models import Paper, HpEvent
 
 cli = FlaskGroup(create_app=create_app)
 
+
 @cli.command("rq_show")
 @click.argument("status", required=True)
 def rq_show(status):
@@ -53,7 +54,7 @@ def rq_show(status):
         finished_registry = FinishedJobRegistry('default', connection=redis_conn)
         finished_jobs = finished_registry.get_job_ids()
         print(finished_jobs)
-    elif status=="failed":
+    elif status == "failed":
         failed_registry = FailedJobRegistry('default', connection=redis_conn)
         failed_jobs = failed_registry.get_job_ids()
         print(failed_jobs)
@@ -242,11 +243,13 @@ def raws_clean(paper_id, dry_run):
             f.unlink()
             print(f"Removed: {f.name}")
 
+
 @cli.command("paper_add")
 @click.argument("istex_dir", required=True)
 def paper_add(istex_dir):
     """Add paper by directory"""
     istexdir_to_db(istex_dir, current_app.config["WEB_UPLOAD_DIR"])
+
 
 @cli.command("papers_add_from_subset")
 @click.argument("subset_dir", required=True)
@@ -260,6 +263,7 @@ def papers_add_from_subset(subset_dir):
             print(j, istex_struct['reason'])
         else:
             print(istex_struct['istex_id'], istex_struct['status'])
+
 
 @cli.command("paper_del")
 @click.argument("paper_id", required=True)
@@ -558,6 +562,18 @@ def events_refresh(paper_id=None):
 def catalog_feed(catalog_file):
     """From a catalog file, feed db with events"""
     catfile_to_db(catalog_file)
+
+
+@cli.command("status_update")
+def status_update():
+    """The rq status had some failures, this command try to fix db information"""
+    papers = Paper.query.filter(Paper.cat_path is not None,
+                                Paper.task_status != 'finished').all()
+    for p in papers:
+        print(f"Setting paper {p.id} task status to 'finished' ")
+        p.task_status='finished'
+        db.session.add(p)
+    db.session.commit()
 
 
 if __name__ == "__main__":
