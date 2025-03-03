@@ -1,4 +1,5 @@
 import json
+
 import os
 from zoneinfo import ZoneInfo
 
@@ -268,7 +269,7 @@ def initialize_data():
     if first_request:
         global cached_events
         global cached_nconf
-        cached_events, cached_nconf  = load_data()
+        #cached_events, cached_nconf  = load_data()
         first_request = False
 
 
