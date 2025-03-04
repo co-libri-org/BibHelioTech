@@ -2,6 +2,7 @@ import glob
 import os
 import shutil
 import sys
+import time
 
 import click
 import redis
@@ -544,14 +545,15 @@ def events_del(paper_id, all_events):
 
 @cli.command("events_refresh")
 @click.option("-p", "--paper-id")
-def events_refresh(paper_id=None):
+@click.option("-s", "--cat-status", type=click.Choice(['new', 'update']))
+def events_refresh(paper_id=None, cat_status=None):
     """Reparse catalogs txt files for all or one paper
 
     \b
     - delete events
     - read
 
-    Can be used in conjunction with refresh_papers() that has to be run first.
+    Can be used in conjunction with papers_refresh() that has to be run first.
 
     This method was first writen to fix the hpevent datetime value in db
     A db bug that was fixed in the commit '6b38c89 Fix the missing hours in hpevent bug'
@@ -562,19 +564,33 @@ def events_refresh(paper_id=None):
     papers = []
     if paper_id:
         papers.append(db.session.get(Paper, paper_id))
+    elif cat_status=='new':
+        papers = Paper.query.filter(Paper.cat_path != '',
+                                    Paper.cat_in_db == False).all()
+    elif cat_status == 'update':
+        print("Not implemented yet")
+        return
     else:
         papers = Paper.query.all()
 
-    events = []
+    # events = []
 
     # then parse catalogs again
-    for _p in papers:
+    from datetime import datetime
+    total_elapsed = datetime.now() - datetime.now()
+    for i, _p in enumerate(papers):
+        then = datetime.now()
         _p.clean_events()
-        _p.push_cat(force=True)
-        events.extend(_p.get_events())
-        db.session.commit()
+        _p.push_cat(force=False)
+        elapsed = datetime.now() - then
+        total_elapsed += elapsed
+        print(f"Updated catalog {i}/{len(papers)} in {elapsed}", end="\r")
+        # events.extend(_p.get_events())
+    db.session.commit()
 
-    print(f"Updated {len(events)} events from {len(papers)} papers")
+    #print(f"\nUpdated {len(events)} events from {len(papers)} papers in {total_elapsed}")
+    print(f"\nUpdated {len(papers)} catalogs in {total_elapsed}")
+
 
 
 @cli.command("catalog_feed")
