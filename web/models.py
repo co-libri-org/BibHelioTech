@@ -171,7 +171,7 @@ def catfile_to_db(catfile):
                 continue
             hpevent = HpEvent(**hpevent_dict)
             db.session.add(hpevent)
-        db.session.commit()
+            db.session.commit()
 
 
 class TaskStruct:
