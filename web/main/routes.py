@@ -256,13 +256,13 @@ cached_nconf = None
 
 first_request = True
 
+
 def load_data():
-    _cached_events=[]
+    _cached_events = []
     for p in Paper.query.all():
         _cached_events.append({"paper_id": p.id, "num_events": len(p.get_events())})
     _cached_nconf = HpEvent.get_events_dicts(HpEvent.query.all())
     return _cached_events, _cached_nconf
-
 
 
 @bp.before_request
@@ -271,7 +271,7 @@ def initialize_data():
     if first_request:
         global cached_events
         global cached_nconf
-        #cached_events, cached_nconf  = load_data()
+        # cached_events, cached_nconf  = load_data()
         first_request = False
 
 
@@ -304,12 +304,23 @@ def db_stats():
     return _db_stats
 
 
+#  - - - - - - - - - - - - - - - R O U T E S - F I X - B U L K 2 - - - - - - - - - - - - - - - - - - - #
+@bp.route('/fix_bulk_2')
+def fix_bulk_2():
+    papers_ids = [89, 128, 491, 535, 1038, 1156, 1285, 1455, 1985, 2006, 2536, 2822, 3710, 3865, 3899,
+                  3945, 4036, 4277, 4443, 4836, 4959, 5355, 5373, 5394, 5563, 5655, 5728, 5859, 6329,
+                  6793, 7078, 7415, 7476, 8192, 8280, 8561, 8631, 8841, 9100, 9389, 9740, 10031, 10264,
+                  11330, 11373]
+    papers = Paper.query.filter(Paper.id.in_(papers_ids)).all()
+    return render_template("fix_bulk_2.html", papers = papers)
+
+
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
 @bp.route('/reload-data')
 def reload_data():
     global cached_events
     global cached_nconf
-    cached_events, cached_nconf  = load_data()
+    cached_events, cached_nconf = load_data()
     return 'Data loaded'
 
 
@@ -1077,6 +1088,7 @@ def api_catalogs_txt():
         fd.write(catalog_txt_stream)
         fd.close()
     return send_file(file_path, as_attachment=True, download_name=file_name)
+
 
 @bp.route("/api/push_catalog", methods=["POST"])
 def api_push_catalog():
