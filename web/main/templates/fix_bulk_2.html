@@ -1,23 +1,41 @@
 {% extends "base_table.html" %}
 {% block more_head %}
 {{ super () }}
+<style>
+
+    .title_td {
+    border: solid 1pt grey;
+    }
+    .title_td:hover {
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+    .title_td a {
+  text-decoration: none;
+  color: inherit;
+}
+
+</style>
 <title> Papers to FIX (Y = 2024|2025)</title>
 {% endblock %}
 {% block content %}
 <table>
-{% for p in papers %}
+    {% for p in papers %}
     <tr>
         <td><a class="btn btn-warning"
                href="{{url_for('main.paper_show', paper_id=p.id)}}" title="{{p.title}}">{{p.id}}</a></td>
-        <td>
-        <a class="btn btn-warning"
-   href="{{url_for('main.paper_pipeline', paper_id=p.id, step_num=0, pipeline_mode='sutime', disp_mode='analysed')}}">Sutime Step</a>
+        <td class="col-2">
+            <a class="btn btn-warning"
+               href="{{url_for('main.paper_pipeline', paper_id=p.id, step_num=0, pipeline_mode='sutime', disp_mode='analysed')}}">Sutime
+                0</a>
         </td>
-        <td>
-            {{p.title}}
-        </td>
+        <td class="col-9 title_td" title="{{p.title}}">
+        <b>{{p.publication_date}}:</b>
+            <a href="{{url_for('main.paper_show', paper_id=p.id)}}" title="{{p.title}}">
+                {{p.title | truncate(80)}}
+            </a></td>
 
     </tr>
-{% endfor %}
+    {% endfor %}
 </table>
 {% endblock %}
