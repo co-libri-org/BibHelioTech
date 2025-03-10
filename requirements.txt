@@ -31,3 +31,5 @@ alembic
 SQLAlchemy
 markdown
 matplotlib
+uvicorn
+fastapi

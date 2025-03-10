@@ -3,6 +3,7 @@ import re
 import json
 from datetime import date, datetime, timedelta
 
+import requests
 import dateutil.parser as parser
 
 from bht.bht_logging import init_logger
@@ -14,12 +15,16 @@ _logger = init_logger()
 raw_dumper = RawDumper("sutime")
 
 
-def SUTime_treatement(current_OCR_folder, sutime):
+def SUTime_treatement(current_OCR_folder, sutime=None):
     _logger.info("SUTime_treatement -> res_sutime.json")
     file = open(current_OCR_folder + "/" + "out_filtered_text.txt", "r")
     input_content = file.read()
 
-    sutime_structs_list = sutime.parse(input_content)  # Analysis of the whole text by SUTime
+    if sutime is None:
+        response = requests.post("http://localhost:8000/parse", json={"text": input_content})
+        sutime_structs_list = response.json()
+    else:
+        sutime_structs_list = sutime.parse(input_content)  # Analysis of the whole text by SUTime
     raw_dumper.dump_to_raw(sutime_structs_list, "Raw sutime output", current_OCR_folder)
 
     raw_dumper.dump_to_raw(sutime_structs_list, "Filtering sutime by values", current_OCR_folder)

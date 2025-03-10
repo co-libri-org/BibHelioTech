@@ -2,6 +2,7 @@ import glob
 import os
 import shutil
 import sys
+import time
 
 import click
 import redis
@@ -19,6 +20,7 @@ from web.models import catfile_to_db, Mission, istexdir_to_db, istexjson_to_db
 from web.models import Paper, HpEvent
 
 cli = FlaskGroup(create_app=create_app)
+
 
 @cli.command("rq_show")
 @click.argument("status", required=True)
@@ -53,7 +55,7 @@ def rq_show(status):
         finished_registry = FinishedJobRegistry('default', connection=redis_conn)
         finished_jobs = finished_registry.get_job_ids()
         print(finished_jobs)
-    elif status=="failed":
+    elif status == "failed":
         failed_registry = FailedJobRegistry('default', connection=redis_conn)
         failed_jobs = failed_registry.get_job_ids()
         print(failed_jobs)
@@ -242,11 +244,13 @@ def raws_clean(paper_id, dry_run):
             f.unlink()
             print(f"Removed: {f.name}")
 
+
 @cli.command("paper_add")
 @click.argument("istex_dir", required=True)
 def paper_add(istex_dir):
     """Add paper by directory"""
     istexdir_to_db(istex_dir, current_app.config["WEB_UPLOAD_DIR"])
+
 
 @cli.command("papers_add_from_subset")
 @click.argument("subset_dir", required=True)
@@ -260,6 +264,7 @@ def papers_add_from_subset(subset_dir):
             print(j, istex_struct['reason'])
         else:
             print(istex_struct['istex_id'], istex_struct['status'])
+
 
 @cli.command("paper_del")
 @click.argument("paper_id", required=True)
@@ -352,6 +357,26 @@ def paper_web_status_cmd(paper_id):
             print(data)
         else:
             print(f"Failed to get status for paper {paper_id}. Status code: {status_code}")
+
+@cli.command("paper_web_status_all")
+def paper_web_status_all():
+    """Trigger a status api GET on started or queued papers
+    so there task status is updated
+    """
+    from web.main.routes import bht_status
+    from datetime import datetime
+    from time import sleep
+    while True:
+        queued_papers = Paper.query.filter(Paper.task_status.in_(['started', 'queued'])).all()
+        sleep(1)
+        time_now = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        interval = f"{queued_papers[0].id} to {queued_papers[-1].id}"
+        msg = f"{time_now} Triggering {len(queued_papers)} papers from {interval}: "
+        for p in queued_papers:
+            print(f"{msg} id: {p.id} status: {p.task_status}", end="\r")
+            with current_app.test_request_context(), current_app.app_context():
+                response, status_code = bht_status(paper_id=p.id)
+                # print(response.json)
 
 
 @cli.command("paper_run")
@@ -520,14 +545,15 @@ def events_del(paper_id, all_events):
 
 @cli.command("events_refresh")
 @click.option("-p", "--paper-id")
-def events_refresh(paper_id=None):
+@click.option("-s", "--cat-status", type=click.Choice(['new', 'update']))
+def events_refresh(paper_id=None, cat_status=None):
     """Reparse catalogs txt files for all or one paper
 
     \b
     - delete events
     - read
 
-    Can be used in conjunction with refresh_papers() that has to be run first.
+    Can be used in conjunction with papers_refresh() that has to be run first.
 
     This method was first writen to fix the hpevent datetime value in db
     A db bug that was fixed in the commit '6b38c89 Fix the missing hours in hpevent bug'
@@ -538,19 +564,33 @@ def events_refresh(paper_id=None):
     papers = []
     if paper_id:
         papers.append(db.session.get(Paper, paper_id))
+    elif cat_status=='new':
+        papers = Paper.query.filter(Paper.cat_path != '',
+                                    Paper.cat_in_db == False).all()
+    elif cat_status == 'update':
+        print("Not implemented yet")
+        return
     else:
         papers = Paper.query.all()
 
-    events = []
+    # events = []
 
     # then parse catalogs again
-    for _p in papers:
+    from datetime import datetime
+    total_elapsed = datetime.now() - datetime.now()
+    for i, _p in enumerate(papers):
+        then = datetime.now()
         _p.clean_events()
-        _p.push_cat(force=True)
-        events.extend(_p.get_events())
-        db.session.commit()
+        _p.push_cat(force=False)
+        elapsed = datetime.now() - then
+        total_elapsed += elapsed
+        print(f"Updated catalog {i}/{len(papers)} in {elapsed}", end="\r")
+        # events.extend(_p.get_events())
+    db.session.commit()
 
-    print(f"Updated {len(events)} events from {len(papers)} papers")
+    #print(f"\nUpdated {len(events)} events from {len(papers)} papers in {total_elapsed}")
+    print(f"\nUpdated {len(papers)} catalogs in {total_elapsed}")
+
 
 
 @cli.command("catalog_feed")
@@ -558,6 +598,18 @@ def events_refresh(paper_id=None):
 def catalog_feed(catalog_file):
     """From a catalog file, feed db with events"""
     catfile_to_db(catalog_file)
+
+
+@cli.command("status_update")
+def status_update():
+    """The rq status had some failures, this command try to fix db information"""
+    papers = Paper.query.filter(Paper.cat_path is not None,
+                                Paper.task_status != 'finished').all()
+    for p in papers:
+        print(f"Setting paper {p.id} task status to 'finished' ")
+        p.task_status='finished'
+        db.session.add(p)
+    db.session.commit()
 
 
 if __name__ == "__main__":

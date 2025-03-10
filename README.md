@@ -76,6 +76,12 @@ run with pipeline capabilities:
     docker run --rm --name redis_for_bht -d -p 6379:6379 redis
     python manage.py run_worker
 
+more over, for bulk purpose, run a Sutime Server
+
+    uvicorn fastapi_sutime:app --host 0.0.0.0 --port 8001
+
+
+
 ## Docker Install
 
 Please, use a recent docker compose plugin version: https://docs.docker.com/compose/install/linux/

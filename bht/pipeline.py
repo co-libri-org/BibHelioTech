@@ -124,12 +124,12 @@ def run_step_filter(dest_pdf_dir):
 
 def run_step_sutime(dest_pdf_dir):
     _logger.info("BHT PIPELINE STEP 4: Sutime")
-    from sutime import SUTime
+    #from sutime import SUTime
     from bht.SUTime_processing import SUTime_treatement
 
-    sutime = SUTime(mark_time_ranges=True, include_range=True)  # load sutime wrapper
+    # sutime = SUTime(mark_time_ranges=True, include_range=True)  # load sutime wrapper
     # SUTime read all the file and save its results in a file "res_sutime.json"
-    SUTime_treatement(dest_pdf_dir, sutime)
+    SUTime_treatement(dest_pdf_dir)
 
 
 def run_step_timefill(dest_pdf_dir):
