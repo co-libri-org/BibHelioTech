@@ -15,7 +15,7 @@ def firefox_driver():
     from subprocess import getoutput
 
     options = Options()
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     options.binary_location = getoutput("find /snap/firefox -name firefox").split("\n")[
         -1
     ]

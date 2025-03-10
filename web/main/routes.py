@@ -739,8 +739,8 @@ def istex():
         return render_template("istex.html", istex_list=[])
 
     # else method == "POST", deal with url or ark arguments
-    istex_req_url = request.form["istex_req_url"]
-    ark_istex = request.form["ark_istex"]
+    istex_req_url = request.form.get("istex_req_url")
+    ark_istex = request.form.get("ark_istex")
     if istex_req_url:
         # just go on with it
         pass
@@ -1024,12 +1024,11 @@ def api_catalogs_txt():
         mission_id = None
     else: #request.method=="GET":
         events_ids = request.args.get("events_ids")
-        events_ids = events_ids.split(",")
         mission_id = request.args.get("mission_id")
     if events_ids:
+        events_ids = events_ids.split(",")
         today = datetime.now().strftime("%Y%M%dT%H%m%S")
         catalog_name = f"web_request_{today}"
-        events_list = []
         # Optimised sqlalchemy request
         events_list = HpEvent.query.filter(HpEvent.id.in_(events_ids)).all()
         events_dict_list = HpEvent.get_events_dicts(events_list)
@@ -1045,8 +1044,10 @@ def api_catalogs_txt():
             HpEvent.query.filter_by(mission_id=mission_id).order_by(HpEvent.start_date)
         )
     else:
-        flash(f"Missing arguments 'mission_id' or 'events_ids[]' empty", "warning")
-        return redirect(url_for("main.catalogs"))
+        return Response(
+            f"Missing arguments 'mission_id' or 'events_ids[]' empty",
+            status=400,
+        )
     catalog_txt_stream = rows_to_catstring(
         events_dict_list,
         catalog_name,
