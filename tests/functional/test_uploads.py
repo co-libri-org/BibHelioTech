@@ -19,7 +19,7 @@ class TestUploadPdf:
         THEN check we find corresponding paper in db
         """
         # get papers page
-        papers_url = request.url + url_for("main.papers")
+        papers_url = request.url + url_for("main.istex")
         firefox_driver.get(papers_url)
         # set file to upload in input field
         input_elmt = firefox_driver.find_element(By.XPATH, "//input[@name='file']")
