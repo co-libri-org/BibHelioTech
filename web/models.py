@@ -193,10 +193,6 @@ class TaskStruct:
 
 
 
-class Catalog(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    hp_events = db.relationship("HpEvent", back_populates="catalog")
-
 
 class HpEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -213,9 +209,6 @@ class HpEvent(db.Model):
     conf = db.Column(db.Float)
     d = db.Column(db.Integer)
     r = db.Column(db.Integer)
-
-    catalog = db.relationship("Catalog", back_populates="hp_events")
-    catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"))
 
     # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
     def __init__(
