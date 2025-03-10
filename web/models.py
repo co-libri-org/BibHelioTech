@@ -198,11 +198,11 @@ class HpEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.DateTime)
     stop_date = db.Column(db.DateTime)
-    doi_id = db.Column(db.Integer, db.ForeignKey("doi.id"))
+    paper_id = db.Column(db.Integer, db.ForeignKey("paper.id"))
     mission_id = db.Column(db.Integer, db.ForeignKey("mission.id"))
     instrument_id = db.Column(db.Integer, db.ForeignKey("instrument.id"))
     region_id = db.Column(db.Integer, db.ForeignKey("region.id"))
-    doi = db.relationship("Doi", back_populates="hp_events")
+    paper = db.relationship("Paper", back_populates="hp_events")
     mission = db.relationship("Mission", back_populates="hp_events")
     instrument = db.relationship("Instrument", back_populates="hp_events")
     region = db.relationship("Region", back_populates="hp_events")
@@ -321,7 +321,6 @@ class HpEvent(db.Model):
 class Doi(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     doi = db.Column(db.String, unique=True, nullable=False)
-    hp_events = db.relationship("HpEvent", back_populates="doi")
 
 
 class Mission(db.Model):
@@ -362,6 +361,8 @@ class Paper(db.Model):
     task_status = db.Column(db.String)
     task_started = db.Column(db.DateTime)
     task_stopped = db.Column(db.DateTime)
+
+    hp_events = db.relationship("HpEvent", back_populates="paper")
 
     def __repr__(self):
         return f"""<Paper #{self.id}
