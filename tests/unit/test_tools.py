@@ -150,8 +150,11 @@ class TestBhtTools:
 
     def test_dict_to_string(self, small_event_dict, long_event_dict):
         small_string = dict_to_string(small_event_dict)
-        assert len(small_string.split(" ")) == len(small_event_dict.keys())
         long_string = dict_to_string(long_event_dict)
+        # deal with empty strings
+        small_string = small_string.replace(' " " ', ' "_" ' )
+        long_string = long_string.replace(' " " ', ' "_" ' )
+        assert len(small_string.split(" ")) == len(small_event_dict.keys())
         assert len(long_string.split(" ")) == len(long_event_dict.keys())
 
     def test_dict_to_dict(self, wrong_keys_dict):

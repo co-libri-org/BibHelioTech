@@ -1,3 +1,4 @@
+
 prerequisites
 
     source venv/bin/activate
@@ -18,6 +19,12 @@ or use the whole docker stack
     cp docker-compose.override.yml-dist docker-compose.override.yml
     docker compose up -d --build
     docker compose run web pytest
+
+very manually 
+
+    docker run --rm --name redis_for_bulk -d -p 6380:6379 redis
+    python manage.py run_worker
+    uvicorn fastapi_sutime:app --host 0.0.0.0 --port 8000  
 
 you may want to skip slow tests:
 

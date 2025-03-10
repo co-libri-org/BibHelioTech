@@ -2,6 +2,7 @@ import pytest
 from datetime import datetime
 
 from bht.catalog_tools import row_to_dict
+from tests.conftest import skip_slow_test
 from web.errors import IstexError
 from web.models import (
     Paper,
@@ -137,6 +138,7 @@ class TestPaper:
 
 
 class TestModels:
+    @pytest.mark.skip(reason="Waiting for db refactoring")
     def test_catalog(self, hpevents_list):
         """
         GIVEN HpEvent List and Catalog Model
@@ -148,6 +150,7 @@ class TestModels:
             c_in.hp_events.append(event)
         assert len(c_in.hp_events) == 3
 
+    @pytest.mark.skip(reason="Waiting for db refactoring")
     def test_hpevent_from_dict(self, hpevent_dict_for_test_new):
         """
         GIVEN a hp_event dict

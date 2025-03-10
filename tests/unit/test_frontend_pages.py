@@ -60,29 +60,33 @@ class TestCatalogsPage:
         """
         response = client.get("/catalogs")
         assert response.status_code == 200
-        assert b"Available Missions:" in response.data
+        assert b"Available Missions" in response.data
 
-    def test_catalog_page_2(self, client, paper_with_cat):
+
+class TestAdminPage:
+
+    def test_admin_page(self, client, paper_with_cat):
         """
         GIVEN a flask app and paper_for_test in db
         WHEN the catalog page is requested
         THEN check that page contains non_added catalogs
         """
-        response = client.get("/catalogs")
+        response = client.get("/admin")
         assert response.status_code == 200
         assert b"Catalogs to add in database:" in response.data
 
 
-class TestPapersPage:
+class TestIstexPage:
+
     def test_papers_uploadfield(self, client):
         """
         GIVEN a Flask application configured for testing
         WHEN the '/papers' page is requested (GET)
         THEN check that the response is valid
         """
-        response = client.get("/papers")
+        response = client.get("/istex")
         assert response.status_code == 200
-        assert b"Upload new File" in response.data
+        assert b"from new File" in response.data
 
     def test_papers_pdffield(self, client):
         """
@@ -90,12 +94,10 @@ class TestPapersPage:
         WHEN the '/papers' page is requested (GET)
         THEN check that the response has download pdf field
         """
-        response = client.get("/papers")
+        response = client.get("/istex")
         assert response.status_code == 200
-        assert b"Upload from URL" in response.data
+        assert b"from URL" in response.data
 
-
-class TestIstexPage:
     def test_istex_page(self, client):
         """
         GIVEN a Flask application configured for testing
