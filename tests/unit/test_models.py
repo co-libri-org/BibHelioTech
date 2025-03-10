@@ -6,7 +6,6 @@ from tests.conftest import skip_slow_test
 from web.errors import IstexError
 from web.models import (
     Paper,
-    Catalog,
     HpEvent,
     Doi,
     Mission,
@@ -138,17 +137,6 @@ class TestPaper:
 
 
 class TestModels:
-    @pytest.mark.skip(reason="Waiting for db refactoring")
-    def test_catalog(self, hpevents_list):
-        """
-        GIVEN HpEvent List and Catalog Model
-        WHEN events are added to catalog
-        THEN verify existence and integrity
-        """
-        c_in = Catalog()
-        for event in hpevents_list:
-            c_in.hp_events.append(event)
-        assert len(c_in.hp_events) == 3
 
     @pytest.mark.skip(reason="Waiting for db refactoring")
     def test_hpevent_from_dict(self, hpevent_dict_for_test_new):
