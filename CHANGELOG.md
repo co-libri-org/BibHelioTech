@@ -26,9 +26,10 @@ Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
 
-## [1.7.3-bulk] - 2025-03-01 - Fixes before bulk import
+## [1.7.3] - 2025-03-10 - Fixes before bulk import
 #### New
 - bulk add from subset
+- add sutime server
 
 #### Changed
 - catalog file header
