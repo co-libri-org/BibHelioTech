@@ -202,13 +202,14 @@ class HpEvent(db.Model):
     mission_id = db.Column(db.Integer, db.ForeignKey("mission.id"))
     instrument_id = db.Column(db.Integer, db.ForeignKey("instrument.id"))
     region_id = db.Column(db.Integer, db.ForeignKey("region.id"))
+    conf = db.Column(db.Float)
+    d = db.Column(db.Integer)
+    r = db.Column(db.Integer)
+
     paper = db.relationship("Paper", back_populates="hp_events")
     mission = db.relationship("Mission", back_populates="hp_events")
     instrument = db.relationship("Instrument", back_populates="hp_events")
     region = db.relationship("Region", back_populates="hp_events")
-    conf = db.Column(db.Float)
-    d = db.Column(db.Integer)
-    r = db.Column(db.Integer)
 
     # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
     def __init__(
