@@ -583,7 +583,14 @@ def events_del(paper_id, all_events):
 @cli.command("events_refresh")
 @click.option("-p", "--paper-id")
 @click.option("-s", "--cat-status", type=click.Choice(['new', 'update']))
-def events_refresh(paper_id=None, cat_status=None):
+@click.option(
+    "-f",
+    "--force-update",
+    is_flag=True,
+    default=False,
+    help="force catalog update when events already exists"
+)
+def events_refresh(paper_id=None, cat_status=None, force_update=False):
     """Reparse catalogs txt files for all or one paper
 
     \b
@@ -617,10 +624,10 @@ def events_refresh(paper_id=None, cat_status=None):
     total_elapsed = datetime.now() - datetime.now()
     for i, _p in enumerate(papers):
         then = datetime.now()
-        _p.push_cat(force=False)
+        _p.push_cat(force=force_update)
         elapsed = datetime.now() - then
         total_elapsed += elapsed
-        print(f"Updated catalog {i}/{len(papers)} in {elapsed}", end="\r")
+        print(f"Updated catalog {i+1}/{len(papers)} in {elapsed}", end="\r")
         # events.extend(_p.get_events())
     db.session.commit()
 
