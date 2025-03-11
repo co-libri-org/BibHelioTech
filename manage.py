@@ -252,6 +252,36 @@ def paper_add(istex_dir):
     istexdir_to_db(istex_dir, current_app.config["WEB_UPLOAD_DIR"])
 
 
+@cli.command("papers_add_from_datadir")
+def papers_add_from_datadir():
+    """Add all papers already contained in data directory"""
+    data_dir = current_app.config["WEB_UPLOAD_DIR"]
+    search_path = os.path.join(data_dir, "*cleaned")
+    cleaned_files = glob.glob(search_path)
+    for i, cf in enumerate(cleaned_files):
+        print(f"{i+1}/{len(cleaned_files)}", end=" ")
+        json_file = cf.replace("cleaned", "json")
+        if not os.path.isfile(json_file):
+            print("No json", os.path.basename(cf))
+            continue
+
+        # Push paper to db with info from json file
+        istex_struct = istexjson_to_db(json_file, data_dir, skip_if_exists=True)
+        if istex_struct['status'] == 'failed':
+            print('failed', json_file, istex_struct['reason'])
+            continue
+
+        # Set paper's catalog if exists
+        pipe_dir = str(os.path.join(data_dir, istex_struct['istex_id']))
+        cat_search_path = os.path.join(pipe_dir, '*bibheliotech*txt')
+        catalog_file =  glob.glob(cat_search_path)[-1]
+        if os.path.isfile(catalog_file):
+            paper = db.session.get(Paper, istex_struct['paper_id'])
+            paper.set_cat_path(catalog_file)
+        print(istex_struct['istex_id'], istex_struct['status'], end= '\r')
+    print('\n')
+
+
 @cli.command("papers_add_from_subset")
 @click.argument("subset_dir", required=True)
 def papers_add_from_subset(subset_dir):
