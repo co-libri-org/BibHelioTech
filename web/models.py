@@ -498,7 +498,7 @@ class Paper(db.Model):
 
         @return: None
         """
-        db.session.query(HpEvent).filter(HpEvent.doi.has(doi=self.doi)).delete(synchronize_session=False)
+        self.hp_events.clear()
         self.cat_in_db = False
         db.session.commit()
 

@@ -617,7 +617,6 @@ def events_refresh(paper_id=None, cat_status=None):
     total_elapsed = datetime.now() - datetime.now()
     for i, _p in enumerate(papers):
         then = datetime.now()
-        _p.clean_events()
         _p.push_cat(force=False)
         elapsed = datetime.now() - then
         total_elapsed += elapsed
