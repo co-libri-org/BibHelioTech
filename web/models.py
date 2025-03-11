@@ -60,13 +60,13 @@ def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
     with open(istex_file_path) as _ifd:
         file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
 
-def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", skip_if_exists=True):
+def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=False):
     """
     Read the json meta-info file of an istex directory
         get the article file
         add to db for late usage
 
-    :param skip_if_exists:
+    :param force_update:
     :param json_file:
     :param upload_dir:
     :param file_ext:
@@ -92,11 +92,12 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", skip_if_exists=Tr
     if paper is None:
         istex_struct['status'] = "added"
     elif  type(paper) == Paper:
-        if skip_if_exists:
-            istex_struct['status'] = "skipped"
-            return istex_struct
-        else:
+        if force_update:
             istex_struct['status'] = "updated"
+        else:
+            istex_struct['status'] = "skipped"
+            istex_struct['paper_id'] = paper.id
+            return istex_struct
 
     istex_file_path = json_file.replace("json", file_ext)
     istex_file_name = os.path.basename(istex_file_path)
@@ -109,7 +110,7 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", skip_if_exists=Tr
             return {'status': 'failed', 'reason': str(e)}
     return istex_struct
 
-def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
+def file_to_db(file_stream, filename, upload_dir, istex_struct=None, force_copy=False):
     """
     Push Paper to db from a stream
     (update Paper's content if exists)
@@ -117,6 +118,7 @@ def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
         - write content to destination file
         - add new Paper object to db
 
+    :param force_copy:
     :param upload_dir:
     :param istex_struct:
     :param file_stream the file content
@@ -127,8 +129,13 @@ def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
     if not os.path.isdir(upload_dir):
         os.makedirs(upload_dir)
     _file_path = os.path.join(upload_dir, filename)
-    with open(_file_path, "wb") as _fd:
-        _fd.write(file_stream)
+
+    # Copy filestream unless file already exists or force
+    if not os.path.isfile(_file_path) or force_copy:
+        with open(_file_path, "wb") as _fd:
+            _fd.write(file_stream)
+    else:
+        print(f"                                                  {filename} exists, dont overwrite", end="\r")
     if not os.path.isfile(_file_path):
         raise FilePathError(f"There was an error on {filename} copy")
     _guessed_filetype = filetype.guess(_file_path)

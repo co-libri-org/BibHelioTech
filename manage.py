@@ -253,7 +253,14 @@ def paper_add(istex_dir):
 
 
 @cli.command("papers_add_from_datadir")
-def papers_add_from_datadir():
+@click.option(
+    "-f",
+    "--force-update",
+    is_flag=True,
+    default=False,
+    help="force db update when paper already exists"
+)
+def papers_add_from_datadir(force_update):
     """Add all papers already contained in data directory"""
     data_dir = current_app.config["WEB_UPLOAD_DIR"]
     search_path = os.path.join(data_dir, "*cleaned")
@@ -266,7 +273,7 @@ def papers_add_from_datadir():
             continue
 
         # Push paper to db with info from json file
-        istex_struct = istexjson_to_db(json_file, data_dir, skip_if_exists=True)
+        istex_struct = istexjson_to_db(json_file, data_dir, force_update=force_update)
         if istex_struct['status'] == 'failed':
             print('failed', json_file, istex_struct['reason'])
             continue
@@ -288,7 +295,7 @@ def papers_add_from_subset(subset_dir):
     """Add all papers contained in an istex subset directory"""
     json_files = glob.glob(os.path.join(subset_dir, "*/*json"))
     for i, j in enumerate(json_files):
-        istex_struct = istexjson_to_db(j, current_app.config["WEB_UPLOAD_DIR"], skip_if_exists=True)
+        istex_struct = istexjson_to_db(j, current_app.config["WEB_UPLOAD_DIR"], force_update=True)
         print(f"{i}/{len(json_files)}", end=" ")
         if istex_struct['status'] == 'failed':
             print(j, istex_struct['reason'])
