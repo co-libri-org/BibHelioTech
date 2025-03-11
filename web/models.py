@@ -169,11 +169,8 @@ def file_to_db(file_stream, filename, upload_dir, istex_struct=None, force_copy=
     return paper.id
 
 
-# TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
 def catfile_to_db(catfile):
     """Save a catalog file's content to db as hpevents
-
-    TODO: MODEL should move to Paper or Catalog method
 
     :return: nothing
     """
@@ -211,7 +208,7 @@ class HpEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.DateTime)
     stop_date = db.Column(db.DateTime)
-    paper_id = db.Column(db.Integer, db.ForeignKey("paper.id"))
+    paper_id = db.Column(db.Integer, db.ForeignKey("paper.id"), nullable=False)
     mission_id = db.Column(db.Integer, db.ForeignKey("mission.id"))
     instrument_id = db.Column(db.Integer, db.ForeignKey("instrument.id"))
     region_id = db.Column(db.Integer, db.ForeignKey("region.id"))
@@ -464,11 +461,16 @@ class Paper(db.Model):
         if self.cat_in_db and not force:
             return
         # only if there is a file
-        if self.has_cat:
-            self.clean_events()
-            catfile_to_db(self.cat_path)
-            self.cat_in_db = True
-        db.session.add(self)
+        if not self.has_cat:
+            return
+        self.clean_events()
+        for hpevent_dict in catfile_to_rows(self.cat_path):
+            # skip if row is empty
+            if not hpevent_dict:
+                continue
+            hpevent = HpEvent(**hpevent_dict)
+            self.hp_events.append(hpevent)
+        self.cat_in_db = True
         db.session.commit()
 
     def istex_update(self):
