@@ -74,18 +74,21 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", skip_if_exists=Tr
     """
     if not os.path.isfile(json_file):
         raise FilePathError(f"Couldn't find {json_file}")
+
     with open(json_file) as json_fp:
         try:
             document_json = json.load(json_fp)
         except JSONDecodeError:
             print(f"Couldn't read json file {json_file}")
             return None
+
     try:
         istex_struct = istex_doc_to_struct(document_json)
     except KeyError as e:
         return {'status': 'failed', 'reason': str(e)}
 
     paper = Paper.query.filter_by(istex_id = istex_struct['istex_id'] ).one_or_none()
+
     if paper is None:
         istex_struct['status'] = "added"
     elif  type(paper) == Paper:
@@ -94,19 +97,22 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", skip_if_exists=Tr
             return istex_struct
         else:
             istex_struct['status'] = "updated"
+
     istex_file_path = json_file.replace("json", file_ext)
     istex_file_name = os.path.basename(istex_file_path)
+
     with open(istex_file_path) as _ifd:
         try:
-            file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+            paper_id = file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+            istex_struct['paper_id'] = paper_id
         except DbError as e:
             return {'status': 'failed', 'reason': str(e)}
     return istex_struct
 
 def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
     """
-    Push Paper to db from a pdf stream
-    (update Paper's pdf content if exists)
+    Push Paper to db from a stream
+    (update Paper's content if exists)
 
         - write content to destination file
         - add new Paper object to db
