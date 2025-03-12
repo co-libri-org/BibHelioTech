@@ -6,7 +6,7 @@ from flask import current_app
 
 from selenium import webdriver
 
-from web.models import file_to_db
+from web.models import stream_to_db
 
 
 @pytest.fixture(scope="module")
@@ -37,6 +37,6 @@ def paperslist_for_tests(tmp_path_factory, db):
     )
     for pdf_file in pdf_list:
         with open(pdf_file, "rb", buffering=0) as fp:
-            _id = file_to_db(fp.read(), os.path.basename(pdf_file), tmp_path_factory.mktemp("upload_dir"))
+            _id = stream_to_db(fp.read(), os.path.basename(pdf_file), tmp_path_factory.mktemp("upload_dir"))
             papers_ids.append(_id)
     yield papers_ids

@@ -31,7 +31,7 @@ from bht.pipeline import PipeStep
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType, istexid_to_paper, file_to_db
+from web.models import Paper, Mission, HpEvent, BhtFileType, istexid_to_paper, stream_to_db
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -546,7 +546,7 @@ def upload_from_url():
         )
     filestream, filename = get_file_from_url(file_url)
     try:
-        paper_id = file_to_db(filestream, filename, upload_dir=current_app.config["WEB_UPLOAD_DIR"])
+        paper_id = stream_to_db(filestream, filename, upload_dir=current_app.config["WEB_UPLOAD_DIR"])
     except FilePathError:
         flash(f"Error adding {filename} to db", "error")
     else:
@@ -568,7 +568,7 @@ def istex_upload_id():
         )
     fs, filename, istex_struct = get_file_from_id(istex_id, doc_type)
     try:
-        paper_id = file_to_db(fs, filename, current_app.config["WEB_UPLOAD_DIR"], istex_struct)
+        paper_id = stream_to_db(fs, filename, current_app.config["WEB_UPLOAD_DIR"], istex_struct)
     except FilePathError:
         return Response(
             f"There was an error on {filename} copy",
@@ -601,7 +601,7 @@ def upload():
         flash("No selected file")
     elif file and allowed_file(file.filename):
         try:
-            file_to_db(file.read(), file.filename, upload_dir=current_app.config["WEB_UPLOAD_DIR"])
+            stream_to_db(file.read(), file.filename, upload_dir=current_app.config["WEB_UPLOAD_DIR"])
         except FilePathError:
             flash(f"Error adding {file.filename} to db", "error")
         else:

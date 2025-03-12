@@ -58,7 +58,7 @@ def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
     istex_struct = istex_doc_to_struct(document_json)
 
     with open(istex_file_path) as _ifd:
-        file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+        stream_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
 
 def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=False):
     """
@@ -104,13 +104,13 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=Fals
 
     with open(istex_file_path) as _ifd:
         try:
-            paper_id = file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+            paper_id = stream_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
             istex_struct['paper_id'] = paper_id
         except DbError as e:
             return {'status': 'failed', 'reason': str(e)}
     return istex_struct
 
-def file_to_db(file_stream, filename, upload_dir, istex_struct=None, force_copy=False):
+def stream_to_db(file_stream, filename, upload_dir, istex_struct=None, force_copy=False):
     """
     Push Paper to db from a stream
     (update Paper's content if exists)
