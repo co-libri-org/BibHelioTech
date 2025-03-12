@@ -235,7 +235,7 @@ class HpEvent(db.Model):
     ):
         self.start_date = datetime.datetime.strptime(start_time, DATE_FORMAT)
         self.stop_date = datetime.datetime.strptime(stop_time, DATE_FORMAT)
-        self.set_doi(doi)
+        # self.set_doi(doi)
         self.set_mission(sats)
         self.set_instrument(insts)
         self.set_region(regs)
@@ -244,7 +244,7 @@ class HpEvent(db.Model):
         self.set_r(r)
 
     def __repr__(self, full=False):
-        full_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission.name:20}\
+        full_str = f"{self.start_date} {self.stop_date} {self.paper.doi} {self.mission.name:20}\
         {self.instrument.name} D:{self.d} R:{self.r} Conf:{self.conf}"
         short_str = f"{self.start_date} {self.stop_date} {self.mission.name:20}\
          {self.d:>4} {self.r:>4} {self.conf:>6}"
@@ -278,7 +278,7 @@ class HpEvent(db.Model):
             "stop_date": datetime.datetime.strftime(self.stop_date, DATE_FORMAT)[0:-3],
             "duration": duration,
             "duration_str": duration_str,
-            "doi": self.doi.doi,
+            "doi": self.paper.doi,
             "mission": self.mission.name,
             "instrument": self.instrument.name,
             "region": self.region.name,
@@ -289,12 +289,12 @@ class HpEvent(db.Model):
         # normalize conf index on the whole database
         r_dict["nconf"] = 1.0 - r_dict["conf"] / max_conf
         return r_dict
-
-    def set_doi(self, doi_str):
-        doi = db.session.query(Doi).filter_by(doi=doi_str).one_or_none()
-        if doi is None:
-            doi = Doi(doi=doi_str)
-        self.doi = doi
+    #
+    # def set_doi(self, doi_str):
+    #     doi = db.session.query(Doi).filter_by(doi=doi_str).one_or_none()
+    #     if doi is None:
+    #         doi = Doi(doi=doi_str)
+    #     self.doi = doi
 
     def set_mission(self, mission_str):
         mission = db.session.query(Mission).filter_by(name=mission_str).one_or_none()
