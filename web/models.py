@@ -456,10 +456,10 @@ class Paper(db.Model):
         """Insert our catalog's events to db"""
         # Quit if already added and not force
         if self.cat_in_db and not force:
-            return
+            return 0
         # only if there is a file
         if not self.has_cat:
-            return
+            return 0
         self.clean_events()
         for hpevent_dict in catfile_to_rows(self.cat_path):
             # skip if row is empty
@@ -469,6 +469,7 @@ class Paper(db.Model):
             self.hp_events.append(hpevent)
         self.cat_in_db = True
         db.session.commit()
+        return(len(self.hp_events))
 
     def istex_update(self):
         """From our ids, update meta information from istex api"""
