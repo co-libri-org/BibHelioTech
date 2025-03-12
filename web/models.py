@@ -507,7 +507,7 @@ class Paper(db.Model):
     def get_events(self):
         """
         Return the list of events with same doi as our's
-        #TODO: should be better to set a new relationship between HpEvent and Paper models
+        #TODO: DB_REFACTOR should be better to set a new relationship between HpEvent and Paper models
         @return:  list of HpEvents
         """
         found_events = []
@@ -520,6 +520,7 @@ class Paper(db.Model):
     def pipeline_version(self):
         """
         Read from catalog file and grab pipeline version number
+        TODO: DB_REFACTOR better set  at self.push_cat(), and better filter from cat_path
         """
         import re
 
