@@ -281,7 +281,10 @@ def papers_add_from_datadir(force_update):
         # Set paper's catalog if exists
         pipe_dir = str(os.path.join(data_dir, istex_struct['istex_id']))
         cat_search_path = os.path.join(pipe_dir, '*bibheliotech*txt')
-        catalog_file =  glob.glob(cat_search_path)[-1]
+        try:
+            catalog_file =  glob.glob(cat_search_path)[-1]
+        except IndexError:
+            catalog_file = "no_catalog_found"
         if os.path.isfile(catalog_file):
             paper = db.session.get(Paper, istex_struct['paper_id'])
             paper.set_cat_path(catalog_file)
