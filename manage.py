@@ -625,17 +625,19 @@ def events_refresh(paper_id=None, cat_status=None, force_update=False):
     # then parse catalogs again
     from datetime import datetime
     total_elapsed = datetime.now() - datetime.now()
+    total_events = 0
     for i, _p in enumerate(papers):
         then = datetime.now()
-        _p.push_cat(force=force_update)
+        num_events = _p.push_cat(force=force_update)
         elapsed = datetime.now() - then
         total_elapsed += elapsed
-        print(f"Updated catalog {i+1}/{len(papers)} in {elapsed}", end="\r")
+        total_events += num_events
+        print(f"Updated {num_events:3d}/{total_events:6d} events in catalog {i+1}/{len(papers)} in {elapsed}", end="\r")
         # events.extend(_p.get_events())
     db.session.commit()
 
     #print(f"\nUpdated {len(events)} events from {len(papers)} papers in {total_elapsed}")
-    print(f"\nUpdated {len(papers)} catalogs in {total_elapsed}")
+    print(f"\n\nUpdated {total_events} events over {len(papers)} catalogs in {total_elapsed}\n")
 
 
 
