@@ -1023,10 +1023,10 @@ def api_catalogs_txt():
         events_ids = request.json.get("events-ids")
         mission_id = None
     else: #request.method=="GET":
-        events_ids = request.args.get("events_ids")
+        events_ids = request.args.get("events_ids").split(",")
         mission_id = request.args.get("mission_id")
     if events_ids:
-        events_ids = events_ids.split(",")
+        # events_ids = events_ids.split(",")
         today = datetime.now().strftime("%Y%M%dT%H%m%S")
         catalog_name = f"web_request_{today}"
         # Optimised sqlalchemy request
