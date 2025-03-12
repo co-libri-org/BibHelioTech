@@ -60,6 +60,7 @@ def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
     with open(istex_file_path) as _ifd:
         stream_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
 
+
 def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=False):
     """
     Read the json meta-info file of an istex directory
@@ -87,11 +88,11 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=Fals
     except KeyError as e:
         return {'status': 'failed', 'reason': str(e)}
 
-    paper = Paper.query.filter_by(istex_id = istex_struct['istex_id'] ).one_or_none()
+    paper = Paper.query.filter_by(istex_id=istex_struct['istex_id']).one_or_none()
 
     if paper is None:
         istex_struct['status'] = "added"
-    elif  type(paper) == Paper:
+    elif type(paper) == Paper:
         if force_update:
             istex_struct['status'] = "updated"
         else:
@@ -109,6 +110,7 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=Fals
         except DbError as e:
             return {'status': 'failed', 'reason': str(e)}
     return istex_struct
+
 
 def stream_to_db(file_stream, filename, upload_dir, istex_struct=None, force_copy=False):
     """
@@ -200,10 +202,6 @@ class TaskStruct:
         self.cat_is_processed = paper.has_cat and paper.cat_in_db
 
 
-
-
-
-
 class HpEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.DateTime)
@@ -253,7 +251,6 @@ class HpEvent(db.Model):
         r_str = full_str if full else short_str
 
         return r_str
-
 
     @classmethod
     def get_events_dicts(cls, events):
@@ -393,8 +390,8 @@ class Paper(db.Model):
     def __str__(self):
         title = f"'{self.title[:20]}...'"
         status = f"'{self.task_status}'"
-        started = str(self.task_started)[:19] if self.task_started is not None else "-"*19
-        stopped = str(self.task_stopped)[:19] if self.task_stopped is not None else "-"*19
+        started = str(self.task_started)[:19] if self.task_started is not None else "-" * 19
+        stopped = str(self.task_stopped)[:19] if self.task_stopped is not None else "-" * 19
         return (f"<Paper #{self.id:<5}"
                 f" {title:25}"
                 f" has_cat:{self.has_cat:2}"
@@ -491,7 +488,6 @@ class Paper(db.Model):
         self.publication_date = istex_struct["pub_date"]
         db.session.add(self)
         db.session.commit()
-
 
     def clean_events(self):
         """
