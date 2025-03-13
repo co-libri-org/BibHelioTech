@@ -307,10 +307,17 @@ def db_stats():
 #  - - - - - - - - - - - - - - - R O U T E S - F I X - B U L K 2 - - - - - - - - - - - - - - - - - - - #
 @bp.route('/fix_bulk_2')
 def fix_bulk_2():
+    year = request.args.get("year")
+
+    begin_year = 2024
+    end_year = 2025
+    if year is not None:
+        begin_year = int(year)
+        end_year = int(year)
 
     # Unwanted dates
-    start_date = datetime(2024, 1, 1)
-    end_date = datetime(2025, 12, 31, 23, 59, 59)
+    start_date = datetime(begin_year, 1, 1)
+    end_date = datetime(end_year, 12, 31, 23, 59, 59)
 
     # Build request
     query = (
@@ -331,7 +338,8 @@ def reload_data():
     global cached_events
     global cached_nconf
     cached_events, cached_nconf = load_data()
-    return 'Data loaded'
+    flash(f"Statistic data reloaded", "info")
+    return redirect(url_for("main.statistics"))
 
 
 @bp.route("/")
