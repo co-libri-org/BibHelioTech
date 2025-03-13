@@ -307,12 +307,22 @@ def db_stats():
 #  - - - - - - - - - - - - - - - R O U T E S - F I X - B U L K 2 - - - - - - - - - - - - - - - - - - - #
 @bp.route('/fix_bulk_2')
 def fix_bulk_2():
-    papers_ids = [89, 128, 491, 535, 1038, 1156, 1285, 1455, 1985, 2006, 2536, 2822, 3710, 3865, 3899,
-                  3945, 4036, 4277, 4443, 4836, 4959, 5355, 5373, 5394, 5563, 5655, 5728, 5859, 6329,
-                  6793, 7078, 7415, 7476, 8192, 8280, 8561, 8631, 8841, 9100, 9389, 9740, 10031, 10264,
-                  11330, 11373]
-    papers = Paper.query.filter(Paper.id.in_(papers_ids)).all()
-    return render_template("fix_bulk_2.html", papers = papers)
+
+    # Unwanted dates
+    start_date = datetime(2024, 1, 1)
+    end_date = datetime(2025, 12, 31, 23, 59, 59)
+
+    # Build request
+    query = (
+        db.session.query(Paper)
+        .join(HpEvent, Paper.id == HpEvent.paper_id)  # Jointure sur paper_id
+        .filter(HpEvent.start_date.between(start_date, end_date))  # Filtrage sur start_date
+        .distinct()  # Évite les doublons
+    )
+
+    # Run
+    _papers = query.all()
+    return render_template("fix_bulk_2.html", papers = _papers)
 
 
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
