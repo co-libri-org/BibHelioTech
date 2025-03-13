@@ -38,7 +38,9 @@
             <a href="{{url_for('main.paper_show', paper_id=p.id)}}" title="{{p.title}}">
                 {{p.title | truncate(80)}}
             </a>
-            <b>{{p.get_events()|length}}</b>
+            </td>
+        <td>
+            <b>{{p.hp_events|length}}</b>
         </td>
 
     </tr>

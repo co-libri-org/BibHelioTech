@@ -535,7 +535,7 @@ def events_list(mission_id=None, paper_id=None):
         events = HpEvent.query.filter_by(mission_id=mission_id)
     elif paper_id:
         paper = db.session.get(Paper, paper_id)
-        events = paper.get_events()
+        events = paper.hp_events
     else:
         events = HpEvent.query.all()
 

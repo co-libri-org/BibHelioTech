@@ -260,7 +260,7 @@ first_request = True
 def load_data():
     _cached_events = []
     for p in Paper.query.all():
-        _cached_events.append({"paper_id": p.id, "num_events": len(p.get_events())})
+        _cached_events.append({"paper_id": p.id, "num_events": len(p.hp_events)})
     _cached_nconf = HpEvent.get_events_dicts(HpEvent.query.all())
     return _cached_events, _cached_nconf
 
@@ -809,7 +809,7 @@ def events(ref_name, ref_id):
         found_events = all_events
     elif ref_name == "paper":
         paper = Paper.query.get(ref_id)
-        found_events = paper.get_events()
+        found_events = paper.hp_events
 
     # translate events to dict list
     events_dict_list = HpEvent.get_events_dicts(found_events)
