@@ -412,7 +412,13 @@ class RawDumper:
         self.name = name
         self.dump_step = 0
 
-    def dump_to_raw(self, struct_to_dump, message, folder):
+    def dump_to_raw(self, struct_to_dump, message, folder, start_step=None):
+
+        if start_step is not None:
+            try:
+                self.dump_step = int(start_step)
+            except ValueError:
+                raise ToolsValueError(f"Dump_step has to be an integer '{start_step}' is not")
         # append version and message to struct for later reading
         entitled_struct = copy.deepcopy(struct_to_dump)
         entitled_struct.append(
@@ -423,13 +429,12 @@ class RawDumper:
             }
         )
         with open(
-            os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
+                os.path.join(folder, f"raw{self.dump_step}_{self.name}.json"), "w"
         ) as raw_file:
             raw_file.write(json.dumps(entitled_struct, sort_keys=True, indent=4))
         self.dump_step = self.dump_step + 1
 
 
-# TODO: shall we move this to models.paper ?
 class StepLighter:
 
     def __init__(self, ocr_dir, step_num=0, enlight_mode="sutime"):
@@ -527,7 +532,7 @@ def convert_long_chars(content=None):
     for i in range(len(_content)):
         c = _content[i]
         if len(c.encode("utf-8")) >= 4:
-            _content = _content[:i] + "AA" + _content[i + 1 :]
+            _content = _content[:i] + "AA" + _content[i + 1:]
     return _content
 
 
