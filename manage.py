@@ -266,7 +266,7 @@ def papers_add_from_datadir(force_update):
     search_path = os.path.join(data_dir, "*cleaned")
     cleaned_files = glob.glob(search_path)
     for i, cf in enumerate(cleaned_files):
-        print(f"{i+1}/{len(cleaned_files)}", end=" ")
+        print(f"{i + 1}/{len(cleaned_files)}", end=" ")
         json_file = cf.replace("cleaned", "json")
         if not os.path.isfile(json_file):
             print("No json", os.path.basename(cf))
@@ -282,13 +282,13 @@ def papers_add_from_datadir(force_update):
         pipe_dir = str(os.path.join(data_dir, istex_struct['istex_id']))
         cat_search_path = os.path.join(pipe_dir, '*bibheliotech*txt')
         try:
-            catalog_file =  glob.glob(cat_search_path)[-1]
+            catalog_file = glob.glob(cat_search_path)[-1]
         except IndexError:
             catalog_file = "no_catalog_found"
         if os.path.isfile(catalog_file):
             paper = db.session.get(Paper, istex_struct['paper_id'])
             paper.set_cat_path(catalog_file)
-        print(istex_struct['istex_id'], istex_struct['status'], end= '\r')
+        print(istex_struct['istex_id'], istex_struct['status'], end='\r')
     print('\n')
 
 
@@ -397,6 +397,7 @@ def paper_web_status_cmd(paper_id):
             print(data)
         else:
             print(f"Failed to get status for paper {paper_id}. Status code: {status_code}")
+
 
 @cli.command("paper_web_status_all")
 def paper_web_status_all():
@@ -584,16 +585,19 @@ def events_del(paper_id, all_events):
 
 
 @cli.command("events_refresh")
-@click.option("-p", "--paper-id")
-@click.option("-s", "--cat-status", type=click.Choice(['new', 'update']))
-@click.option(
-    "-f",
-    "--force-update",
-    is_flag=True,
-    default=False,
-    help="force catalog update when events already exists"
-)
-def events_refresh(paper_id=None, cat_status=None, force_update=False):
+@click.option("-p", "--paper-id",
+              help="paper's id to refresh events from")
+@click.option("-i", "--ids-file",
+              help="file path with papers' ids to refresh")
+@click.option("-s", "--cat-status",
+              type=click.Choice(['new', 'update']),
+              help="select catalog status")
+@click.option("-f", "--force-update",
+              is_flag=True,
+              default=False,
+              help="force catalog update when events already exists"
+              )
+def events_refresh(paper_id=None, ids_file=None, cat_status=None, force_update=False):
     """Reparse catalogs txt files for all or one paper
 
     \b
@@ -611,7 +615,15 @@ def events_refresh(paper_id=None, cat_status=None, force_update=False):
     papers = []
     if paper_id:
         papers.append(db.session.get(Paper, paper_id))
-    elif cat_status=='new':
+    elif ids_file:
+        if not os.path.exists(ids_file):
+            print(f"file {ids_file} doesnt exist")
+            return
+        with open(ids_file) as pi:
+            ids = [int(line.strip()) for line in pi.readlines() if line.strip().isdigit()]
+        print(ids)
+        papers = Paper.query.filter(Paper.id.in_(ids)).all()
+    elif cat_status == 'new':
         papers = Paper.query.filter(Paper.cat_path != '',
                                     Paper.cat_in_db == False).all()
     elif cat_status == 'update':
@@ -621,6 +633,12 @@ def events_refresh(paper_id=None, cat_status=None, force_update=False):
         papers = Paper.query.all()
 
     # events = []
+
+    if len(papers) == 0:
+        print("No paper to update")
+        return
+    else:
+        print(f"Updating {len(papers)} papers" )
 
     # then parse catalogs again
     from datetime import datetime
@@ -632,13 +650,13 @@ def events_refresh(paper_id=None, cat_status=None, force_update=False):
         elapsed = datetime.now() - then
         total_elapsed += elapsed
         total_events += num_events
-        print(f"Updated {num_events:3d}/{total_events:6d} events in catalog {i+1}/{len(papers)} in {elapsed}", end="\r")
+        print(f"Updated {num_events:3d}/{total_events:6d} events in catalog {i + 1}/{len(papers)} in {elapsed}",
+              end="\r")
         # events.extend(_p.get_events())
     db.session.commit()
 
-    #print(f"\nUpdated {len(events)} events from {len(papers)} papers in {total_elapsed}")
+    # print(f"\nUpdated {len(events)} events from {len(papers)} papers in {total_elapsed}")
     print(f"\n\nUpdated {total_events} events over {len(papers)} catalogs in {total_elapsed}\n")
-
 
 
 @cli.command("catalog_feed")
@@ -655,7 +673,7 @@ def status_update():
                                 Paper.task_status != 'finished').all()
     for p in papers:
         print(f"Setting paper {p.id} task status to 'finished' ")
-        p.task_status='finished'
+        p.task_status = 'finished'
         db.session.add(p)
     db.session.commit()
 
