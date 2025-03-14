@@ -469,7 +469,7 @@ class Paper(db.Model):
             self.hp_events.append(hpevent)
         self.cat_in_db = True
         db.session.commit()
-        return(len(self.hp_events))
+        return len(self.hp_events)
 
     def istex_update(self):
         """From our ids, update meta information from istex api"""
@@ -497,7 +497,7 @@ class Paper(db.Model):
 
         @return: None
         """
-        self.hp_events.clear()
+        HpEvent.query.filter_by(paper_id=self.id).delete(synchronize_session=False)
         self.cat_in_db = False
         db.session.commit()
 
