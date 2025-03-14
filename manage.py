@@ -361,16 +361,7 @@ def paper_run(paper_id):
     except Exception as e:
         print(f"Couldn't run on paper #{paper_id}")
 
-
-@cli.command("paper_web_run")
-@click.argument("paper_id", required=True)
-@click.option(
-    "--start-step",
-    type=click.Choice([ps.name for ps in list(PipeStep)], case_sensitive=True),
-    default=PipeStep.MKDIR.name,
-    help="Optional start step"
-)
-def paper_web_run_cmd(paper_id, start_step):
+def paper_web_run(paper_id, start_step):
     """Run the latest pipeline on that paper's article through web/RQ"""
     start_step = PipeStep[start_step]
     with current_app.test_request_context(), current_app.app_context():
@@ -382,6 +373,18 @@ def paper_web_run_cmd(paper_id, start_step):
             print(data)
         else:
             print(f"Failed to process paper {paper_id}. Status code: {status_code}")
+
+@cli.command("paper_web_run")
+@click.argument("paper_id", required=True)
+@click.option(
+    "--start-step",
+    type=click.Choice([ps.name for ps in list(PipeStep)], case_sensitive=True),
+    default=PipeStep.MKDIR.name,
+    help="Optional start step"
+)
+def paper_web_run_cmd(paper_id, start_step):
+    """Run the latest pipeline on that paper's article through web/RQ"""
+    paper_web_run(paper_id, start_step)
 
 
 @cli.command("paper_web_status")
