@@ -31,7 +31,7 @@ from bht.pipeline import PipeStep
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType, istexid_to_paper, file_to_db
+from web.models import Paper, Mission, HpEvent, BhtFileType, istexid_to_paper, stream_to_db
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -64,6 +64,8 @@ class StatusResponse:
     cat_is_processed: Optional[bool] = False
     message: str = ""
     alt_message: str = ""
+    task_started: datetime = ""
+    task_stopped: datetime = ""
 
     def __post_init__(self):
         if self.status not in ["success", "failed"]:
@@ -544,7 +546,7 @@ def upload_from_url():
         )
     filestream, filename = get_file_from_url(file_url)
     try:
-        paper_id = file_to_db(filestream, filename, upload_dir=current_app.config["WEB_UPLOAD_DIR"])
+        paper_id = stream_to_db(filestream, filename, upload_dir=current_app.config["WEB_UPLOAD_DIR"])
     except FilePathError:
         flash(f"Error adding {filename} to db", "error")
     else:
@@ -566,7 +568,7 @@ def istex_upload_id():
         )
     fs, filename, istex_struct = get_file_from_id(istex_id, doc_type)
     try:
-        paper_id = file_to_db(fs, filename, current_app.config["WEB_UPLOAD_DIR"], istex_struct)
+        paper_id = stream_to_db(fs, filename, current_app.config["WEB_UPLOAD_DIR"], istex_struct)
     except FilePathError:
         return Response(
             f"There was an error on {filename} copy",
@@ -599,7 +601,7 @@ def upload():
         flash("No selected file")
     elif file and allowed_file(file.filename):
         try:
-            file_to_db(file.read(), file.filename, upload_dir=current_app.config["WEB_UPLOAD_DIR"])
+            stream_to_db(file.read(), file.filename, upload_dir=current_app.config["WEB_UPLOAD_DIR"])
         except FilePathError:
             flash(f"Error adding {file.filename} to db", "error")
         else:
@@ -737,8 +739,8 @@ def istex():
         return render_template("istex.html", istex_list=[])
 
     # else method == "POST", deal with url or ark arguments
-    istex_req_url = request.form["istex_req_url"]
-    ark_istex = request.form["ark_istex"]
+    istex_req_url = request.form.get("istex_req_url")
+    ark_istex = request.form.get("ark_istex")
     if istex_req_url:
         # just go on with it
         pass
@@ -1021,13 +1023,12 @@ def api_catalogs_txt():
         events_ids = request.json.get("events-ids")
         mission_id = None
     else: #request.method=="GET":
-        events_ids = request.args.get("events_ids")
-        events_ids = events_ids.split(",")
+        events_ids = request.args.get("events_ids").split(",")
         mission_id = request.args.get("mission_id")
     if events_ids:
+        # events_ids = events_ids.split(",")
         today = datetime.now().strftime("%Y%M%dT%H%m%S")
         catalog_name = f"web_request_{today}"
-        events_list = []
         # Optimised sqlalchemy request
         events_list = HpEvent.query.filter(HpEvent.id.in_(events_ids)).all()
         events_dict_list = HpEvent.get_events_dicts(events_list)
@@ -1043,8 +1044,10 @@ def api_catalogs_txt():
             HpEvent.query.filter_by(mission_id=mission_id).order_by(HpEvent.start_date)
         )
     else:
-        flash(f"Missing arguments 'mission_id' or 'events_ids[]' empty", "warning")
-        return redirect(url_for("main.catalogs"))
+        return Response(
+            f"Missing arguments 'mission_id' or 'events_ids[]' empty",
+            status=400,
+        )
     catalog_txt_stream = rows_to_catstring(
         events_dict_list,
         catalog_name,

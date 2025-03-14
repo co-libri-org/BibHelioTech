@@ -1,4 +1,13 @@
 
+prerequisites
+
+    source venv/bin/activate
+    pip install -r requirements-tests.txt
+
+basic run
+
+    pytest
+    
 
 alternately, run with ini file
 
@@ -10,6 +19,12 @@ or use the whole docker stack
     cp docker-compose.override.yml-dist docker-compose.override.yml
     docker compose up -d --build
     docker compose run web pytest
+
+very manually 
+
+    docker run --rm --name redis_for_bulk -d -p 6380:6379 redis
+    python manage.py run_worker
+    uvicorn fastapi_sutime:app --host 0.0.0.0 --port 8000  
 
 you may want to skip slow tests:
 
@@ -24,7 +39,7 @@ or allow ISTEX tests if you have IP authorisation
     BHT_SKIP_ISTEX=False python -m pytest tests
     # defaults to False, that is it wont run istex tests
 
-or allow Selenium functionnal tests if available
+or allow Selenium functional tests if available
 
     BHT_SKIP_SELENIUM=False python -m pytest tests
     # defaults to False, that is it wont run selenium tests

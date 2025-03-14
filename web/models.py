@@ -58,15 +58,16 @@ def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
     istex_struct = istex_doc_to_struct(document_json)
 
     with open(istex_file_path) as _ifd:
-        file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+        stream_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
 
-def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", skip_if_exists=True):
+
+def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=False):
     """
     Read the json meta-info file of an istex directory
         get the article file
         add to db for late usage
 
-    :param skip_if_exists:
+    :param force_update:
     :param json_file:
     :param upload_dir:
     :param file_ext:
@@ -74,43 +75,52 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", skip_if_exists=Tr
     """
     if not os.path.isfile(json_file):
         raise FilePathError(f"Couldn't find {json_file}")
+
     with open(json_file) as json_fp:
         try:
             document_json = json.load(json_fp)
         except JSONDecodeError:
             print(f"Couldn't read json file {json_file}")
             return None
+
     try:
         istex_struct = istex_doc_to_struct(document_json)
     except KeyError as e:
         return {'status': 'failed', 'reason': str(e)}
 
-    paper = Paper.query.filter_by(istex_id = istex_struct['istex_id'] ).one_or_none()
+    paper = Paper.query.filter_by(istex_id=istex_struct['istex_id']).one_or_none()
+
     if paper is None:
         istex_struct['status'] = "added"
-    elif  type(paper) == Paper:
-        if skip_if_exists:
-            istex_struct['status'] = "skipped"
-            return istex_struct
-        else:
+    elif type(paper) == Paper:
+        if force_update:
             istex_struct['status'] = "updated"
+        else:
+            istex_struct['status'] = "skipped"
+            istex_struct['paper_id'] = paper.id
+            return istex_struct
+
     istex_file_path = json_file.replace("json", file_ext)
     istex_file_name = os.path.basename(istex_file_path)
+
     with open(istex_file_path) as _ifd:
         try:
-            file_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+            paper_id = stream_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+            istex_struct['paper_id'] = paper_id
         except DbError as e:
             return {'status': 'failed', 'reason': str(e)}
     return istex_struct
 
-def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
+
+def stream_to_db(file_stream, filename, upload_dir, istex_struct=None, force_copy=False):
     """
-    Push Paper to db from a pdf stream
-    (update Paper's pdf content if exists)
+    Push Paper to db from a stream
+    (update Paper's content if exists)
 
         - write content to destination file
         - add new Paper object to db
 
+    :param force_copy:
     :param upload_dir:
     :param istex_struct:
     :param file_stream the file content
@@ -121,8 +131,13 @@ def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
     if not os.path.isdir(upload_dir):
         os.makedirs(upload_dir)
     _file_path = os.path.join(upload_dir, filename)
-    with open(_file_path, "wb") as _fd:
-        _fd.write(file_stream)
+
+    # Copy filestream unless file already exists or force
+    if not os.path.isfile(_file_path) or force_copy:
+        with open(_file_path, "wb") as _fd:
+            _fd.write(file_stream)
+    else:
+        print(f"                                                  {filename} exists, dont overwrite", end="\r")
     if not os.path.isfile(_file_path):
         raise FilePathError(f"There was an error on {filename} copy")
     _guessed_filetype = filetype.guess(_file_path)
@@ -156,11 +171,8 @@ def file_to_db(file_stream, filename, upload_dir, istex_struct=None):
     return paper.id
 
 
-# TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
 def catfile_to_db(catfile):
     """Save a catalog file's content to db as hpevents
-
-    TODO: MODEL should move to Paper or Catalog method
 
     :return: nothing
     """
@@ -190,32 +202,22 @@ class TaskStruct:
         self.cat_is_processed = paper.has_cat and paper.cat_in_db
 
 
-
-
-
-class Catalog(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    hp_events = db.relationship("HpEvent", back_populates="catalog")
-
-
 class HpEvent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.DateTime)
     stop_date = db.Column(db.DateTime)
-    doi_id = db.Column(db.Integer, db.ForeignKey("doi.id"))
+    paper_id = db.Column(db.Integer, db.ForeignKey("paper.id"), nullable=False)
     mission_id = db.Column(db.Integer, db.ForeignKey("mission.id"))
     instrument_id = db.Column(db.Integer, db.ForeignKey("instrument.id"))
     region_id = db.Column(db.Integer, db.ForeignKey("region.id"))
-    doi = db.relationship("Doi", back_populates="hp_events")
-    mission = db.relationship("Mission", back_populates="hp_events")
-    instrument = db.relationship("Instrument", back_populates="hp_events")
-    region = db.relationship("Region", back_populates="hp_events")
     conf = db.Column(db.Float)
     d = db.Column(db.Integer)
     r = db.Column(db.Integer)
 
-    catalog = db.relationship("Catalog", back_populates="hp_events")
-    catalog_id = db.Column(db.Integer, db.ForeignKey("catalog.id"))
+    paper = db.relationship("Paper", back_populates="hp_events")
+    mission = db.relationship("Mission", back_populates="hp_events")
+    instrument = db.relationship("Instrument", back_populates="hp_events")
+    region = db.relationship("Region", back_populates="hp_events")
 
     # TODO: MODEL warning raised because HpEvent not in session when __init__ see test_catfile_to_db
     def __init__(
@@ -233,7 +235,7 @@ class HpEvent(db.Model):
     ):
         self.start_date = datetime.datetime.strptime(start_time, DATE_FORMAT)
         self.stop_date = datetime.datetime.strptime(stop_time, DATE_FORMAT)
-        self.set_doi(doi)
+        # self.set_doi(doi)
         self.set_mission(sats)
         self.set_instrument(insts)
         self.set_region(regs)
@@ -242,14 +244,13 @@ class HpEvent(db.Model):
         self.set_r(r)
 
     def __repr__(self, full=False):
-        full_str = f"{self.start_date} {self.stop_date} {self.doi.doi} {self.mission.name:20}\
+        full_str = f"{self.start_date} {self.stop_date} {self.paper.doi} {self.mission.name:20}\
         {self.instrument.name} D:{self.d} R:{self.r} Conf:{self.conf}"
         short_str = f"{self.start_date} {self.stop_date} {self.mission.name:20}\
          {self.d:>4} {self.r:>4} {self.conf:>6}"
         r_str = full_str if full else short_str
 
         return r_str
-
 
     @classmethod
     def get_events_dicts(cls, events):
@@ -277,7 +278,7 @@ class HpEvent(db.Model):
             "stop_date": datetime.datetime.strftime(self.stop_date, DATE_FORMAT)[0:-3],
             "duration": duration,
             "duration_str": duration_str,
-            "doi": self.doi.doi,
+            "doi": self.paper.doi,
             "mission": self.mission.name,
             "instrument": self.instrument.name,
             "region": self.region.name,
@@ -288,12 +289,12 @@ class HpEvent(db.Model):
         # normalize conf index on the whole database
         r_dict["nconf"] = 1.0 - r_dict["conf"] / max_conf
         return r_dict
-
-    def set_doi(self, doi_str):
-        doi = db.session.query(Doi).filter_by(doi=doi_str).one_or_none()
-        if doi is None:
-            doi = Doi(doi=doi_str)
-        self.doi = doi
+    #
+    # def set_doi(self, doi_str):
+    #     doi = db.session.query(Doi).filter_by(doi=doi_str).one_or_none()
+    #     if doi is None:
+    #         doi = Doi(doi=doi_str)
+    #     self.doi = doi
 
     def set_mission(self, mission_str):
         mission = db.session.query(Mission).filter_by(name=mission_str).one_or_none()
@@ -328,7 +329,6 @@ class HpEvent(db.Model):
 class Doi(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     doi = db.Column(db.String, unique=True, nullable=False)
-    hp_events = db.relationship("HpEvent", back_populates="doi")
 
 
 class Mission(db.Model):
@@ -370,6 +370,8 @@ class Paper(db.Model):
     task_started = db.Column(db.DateTime)
     task_stopped = db.Column(db.DateTime)
 
+    hp_events = db.relationship("HpEvent", back_populates="paper")
+
     def __repr__(self):
         return f"""<Paper #{self.id}
         title:     {self.title}
@@ -388,8 +390,8 @@ class Paper(db.Model):
     def __str__(self):
         title = f"'{self.title[:20]}...'"
         status = f"'{self.task_status}'"
-        started = str(self.task_started)[:19] if self.task_started is not None else "-"*19
-        stopped = str(self.task_stopped)[:19] if self.task_stopped is not None else "-"*19
+        started = str(self.task_started)[:19] if self.task_started is not None else "-" * 19
+        stopped = str(self.task_stopped)[:19] if self.task_stopped is not None else "-" * 19
         return (f"<Paper #{self.id:<5}"
                 f" {title:25}"
                 f" has_cat:{self.has_cat:2}"
@@ -454,14 +456,20 @@ class Paper(db.Model):
         """Insert our catalog's events to db"""
         # Quit if already added and not force
         if self.cat_in_db and not force:
-            return
+            return 0
         # only if there is a file
-        if self.has_cat:
-            self.clean_events()
-            catfile_to_db(self.cat_path)
-            self.cat_in_db = True
-        db.session.add(self)
+        if not self.has_cat:
+            return 0
+        self.clean_events()
+        for hpevent_dict in catfile_to_rows(self.cat_path):
+            # skip if row is empty
+            if not hpevent_dict:
+                continue
+            hpevent = HpEvent(**hpevent_dict)
+            self.hp_events.append(hpevent)
+        self.cat_in_db = True
         db.session.commit()
+        return(len(self.hp_events))
 
     def istex_update(self):
         """From our ids, update meta information from istex api"""
@@ -482,7 +490,6 @@ class Paper(db.Model):
         db.session.add(self)
         db.session.commit()
 
-
     def clean_events(self):
         """
         Remove the list of events with the same DOI as ours.
@@ -490,14 +497,14 @@ class Paper(db.Model):
 
         @return: None
         """
-        db.session.query(HpEvent).filter(HpEvent.doi.has(doi=self.doi)).delete(synchronize_session=False)
+        self.hp_events.clear()
         self.cat_in_db = False
         db.session.commit()
 
     def get_events(self):
         """
         Return the list of events with same doi as our's
-        #TODO: should be better to set a new relationship between HpEvent and Paper models
+        #TODO: DB_REFACTOR should be better to set a new relationship between HpEvent and Paper models
         @return:  list of HpEvents
         """
         found_events = []
@@ -510,6 +517,7 @@ class Paper(db.Model):
     def pipeline_version(self):
         """
         Read from catalog file and grab pipeline version number
+        TODO: DB_REFACTOR better set  at self.push_cat(), and better filter from cat_path
         """
         import re
 

@@ -7,7 +7,7 @@ from flask import current_app
 
 from web import create_app
 from web import db as _db
-from web.models import Paper, HpEvent, BhtFileType, file_to_db
+from web.models import Paper, HpEvent, BhtFileType, stream_to_db
 
 skip_selenium = pytest.mark.skipif(
     os.environ.get("BHT_SKIP_SELENIUM") is not None
@@ -53,9 +53,9 @@ def app():
     _ctx.pop()
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def db(app):
-    """Session-wide test database."""
+    """function-wide test database."""
     # db_file = current_app.config["SQLALCHEMY_DATABASE_URI"].split("sqlite:///")[1]
     # if os.path.exists(db_file):
     #     os.remove(db_file)
@@ -95,7 +95,7 @@ def paper_with_cat(paper_for_test, cat_for_test):
 def paper_for_test(pdf_for_test, tmp_path_factory):
     """Add a paper's pdf to db"""
     with open(pdf_for_test, "rb", buffering=0) as fp:
-        paper_id = file_to_db(fp.readall(), os.path.basename(pdf_for_test), tmp_path_factory.mktemp("upload_dir"))
+        paper_id = stream_to_db(fp.readall(), os.path.basename(pdf_for_test), tmp_path_factory.mktemp("upload_dir"))
     paper = _db.session.get(Paper, paper_id)
     _db.session.add(paper)
     _db.session.commit()
@@ -246,6 +246,19 @@ def hpevent_dict_for_test():
         "mission": "THEMIS-A",
         "instrument": "FGM-ESA",
         "region": "Earth.Magnetosheath",
+    }
+    return hpevent_dict
+
+@pytest.fixture(scope="module")
+def hpevent_dict_for_test_new():
+    hpevent_dict = {
+        "start_time": "2007-07-16T19:50:00.000",
+        "stop_time": "2007-07-16T20:18:00.000",
+        "doi": "https://doi.org/10.1029/2010JA015404",
+        "sats": "THEMIS-A",
+        "insts": "FGM-ESA",
+        "regs": "Earth.Magnetosheath",
+        "conf": 1000
     }
     return hpevent_dict
 

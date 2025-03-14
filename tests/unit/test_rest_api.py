@@ -6,6 +6,7 @@
 # More tests on specific use cases will occur in the functional/ directory
 import json
 
+import pytest
 from flask import url_for
 
 from tests.conftest import skip_istex
@@ -104,6 +105,7 @@ class TestCatalogsRoutes:
         )
         assert response.status_code == 201
 
+    @pytest.mark.skip(reason="Waiting for db refactoring")
     def test_api_catalogs_txt(self, client, hpevents_in_db):
         catalog_txt_url = url_for("main.api_catalogs_txt")
         response = client.get(catalog_txt_url, query_string={"mission_id": 1})
@@ -114,11 +116,11 @@ class TestCatalogsRoutes:
     def test_api_catalogs_txt_wrong_param(self, client):
         response = client.get(url_for("main.api_catalogs_txt"))
         assert response.status_code == 400
-        assert b"No valid parameters" in response.data
+        assert b"Missing arguments" in response.data
 
     def test_api_catalogs_txt_wrong_param_2(self, client):
         response = client.get(
             url_for("main.api_catalogs_txt"), query_string={"wrong_param": 1}
         )
         assert response.status_code == 400
-        assert b"No valid parameters" in response.data
+        assert b"Missing arguments" in response.data

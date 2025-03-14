@@ -109,7 +109,9 @@ def dict_to_dict(event_dict, columns=None):
         lowered_dict[k.lower()] = v
 
     # keep only given columns
-    _r_dict = {k: lowered_dict[k] for k in columns}
+    from pprint import pprint
+    pprint(lowered_dict)
+    _r_dict = {k: lowered_dict[k] for k in columns if k in lowered_dict.keys()}
 
     return _r_dict
 

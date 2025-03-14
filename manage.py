@@ -252,13 +252,53 @@ def paper_add(istex_dir):
     istexdir_to_db(istex_dir, current_app.config["WEB_UPLOAD_DIR"])
 
 
+@cli.command("papers_add_from_datadir")
+@click.option(
+    "-f",
+    "--force-update",
+    is_flag=True,
+    default=False,
+    help="force db update when paper already exists"
+)
+def papers_add_from_datadir(force_update):
+    """Add all papers already contained in data directory"""
+    data_dir = current_app.config["WEB_UPLOAD_DIR"]
+    search_path = os.path.join(data_dir, "*cleaned")
+    cleaned_files = glob.glob(search_path)
+    for i, cf in enumerate(cleaned_files):
+        print(f"{i+1}/{len(cleaned_files)}", end=" ")
+        json_file = cf.replace("cleaned", "json")
+        if not os.path.isfile(json_file):
+            print("No json", os.path.basename(cf))
+            continue
+
+        # Push paper to db with info from json file
+        istex_struct = istexjson_to_db(json_file, data_dir, force_update=force_update)
+        if istex_struct['status'] == 'failed':
+            print('failed', json_file, istex_struct['reason'])
+            continue
+
+        # Set paper's catalog if exists
+        pipe_dir = str(os.path.join(data_dir, istex_struct['istex_id']))
+        cat_search_path = os.path.join(pipe_dir, '*bibheliotech*txt')
+        try:
+            catalog_file =  glob.glob(cat_search_path)[-1]
+        except IndexError:
+            catalog_file = "no_catalog_found"
+        if os.path.isfile(catalog_file):
+            paper = db.session.get(Paper, istex_struct['paper_id'])
+            paper.set_cat_path(catalog_file)
+        print(istex_struct['istex_id'], istex_struct['status'], end= '\r')
+    print('\n')
+
+
 @cli.command("papers_add_from_subset")
 @click.argument("subset_dir", required=True)
 def papers_add_from_subset(subset_dir):
     """Add all papers contained in an istex subset directory"""
     json_files = glob.glob(os.path.join(subset_dir, "*/*json"))
     for i, j in enumerate(json_files):
-        istex_struct = istexjson_to_db(j, current_app.config["WEB_UPLOAD_DIR"], skip_if_exists=True)
+        istex_struct = istexjson_to_db(j, current_app.config["WEB_UPLOAD_DIR"], force_update=True)
         print(f"{i}/{len(json_files)}", end=" ")
         if istex_struct['status'] == 'failed':
             print(j, istex_struct['reason'])
@@ -546,7 +586,14 @@ def events_del(paper_id, all_events):
 @cli.command("events_refresh")
 @click.option("-p", "--paper-id")
 @click.option("-s", "--cat-status", type=click.Choice(['new', 'update']))
-def events_refresh(paper_id=None, cat_status=None):
+@click.option(
+    "-f",
+    "--force-update",
+    is_flag=True,
+    default=False,
+    help="force catalog update when events already exists"
+)
+def events_refresh(paper_id=None, cat_status=None, force_update=False):
     """Reparse catalogs txt files for all or one paper
 
     \b
@@ -578,18 +625,19 @@ def events_refresh(paper_id=None, cat_status=None):
     # then parse catalogs again
     from datetime import datetime
     total_elapsed = datetime.now() - datetime.now()
+    total_events = 0
     for i, _p in enumerate(papers):
         then = datetime.now()
-        _p.clean_events()
-        _p.push_cat(force=False)
+        num_events = _p.push_cat(force=force_update)
         elapsed = datetime.now() - then
         total_elapsed += elapsed
-        print(f"Updated catalog {i}/{len(papers)} in {elapsed}", end="\r")
+        total_events += num_events
+        print(f"Updated {num_events:3d}/{total_events:6d} events in catalog {i+1}/{len(papers)} in {elapsed}", end="\r")
         # events.extend(_p.get_events())
     db.session.commit()
 
     #print(f"\nUpdated {len(events)} events from {len(papers)} papers in {total_elapsed}")
-    print(f"\nUpdated {len(papers)} catalogs in {total_elapsed}")
+    print(f"\n\nUpdated {total_events} events over {len(papers)} catalogs in {total_elapsed}\n")
 
 
 

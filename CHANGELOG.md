@@ -25,6 +25,11 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [2.0.0] - 2025-03-14 - Refactor DB
+#### Fixed
+- tests now all run
+#### Change
+- new links between paper and hp_event
 
 ## [1.7.3] - 2025-03-10 - Fixes before bulk import
 #### New

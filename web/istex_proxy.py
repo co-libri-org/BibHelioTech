@@ -5,7 +5,7 @@ import re
 import requests
 from requests import RequestException
 
-from web.errors import IstexParamError
+from web.errors import IstexParamError, IstexError
 
 ISTEX_BASE_URL = "https://api.istex.fr/"
 
@@ -110,13 +110,15 @@ def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
     """
     Build url to request file from Istex for pdf, txt, or any supported doctype.
 
-    @param doc_type: the type of document to fetch
     @param istex_id:  the istex document id.
+    @param doc_type: the type of document to fetch
     @return: a dict struct with http url, and other doc attributes
     """
     doc_url = f"{ISTEX_BASE_URL}document/{istex_id}"
     r = requests.get(url=doc_url)
     document_json = r.json()
+    if document_json.get('_error') is not None:
+        raise IstexError(document_json['_error'])
     # Default url value
     _url = None
     # Iterate all fulltext elements till we found what we want

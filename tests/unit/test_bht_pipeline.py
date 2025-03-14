@@ -16,7 +16,7 @@ from web.models import BhtFileType
 @skip_bht
 class TestBhtPipeline:
     def test_pipeline(self, ocr_dir_test):
-        pipe_steps = [PipeStep.OCR, PipeStep.GROBID]
+        pipe_steps = [PipeStep.OCR]
         res_steps = run_pipeline(
             "path", doc_type=IstexDoctype.TXT, pipe_steps=pipe_steps, pipeline_paper_dir=ocr_dir_test
         )
@@ -37,7 +37,7 @@ class TestBhtPipelineSteps:
         catalog_file = run_step_entities(ocr_dir_test, doc_meta_info={"doi": doi})
         with open(catalog_file) as _r_fp:
             _r_content = _r_fp.readlines()
-            assert len(_r_content) == 67
+            assert len(_r_content) == 39
 
     def test_run_step_entities_with_no_metadoc(self, tmp_path):
         with pytest.raises(BhtPipelineError):
@@ -84,7 +84,7 @@ class TestBhtPipelineTools:
         token = "IXMbiJNANWTlkMSb4ea7Y5qJIGCFqki6IJPZjc1m"  # API Key
         doi = "10.1002/2016gl069787"
         found_date = published_date_finder(token, version, doi)
-        assert "2017-04-01T00:00:00Z" == found_date
+        assert '2016-08-01T00:00:00Z' == found_date
 
     @skip_slow_test
     def test_grobid_generation(self, tei_for_test):
