@@ -386,6 +386,22 @@ def paper_web_run_cmd(paper_id, start_step):
     """Run the latest pipeline on that paper's article through web/RQ"""
     paper_web_run(paper_id, start_step)
 
+@cli.command("papers_web_run")
+@click.option("-i", "--ids-file",
+              help="file path with papers' ids to refresh")
+@click.option(
+    "--start-step",
+    type=click.Choice([ps.name for ps in list(PipeStep)], case_sensitive=True),
+    default=PipeStep.MKDIR.name,
+    help="Optional start step"
+)
+def papers_web_run_cmd(ids_file, start_step):
+    """Run the latest pipeline on that paper's article through web/RQ"""
+    with open(ids_file) as pi:
+        ids = [int(line.strip()) for line in pi.readlines() if line.strip().isdigit()]
+    for i in ids:
+        paper_web_run(i, start_step)
+
 
 @cli.command("paper_web_status")
 @click.argument("paper_id", required=True)
@@ -624,7 +640,6 @@ def events_refresh(paper_id=None, ids_file=None, cat_status=None, force_update=F
             return
         with open(ids_file) as pi:
             ids = [int(line.strip()) for line in pi.readlines() if line.strip().isdigit()]
-        print(ids)
         papers = Paper.query.filter(Paper.id.in_(ids)).all()
     elif cat_status == 'new':
         papers = Paper.query.filter(Paper.cat_path != '',
