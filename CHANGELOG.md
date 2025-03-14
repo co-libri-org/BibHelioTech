@@ -25,7 +25,7 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [2.0.0-bulk] - 2025-03-xx - Refactor DB
+## [2.0.0] - 2025-03-14 - Refactor DB
 #### Fixed
 - tests now all run
 #### Change
