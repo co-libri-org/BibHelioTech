@@ -11,6 +11,8 @@ from rq import Worker
 from flask import current_app, url_for
 from flask_migrate import upgrade
 from flask.cli import FlaskGroup
+from rq.exceptions import NoSuchJobError
+from rq.job import Job
 
 from bht.databank_reader import DataBank, DataBankSheet
 from bht.pipeline import PipeStep
@@ -421,7 +423,7 @@ def paper_web_status_cmd(paper_id):
 @cli.command("paper_web_status_all")
 def paper_web_status_all():
     """Trigger a status api GET on started or queued papers
-    so there task status is updated
+        so their task status is updated
     """
     from web.main.routes import bht_status
     from datetime import datetime
@@ -437,6 +439,38 @@ def paper_web_status_all():
             with current_app.test_request_context(), current_app.app_context():
                 response, status_code = bht_status(paper_id=p.id)
                 # print(response.json)
+
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    default=False,
+    help="Only show status, dont reset",
+)
+@cli.command("papers_status_reset")
+def papers_status_reset(dry_run):
+    """ Request rq on queued or started papers,
+        update Paper.status in db by response
+    """
+
+    papers = Paper.query.filter(Paper.task_status.in_(['queued', 'started'])).all()
+
+    for  i, paper in enumerate( papers):
+        print(f"Paper {paper.id:<6} {i:4}/{len(papers)}", end = " ")
+        task_id = paper.task_id
+        try:
+            job = Job.fetch(
+                task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
+            )
+            task_status = job.get_status(refresh=True).value
+            if dry_run:
+                print(f"task_status: {task_status}")
+        except NoSuchJobError:
+            if dry_run:
+                print(f"status to reset")
+            else:
+                print(f"reset status")
+                paper.set_task_status("")
+    print()
 
 
 @cli.command("paper_run")
