@@ -5,12 +5,8 @@ from zoneinfo import ZoneInfo
 
 import dateutil.parser as parser
 import pandas as pd
-import redis
 import requests
 
-from rq import Queue
-from rq.exceptions import NoSuchJobError
-from rq.job import Job
 
 from sqlalchemy import func
 
@@ -30,7 +26,7 @@ from bht.errors import BhtCsvError
 from bht.pipeline import PipeStep
 from tools import StepLighter
 from . import bp
-from web import db
+from web import db, task_queue, redis_conn
 from web.models import Paper, Mission, HpEvent, BhtFileType, istexid_to_paper, stream_to_db
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
@@ -42,6 +38,8 @@ from web.istex_proxy import (
     ark_to_istex_url,
 )
 from ..errors import IstexError, WebError, FilePathError
+
+
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -666,9 +664,12 @@ def bht_status(paper_id):
         # task_status is in ["queued", "started"] but can change before next if
 
         task_id = paper.task_id
+        from rq.exceptions import NoSuchJobError
+        from redis.connection import ConnectionError
         try:
+            from rq.job import Job
             job = Job.fetch(
-                task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
+                task_id, connection=current_app.redis_conn
             )
             task_status = job.get_status(refresh=True).value
 
@@ -695,7 +696,7 @@ def bht_status(paper_id):
                                              alt_message=f"No such job id {task_id} was found",
                                              status="failed",
                                              http_code=503)
-        except redis.connection.ConnectionError:
+        except ConnectionError:
             response_object = StatusResponse(paper=paper,
                                              message="Redis Cnx Err",
                                              alt_message="Database to read tasks status is unreachable",
@@ -722,13 +723,12 @@ def bht_run(paper_id, file_type, pipeline_start_step=0):
 
     # TODO: REFACTOR CUT START and delegate to Paper and Task models
     try:
-        q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
-        task = q.enqueue(
+        task = current_app.task_queue.enqueue(
             get_pipe_callback(test=current_app.config["TESTING"]),
             args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type, pipeline_start_step),
             job_timeout=600,
         )
-    except redis.connection.ConnectionError:
+    except ConnectionError:
         response_object = StatusResponse(paper=None,
                                          status="failed",
                                          paper_id=int(paper_id),

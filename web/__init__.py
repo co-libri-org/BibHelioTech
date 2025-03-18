@@ -6,6 +6,12 @@ from bht_config import yml_settings
 from web.app_logger import AppLogger
 from web.config import Config, ProdConfig, DevConfig, TestConfig
 
+import redis
+from rq import Queue
+
+redis_conn = None
+task_queue = None
+
 db = SQLAlchemy()
 mig = Migrate()
 app_logger = AppLogger()
@@ -49,6 +55,12 @@ def create_app(bht_env=None):
         from flask_htpasswd import HtPasswdAuth
 
         HtPasswdAuth(app)
+
+    # Initialize Redis
+    redis_conn  = redis.from_url(app.config["REDIS_URL"])
+    task_queue = Queue(connection=redis_conn)
+    app.redis_conn  = redis_conn
+    app.task_queue = task_queue
 
     # Initialize other plugins
     app_logger.init_app(app)
