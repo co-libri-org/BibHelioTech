@@ -26,7 +26,7 @@ from bht.errors import BhtCsvError
 from bht.pipeline import PipeStep
 from tools import StepLighter
 from . import bp
-from web import db, task_queue, redis_conn
+from web import db
 from web.models import Paper, Mission, HpEvent, BhtFileType, istexid_to_paper, stream_to_db
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
@@ -248,18 +248,6 @@ def add_css_colors_to_templates():
     current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
 
 
-# Optimizing sql requests to be done once only
-cached_events = None
-cached_nconf = None
-
-
-
-def load_data():
-    _cached_events = []
-    for p in Paper.query.all():
-        _cached_events.append({"paper_id": p.id, "num_events": len(p.hp_events)})
-    _cached_nconf = HpEvent.get_events_dicts(HpEvent.query.all())
-    return _cached_events, _cached_nconf
 
 
 first_request = True
@@ -267,9 +255,7 @@ first_request = True
 def initialize_data():
     global first_request
     if first_request:
-        global cached_events
-        global cached_nconf
-        # cached_events, cached_nconf  = load_data()
+        # DO WHATEVER AT FIRST REQUEST
         first_request = False
 
 
@@ -336,13 +322,6 @@ def fix_bulk_2():
 
 
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
-@bp.route('/reload-data')
-def reload_data():
-    global cached_events
-    global cached_nconf
-    cached_events, cached_nconf = load_data()
-    flash(f"Statistic data reloaded", "info")
-    return redirect(url_for("main.statistics"))
 
 
 @bp.route("/")
@@ -950,7 +929,7 @@ def api_papers_events_graph():
     import io
     import base64
 
-    global cached_events
+    cached_events = json.loads(current_app.redis_conn.get('cached_events') or '[]')
 
     df = pd.DataFrame(cached_events)
     df = df[(df['num_events'] >= params['events_min']) & (df['num_events'] <= params['events_max'])]
@@ -987,7 +966,7 @@ def api_nconf_dist_graph():
     import io
     import base64
 
-    global cached_nconf
+    cached_nconf = json.loads(current_app.redis_conn.get('cached_nconf') or '[]')
     df = pd.DataFrame(cached_nconf)
 
     df = df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
