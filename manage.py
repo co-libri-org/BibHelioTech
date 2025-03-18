@@ -2,7 +2,6 @@ import glob
 import os
 import shutil
 import sys
-import time
 
 import click
 import redis
@@ -11,6 +10,8 @@ from rq import Worker
 from flask import current_app, url_for
 from flask_migrate import upgrade
 from flask.cli import FlaskGroup
+from rq.exceptions import NoSuchJobError
+from rq.job import Job
 
 from bht.databank_reader import DataBank, DataBankSheet
 from bht.pipeline import PipeStep
@@ -266,7 +267,7 @@ def papers_add_from_datadir(force_update):
     search_path = os.path.join(data_dir, "*cleaned")
     cleaned_files = glob.glob(search_path)
     for i, cf in enumerate(cleaned_files):
-        print(f"{i+1}/{len(cleaned_files)}", end=" ")
+        print(f"{i + 1}/{len(cleaned_files)}", end=" ")
         json_file = cf.replace("cleaned", "json")
         if not os.path.isfile(json_file):
             print("No json", os.path.basename(cf))
@@ -282,13 +283,13 @@ def papers_add_from_datadir(force_update):
         pipe_dir = str(os.path.join(data_dir, istex_struct['istex_id']))
         cat_search_path = os.path.join(pipe_dir, '*bibheliotech*txt')
         try:
-            catalog_file =  glob.glob(cat_search_path)[-1]
+            catalog_file = glob.glob(cat_search_path)[-1]
         except IndexError:
             catalog_file = "no_catalog_found"
         if os.path.isfile(catalog_file):
             paper = db.session.get(Paper, istex_struct['paper_id'])
             paper.set_cat_path(catalog_file)
-        print(istex_struct['istex_id'], istex_struct['status'], end= '\r')
+        print(istex_struct['istex_id'], istex_struct['status'], end='\r')
     print('\n')
 
 
@@ -361,16 +362,7 @@ def paper_run(paper_id):
     except Exception as e:
         print(f"Couldn't run on paper #{paper_id}")
 
-
-@cli.command("paper_web_run")
-@click.argument("paper_id", required=True)
-@click.option(
-    "--start-step",
-    type=click.Choice([ps.name for ps in list(PipeStep)], case_sensitive=True),
-    default=PipeStep.MKDIR.name,
-    help="Optional start step"
-)
-def paper_web_run_cmd(paper_id, start_step):
+def paper_web_run(paper_id, start_step):
     """Run the latest pipeline on that paper's article through web/RQ"""
     start_step = PipeStep[start_step]
     with current_app.test_request_context(), current_app.app_context():
@@ -382,6 +374,34 @@ def paper_web_run_cmd(paper_id, start_step):
             print(data)
         else:
             print(f"Failed to process paper {paper_id}. Status code: {status_code}")
+
+@cli.command("paper_web_run")
+@click.argument("paper_id", required=True)
+@click.option(
+    "--start-step",
+    type=click.Choice([ps.name for ps in list(PipeStep)], case_sensitive=True),
+    default=PipeStep.MKDIR.name,
+    help="Optional start step"
+)
+def paper_web_run_cmd(paper_id, start_step):
+    """Run the latest pipeline on that paper's article through web/RQ"""
+    paper_web_run(paper_id, start_step)
+
+@cli.command("papers_web_run")
+@click.option("-i", "--ids-file",
+              help="file path with papers' ids to refresh")
+@click.option(
+    "--start-step",
+    type=click.Choice([ps.name for ps in list(PipeStep)], case_sensitive=True),
+    default=PipeStep.MKDIR.name,
+    help="Optional start step"
+)
+def papers_web_run_cmd(ids_file, start_step):
+    """Run the latest pipeline on that paper's article through web/RQ"""
+    with open(ids_file) as pi:
+        ids = [int(line.strip()) for line in pi.readlines() if line.strip().isdigit()]
+    for i in ids:
+        paper_web_run(i, start_step)
 
 
 @cli.command("paper_web_status")
@@ -398,10 +418,11 @@ def paper_web_status_cmd(paper_id):
         else:
             print(f"Failed to get status for paper {paper_id}. Status code: {status_code}")
 
+
 @cli.command("paper_web_status_all")
 def paper_web_status_all():
     """Trigger a status api GET on started or queued papers
-    so there task status is updated
+        so their task status is updated
     """
     from web.main.routes import bht_status
     from datetime import datetime
@@ -417,6 +438,38 @@ def paper_web_status_all():
             with current_app.test_request_context(), current_app.app_context():
                 response, status_code = bht_status(paper_id=p.id)
                 # print(response.json)
+
+@click.option(
+    "--dry-run",
+    is_flag=True,
+    default=False,
+    help="Only show status, dont reset",
+)
+@cli.command("papers_status_reset")
+def papers_status_reset(dry_run):
+    """ Request rq on queued or started papers,
+        update Paper.status in db by response
+    """
+
+    papers = Paper.query.filter(Paper.task_status.in_(['queued', 'started'])).all()
+
+    for  i, paper in enumerate( papers):
+        print(f"Paper {paper.id:<6} {i:4}/{len(papers)}", end = " ")
+        task_id = paper.task_id
+        try:
+            job = Job.fetch(
+                task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
+            )
+            task_status = job.get_status(refresh=True).value
+            if dry_run:
+                print(f"task_status: {task_status}")
+        except NoSuchJobError:
+            if dry_run:
+                print(f"status to reset")
+            else:
+                print(f"reset status")
+                paper.set_task_status("")
+    print()
 
 
 @cli.command("paper_run")
@@ -535,7 +588,7 @@ def events_list(mission_id=None, paper_id=None):
         events = HpEvent.query.filter_by(mission_id=mission_id)
     elif paper_id:
         paper = db.session.get(Paper, paper_id)
-        events = paper.get_events()
+        events = paper.hp_events
     else:
         events = HpEvent.query.all()
 
@@ -554,7 +607,7 @@ def events_list(mission_id=None, paper_id=None):
     "--all-events",
     is_flag=True,
     default=False,
-    help="Don't remove / Force remove (default dry)",
+    help="Erase all events from DataBase",
 )
 def events_del(paper_id, all_events):
     """
@@ -584,16 +637,19 @@ def events_del(paper_id, all_events):
 
 
 @cli.command("events_refresh")
-@click.option("-p", "--paper-id")
-@click.option("-s", "--cat-status", type=click.Choice(['new', 'update']))
-@click.option(
-    "-f",
-    "--force-update",
-    is_flag=True,
-    default=False,
-    help="force catalog update when events already exists"
-)
-def events_refresh(paper_id=None, cat_status=None, force_update=False):
+@click.option("-p", "--paper-id",
+              help="paper's id to refresh events from")
+@click.option("-i", "--ids-file",
+              help="file path with papers' ids to refresh")
+@click.option("-s", "--cat-status",
+              type=click.Choice(['new', 'update']),
+              help="select catalog status")
+@click.option("-f", "--force-update",
+              is_flag=True,
+              default=False,
+              help="force catalog update when events already exists"
+              )
+def events_refresh(paper_id=None, ids_file=None, cat_status=None, force_update=False):
     """Reparse catalogs txt files for all or one paper
 
     \b
@@ -611,7 +667,14 @@ def events_refresh(paper_id=None, cat_status=None, force_update=False):
     papers = []
     if paper_id:
         papers.append(db.session.get(Paper, paper_id))
-    elif cat_status=='new':
+    elif ids_file:
+        if not os.path.exists(ids_file):
+            print(f"file {ids_file} doesnt exist")
+            return
+        with open(ids_file) as pi:
+            ids = [int(line.strip()) for line in pi.readlines() if line.strip().isdigit()]
+        papers = Paper.query.filter(Paper.id.in_(ids)).all()
+    elif cat_status == 'new':
         papers = Paper.query.filter(Paper.cat_path != '',
                                     Paper.cat_in_db == False).all()
     elif cat_status == 'update':
@@ -621,6 +684,12 @@ def events_refresh(paper_id=None, cat_status=None, force_update=False):
         papers = Paper.query.all()
 
     # events = []
+
+    if len(papers) == 0:
+        print("No paper to update")
+        return
+    else:
+        print(f"Updating {len(papers)} papers" )
 
     # then parse catalogs again
     from datetime import datetime
@@ -632,13 +701,13 @@ def events_refresh(paper_id=None, cat_status=None, force_update=False):
         elapsed = datetime.now() - then
         total_elapsed += elapsed
         total_events += num_events
-        print(f"Updated {num_events:3d}/{total_events:6d} events in catalog {i+1}/{len(papers)} in {elapsed}", end="\r")
+        print(f"Updated {num_events:3d}/{total_events:6d} events in catalog {i + 1}/{len(papers)} in {elapsed}",
+              end="\r")
         # events.extend(_p.get_events())
     db.session.commit()
 
-    #print(f"\nUpdated {len(events)} events from {len(papers)} papers in {total_elapsed}")
+    # print(f"\nUpdated {len(events)} events from {len(papers)} papers in {total_elapsed}")
     print(f"\n\nUpdated {total_events} events over {len(papers)} catalogs in {total_elapsed}\n")
-
 
 
 @cli.command("catalog_feed")
@@ -655,7 +724,7 @@ def status_update():
                                 Paper.task_status != 'finished').all()
     for p in papers:
         print(f"Setting paper {p.id} task status to 'finished' ")
-        p.task_status='finished'
+        p.task_status = 'finished'
         db.session.add(p)
     db.session.commit()
 

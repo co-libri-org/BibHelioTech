@@ -25,6 +25,10 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [8.4] - 2025-03-14 - Fix previous year bug
+#### Fixed
+- Also substitute current_year-1
+
 ## [8.3] - 2025-02-07 - Fix errors from bulk
 #### Fixed
 - empty entities bug

@@ -254,24 +254,24 @@ def add_css_colors_to_templates():
 cached_events = None
 cached_nconf = None
 
-first_request = True
+
 
 def load_data():
-    _cached_events=[]
+    _cached_events = []
     for p in Paper.query.all():
-        _cached_events.append({"paper_id": p.id, "num_events": len(p.get_events())})
+        _cached_events.append({"paper_id": p.id, "num_events": len(p.hp_events)})
     _cached_nconf = HpEvent.get_events_dicts(HpEvent.query.all())
     return _cached_events, _cached_nconf
 
 
-
+first_request = True
 @bp.before_request
 def initialize_data():
     global first_request
     if first_request:
         global cached_events
         global cached_nconf
-        #cached_events, cached_nconf  = load_data()
+        # cached_events, cached_nconf  = load_data()
         first_request = False
 
 
@@ -304,13 +304,47 @@ def db_stats():
     return _db_stats
 
 
+#  - - - - - - - - - - - - - - - R O U T E S - F I X - B U L K 2 - - - - - - - - - - - - - - - - - - - #
+@bp.route('/fix_bulk_2')
+def fix_bulk_2():
+    page = request.args.get('page', 0, type=int)
+    year = request.args.get("year")
+
+    begin_year = 2024
+    end_year = 2025
+    if year is not None:
+        begin_year = int(year)
+        end_year = int(year)
+
+    # Unwanted dates
+    start_date = datetime(begin_year, 1, 1)
+    end_date = datetime(end_year, 12, 31, 23, 59, 59)
+
+    # Build request
+    query = (
+        db.session.query(Paper)
+        .join(HpEvent, Paper.id == HpEvent.paper_id)  # Jon on paper_id
+        .filter(HpEvent.start_date.between(start_date, end_date))  # Filter on start_date
+    )
+
+    # Run
+    _papers = query.all()
+    # _papers = query.paginate(
+    #     page=page,
+    #     per_page=current_app.config["PER_PAGE"],
+    #     error_out=False
+    # )
+    return render_template("fix_bulk_2.html", papers = _papers)
+
+
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
 @bp.route('/reload-data')
 def reload_data():
     global cached_events
     global cached_nconf
-    cached_events, cached_nconf  = load_data()
-    return 'Data loaded'
+    cached_events, cached_nconf = load_data()
+    flash(f"Statistic data reloaded", "info")
+    return redirect(url_for("main.statistics"))
 
 
 @bp.route("/")
@@ -798,7 +832,7 @@ def events(ref_name, ref_id):
         found_events = all_events
     elif ref_name == "paper":
         paper = Paper.query.get(ref_id)
-        found_events = paper.get_events()
+        found_events = paper.hp_events
 
     # translate events to dict list
     events_dict_list = HpEvent.get_events_dicts(found_events)
@@ -1077,6 +1111,7 @@ def api_catalogs_txt():
         fd.write(catalog_txt_stream)
         fd.close()
     return send_file(file_path, as_attachment=True, download_name=file_name)
+
 
 @bp.route("/api/push_catalog", methods=["POST"])
 def api_push_catalog():

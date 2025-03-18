@@ -143,7 +143,8 @@ class SUTimeTransformer:
 
     def _get_current_year(self):
         today = datetime.today().strftime("%Y-%m-%d")
-        return re.match("(((^[0-9]{4})|(XXXX))-[0-9]{2}-[0-9]{2}$)", today).group(2)
+        current_year_str = re.match("(((^[0-9]{4})|(XXXX))-[0-9]{2}-[0-9]{2}$)", today).group(2)
+        return int(current_year_str)
 
     def _filter_empty(self):
         self.json_list = [entry for entry in self.json_list if entry]
@@ -208,13 +209,14 @@ class SUTimeTransformer:
         self.json_list = [i for i in self.json_list if i]
 
     def _replace_current_year(self):
+        r_pattern = rf"{self.current_year}|{self.current_year-1}"
         for entry in self.json_list:
             if entry["type"] in ["DATE", "TIME"]:
-                entry["value"] = re.sub(rf"{self.current_year}", "XXXX", entry["value"])
+                entry["value"] = re.sub(r_pattern, "XXXX", entry["value"])
             elif entry["type"] == "DURATION":
                 if "begin" in entry["value"] and "end" in entry["value"]:
                     for key in ["begin", "end"]:
-                        entry["value"][key] = re.sub(rf"{self.current_year}", "XXXX", entry["value"][key])
+                        entry["value"][key] = re.sub(r_pattern, "XXXX", entry["value"][key])
                 else:
                     entry.clear()
         self._filter_empty()
@@ -358,7 +360,8 @@ class SUTimeTransformer:
 
     def transform(self):
         self._remove_unparsable_patterns()
-        raw_dumper.dump_to_raw(self.json_list, "First Filter: Remove Unreadable Patterns", self.ocr_folder)
+        raw_dumper.dump_to_raw(self.json_list, "First Filter: Remove Unreadable Patterns",
+                               self.ocr_folder, start_step=2)
 
         self._remove_today_date()
         raw_dumper.dump_to_raw(self.json_list, "Remove date today", self.ocr_folder)
