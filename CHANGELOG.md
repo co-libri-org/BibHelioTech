@@ -25,6 +25,10 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [2.2.0] - 2025-03-18 - Store globals in REDIS
+### Changed
+- global stats are stored in redis now
+
 ## [2.1.0] - 2025-03-18 - Fix SUTIME current year
 ### Fixed
 - current year in pipeline 8.4

@@ -5,12 +5,8 @@ from zoneinfo import ZoneInfo
 
 import dateutil.parser as parser
 import pandas as pd
-import redis
 import requests
 
-from rq import Queue
-from rq.exceptions import NoSuchJobError
-from rq.job import Job
 
 from sqlalchemy import func
 
@@ -42,6 +38,8 @@ from web.istex_proxy import (
     ark_to_istex_url,
 )
 from ..errors import IstexError, WebError, FilePathError
+
+
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -250,18 +248,6 @@ def add_css_colors_to_templates():
     current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
 
 
-# Optimizing sql requests to be done once only
-cached_events = None
-cached_nconf = None
-
-
-
-def load_data():
-    _cached_events = []
-    for p in Paper.query.all():
-        _cached_events.append({"paper_id": p.id, "num_events": len(p.hp_events)})
-    _cached_nconf = HpEvent.get_events_dicts(HpEvent.query.all())
-    return _cached_events, _cached_nconf
 
 
 first_request = True
@@ -269,9 +255,7 @@ first_request = True
 def initialize_data():
     global first_request
     if first_request:
-        global cached_events
-        global cached_nconf
-        # cached_events, cached_nconf  = load_data()
+        # DO WHATEVER AT FIRST REQUEST
         first_request = False
 
 
@@ -338,13 +322,6 @@ def fix_bulk_2():
 
 
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
-@bp.route('/reload-data')
-def reload_data():
-    global cached_events
-    global cached_nconf
-    cached_events, cached_nconf = load_data()
-    flash(f"Statistic data reloaded", "info")
-    return redirect(url_for("main.statistics"))
 
 
 @bp.route("/")
@@ -666,9 +643,12 @@ def bht_status(paper_id):
         # task_status is in ["queued", "started"] but can change before next if
 
         task_id = paper.task_id
+        from rq.exceptions import NoSuchJobError
+        from redis.connection import ConnectionError
         try:
+            from rq.job import Job
             job = Job.fetch(
-                task_id, connection=redis.from_url(current_app.config["REDIS_URL"])
+                task_id, connection=current_app.redis_conn
             )
             task_status = job.get_status(refresh=True).value
 
@@ -695,7 +675,7 @@ def bht_status(paper_id):
                                              alt_message=f"No such job id {task_id} was found",
                                              status="failed",
                                              http_code=503)
-        except redis.connection.ConnectionError:
+        except ConnectionError:
             response_object = StatusResponse(paper=paper,
                                              message="Redis Cnx Err",
                                              alt_message="Database to read tasks status is unreachable",
@@ -722,13 +702,12 @@ def bht_run(paper_id, file_type, pipeline_start_step=0):
 
     # TODO: REFACTOR CUT START and delegate to Paper and Task models
     try:
-        q = Queue(connection=redis.from_url(current_app.config["REDIS_URL"]))
-        task = q.enqueue(
+        task = current_app.task_queue.enqueue(
             get_pipe_callback(test=current_app.config["TESTING"]),
             args=(paper_id, current_app.config["WEB_UPLOAD_DIR"], file_type, pipeline_start_step),
             job_timeout=600,
         )
-    except redis.connection.ConnectionError:
+    except ConnectionError:
         response_object = StatusResponse(paper=None,
                                          status="failed",
                                          paper_id=int(paper_id),
@@ -950,7 +929,7 @@ def api_papers_events_graph():
     import io
     import base64
 
-    global cached_events
+    cached_events = json.loads(current_app.redis_conn.get('cached_events') or '[]')
 
     df = pd.DataFrame(cached_events)
     df = df[(df['num_events'] >= params['events_min']) & (df['num_events'] <= params['events_max'])]
@@ -987,7 +966,7 @@ def api_nconf_dist_graph():
     import io
     import base64
 
-    global cached_nconf
+    cached_nconf = json.loads(current_app.redis_conn.get('cached_nconf') or '[]')
     df = pd.DataFrame(cached_nconf)
 
     df = df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
