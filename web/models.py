@@ -254,7 +254,7 @@ class HpEvent(db.Model):
 
     @classmethod
     def get_events_dicts(cls, events):
-        """From an event list to a list of event's dict with maxconf calculation once only """
+        """From an event list to a list of event's dict with max_conf calculation once only """
         if not events:
             return []
 
@@ -264,8 +264,8 @@ class HpEvent(db.Model):
         return [event.get_dict(max_conf) for event in events]
 
     def get_dict(self, max_conf):
-        td = self.stop_date - self.start_date
-        duration = datetime.timedelta(days=td.days, seconds=td.seconds, microseconds=0)
+        time_delta = self.stop_date - self.start_date
+        duration = datetime.timedelta(days=time_delta.days, seconds=time_delta.seconds, microseconds=0)
         hours_str = f"{duration}"[-8:]
         days = int(duration.days)
         duration_str = f"{days:4}d {hours_str:>8}"

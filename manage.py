@@ -2,7 +2,6 @@ import glob
 import os
 import shutil
 import sys
-import time
 
 import click
 import redis
@@ -608,7 +607,7 @@ def events_list(mission_id=None, paper_id=None):
     "--all-events",
     is_flag=True,
     default=False,
-    help="Don't remove / Force remove (default dry)",
+    help="Erase all events from DataBase",
 )
 def events_del(paper_id, all_events):
     """
