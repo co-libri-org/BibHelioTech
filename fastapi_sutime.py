@@ -6,7 +6,7 @@ from pydantic import BaseModel
 app = FastAPI()
 
 # Charger SUTime une seule fois au démarrage du serveur
-sutime = SUTime()
+sutime = SUTime(mark_time_ranges=True, include_range=True)
 
 class TextRequest(BaseModel):
     text: str
