@@ -453,6 +453,10 @@ def papers_status_reset(dry_run):
 
     papers = Paper.query.filter(Paper.task_status.in_(['queued', 'started'])).all()
 
+    if len(papers) == 0:
+        print("No 'queued' or 'started' papers")
+        return()
+
     for  i, paper in enumerate( papers):
         print(f"Paper {paper.id:<6} {i:4}/{len(papers)}", end = " ")
         task_id = paper.task_id
