@@ -11,6 +11,7 @@ from flask import current_app, url_for
 from flask_migrate import upgrade
 from flask.cli import FlaskGroup
 from rq.exceptions import NoSuchJobError
+from redis.exceptions import ConnectionError
 from rq.job import Job
 
 from bht.databank_reader import DataBank, DataBankSheet
@@ -458,7 +459,7 @@ def papers_status_reset(dry_run):
         return()
 
     for  i, paper in enumerate( papers):
-        print(f"Paper {paper.id:<6} {i:4}/{len(papers)}", end = " ")
+        print(f"Paper #{paper.id:<6} {i:4}/{len(papers)}", end = " ")
         task_id = paper.task_id
         try:
             job = Job.fetch(
@@ -466,13 +467,20 @@ def papers_status_reset(dry_run):
             )
             task_status = job.get_status(refresh=True).value
             if dry_run:
-                print(f"task_status: {task_status}")
+                print(f"task_status: {task_status}   ", end="\r")
+            else:
+                print(f"no update needed             ", end="\r")
+        except  ConnectionError:
+            print("Redis connexion error")
+            return()
         except NoSuchJobError:
             if dry_run:
-                print(f"status to reset")
+                print(f"status to reset", end="\r")
             else:
-                print(f"reset status")
+                print(f"status reset", end="\r")
                 paper.set_task_status("")
+        except Exception as e:
+            print(f"Another exception {e}", end="\r")
     print()
 
 
