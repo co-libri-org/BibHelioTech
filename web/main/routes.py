@@ -697,8 +697,13 @@ def bht_status(paper_id):
 def bht_run(paper_id, file_type, pipeline_start_step=0):
     found_file = get_paper_file(paper_id, file_type.upper())
     if found_file is None:
-        flash("No file for that paper.")
-        return redirect(url_for("main.papers"))
+        response_object = StatusResponse(paper=None,
+                                         status="failed",
+                                         paper_id=int(paper_id),
+                                         message="Failed, no input file",
+                                         alt_message=f"TXT or PDF file not found for paper {paper_id}",
+                                         http_code=503)
+        return response_object.response
 
     # TODO: REFACTOR CUT START and delegate to Paper and Task models
     try:
