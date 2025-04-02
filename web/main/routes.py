@@ -509,16 +509,17 @@ def enlighted_json():
 @bp.route("/papers")
 def papers():
     requested_status = request.args.get('requested_status', None)
+    valid_states = ['finished', 'queued', 'started', 'failed']
+    requestable_states = valid_states + ["undefined", None]
 
-    if requested_status not in ["queued", "started", "finished", "failed", "undefined", None]:
+    if requested_status not in requestable_states:
         flash(f"Status {requested_status} is not valid", "warning")
         return redirect(url_for("main.papers"))
 
-    # make some statistics by pipeline job status
+    # Make some statistics by pipeline job status
     state_counts = db.session.query(Paper.task_status, func.count(Paper.id)).group_by(Paper.task_status).all()
 
-    # Add the 'undefined' state
-    valid_states = ['finished', 'queued', 'started', 'failed']
+    # Add the 'undefined' state to stat dict
     state_dict = {state: count for state, count in state_counts if state in valid_states}
     undefined_count = sum(count for state, count in state_counts if state not in valid_states)
     state_dict['undefined'] = undefined_count
@@ -527,17 +528,22 @@ def papers():
             continue
         state_dict[state] = 0
 
-    # Transform to a list of dicts
+    # Transform into a list of dicts
     state_stats = [{'status': k, 'tag': k, 'value': state_dict[k]} for k in valid_states]
     state_stats.append({'status': 'undefined', 'tag': 'not run', 'value': state_dict['undefined']})
 
-    # get all uploaded pdf stored in db
-    # papers_list = db.session.query(Paper).all()
+
+    # Now search for papers by status
     page = request.args.get('page', 1, type=int)
-    if requested_status is not None:
+    if requested_status in valid_states:
         _query = Paper.query.filter_by(task_status=requested_status)
-    else:
+    elif requested_status is None:
         _query = Paper.query
+    else:
+        _query = Paper.query.filter(
+            (~Paper.task_status.in_(valid_states)) | (Paper.task_status.is_(None))
+        )
+
     _papers = _query.paginate(
         page=page,
         per_page=current_app.config["PER_PAGE"],
