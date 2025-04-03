@@ -164,10 +164,11 @@ def paper_update(paper_id, cat_path):
 
 @cli.command("paper_show")
 @click.argument("paper_id", required=True)
-def paper_show(paper_id):
+@click.option("--long", is_flag=True, default=False, help="Show long version of paper details")
+def paper_show(paper_id, long):
     """Display paper's content by id"""
     p = db.session.get(Paper, paper_id)
-    print(p)
+    print(repr(p) if long else str(p))
 
 
 @cli.command("raws_clean")
