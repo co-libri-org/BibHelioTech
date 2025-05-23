@@ -25,6 +25,11 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [2.1.0] - 2025-04-03 - Fix Sutime Instanciation
+### Fixed
+- Sutime instance options
+- Exception catching
+
 ## [2.1.0] - 2025-03-18 - Store globals in REDIS
 ### Changed
 - global stats are stored in redis now
