@@ -11,6 +11,7 @@ from flask import current_app, url_for
 from flask_migrate import upgrade
 from flask.cli import FlaskGroup
 from rq.exceptions import NoSuchJobError
+from redis.exceptions import ConnectionError
 from rq.job import Job
 
 from bht.databank_reader import DataBank, DataBankSheet
@@ -163,10 +164,11 @@ def paper_update(paper_id, cat_path):
 
 @cli.command("paper_show")
 @click.argument("paper_id", required=True)
-def paper_show(paper_id):
+@click.option("--long", is_flag=True, default=False, help="Show long version of paper details")
+def paper_show(paper_id, long):
     """Display paper's content by id"""
     p = db.session.get(Paper, paper_id)
-    print(p)
+    print(repr(p) if long else str(p))
 
 
 @cli.command("raws_clean")
@@ -453,8 +455,12 @@ def papers_status_reset(dry_run):
 
     papers = Paper.query.filter(Paper.task_status.in_(['queued', 'started'])).all()
 
+    if len(papers) == 0:
+        print("No 'queued' or 'started' papers")
+        return()
+
     for  i, paper in enumerate( papers):
-        print(f"Paper {paper.id:<6} {i:4}/{len(papers)}", end = " ")
+        print(f"Paper #{paper.id:<6} {i:4}/{len(papers)}", end = " ")
         task_id = paper.task_id
         try:
             job = Job.fetch(
@@ -462,13 +468,20 @@ def papers_status_reset(dry_run):
             )
             task_status = job.get_status(refresh=True).value
             if dry_run:
-                print(f"task_status: {task_status}")
+                print(f"task_status: {task_status}   ", end="\r")
+            else:
+                print(f"no update needed             ", end="\r")
+        except  ConnectionError:
+            print("Redis connexion error")
+            return()
         except NoSuchJobError:
             if dry_run:
-                print(f"status to reset")
+                print(f"status to reset", end="\r")
             else:
-                print(f"reset status")
+                print(f"status reset", end="\r")
                 paper.set_task_status("")
+        except Exception as e:
+            print(f"Another exception {e}", end="\r")
     print()
 
 

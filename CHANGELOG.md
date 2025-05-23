@@ -25,11 +25,16 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [2.2.0] - 2025-03-18 - Store globals in REDIS
+## [2.1.1] - 2025-04-03 - Fix Sutime Instantiation
+### Fixed
+- Sutime instance options
+- Exception catching
+
+## [2.1.0] - 2025-03-18 - Store globals in REDIS
 ### Changed
 - global stats are stored in redis now
 
-## [2.1.0] - 2025-03-18 - Fix SUTIME current year
+## [2.0.1] - 2025-03-18 - Fix SUTIME current year
 ### Fixed
 - current year in pipeline 8.4
 ### Changed
@@ -44,7 +49,7 @@ Only major refactoring improvements or functional changes should be noted.
 #### Change
 - new links between paper and hp_event
 
-## [1.7.3] - 2025-03-10 - Fixes before bulk import
+## [1.7.3] - 2025-03-10 - Add FASTAPI Sutime
 #### New
 - bulk add from subset
 - add sutime server
