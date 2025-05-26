@@ -1,11 +1,10 @@
-# fastapi_sutime.py
 from fastapi import FastAPI
 from sutime import SUTime
 from pydantic import BaseModel
 
 app = FastAPI()
 
-# Charger SUTime une seule fois au démarrage du serveur
+# Load SUTime once only, at server start
 sutime = SUTime(mark_time_ranges=True, include_range=True)
 
 class TextRequest(BaseModel):
@@ -13,6 +12,6 @@ class TextRequest(BaseModel):
 
 @app.post("/parse")
 def parse_text(request: TextRequest):
-    """Analyse un texte avec SUTime"""
+    """Text analysis with SUTime"""
     result = sutime.parse(request.text)
     return result

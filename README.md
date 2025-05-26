@@ -82,7 +82,7 @@ more over, for bulk purpose, run a Sutime Server
 
 but if multi processes needed
 
-   gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 fastapi_sutime:app
+    gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 fastapi_sutime:app
 
 
 
