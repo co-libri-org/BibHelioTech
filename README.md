@@ -80,6 +80,10 @@ more over, for bulk purpose, run a Sutime Server
 
     uvicorn fastapi_sutime:app --host 0.0.0.0 --port 8001
 
+but if multi processes needed
+
+   gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 fastapi_sutime:app
+
 
 
 ## Docker Install
@@ -351,6 +355,23 @@ Any VERSION change is git tagged with `v` prepended. In the later example, that 
 
     git tag -a v0.3.0.pre-5 -m "v0.3.0.pre-5 Release"
     git push origin --tags
+
+## Manual run (without docker)
+### Installation and requirements
+
+1. copy resources/*dist config file to there destination and edit
+2. install Sutime java dependencies
+3. install pip dependencies
+3. insert english-custom.txt to java pip package
+
+### Run each component
+
+1. run nginx
+2. run redis
+3. run flask app for web
+4. run (1,n) flask worker(s) with click cli interface
+5. run fastapi embedding Sutime
+
 
 ## Manual installation (the old way)
 
