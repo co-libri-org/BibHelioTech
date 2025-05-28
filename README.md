@@ -37,8 +37,12 @@ Make sure to fulfill any dependency first:
 
 ### Install sutime dependencies and update language file
 
+on the linux system
+
     sudo apt install -y openjdk-8-jdk openjdk-8-jre maven zip
     sudo update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+on the pip venv
 
     mvn dependency:copy-dependencies -DoutputDirectory=./jars -f $(python -c 'import importlib.util; import pathlib; print(pathlib.Path(importlib.util.find_spec("sutime").origin).parent / "pom.xml")')
     cd ./resources
@@ -78,9 +82,13 @@ run with pipeline capabilities:
 
 more over, for bulk purpose, run a Sutime Server
 
-    uvicorn fastapi_sutime:app --host 0.0.0.0 --port 8001
+    uvicorn fastapi_sutime:app --host 0.0.0.0 --port 8000
 
-but if multi processes needed
+but if multi processes is needed
+
+    uvicorn --workers 4 fastapi_sutime:app --host 0.0.0.0 --port 8000
+
+or for high load production server
 
     gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 fastapi_sutime:app
 
