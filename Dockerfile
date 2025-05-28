@@ -39,8 +39,8 @@ RUN zip -u $VIRTUAL_ENV/lib/python3.12/site-packages/sutime/jars/stanford-corenl
 
 WORKDIR /home/bibheliotech/BibHelioTech
 COPY . .
-RUN cp ./resources/grobid-client-config.json-dist ./grobid-client-config.json &&\
-    cp ./resources/bht-config.yml-dist ./bht-config.yml
+#RUN cp ./resources/grobid-client-config.json-dist ./grobid-client-config.json &&\
+RUN cp ./resources/bht-config.yml-dist ./bht-config.yml
 
 
 FROM bht-prod AS bht-test
