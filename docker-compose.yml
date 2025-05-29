@@ -12,26 +12,9 @@ services:
         mem_limit: 32g
         mem_reservation: 16g
         depends_on:
-          grobid:
-            condition: service_healthy
           redis:
             condition: service_started
  
-    grobid:
-      image: lfoppiano/grobid:0.7.2
-      cpus: 8
-      mem_limit: 32g
-      mem_reservation: 16g
-      # thank you to:
-      # https://github.com/elifesciences/sciencebeam-orchester/blob/develop/docker-compose.yml#L27-L34
-      healthcheck:
-        test: [
-          "CMD", "bash", "-c",
-          "while ! timeout 1 bash -c 'echo > /dev/tcp/localhost/8070'; do sleep 10; done"
-        ]
-        interval: 10s
-        timeout: 10s
-        retries: 5
 
     worker:
       image: bht/web:${WEB_TAG:-latest}
