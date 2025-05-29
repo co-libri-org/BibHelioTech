@@ -1,7 +1,13 @@
 # Minimize the docker context size to only needed files
 .git/
+.gitignore
+.github/
+DATA/
+
 venv/
-DATA
-DATA/Papers
-DATA/Papers-dist
-DATA/web-upload
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
