@@ -33,14 +33,9 @@ class AppLogger:
             _app.logger.addHandler(stream_handler)
 
         if _app.config.get("LOG_TO_FILE") and _app.config["LOG_TO_FILE"]:
-            # log INFO to file
-            if not os.path.exists("logs"):
-                os.mkdir("logs")
-            log_filename = _app.config.get("LOG_FILENAME")
-            if not log_filename:
-                log_filename = "logfile.log"
+            log_filename = _app.config.get("BHT_LOGFILE_PATH")
             file_handler = RotatingFileHandler(
-                os.path.join("logs", log_filename), maxBytes=10240, backupCount=10
+                log_filename, maxBytes=10240, backupCount=10
             )
             file_handler.setFormatter(
                 logging.Formatter(

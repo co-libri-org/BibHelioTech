@@ -16,8 +16,18 @@ if not os.path.isfile(config_filepath):
 with open(config_filepath) as f:
     yml_settings = yaml.safe_load(f)
 
+if not os.path.isabs(yml_settings["BHT_DATA_DIR"]):
+    yml_settings["BHT_DATA_DIR"] = os.path.join(
+        BHT_ROOT_DIR, yml_settings["BHT_DATA_DIR"]
+    )
+
 yml_settings["BHT_ROOT_DIR"] = BHT_ROOT_DIR
-yml_settings["BHT_LOGFILE_PATH"] = os.path.join(BHT_ROOT_DIR, yml_settings["BHT_LOGFILE_NAME"])
+BHT_LOGS_DIR = os.path.join(yml_settings["BHT_DATA_DIR"], "logs")
+
+if not os.path.isdir(BHT_LOGS_DIR):
+    os.mkdir(BHT_LOGS_DIR)
+yml_settings["BHT_LOGS_DIR"] = BHT_LOGS_DIR
+yml_settings["BHT_LOGFILE_PATH"] = os.path.join(BHT_LOGS_DIR, yml_settings["BHT_LOGFILE_NAME"])
 
 with open(os.path.join(BHT_ROOT_DIR, "VERSION.txt")) as version_file:
     yml_settings["VERSION"] = version_file.read().strip()
@@ -25,10 +35,6 @@ with open(os.path.join(BHT_ROOT_DIR, "VERSION.txt")) as version_file:
 with open(os.path.join(BHT_ROOT_DIR, "bht", "PIPELINE_VERSION.txt")) as pipeline_version_file:
     yml_settings["BHT_PIPELINE_VERSION"] = pipeline_version_file.read().strip()
 
-if not os.path.isabs(yml_settings["BHT_DATA_DIR"]):
-    yml_settings["BHT_DATA_DIR"] = os.path.join(
-        BHT_ROOT_DIR, yml_settings["BHT_DATA_DIR"]
-    )
 yml_settings["BHT_PAPERS_DIR"] = os.path.join(yml_settings["BHT_DATA_DIR"], "Papers")
 yml_settings["BHT_RESOURCES_DIR"] = os.path.join(BHT_ROOT_DIR, "resources")
 yml_settings["BHT_SATSCAT_DIR"] = os.path.join(

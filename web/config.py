@@ -6,7 +6,6 @@ from bht_config import yml_settings, BHT_ROOT_DIR
 class Config(object):
     LOG_TO_STDOUT = True
     LOG_TO_FILE = True
-    LOG_FILENAME = "bht.log"
     TESTING = False
     SECRET_KEY = (
         os.environ.get("SECRET_KEY")
@@ -30,7 +29,6 @@ class ProdConfig(Config):
 class DevConfig(Config):
     # Set DEBUG with `flask run --debug` option
     TESTING = True
-    # LOG_FILENAME = "dev_log.log"
     WEB_UPLOAD_DIR = os.path.join(BHT_ROOT_DIR, "dev-upload/")
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
         yml_settings["WEB_DB_DIR"], "bht_web-dev.db"
