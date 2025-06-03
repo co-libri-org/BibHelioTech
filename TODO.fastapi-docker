@@ -1,0 +1,18 @@
+
+* change DOCKERFILE
+    - more targets
+    - clarify steps
+    - COPY only what is needed
+
+    - what to do with .htpasswd
+
+* change docker-compose 
+    - add the fast-api
+    - manage the number of workers
+
+
+* set db at first start ?
+
+* import data from ovh:
+    - db
+    - DATA/web-upload tree
