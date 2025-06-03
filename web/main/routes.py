@@ -323,6 +323,11 @@ def fix_bulk_2():
 
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
 
+@bp.errorhandler(Exception)
+def handle_exception(e):
+    current_app.logger.exception("Exception has occured:")
+    return "FLASK Internal Error", 500
+
 
 @bp.route("/")
 def index():
