@@ -8,9 +8,6 @@ services:
         command: gunicorn --bind 0.0.0.0:5000 bht_web:app
         volumes:
             - bht_data:/home/bibheliotech/BibHelioTech/DATA:cached
-        cpus: 8
-        mem_limit: 32g
-        mem_reservation: 16g
         depends_on:
           redis:
             condition: service_started
@@ -21,9 +18,6 @@ services:
       command: python manage.py run_worker
       volumes:
         - bht_data:/home/bibheliotech/BibHelioTech/DATA:cached
-      cpus: 8
-      mem_limit: 32g
-      mem_reservation: 16g
       depends_on:
         - web
 
