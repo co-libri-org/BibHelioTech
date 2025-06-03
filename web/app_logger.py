@@ -31,7 +31,8 @@ class AppLogger:
                 )
             )
             _app.logger.addHandler(stream_handler)
-        else:
+
+        if _app.config.get("LOG_TO_FILE") and _app.config["LOG_TO_FILE"]:
             # log INFO to file
             if not os.path.exists("logs"):
                 os.mkdir("logs")

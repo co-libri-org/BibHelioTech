@@ -5,6 +5,7 @@ from bht_config import yml_settings, BHT_ROOT_DIR
 
 class Config(object):
     LOG_TO_STDOUT = True
+    LOG_TO_FILE = True
     LOG_FILENAME = "bht.log"
     TESTING = False
     SECRET_KEY = (
