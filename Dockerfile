@@ -2,6 +2,7 @@
 # so we can use COPY --parents
 FROM ubuntu:24.04
 
+
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
         python3-venv && \
@@ -24,6 +25,8 @@ RUN pip install --upgrade pip && \
 
 
 # Finally set application files
+WORKDIR /home/bibheliotech/BibHelioTech
+
 COPY --parents \
      LICENSE \
      VERSION.txt \
@@ -36,9 +39,8 @@ COPY --parents \
      tools/ \
      web/ \
      bht/ \
-     /home/bibheliotech/BibHelioTech/
+     ./
 
-COPY .htpasswd  /home/bibheliotech/BibHelioTech/
+COPY .htpasswd  ./
+COPY bht-config.yml ./
 
-WORKDIR /home/bibheliotech/BibHelioTech
-RUN cp ./resources/bht-config.yml-dist ./bht-config.yml
