@@ -15,7 +15,7 @@ QUEUES: ["default"]
 PER_PAGE: 50
 
 CSS_COLORS: {
-  #    'app_theme_color': '#FFD700', # prod
+  'app_theme_color': '#FFC107', # prod
   #    'app_theme_color': '#2ECC71',  # dev
-  'app_theme_color': '#FF4422', # bulk
+  #    'app_theme_color': '#FF4422', # bulk
 }

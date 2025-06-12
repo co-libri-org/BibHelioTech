@@ -111,7 +111,7 @@ After first install (git clone),
 
 Then make sure you have created the database:
 
-    docker compose run -it web python manage.py create_db
+    docker compose exec web python manage.py create_db
 
 ### Web interface
 
