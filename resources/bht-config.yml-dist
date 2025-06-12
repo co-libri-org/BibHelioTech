@@ -9,6 +9,7 @@ BHT_LOGLEVEL_LOGFILE: INFO
 
 WEB_UPLOAD_DIR: "DATA/web-upload"
 REDIS_URL: "redis://redis:6379/0"
+FASTAPI_URL: "http://fastapi:8000/parse"
 QUEUES: ["default"]
 
 PER_PAGE: 50

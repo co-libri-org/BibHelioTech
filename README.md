@@ -98,14 +98,20 @@ or for high load production server
 
 Please, use a recent docker compose plugin version: https://docs.docker.com/compose/install/linux/
 
-After first install (git clone), build and run:
+After first install (git clone),
 
-    docker compose build
-    docker compose up -d
+1. add 2 files
+    * `htpasswd -b -c .htpasswd 'user' 'passwd'`
+    * `cp resources/bht-config.yml-dist bht-config.yml`
+1. build and run:
+    * `docker compose build`
+    * `docker compose up -d`
+1. or you may want to listen to another port than :80:
+   * `WEB_PORT=8085 docker compose up -d`
 
 Then make sure you have created the database:
 
-    docker compose run -it   web python manage.py create_db
+    docker compose run -it web python manage.py create_db
 
 ### Web interface
 

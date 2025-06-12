@@ -10,7 +10,6 @@ services:
         depends_on:
           redis:
             condition: service_started
- 
 
     worker:
       image: bht/web:${WEB_TAG:-latest}
@@ -19,6 +18,17 @@ services:
         - bht_data:/home/bibheliotech/BibHelioTech/DATA:cached
       depends_on:
         - web
+
+    fastapi:
+      image: bht/fastapi:${WEB_TAG:-latest}
+      build:
+        context: .
+        dockerfile: Dockerfile.fastapi
+      command: uvicorn fastapi_sutime:app --host 0.0.0.0 --port 8000 --workers 1
+      volumes:
+        - bht_data:/home/bibheliotech/BibHelioTech/DATA:cached
+      ports:
+        - "8000:8000"
 
     nginx:
       image: nginx
