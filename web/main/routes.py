@@ -20,6 +20,7 @@ from flask import (
     send_file,
     Response,
     send_from_directory,
+    abort,
 )
 
 from bht.errors import BhtCsvError
@@ -932,6 +933,38 @@ def statistics():
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
 
+@bp.route("/api/stat_update")
+def api_stat_update():
+    """Load stat data into REDIS keys for later call"""
+
+    try:
+        _cached_events = []
+        _papers = Paper.query.all()
+        for i, p in enumerate(_papers):
+            _cached_events.append({"paper_id": p.id, "num_events": len(p.hp_events)})
+        current_app.redis_conn.set('cached_events', json.dumps(_cached_events))
+        current_app.logger.debug("Updating cached_events REDIS key")
+
+        _cached_nconf = []
+        _events = HpEvent.query.all()
+        max_conf = max(event.conf for event in _events if event.conf is not None) if _events else 1
+        for i, e in enumerate(_events):
+            e_dict = e.get_dict(max_conf)
+            _cached_nconf.append({'nconf': e_dict['nconf']})
+        current_app.redis_conn.set('cached_nconf', json.dumps(_cached_nconf))
+        current_app.logger.debug("Updating cached_nconf REDIS key")
+
+    except Exception as e:
+        current_app.logger.exception("Failed to update Redis cache")
+        abort(500, description="Redis update failed")
+
+    return jsonify({
+        "status": "success",
+        "cached_events": len(_cached_events),
+        "cached_nconf": len(_cached_nconf)
+    }), 200
+
+
 @bp.route("/api/papers_events_graph", methods=["POST"])
 def api_papers_events_graph():
     params = {"events_bins": int(request.json.get("events-bins")),
@@ -1019,7 +1052,6 @@ def api_nconf_dist_graph():
         # If redis exception, fill in with empty data
         df = pd.DataFrame({'nconf': []})
         error_occurred = True
-
 
     # Prevent no gui error
     plt.ioff()
