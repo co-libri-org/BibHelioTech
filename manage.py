@@ -7,7 +7,7 @@ import click
 import redis
 from pathlib import Path
 from rq import Worker
-from flask import current_app, url_for
+from flask import current_app
 from flask_migrate import upgrade
 from flask.cli import FlaskGroup
 from rq.exceptions import NoSuchJobError
@@ -740,29 +740,6 @@ def status_update():
         p.task_status = 'finished'
         db.session.add(p)
     db.session.commit()
-
-
-@cli.command("stats_update")
-def stats_update():
-    """Store stats in REDIS"""
-    import json
-    _cached_events = []
-    papers = Paper.query.all()
-    for i, p in enumerate(papers):
-        print(f"Appending paper {p.id} {i}/{len(papers)}", end="\r")
-        _cached_events.append({"paper_id": p.id, "num_events": len(p.hp_events)})
-    current_app.redis_conn.set('cached_events', json.dumps(_cached_events))
-    print("\n")
-
-    _cached_nconf = []
-    events = HpEvent.query.all()
-    max_conf = max(event.conf for event in events if event.conf is not None) if events else 1
-    for i, e in enumerate(events):
-        print(f"Appending event {e.id} {i}/{len(events)}", end="\r")
-        e_dict = e.get_dict(max_conf)
-        _cached_nconf.append({'nconf': e_dict['nconf']})
-    current_app.redis_conn.set('cached_nconf', json.dumps(_cached_nconf))
-    print("\n")
 
 
 if __name__ == "__main__":
