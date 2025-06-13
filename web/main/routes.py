@@ -7,7 +7,6 @@ import dateutil.parser as parser
 import pandas as pd
 import requests
 
-
 from sqlalchemy import func
 
 from flask import (
@@ -38,8 +37,6 @@ from web.istex_proxy import (
     ark_to_istex_url,
 )
 from ..errors import IstexError, WebError, FilePathError
-
-
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -244,13 +241,13 @@ def basename_filter(filename):
 # Add colors as default variable for all template
 @bp.before_request
 def add_css_colors_to_templates():
-    # Mettre CSS_COLORS dans le contexte global des templates
+    # Insert CSS_COLORS in templates global context
     current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
 
 
-
-
 first_request = True
+
+
 @bp.before_request
 def initialize_data():
     global first_request
@@ -318,7 +315,7 @@ def fix_bulk_2():
     #     per_page=current_app.config["PER_PAGE"],
     #     error_out=False
     # )
-    return render_template("fix_bulk_2.html", papers = _papers)
+    return render_template("fix_bulk_2.html", papers=_papers)
 
 
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
@@ -536,7 +533,6 @@ def papers():
     # Transform into a list of dicts
     state_stats = [{'status': k, 'tag': k, 'value': state_dict[k]} for k in valid_states]
     state_stats.append({'status': 'undefined', 'tag': 'not run', 'value': state_dict['undefined']})
-
 
     # Now search for papers by status
     page = request.args.get('page', 1, type=int)
@@ -1054,7 +1050,7 @@ def api_catalogs_txt():
     if request.method == "POST":
         events_ids = request.json.get("events-ids")
         mission_id = None
-    else: #request.method=="GET":
+    else:  # request.method=="GET":
         events_ids = request.args.get("events_ids").split(",")
         mission_id = request.args.get("mission_id")
     if events_ids:
