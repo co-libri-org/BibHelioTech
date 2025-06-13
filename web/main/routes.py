@@ -541,10 +541,13 @@ def papers():
     # Now search for papers by status
     page = request.args.get('page', 1, type=int)
     if requested_status in valid_states:
+        # filter papers by valid status
         _query = Paper.query.filter_by(task_status=requested_status)
     elif requested_status is None:
+        # return all papers
         _query = Paper.query
     else:
+        # return papers that have no valid status, or status is None
         _query = Paper.query.filter(
             (~Paper.task_status.in_(valid_states)) | (Paper.task_status.is_(None))
         )
