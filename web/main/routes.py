@@ -936,6 +936,7 @@ def statistics():
 @bp.route("/api/stat_update")
 def api_stat_update():
     """Load stat data into REDIS keys for later call"""
+    from sqlalchemy.orm import joinedload
     try:
         current_app.redis_conn.ping()
     except redis.exceptions.ConnectionError:
@@ -944,7 +945,7 @@ def api_stat_update():
 
     try:
         _cached_events = []
-        _papers = Paper.query.all()
+        _papers = Paper.query.options(joinedload(Paper.hp_events)).all()
         for i, p in enumerate(_papers):
             _cached_events.append({"paper_id": p.id, "num_events": len(p.hp_events)})
         current_app.redis_conn.set('cached_events', json.dumps(_cached_events))
