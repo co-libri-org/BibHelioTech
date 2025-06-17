@@ -324,7 +324,7 @@ def fix_bulk_2():
 
 @bp.errorhandler(Exception)
 def handle_exception(e):
-    current_app.logger.exception("Exception has occured:")
+    current_app.logger.exception("Exception has occurred")
     return "FLASK Internal Error", 500
 
 
@@ -664,7 +664,7 @@ def bht_status(paper_id):
             )
             task_status = job.get_status(refresh=True).value
 
-            # even if we entered that case with status in ["queued", "started"] it can have changed in the mean time
+            # even if we entered that case with status in ["queued", "started"] it can have changed in the meantime
             # so we need to also test  "finished" and "failed" statuses
             if task_status in ["started", "finished", "failed"]:
                 task_started = job.started_at
