@@ -1006,7 +1006,7 @@ def api_papers_events_graph():
 
     if df.empty or error_occurred:
         # Affiche un message centré à la place du graphique
-        plt.text(0.5, 0.7, 'Error ou data unavailable', horizontalalignment='center',
+        plt.text(0.5, 0.7, 'Error or data unavailable', horizontalalignment='center',
                  verticalalignment='center', transform=plt.gca().transAxes, fontsize=16, color='red')
         plt.text(0.5, 0.5, 'See README.md', horizontalalignment='center',
                  verticalalignment='center', transform=plt.gca().transAxes, fontsize=14, color='black')
@@ -1063,7 +1063,7 @@ def api_nconf_dist_graph():
     # Create plot
     if df.empty or error_occurred:
         # Affiche un message centré à la place du graphique
-        plt.text(0.5, 0.7, 'Error ou data unavailable', horizontalalignment='center',
+        plt.text(0.5, 0.7, 'Error or data unavailable', horizontalalignment='center',
                  verticalalignment='center', transform=plt.gca().transAxes, fontsize=16, color='red')
         plt.text(0.5, 0.5, 'See README.md', horizontalalignment='center',
                  verticalalignment='center', transform=plt.gca().transAxes, fontsize=14, color='black')
