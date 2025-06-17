@@ -27,19 +27,14 @@ RUN pip install --upgrade pip && \
 # Finally set application files
 WORKDIR /home/bibheliotech/BibHelioTech
 
-COPY --parents \
-     LICENSE \
-     VERSION.txt \
-     requirements.txt \
-     bht_config.py \
-     bht_web.py \
-     manage.py \
-     migrations/ \
-     resources/ \
-     tools/ \
-     web/ \
-     bht/ \
-     ./
+
+COPY --parents LICENSE VERSION.txt requirements.txt ./
+COPY --parents bht_config.py bht_web.py manage.py ./
+COPY --parents migrations/ ./
+COPY --parents resources/ ./
+COPY --parents tools/ ./
+COPY --parents web/ ./
+COPY --parents bht/ ./
 
 COPY .htpasswd  ./
 COPY bht-config.yml ./
