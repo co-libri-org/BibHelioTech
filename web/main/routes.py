@@ -936,6 +936,11 @@ def statistics():
 @bp.route("/api/stat_update")
 def api_stat_update():
     """Load stat data into REDIS keys for later call"""
+    try:
+        current_app.redis_conn.ping()
+    except redis.exceptions.ConnectionError:
+        current_app.logger.exception("Failed to ping Redis")
+        abort(503, description="Redis unavailable")
 
     try:
         _cached_events = []
