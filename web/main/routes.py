@@ -20,6 +20,7 @@ from flask import (
     send_file,
     Response,
     send_from_directory,
+    abort,
 )
 
 from bht.errors import BhtCsvError
@@ -323,7 +324,7 @@ def fix_bulk_2():
 
 @bp.errorhandler(Exception)
 def handle_exception(e):
-    current_app.logger.exception("Exception has occured:")
+    current_app.logger.exception("Exception has occurred")
     return "FLASK Internal Error", 500
 
 
@@ -663,7 +664,7 @@ def bht_status(paper_id):
             )
             task_status = job.get_status(refresh=True).value
 
-            # even if we entered that case with status in ["queued", "started"] it can have changed in the mean time
+            # even if we entered that case with status in ["queued", "started"] it can have changed in the meantime
             # so we need to also test  "finished" and "failed" statuses
             if task_status in ["started", "finished", "failed"]:
                 task_started = job.started_at
@@ -932,6 +933,44 @@ def statistics():
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
 
+@bp.route("/api/stat_update")
+def api_stat_update():
+    """Load stat data into REDIS keys for later call"""
+    from sqlalchemy.orm import joinedload
+    try:
+        current_app.redis_conn.ping()
+    except redis.exceptions.ConnectionError:
+        current_app.logger.exception("Failed to ping Redis")
+        abort(503, description="Redis unavailable")
+
+    try:
+        _cached_events = []
+        _papers = Paper.query.options(joinedload(Paper.hp_events)).all()
+        for i, p in enumerate(_papers):
+            _cached_events.append({"paper_id": p.id, "num_events": len(p.hp_events)})
+        current_app.redis_conn.set('cached_events', json.dumps(_cached_events))
+        current_app.logger.debug("Updating cached_events REDIS key")
+
+        _cached_nconf = []
+        _events = HpEvent.query.all()
+        max_conf = max(event.conf for event in _events if event.conf is not None) if _events else 1
+        for i, e in enumerate(_events):
+            e_dict = e.get_dict(max_conf)
+            _cached_nconf.append({'nconf': e_dict['nconf']})
+        current_app.redis_conn.set('cached_nconf', json.dumps(_cached_nconf))
+        current_app.logger.debug("Updating cached_nconf REDIS key")
+
+    except Exception as e:
+        current_app.logger.exception("Failed to update Redis cache")
+        abort(500, description="Redis update failed")
+
+    return jsonify({
+        "status": "success",
+        "cached_events": len(_cached_events),
+        "cached_nconf": len(_cached_nconf)
+    }), 200
+
+
 @bp.route("/api/papers_events_graph", methods=["POST"])
 def api_papers_events_graph():
     params = {"events_bins": int(request.json.get("events-bins")),
@@ -968,7 +1007,7 @@ def api_papers_events_graph():
 
     if df.empty or error_occurred:
         # Affiche un message centré à la place du graphique
-        plt.text(0.5, 0.7, 'Error ou data unavailable', horizontalalignment='center',
+        plt.text(0.5, 0.7, 'Error or data unavailable', horizontalalignment='center',
                  verticalalignment='center', transform=plt.gca().transAxes, fontsize=16, color='red')
         plt.text(0.5, 0.5, 'See README.md', horizontalalignment='center',
                  verticalalignment='center', transform=plt.gca().transAxes, fontsize=14, color='black')
@@ -1020,13 +1059,12 @@ def api_nconf_dist_graph():
         df = pd.DataFrame({'nconf': []})
         error_occurred = True
 
-
     # Prevent no gui error
     plt.ioff()
     # Create plot
     if df.empty or error_occurred:
         # Affiche un message centré à la place du graphique
-        plt.text(0.5, 0.7, 'Error ou data unavailable', horizontalalignment='center',
+        plt.text(0.5, 0.7, 'Error or data unavailable', horizontalalignment='center',
                  verticalalignment='center', transform=plt.gca().transAxes, fontsize=16, color='red')
         plt.text(0.5, 0.5, 'See README.md', horizontalalignment='center',
                  verticalalignment='center', transform=plt.gca().transAxes, fontsize=14, color='black')
