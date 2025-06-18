@@ -25,6 +25,13 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [3.0.0] - 2025-06-13 - Fastapi as docker component
+### New
+- Create a fastapi docker service
+### Changed
+- Enhance Dockerfile's 
+- Enhance logging
+
 ## [2.1.1] - 2025-04-03 - Fix Sutime Instantiation
 ### Fixed
 - Sutime instance options

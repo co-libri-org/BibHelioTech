@@ -9,12 +9,13 @@ BHT_LOGLEVEL_LOGFILE: INFO
 
 WEB_UPLOAD_DIR: "DATA/web-upload"
 REDIS_URL: "redis://redis:6379/0"
+FASTAPI_URL: "http://fastapi:8000/parse"
 QUEUES: ["default"]
 
 PER_PAGE: 50
 
 CSS_COLORS: {
-  #    'app_theme_color': '#FFD700', # prod
+  'app_theme_color': '#FFC107', # prod
   #    'app_theme_color': '#2ECC71',  # dev
-  'app_theme_color': '#FF4422', # bulk
+  #    'app_theme_color': '#FF4422', # bulk
 }

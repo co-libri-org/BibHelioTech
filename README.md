@@ -37,8 +37,12 @@ Make sure to fulfill any dependency first:
 
 ### Install sutime dependencies and update language file
 
+on the linux system
+
     sudo apt install -y openjdk-8-jdk openjdk-8-jre maven zip
     sudo update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+on the pip venv
 
     mvn dependency:copy-dependencies -DoutputDirectory=./jars -f $(python -c 'import importlib.util; import pathlib; print(pathlib.Path(importlib.util.find_spec("sutime").origin).parent / "pom.xml")')
     cd ./resources
@@ -78,7 +82,15 @@ run with pipeline capabilities:
 
 more over, for bulk purpose, run a Sutime Server
 
-    uvicorn fastapi_sutime:app --host 0.0.0.0 --port 8001
+    uvicorn fastapi_sutime:app --host 0.0.0.0 --port 8000
+
+but if multi processes is needed
+
+    uvicorn --workers 4 fastapi_sutime:app --host 0.0.0.0 --port 8000
+
+or for high load production server
+
+    gunicorn -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000 fastapi_sutime:app
 
 
 
@@ -86,14 +98,20 @@ more over, for bulk purpose, run a Sutime Server
 
 Please, use a recent docker compose plugin version: https://docs.docker.com/compose/install/linux/
 
-After first install (git clone), build and run:
+After first install (git clone),
 
-    docker compose build
-    docker compose up -d
+1. add 2 files
+    * `htpasswd -b -c .htpasswd 'user' 'passwd'`
+    * `cp resources/bht-config.yml-dist bht-config.yml`
+1. build and run:
+    * `docker compose build`
+    * `docker compose up -d`
+1. or you may want to listen to another port than :80:
+   * `WEB_PORT=8085 docker compose up -d`
 
 Then make sure you have created the database:
 
-    docker compose run -it   web python manage.py create_db
+    docker compose exec web python manage.py create_db
 
 ### Web interface
 
@@ -351,6 +369,23 @@ Any VERSION change is git tagged with `v` prepended. In the later example, that 
 
     git tag -a v0.3.0.pre-5 -m "v0.3.0.pre-5 Release"
     git push origin --tags
+
+## Manual run (without docker)
+### Installation and requirements
+
+1. copy resources/*dist config file to there destination and edit
+2. install Sutime java dependencies
+3. install pip dependencies
+3. insert english-custom.txt to java pip package
+
+### Run each component
+
+1. run nginx
+2. run redis
+3. run flask app for web
+4. run (1,n) flask worker(s) with click cli interface
+5. run fastapi embedding Sutime
+
 
 ## Manual installation (the old way)
 

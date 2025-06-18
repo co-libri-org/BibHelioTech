@@ -1,7 +1,6 @@
 pytesseract
 Pillow
 pdf2image
-sutime
 lxml
 bs4
 beautifulsoup4
@@ -31,5 +30,3 @@ alembic
 SQLAlchemy
 markdown
 matplotlib
-uvicorn
-fastapi

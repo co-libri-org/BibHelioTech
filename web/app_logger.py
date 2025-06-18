@@ -21,25 +21,6 @@ class AppLogger:
 
     def init_app(self, _app):
         _app.logger.removeHandler(default_handler)
-        if not _app.debug and not _app.testing:
-            # send ERROR by Mail if possible
-            if _app.config.get("MAIL_SERVER"):
-                auth = None
-                if _app.config["MAIL_USERNAME"] or _app.config["MAIL_PASSWORD"]:
-                    auth = (_app.config["MAIL_USERNAME"], _app.config["MAIL_PASSWORD"])
-                secure = None
-                if _app.config["MAIL_USE_TLS"]:
-                    secure = ()
-                mail_handler = SMTPHandler(
-                    mailhost=(_app.config["MAIL_SERVER"], _app.config["MAIL_PORT"]),
-                    fromaddr="no-reply@" + _app.config["MAIL_SERVER"],
-                    toaddrs=[_app.config["DEV_EMAIL"]],
-                    subject="App Failure",
-                    credentials=auth,
-                    secure=secure,
-                )
-                mail_handler.setLevel(logging.ERROR)
-                _app.logger.addHandler(mail_handler)
 
         if _app.config.get("LOG_TO_STDOUT") and _app.config["LOG_TO_STDOUT"]:
             stream_handler = logging.StreamHandler()
@@ -50,15 +31,11 @@ class AppLogger:
                 )
             )
             _app.logger.addHandler(stream_handler)
-        else:
-            # log INFO to file
-            if not os.path.exists("logs"):
-                os.mkdir("logs")
-            log_filename = _app.config.get("LOG_FILENAME")
-            if not log_filename:
-                log_filename = "logfile.log"
+
+        if _app.config.get("LOG_TO_FILE") and _app.config["LOG_TO_FILE"]:
+            log_filename = _app.config.get("BHT_LOGFILE_PATH")
             file_handler = RotatingFileHandler(
-                os.path.join("logs", log_filename), maxBytes=10240, backupCount=10
+                log_filename, maxBytes=10240, backupCount=10
             )
             file_handler.setFormatter(
                 logging.Formatter(

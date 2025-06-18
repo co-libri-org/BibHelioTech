@@ -8,6 +8,7 @@ import dateutil.parser as parser
 
 from bht.bht_logging import init_logger
 from bht.sutime_tools import nearest_year, shortdate_rewriting_step
+from bht_config import yml_settings
 from tools import RawDumper
 
 _logger = init_logger()
@@ -21,7 +22,8 @@ def SUTime_treatement(current_OCR_folder, sutime=None):
     input_content = file.read()
 
     if sutime is None:
-        response = requests.post("http://localhost:8000/parse", json={"text": input_content})
+        response = requests.post(yml_settings["FASTAPI_URL"], json={"text": input_content})
+
         sutime_structs_list = response.json()
     else:
         sutime_structs_list = sutime.parse(input_content)  # Analysis of the whole text by SUTime

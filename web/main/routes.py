@@ -5,8 +5,8 @@ from zoneinfo import ZoneInfo
 
 import dateutil.parser as parser
 import pandas as pd
+import redis
 import requests
-
 
 from sqlalchemy import func
 
@@ -38,8 +38,6 @@ from web.istex_proxy import (
     ark_to_istex_url,
 )
 from ..errors import IstexError, WebError, FilePathError
-
-
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -244,13 +242,13 @@ def basename_filter(filename):
 # Add colors as default variable for all template
 @bp.before_request
 def add_css_colors_to_templates():
-    # Mettre CSS_COLORS dans le contexte global des templates
+    # Insert CSS_COLORS in templates global context
     current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
 
 
-
-
 first_request = True
+
+
 @bp.before_request
 def initialize_data():
     global first_request
@@ -318,10 +316,15 @@ def fix_bulk_2():
     #     per_page=current_app.config["PER_PAGE"],
     #     error_out=False
     # )
-    return render_template("fix_bulk_2.html", papers = _papers)
+    return render_template("fix_bulk_2.html", papers=_papers)
 
 
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
+
+@bp.errorhandler(Exception)
+def handle_exception(e):
+    current_app.logger.exception("Exception has occured:")
+    return "FLASK Internal Error", 500
 
 
 @bp.route("/")
@@ -532,14 +535,16 @@ def papers():
     state_stats = [{'status': k, 'tag': k, 'value': state_dict[k]} for k in valid_states]
     state_stats.append({'status': 'undefined', 'tag': 'not run', 'value': state_dict['undefined']})
 
-
     # Now search for papers by status
     page = request.args.get('page', 1, type=int)
     if requested_status in valid_states:
+        # filter papers by valid status
         _query = Paper.query.filter_by(task_status=requested_status)
     elif requested_status is None:
+        # return all papers
         _query = Paper.query
     else:
+        # return papers that have no valid status, or status is None
         _query = Paper.query.filter(
             (~Paper.task_status.in_(valid_states)) | (Paper.task_status.is_(None))
         )
@@ -940,20 +945,42 @@ def api_papers_events_graph():
     import io
     import base64
 
-    cached_events = json.loads(current_app.redis_conn.get('cached_events') or '[]')
+    error_occurred = False
 
-    df = pd.DataFrame(cached_events)
-    df = df[(df['num_events'] >= params['events_min']) & (df['num_events'] <= params['events_max'])]
+    try:
+        cached_raw = current_app.redis_conn.get('cached_events')
+        cached_events = json.loads(cached_raw) if cached_raw else []
+        df = pd.DataFrame(cached_events)
+
+        if 'num_events' not in df.columns:
+            df['num_events'] = []
+
+        df = df[(df['num_events'] >= params['events_min']) & (df['num_events'] <= params['events_max'])]
+    except redis.RedisError as e:
+        # If redis exception, fill in with empty data
+        df = pd.DataFrame({'num_events': []})
+        error_occurred = True
 
     # Prevent no gui error
     plt.ioff()
+
     # Create plot
-    plt.figure(figsize=(15, 6))
-    plt.hist(df['num_events'], bins=params['events_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
-             linewidth=0.5)
-    plt.title(f"Events Distribution")
-    plt.xlabel('Events')
-    plt.ylabel('Papers')
+
+    if df.empty or error_occurred:
+        # Affiche un message centré à la place du graphique
+        plt.text(0.5, 0.7, 'Error ou data unavailable', horizontalalignment='center',
+                 verticalalignment='center', transform=plt.gca().transAxes, fontsize=16, color='red')
+        plt.text(0.5, 0.5, 'See README.md', horizontalalignment='center',
+                 verticalalignment='center', transform=plt.gca().transAxes, fontsize=14, color='black')
+        plt.gca().set_xticks([])
+        plt.gca().set_yticks([])
+        plt.title("Events Distribution (error)")
+    else:
+        plt.hist(df['num_events'], bins=params.get('events_bins', 10),
+                 facecolor='#ffca2c', edgecolor='black', linewidth=0.5)
+        plt.title("Events Distribution")
+        plt.xlabel("Events")
+        plt.ylabel("Papers")
 
     img = io.BytesIO()
     plt.tight_layout()
@@ -977,20 +1004,42 @@ def api_nconf_dist_graph():
     import io
     import base64
 
-    cached_nconf = json.loads(current_app.redis_conn.get('cached_nconf') or '[]')
-    df = pd.DataFrame(cached_nconf)
+    error_occurred = False
 
-    df = df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
+    try:
+        cached_raw = current_app.redis_conn.get('cached_nconf')
+        cached_nconf = json.loads(cached_raw) if cached_raw else []
+        df = pd.DataFrame(cached_nconf)
+
+        if 'nconf' not in df.columns:
+            df['nconf'] = []
+
+        df = df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
+    except redis.RedisError as e:
+        # If redis exception, fill in with empty data
+        df = pd.DataFrame({'nconf': []})
+        error_occurred = True
+
 
     # Prevent no gui error
     plt.ioff()
     # Create plot
-    plt.figure(figsize=(15, 6))
-    plt.hist(df['nconf'], bins=params['nconf_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
-             linewidth=0.5)
-    plt.title(f"NConf Distribution ({params['nconf_min']} to {params['nconf_max']})")
-    plt.xlabel('NConf')
-    plt.ylabel('Frequency')
+    if df.empty or error_occurred:
+        # Affiche un message centré à la place du graphique
+        plt.text(0.5, 0.7, 'Error ou data unavailable', horizontalalignment='center',
+                 verticalalignment='center', transform=plt.gca().transAxes, fontsize=16, color='red')
+        plt.text(0.5, 0.5, 'See README.md', horizontalalignment='center',
+                 verticalalignment='center', transform=plt.gca().transAxes, fontsize=14, color='black')
+        plt.gca().set_xticks([])
+        plt.gca().set_yticks([])
+        plt.title(f"NConf Distribution (error)")
+    else:
+        plt.figure(figsize=(15, 6))
+        plt.hist(df['nconf'], bins=params['nconf_bins'], facecolor='#ffca2c', color='#ffca2c', edgecolor='black',
+                 linewidth=0.5)
+        plt.title(f"NConf Distribution ({params['nconf_min']} to {params['nconf_max']})")
+        plt.xlabel('NConf')
+        plt.ylabel('Frequency')
 
     img = io.BytesIO()
     plt.tight_layout()
@@ -1046,7 +1095,7 @@ def api_catalogs_txt():
     if request.method == "POST":
         events_ids = request.json.get("events-ids")
         mission_id = None
-    else: #request.method=="GET":
+    else:  # request.method=="GET":
         events_ids = request.args.get("events_ids").split(",")
         mission_id = request.args.get("mission_id")
     if events_ids:
