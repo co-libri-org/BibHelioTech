@@ -816,6 +816,11 @@ def istex():
     )
 
 
+@bp.route("/subset")
+def subset():
+    return render_template("subset.html")
+
+
 # TODO: merge /events and /catalogs routes
 @bp.route("/events", defaults={"ref_id": None, "ref_name": None}, methods=["GET"])
 @bp.route("/events/<ref_name>/<ref_id>", methods=["GET"])
