@@ -63,26 +63,28 @@ def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
 
 def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=False):
     """
-    Read the json meta-info file of an istex directory
-        get the article file
-        add to db for late usage
+    Read the JSON meta-info file from istex directory
+    Then
+        1. Get article file
+        2. Add to db for later usage
 
-    :param force_update:
-    :param json_file:
-    :param upload_dir:
-    :param file_ext:
+    :param json_file: Istex JSON article's meta-info
+    :param upload_dir: Where to save paper's content to
+    :param file_ext: paper file extension (txt, cleaned, pdf)
+    :param force_update: if True, update when already exists
     :return:
     """
     if not os.path.isfile(json_file):
         raise FilePathError(f"Couldn't find {json_file}")
 
+    # status: 'failed' if unable to load json
     with open(json_file) as json_fp:
         try:
             document_json = json.load(json_fp)
         except JSONDecodeError:
-            print(f"Couldn't read json file {json_file}")
-            return None
+            return {'status': 'failed', 'reason': f"Couldn't read json file {json_file}"}
 
+    # status: 'failed' if unable to read Istex struct
     try:
         istex_struct = istex_doc_to_struct(document_json)
     except KeyError as e:
@@ -90,9 +92,10 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=Fals
 
     paper = Paper.query.filter_by(istex_id=istex_struct['istex_id']).one_or_none()
 
+    # 3 available statuses depending on paper exists or force_update
     if paper is None:
         istex_struct['status'] = "added"
-    elif type(paper) == Paper:
+    elif isinstance(paper, Paper):
         if force_update:
             istex_struct['status'] = "updated"
         else:
