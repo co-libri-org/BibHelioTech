@@ -3,5 +3,65 @@
 <title>Subset</title>
 {%  endblock %}
 {% block content %}
-hello world
+<div class="row">
+    <h4>Upload Istex Archive</h4>
+    <div class="col">
+        <h5>from new File</h5>
+        <form action={{url_for('main.subset_upload')}} method=post enctype=multipart/form-data>
+            <input type=file name=zipfile>
+            <input type=submit value="Upload Zip">
+        </form>
+    </div>
+</div>
+<hr class="mt-4 mb-4">
+<div class="row">
+    <h4>Istex Archives</h4>
+    <div class="col">
+        <h5>from new File</h5>
+        <form action={{url_for('main.subset_upload')}} method=post enctype=multipart/form-data>
+            <input type=file name=zipfile>
+            <input type=submit value="Upload Zip">
+        </form>
+    </div>
+</div>
+
+{#
+<button class="btn btn-warning" id="unzipSubsetBtn" title="Unzip Subset">Unzip</button>
+<div id="taskStatus"></div>
+#}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    {#
+    function updateSubsetStatus(task_id){
+       $.ajax({
+                url: "{{url_for('main.api_subset_status', task_id=task_id)}}",
+                method: 'GET',
+            })
+        .done((res) => {
+            const taskStatus = res.data.task_status;
+            const taskId = res.data.task_id;
+            const taskProgress = res.data.task_progress;
+            $('#taskStatus').html(taskProgress);
+            setTimeout(function() {
+                updateSubsetStatus(task_id);
+            }, 1000);
+        })
+        .fail((err) => {
+            // Show there was an error returned by /bht_status/p_id
+            alert("HI");
+
+        });
+    }
+
+    $(document).ready(function() {
+        alert({{task_id}});
+        $('#unzipSubsetBtn').click(function(){
+            updateSubsetStatus({{task_id}});
+        });
+    });
+    #}
+</script>
 {% endblock %}

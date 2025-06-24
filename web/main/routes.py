@@ -23,6 +23,7 @@ from flask import (
     send_from_directory,
     abort,
 )
+from werkzeug.utils import secure_filename
 
 from bht.errors import BhtCsvError
 from bht.pipeline import PipeStep
@@ -819,8 +820,8 @@ def istex():
     )
 
 
-@bp.route("/unzip_subset", methods=["GET"])
-def unzip_subset():
+@bp.route("/subset_unzip", methods=["POST"])
+def subset_unzip():
     file = request.files["zip_file"]
     uid = None
     if file and file.filename.endswith('.zip'):
@@ -835,13 +836,35 @@ def unzip_subset():
             job_id=uid,
             job_timeout=600,
         )
+    else:
+        flash(f"Not allowd such file {file} ")
+        return redirect(url_for("main.subset"))
 
-    return redirect(url_for("main.subset", uid=uid))
+    return redirect(url_for("main.subset", task_id=task.get_id()))
 
 
-@bp.route("/subset")
-def subset():
-    return render_template("subset.html")
+@bp.route("/subset_upload", methods=["POST"])
+def subset_upload():
+    if "zipfile" not in request.files:
+        flash("No file part")
+        return redirect(url_for("main.subset"))
+    file = request.files["zipfile"]
+    if file.filename == "":
+        flash("No selected file")
+    if file and file.filename.endswith('.zip'):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(current_app.config['ZIP_UPLOAD_DIR'], filename))
+        flash(f"Downloaded {filename} ")
+        return redirect(url_for('main.subset'))
+    else:
+        flash(f"Not allowed such file {file} ")
+        return redirect(url_for("main.subset"))
+
+
+@bp.route("/subset/<task_id>")
+@bp.route("/subset", defaults={"task_id": None})
+def subset(task_id):
+    return render_template("subset.html", task_id=task_id)
 
 
 # TODO: merge /events and /catalogs routes
@@ -960,19 +983,19 @@ def statistics():
 
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
-@bp.route("/api/unzip_status/<job_id>", methods=["GET"])
-def api_unzip_status(job_id):
-    job_state = "running"
-    job_progress = datetime.now().strftime("%S:%f")
+@bp.route("/api/subset_status/<task_id>", methods=["GET"])
+def api_subset_status(task_id):
+    task_status = "running"
+    task_progress = datetime.now().strftime("%S:%f")
     response_object = {
         "status": "success",
-        "data": {"job_id": job_id,
-                 "job_state": job_state,
-                 "progress": job_progress},
+        "data": {"task_id": task_id,
+                 "task_status": task_status,
+                 "task_progress": task_progress},
     }
-    if job_state == "running":
+    if task_status == "running":
         http_code = 202
-    elif job_state == "finished":
+    elif task_status == "finished":
         http_code = 200
     else:
         response_object, http_code = {"status": "failed"}, 422
