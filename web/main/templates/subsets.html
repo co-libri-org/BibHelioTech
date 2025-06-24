@@ -16,15 +16,35 @@
 <hr class="mt-4 mb-4">
 <div class="row">
     <h4>Istex Archives</h4>
-    {% for zf in zip_files %}
-    <div class="col">
-        {{zf}}
-    </div>
-    {% endfor %}
+    {% if zip_files|length == 0 %}
+    <h6>No zip files found</h6>
+    {% else %}
+    <table class="table-hover table">
+        <thead>
+        <tr>
+            <th scope="col" class="col">filename</th>
+            <th scope="col" class="col">size</th>
+            <th scope="col" class="col">papers</th>
+            <th scope="col" class="col">unzip</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for zf in zip_files %}
+        <tr>
+            <td>{{zf.name}}</td>
+            <td>{{zf.size}}</td>
+            <td>{{zf.nb_json}}</td>
+            <td>
+                <button class="btn btn-warning" id="unzipSubsetBtn" title="Unzip Subset">Unzip</button>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {%endif%}
 </div>
 
 {#
-<button class="btn btn-warning" id="unzipSubsetBtn" title="Unzip Subset">Unzip</button>
 <div id="taskStatus"></div>
 #}
 

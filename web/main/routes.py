@@ -865,10 +865,28 @@ def subset_upload():
 @bp.route("/subsets/<task_id>")
 @bp.route("/subsets", defaults={"task_id": None})
 def subsets(task_id):
+    def zip_archive_info(zip_path):
+        import math
+        import zipfile
+        # archive size in Mo
+        size_octets = os.path.getsize(zip_path)
+        size_mo = size_octets / (1024 * 1024)
+        size_mo = f"{math.ceil(size_mo)} Mo"
+
+        # Count JSON files contained in archive
+        with zipfile.ZipFile(zip_path, 'r') as archive:
+            json_files = [f for f in archive.namelist() if f.endswith('.json')]
+            nb_json = len(json_files)
+
+        return os.path.basename(zip_path), size_mo, nb_json
+
     # get the list of available zip files to unzip
     zip_pattern = os.path.join(current_app.config["ZIP_UPLOAD_DIR"], "istex-subset*.zip")
     files = glob.glob(zip_pattern)
-    zip_files = [os.path.basename(f) for f in files]
+    zip_files = []
+    for zf in files:
+        _name, _size, _nb_json = zip_archive_info(zf)
+        zip_files.append({'name': _name, 'size': _size, 'nb_json': _nb_json})
     return render_template("subsets.html", task_id=task_id, zip_files=zip_files)
 
 
