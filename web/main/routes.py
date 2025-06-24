@@ -837,17 +837,17 @@ def subset_unzip():
             job_timeout=600,
         )
     else:
-        flash(f"Not allowd such file {file} ")
-        return redirect(url_for("main.subset"))
+        flash(f"Not allowed such file {file} ")
+        return redirect(url_for("main.subsets"))
 
-    return redirect(url_for("main.subset", task_id=task.get_id()))
+    return redirect(url_for("main.subsets", task_id=task.get_id()))
 
 
 @bp.route("/subset_upload", methods=["POST"])
 def subset_upload():
     if "zipfile" not in request.files:
         flash("No file part")
-        return redirect(url_for("main.subset"))
+        return redirect(url_for("main.subsets"))
     file = request.files["zipfile"]
     if file.filename == "":
         flash("No selected file")
@@ -855,16 +855,16 @@ def subset_upload():
         filename = secure_filename(file.filename)
         file.save(os.path.join(current_app.config['ZIP_UPLOAD_DIR'], filename))
         flash(f"Downloaded {filename} ")
-        return redirect(url_for('main.subset'))
+        return redirect(url_for('main.subsets'))
     else:
         flash(f"Not allowed such file {file} ")
-        return redirect(url_for("main.subset"))
+        return redirect(url_for("main.subsets"))
 
 
-@bp.route("/subset/<task_id>")
-@bp.route("/subset", defaults={"task_id": None})
-def subset(task_id):
-    return render_template("subset.html", task_id=task_id)
+@bp.route("/subsets/<task_id>")
+@bp.route("/subsets", defaults={"task_id": None})
+def subsets(task_id):
+    return render_template("subsets.html", task_id=task_id)
 
 
 # TODO: merge /events and /catalogs routes
