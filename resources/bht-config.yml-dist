@@ -8,6 +8,7 @@ BHT_LOGLEVEL_CONSOLE: DEBUG
 BHT_LOGLEVEL_LOGFILE: INFO
 
 WEB_UPLOAD_DIR: "DATA/web-upload"
+ZIP_UPLOAD_DIR: "DATA/zip-upload"
 REDIS_URL: "redis://redis:6379/0"
 FASTAPI_URL: "http://fastapi:8000/parse"
 QUEUES: ["default"]
