@@ -1,6 +1,7 @@
 import json
 
 import os
+import uuid
 from zoneinfo import ZoneInfo
 
 import dateutil.parser as parser
@@ -44,6 +45,8 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Optional
 from flask import jsonify
+
+from ..subset_tools import get_unzip_callback
 
 
 @dataclass
@@ -816,6 +819,26 @@ def istex():
     )
 
 
+@bp.route("/unzip_subset", methods=["GET"])
+def unzip_subset():
+    file = request.files["zip_file"]
+    uid = None
+    if file and file.filename.endswith('.zip'):
+        uid = str(uuid.uuid4())
+        zip_path = os.path.join("path", f"{uid}.zip")
+        dest_folder = os.path.join("path", uid)
+        file.save(zip_path)
+
+        task = current_app.task_queue.enqueue(
+            get_unzip_callback(test=current_app.config["TESTING"]),
+            args=(zip_path, dest_folder),
+            job_id=uid,
+            job_timeout=600,
+        )
+
+    return redirect(url_for("main.subset", uid=uid))
+
+
 @bp.route("/subset")
 def subset():
     return render_template("subset.html")
@@ -937,6 +960,24 @@ def statistics():
 
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
+@bp.route("/api/unzip_status/<job_id>", methods=["GET"])
+def api_unzip_status(job_id):
+    job_state = "running"
+    job_progress = datetime.now().strftime("%S:%f")
+    response_object = {
+        "status": "success",
+        "data": {"job_id": job_id,
+                 "job_state": job_state,
+                 "progress": job_progress},
+    }
+    if job_state == "running":
+        http_code = 202
+    elif job_state == "finished":
+        http_code = 200
+    else:
+        response_object, http_code = {"status": "failed"}, 422
+    return jsonify(response_object), http_code
+
 
 @bp.route("/api/stat_update")
 def api_stat_update():
