@@ -1,3 +1,4 @@
+import glob
 import json
 
 import os
@@ -864,7 +865,11 @@ def subset_upload():
 @bp.route("/subsets/<task_id>")
 @bp.route("/subsets", defaults={"task_id": None})
 def subsets(task_id):
-    return render_template("subsets.html", task_id=task_id)
+    # get the list of available zip files to unzip
+    zip_pattern = os.path.join(current_app.config["ZIP_UPLOAD_DIR"], "istex-subset*.zip")
+    files = glob.glob(zip_pattern)
+    zip_files = [os.path.basename(f) for f in files]
+    return render_template("subsets.html", task_id=task_id, zip_files=zip_files)
 
 
 # TODO: merge /events and /catalogs routes
