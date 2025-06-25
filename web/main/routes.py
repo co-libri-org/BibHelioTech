@@ -9,6 +9,9 @@ import dateutil.parser as parser
 import pandas as pd
 import redis
 import requests
+from rq.job import Job
+from rq.exceptions import NoSuchJobError
+from redis.connection import ConnectionError
 
 from sqlalchemy import func
 
@@ -660,10 +663,7 @@ def bht_status(paper_id):
         # task_status is in ["queued", "started"] but can change before next if
 
         task_id = paper.task_id
-        from rq.exceptions import NoSuchJobError
-        from redis.connection import ConnectionError
         try:
-            from rq.job import Job
             job = Job.fetch(
                 task_id, connection=current_app.redis_conn
             )
@@ -821,29 +821,6 @@ def istex():
     )
 
 
-@bp.route("/subset_unzip", methods=["POST"])
-def subset_unzip():
-    file = request.files["zip_file"]
-    uid = None
-    if file and file.filename.endswith('.zip'):
-        uid = str(uuid.uuid4())
-        zip_path = os.path.join("path", f"{uid}.zip")
-        dest_folder = os.path.join("path", uid)
-        file.save(zip_path)
-
-        task = current_app.task_queue.enqueue(
-            get_unzip_callback(test=current_app.config["TESTING"]),
-            args=(zip_path, dest_folder),
-            job_id=uid,
-            job_timeout=600,
-        )
-    else:
-        flash(f"Not allowed such file {file} ")
-        return redirect(url_for("main.subsets"))
-
-    return redirect(url_for("main.subsets", task_id=task.get_id()))
-
-
 @bp.route("/subset_upload", methods=["POST"])
 def subset_upload():
     if "zipfile" not in request.files:
@@ -878,15 +855,22 @@ def subsets(task_id):
             json_files = [f for f in archive.namelist() if f.endswith('.json')]
             nb_json = len(json_files)
 
-        return os.path.basename(zip_path), size_mo, nb_json
+        zip_filename = os.path.basename(zip_path)
+        # Now, retrieve jobid by filename stored at job start
+        job_id_bytes = current_app.redis_conn.get(f"job_by_filename:{zip_filename}")
+        if job_id_bytes is not None:
+            job_id = job_id_bytes.decode()  # Conversion bytes -> str
+        else:
+            job_id = None
+        return zip_filename, size_mo, nb_json, job_id
 
     # get the list of available zip files to unzip
     zip_pattern = os.path.join(current_app.config["ZIP_UPLOAD_DIR"], "istex-subset*.zip")
     files = glob.glob(zip_pattern)
     zip_files = []
     for zf in files:
-        _name, _size, _nb_json = zip_archive_info(zf)
-        zip_files.append({'name': _name, 'size': _size, 'nb_json': _nb_json})
+        _name, _size, _nb_json, _job_id = zip_archive_info(zf)
+        zip_files.append({'name': _name, 'size': _size, 'nb_json': _nb_json, 'job_id': _job_id})
     return render_template("subsets.html", task_id=task_id, zip_files=zip_files)
 
 
@@ -1006,22 +990,87 @@ def statistics():
 
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
+@bp.route("/api/subset_unzip", methods=["POST"])
+def api_subset_unzip():
+    total_files = request.json.get("total_files")
+    zip_filename = request.json.get("zip_filename")
+    zip_folder = current_app.config["ZIP_UPLOAD_DIR"]
+    zip_path = os.path.join(zip_folder, zip_filename)
+    uid = str(uuid.uuid4())
+    if zip_filename and os.path.isfile(zip_path):
+
+        # get_unzip_callback(test=current_app.config["TESTING"]),
+        job = current_app.task_queue.enqueue(
+            get_unzip_callback(test=True),
+            args=(zip_path, zip_folder, total_files),
+            job_id=uid,
+            job_timeout=600,
+        )
+        # now, store the jobid by filename for later retrieval
+        current_app.redis_conn.set(f"job_by_filename:{zip_filename}", job.get_id())
+        response_object, http_code = {
+            "status": "success",
+            "data": {"task_id": job.get_id()}
+        }, 200
+    else:
+        response_object, http_code = {
+            "status": "failed",
+            "data": {"err_message": f"no such file {zip_filename}"}
+        }, 503
+
+    return jsonify(response_object), http_code
+
+
 @bp.route("/api/subset_status/<task_id>", methods=["GET"])
 def api_subset_status(task_id):
-    task_status = "running"
-    task_progress = datetime.now().strftime("%S:%f")
-    response_object = {
-        "status": "success",
-        "data": {"task_id": task_id,
-                 "task_status": task_status,
-                 "task_progress": task_progress},
-    }
-    if task_status == "running":
-        http_code = 202
-    elif task_status == "finished":
-        http_code = 200
-    else:
-        response_object, http_code = {"status": "failed"}, 422
+    try:
+        job = Job.fetch(task_id, connection=current_app.redis_conn)
+        task_status = job.get_status(refresh=True).value
+        task_progress = job.meta.get("progress")
+
+        response_object = {
+            "status": "success",
+            "data": {
+                "task_id": task_id,
+                "task_status": task_status,
+                "task_progress": task_progress,
+            },
+        }
+
+        if task_status in ["queued", "started"]:
+            http_code = 202
+        elif task_status == "finished":
+            http_code = 200
+        else:
+            response_object = {
+                'status': "failed",
+                'data': {
+                    'message': 'Unmanaged status',
+                    'alt_message': f"{task_status} unmanaged"
+                }
+            }
+            http_code = 422
+
+    except NoSuchJobError:
+        response_object = {
+            'status': "failed",
+            'data': {
+                'message': "Job Id Error",
+                'alt_message': f"No such job id {task_id} was found",
+            }
+        }
+        http_code = 503
+
+    except ConnectionError:
+        response_object = {
+            "status": "failed",
+            'data': {
+                'message': "Redis Cnx Err",
+                'alt_message': "Database to read tasks status is unreachable",
+            }
+        }
+        http_code = 503
+
     return jsonify(response_object), http_code
 
 
