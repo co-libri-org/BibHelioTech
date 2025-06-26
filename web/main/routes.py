@@ -843,9 +843,8 @@ def subset_upload():
         return redirect(url_for("main.subsets"))
 
 
-@bp.route("/subsets/<task_id>")
-@bp.route("/subsets", defaults={"task_id": None})
-def subsets(task_id):
+@bp.route("/subsets")
+def subsets():
     def zip_archive_info(zip_path):
         import math
         import zipfile
@@ -875,7 +874,7 @@ def subsets(task_id):
     for zf in files:
         _name, _size, _nb_json, _job_id = zip_archive_info(zf)
         zip_files.append({'name': _name, 'size': _size, 'nb_json': _nb_json, 'job_id': _job_id})
-    return render_template("subsets.html", task_id=task_id, zip_files=zip_files)
+    return render_template("subsets.html", zip_files=zip_files)
 
 
 # TODO: merge /events and /catalogs routes
