@@ -2,6 +2,7 @@ import glob
 import json
 
 import os
+import re
 import uuid
 from zoneinfo import ZoneInfo
 
@@ -824,18 +825,21 @@ def istex():
 @bp.route("/subset_upload", methods=["POST"])
 def subset_upload():
     if "zipfile" not in request.files:
-        flash("No file part")
+        flash("Please, provide file for upload", "error" )
         return redirect(url_for("main.subsets"))
+
     file = request.files["zipfile"]
-    if file.filename == "":
-        flash("No selected file")
-    if file and file.filename.endswith('.zip'):
-        filename = secure_filename(file.filename)
+    if not file or file.filename == "":
+        flash("Surprising, your requested file is empty", "error")
+
+    pattern = r"^istex-subset-\d{4}-\d{2}-\d{2}\.zip$"
+    if re.match(pattern, str(file.filename)):
+        filename = secure_filename(str(file.filename))
         file.save(os.path.join(current_app.config['ZIP_UPLOAD_DIR'], filename))
-        flash(f"Downloaded {filename} ")
+        flash(f"Downloaded {filename}")
         return redirect(url_for('main.subsets'))
     else:
-        flash(f"Not allowed such file {file} ")
+        flash(f"<strong>{file.filename}</strong> Not allowed. Follow the <em>\"istex-subset-YYYY-MM-DD\"</em> pattern", "error")
         return redirect(url_for("main.subsets"))
 
 
