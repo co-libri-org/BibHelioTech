@@ -1003,8 +1003,20 @@ def api_subset_unzip():
     return jsonify(response_object), http_code
 
 
-@bp.route("/api/subset_status/<task_id>", methods=["GET"])
-def api_subset_status(task_id):
+@bp.route("/api/subset_status/<subset_name>", methods=["GET"])
+def api_subset_status(subset_name):
+    task_id = job_by_subset(subset_name)
+    current_app.logger.info(f"--------------------------------------------------------------------------------")
+    current_app.logger.info(f"{subset_name}: <{task_id}>")
+    if task_id is None:
+        response_object = {
+            'status': "failed",
+            'data': {
+                'message': "No task id",
+                'alt_message': f"No task for {subset_name}"
+            }
+        }
+        return response_object, 503
     try:
         job = Job.fetch(task_id, connection=current_app.redis_conn)
         task_status = job.get_status(refresh=True).value
@@ -1035,7 +1047,7 @@ def api_subset_status(task_id):
 
     except NoSuchJobError:
         response_object = {
-            'status': "failed",
+            'status': "error",
             'data': {
                 'message': "Job Id Error",
                 'alt_message': f"No such job id {task_id} was found",
@@ -1045,7 +1057,7 @@ def api_subset_status(task_id):
 
     except ConnectionError:
         response_object = {
-            "status": "failed",
+            "status": "error",
             'data': {
                 'message': "Redis Cnx Err",
                 'alt_message': "Database to read tasks status is unreachable",
