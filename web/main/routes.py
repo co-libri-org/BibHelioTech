@@ -825,7 +825,7 @@ def istex():
 @bp.route("/subset_upload", methods=["POST"])
 def subset_upload():
     if "zipfile" not in request.files:
-        flash("Please, provide file for upload", "error" )
+        flash("Please, provide file for upload", "error")
         return redirect(url_for("main.subsets"))
 
     file = request.files["zipfile"]
@@ -975,11 +975,11 @@ def statistics():
 @bp.route("/api/subset_unzip", methods=["POST"])
 def api_subset_unzip():
     total_files = request.json.get("total_files")
-    zip_filename = request.json.get("zip_filename")
+    subset_name = request.json.get("subset_name")
     zip_folder = current_app.config["ZIP_UPLOAD_DIR"]
-    zip_path = os.path.join(zip_folder, zip_filename)
+    zip_path = os.path.join(zip_folder, f"{subset_name}.zip")
     uid = str(uuid.uuid4())
-    if zip_filename and os.path.isfile(zip_path):
+    if zip_path and os.path.isfile(zip_path):
 
         # get_unzip_callback(test=current_app.config["TESTING"]),
         job = current_app.task_queue.enqueue(
@@ -989,7 +989,7 @@ def api_subset_unzip():
             job_timeout=600,
         )
         # now, store the jobid by filename for later retrieval
-        current_app.redis_conn.set(f"job_by_filename:{zip_filename}", job.get_id())
+        current_app.redis_conn.set(f"job_by_filename:{subset_name}", job.get_id())
         response_object, http_code = {
             "status": "success",
             "data": {"task_id": job.get_id()}
@@ -997,7 +997,7 @@ def api_subset_unzip():
     else:
         response_object, http_code = {
             "status": "failed",
-            "data": {"err_message": f"no such file {zip_filename}"}
+            "data": {"err_message": f"no such file {subset_name}"}
         }, 503
 
     return jsonify(response_object), http_code
@@ -1006,14 +1006,15 @@ def api_subset_unzip():
 @bp.route("/api/subset_status/<subset_name>", methods=["GET"])
 def api_subset_status(subset_name):
     task_id = job_by_subset(subset_name)
-    current_app.logger.info(f"--------------------------------------------------------------------------------")
-    current_app.logger.info(f"{subset_name}: <{task_id}>")
+    current_app.logger.debug(f"--------------------------------------------------------------------------------")
+    current_app.logger.debug(f"Subset: <{subset_name}> Task: <{task_id}>")
+    current_app.logger.debug(f"--------------------------------------------------------------------------------")
     if task_id is None:
         response_object = {
             'status': "failed",
             'data': {
-                'message': "No task id",
-                'alt_message': f"No task for {subset_name}"
+                'message': "No task",
+                'alt_message': f"No task id for {subset_name}"
             }
         }
         return response_object, 503
