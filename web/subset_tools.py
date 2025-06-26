@@ -6,6 +6,34 @@ import zipfile
 import time
 
 
+def job_by_subset(subset_name):
+    # Now, retrieve jobid by filename stored at job start
+    job_id_bytes = current_app.redis_conn.get(f"job_by_filename:{subset_name}")
+    if job_id_bytes is not None:
+        job_id = job_id_bytes.decode()  # Conversion bytes -> str
+    else:
+        job_id = None
+    return job_id
+
+
+def zip_archive_info(zip_path):
+    import math
+    import zipfile
+    # archive size in Mo
+    size_octets = os.path.getsize(zip_path)
+    size_mo = size_octets / (1024 * 1024)
+    size_mo = f"{math.ceil(size_mo)} Mo"
+
+    # Count JSON files contained in archive
+    with zipfile.ZipFile(zip_path, 'r') as archive:
+        json_files = [f for f in archive.namelist() if f.endswith('.json')]
+        nb_json = len(json_files)
+
+    subset_name, zip_ext = os.path.splitext( os.path.basename(zip_path))
+    job_id = job_by_subset(subset_name)
+    return subset_name, size_mo, nb_json, job_id
+
+
 def get_unzip_callback(test=True):
     """Wrapper to exec a task callback depending on configuration
 

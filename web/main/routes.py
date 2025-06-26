@@ -52,7 +52,7 @@ from datetime import datetime, timezone
 from typing import Optional
 from flask import jsonify
 
-from ..subset_tools import get_unzip_callback
+from ..subset_tools import get_unzip_callback, zip_archive_info, job_by_subset
 
 
 @dataclass
@@ -845,27 +845,6 @@ def subset_upload():
 
 @bp.route("/subsets")
 def subsets():
-    def zip_archive_info(zip_path):
-        import math
-        import zipfile
-        # archive size in Mo
-        size_octets = os.path.getsize(zip_path)
-        size_mo = size_octets / (1024 * 1024)
-        size_mo = f"{math.ceil(size_mo)} Mo"
-
-        # Count JSON files contained in archive
-        with zipfile.ZipFile(zip_path, 'r') as archive:
-            json_files = [f for f in archive.namelist() if f.endswith('.json')]
-            nb_json = len(json_files)
-
-        zip_filename = os.path.basename(zip_path)
-        # Now, retrieve jobid by filename stored at job start
-        job_id_bytes = current_app.redis_conn.get(f"job_by_filename:{zip_filename}")
-        if job_id_bytes is not None:
-            job_id = job_id_bytes.decode()  # Conversion bytes -> str
-        else:
-            job_id = None
-        return zip_filename, size_mo, nb_json, job_id
 
     # get the list of available zip files to unzip
     zip_pattern = os.path.join(current_app.config["ZIP_UPLOAD_DIR"], "istex-subset*.zip")
