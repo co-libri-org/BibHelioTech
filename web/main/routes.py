@@ -1040,8 +1040,8 @@ def api_subset_status(subset_name):
             response_object = {
                 'status': "failed",
                 'data': {
-                    'message': 'Unmanaged status',
-                    'alt_message': f"{task_status} unmanaged"
+                    'message': "Unmanaged status",
+                    'alt_message': f"Status '{task_status}' is unmanaged"
                 }
             }
             http_code = 422

@@ -26,6 +26,7 @@
             <th scope="col" class="col">size</th>
             <th scope="col" class="col">papers</th>
             <th scope="col" class="col">unzip</th>
+            <th scope="col" class="col">status</th>
         </tr>
         </thead>
         <tbody>
@@ -43,7 +44,8 @@
                 </button>
             </td>
             <td>
-                <span class="zip-status" title="" id="zip-status-{{zf.name}}"></span>
+                <span class="zip-status" title="" id="zip-status-{{zf.name}}"
+                      data-subset_name="{{zf.name}}"></span>
                 <span class="spinner-border spinner-border-sm text-warning d-none" id="spinner-{{zf.name}}"></span>
             </td>
         </tr>
@@ -74,9 +76,10 @@
         const urlSubsetStatusTemplate = "{{ url_for('main.api_subset_status', subset_name='__subset_name__') }}";
 
         function updateSubsetStatus(subset_name){
+            console.log("Updating status for "+subset_name);
            // now dynamically build the flask url
            const url = urlSubsetStatusTemplate.replace("__subset_name__", subset_name);
-           const taskStatusElmtId = '#zip-status-' + subset_name;
+           const statusElmtId = '#zip-status-' + subset_name;
 
            $.ajax({
                     url: url,
@@ -86,26 +89,30 @@
                 const taskStatus = res.data.task_status;
                 const taskProgress = res.data.task_progress;
                 if (taskStatus == "started") {
-                    $(taskStatusElmtId).html(taskProgress);
+                    console.log("Task: started");
+                    $(statusElmtId).html(taskProgress);
                     setTimeout(function() {
                         updateSubsetStatus(subset_name);
                     }, 1000);
                 } else if (taskStatus == "queued") {
+                    console.log("Task: queued");
+                    $(statusElmtId).html(taskStatus);
                     // wait for queued to be executed
                     setTimeout(function() {
                         updateSubsetStatus(subset_name);
-                    }, 1000);
+                    }, 5000);
                 } else {
-                    $(taskStatusElmtId).html(res.data.message)
+                    console.log("Task: "+taskStatus);
+                    $(statusElmtId).html(res.data.message)
                                        .attr("title", res.data.alt_message);
                 }
            })
            .fail((err) => {
-                failedToStatus(err, taskStatusElmtId, "FAILED Update Unzip Status");
+                failedToStatus(err, statusElmtId, "FAILED Update Unzip Status");
            });
         }
 
-        function setUnzipSubsetOnClick(){
+        function setUnzipBtnOnCLick(){
             $('.unzip-subset').click(function(){
                 const subset_name = $(this).data("subset_name")
                 const total_files = $(this).data("total_files")
@@ -119,8 +126,8 @@
                     updateSubsetStatus(subset_name);
                 })
                 .fail((err) => {
-                    const taskStatusElmtId = '#zip-status-' + subset_name;
-                    failedToStatus(err, taskStatusElmtId, "FAILED Unzip Subset");
+                    const statusElmtId = '#zip-status-' + subset_name;
+                    failedToStatus(err, statusElmtId, "FAILED Unzip Subset");
                     console.error(err);
                 });
             });
@@ -128,13 +135,13 @@
 
         function updateAllStatuses() {
             $('.zip-status').each(function(index) {
-                const jobId = $(this).attr('id').substring(11);
-                updateSubsetStatus(jobId);
+                const subset_name = $(this).data("subset_name")
+                updateSubsetStatus(subset_name);
             });
         }
 
         $(document).ready(function() {
-            setUnzipSubsetOnClick();
+            setUnzipBtnOnCLick();
             updateAllStatuses();
         });
 </script>
