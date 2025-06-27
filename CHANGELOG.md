@@ -25,6 +25,8 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [3.2.0-dev] - 2025-06-xx - Upload subsets as zip
+
 ## [3.1.0] - 2025-06-18 - Update stats
 ### Changed
 - Web button for stats update
