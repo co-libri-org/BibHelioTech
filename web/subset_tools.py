@@ -10,6 +10,32 @@ ISTEX_SUBSET_PATTERN = r"^istex-subset-\d{4}-\d{2}-\d{2}$"
 ISTEX_ZIP_PATTERN = rf"{ISTEX_SUBSET_PATTERN}zip$"
 
 
+class Subset:
+    def __init__(self, _subset_name):
+        self.subset_name = _subset_name
+
+    @property
+    def subset_dir(self):
+        # TODO: move function to this method
+        return subset_directory(self.subset_name, current_app.config["ZIP_UPLOAD_DIR"])
+
+    @property
+    def papers(self):
+        _subset_dir = str(self.subset_dir)
+        _papers = []
+
+        for _dir in os.listdir(_subset_dir):
+
+            _abs_dir = os.path.join(_subset_dir, _dir)
+            if not os.path.isdir(_abs_dir):
+                continue
+            _paper_json = os.path.join(_abs_dir, f"{_dir}.json")
+            _paper_cleaned = os.path.join(_abs_dir, f"{_dir}.cleaned")
+            if os.path.isfile(_paper_json) and os.path.isfile(_paper_cleaned):
+                _papers.append({'name': _dir, 'json': _paper_json, 'cleaned': _paper_cleaned})
+        return _papers
+
+
 def subset_directory(subset_name, base_dir):
     _subset_dir = os.path.join(base_dir, subset_name)
     if not (re.match(ISTEX_SUBSET_PATTERN, str(subset_name))
