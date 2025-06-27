@@ -1016,7 +1016,6 @@ def api_subset_status(subset_name):
             'status': "failed",
             'data': {
                 'subset_name': subset_name,
-                'subset_dir': subset_dir,
                 'message': "No task",
                 'alt_message': f"No task id for {subset_name}"
             }
@@ -1031,7 +1030,6 @@ def api_subset_status(subset_name):
             'status': "success",
             'data': {
                 'subset_name': subset_name,
-                'subset_dir': subset_dir,
                 'task_id': task_id,
                 'task_status': task_status,
                 'task_progress': task_progress,
@@ -1059,16 +1057,27 @@ def api_subset_status(subset_name):
             http_code = 422
 
     except NoSuchJobError:
-        response_object = {
-            'status': "error",
-            'data': {
-                'subset_name': subset_name,
-                'subset_dir': subset_dir,
-                'message': "Job Id Error",
-                'alt_message': f"No such job id {task_id} was found",
+        if subset_dir:
+            response_object = {
+                'status': "success",
+                'data': {
+                    'subset_name': subset_name,
+                    'message': "Extracted",
+                    'alt_message': f"{subset_name}.zip is extracted in {subset_name}/",
+                }
             }
-        }
-        http_code = 503
+            http_code = 200
+        else:
+            current_app.logger.info(f"{subset_name}: {subset_dir}")
+            response_object = {
+                'status': "error",
+                'data': {
+                    'subset_name': subset_name,
+                    'message': "Job Id Error",
+                    'alt_message': f"Job was run, but non extracted archive found",
+                }
+            }
+            http_code = 503
 
     except ConnectionError:
         response_object = {
