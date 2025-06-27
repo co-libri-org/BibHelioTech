@@ -32,7 +32,12 @@
         <tbody>
         {% for zf in zip_files %}
         <tr>
-            <td>{{zf.name}}</td>
+            <td>
+                <a class="btn btn-warning" href="{{url_for('main.subset_show', subset_name=zf.name)}}"
+                   title="Show subset {{zf.name}}">
+                    {{zf.name}}
+                </a>
+            </td>
             <td>{{zf.size}}</td>
             <td>{{zf.nb_json}}</td>
             <td>
