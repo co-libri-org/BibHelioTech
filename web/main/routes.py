@@ -976,15 +976,16 @@ def statistics():
 def api_subset_unzip():
     total_files = request.json.get("total_files")
     subset_name = request.json.get("subset_name")
-    zip_folder = current_app.config["ZIP_UPLOAD_DIR"]
-    zip_path = os.path.join(zip_folder, f"{subset_name}.zip")
+    src_folder = current_app.config["ZIP_UPLOAD_DIR"]
+    zip_path = os.path.join(src_folder, f"{subset_name}.zip")
+    dst_folder = os.path.join(src_folder, subset_name)
     uid = str(uuid.uuid4())
     if zip_path and os.path.isfile(zip_path):
 
         # get_unzip_callback(test=current_app.config["TESTING"]),
         job = current_app.task_queue.enqueue(
-            get_unzip_callback(test=True),
-            args=(zip_path, zip_folder, total_files),
+            get_unzip_callback(test=current_app.config["TESTING"]),
+            args=(zip_path, dst_folder, total_files),
             job_id=uid,
             job_timeout=600,
         )
