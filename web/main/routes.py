@@ -52,7 +52,7 @@ from datetime import datetime, timezone
 from typing import Optional
 from flask import jsonify
 
-from ..subset_tools import get_unzip_callback, zip_archive_info, job_by_subset
+from ..subset_tools import get_unzip_callback, zip_archive_info, job_by_subset, ISTEX_ZIP_PATTERN, subset_directory
 
 
 @dataclass
@@ -832,27 +832,27 @@ def subset_upload():
     if not file or file.filename == "":
         flash("Surprising, your requested file is empty", "error")
 
-    pattern = r"^istex-subset-\d{4}-\d{2}-\d{2}\.zip$"
-    if re.match(pattern, str(file.filename)):
+    if re.match(ISTEX_ZIP_PATTERN, str(file.filename)):
         filename = secure_filename(str(file.filename))
         file.save(os.path.join(current_app.config['ZIP_UPLOAD_DIR'], filename))
         flash(f"Downloaded {filename}")
         return redirect(url_for('main.subsets'))
     else:
-        flash(f"<strong>{file.filename}</strong> Not allowed. Follow the <em>\"istex-subset-YYYY-MM-DD\"</em> pattern", "error")
+        flash(f"<strong>{file.filename}</strong> Not allowed. Follow the <em>\"istex-subset-YYYY-MM-DD\"</em> pattern",
+              "error")
         return redirect(url_for("main.subsets"))
 
 
 @bp.route("/subsets")
 def subsets():
-
     # get the list of available zip files to unzip
     zip_pattern = os.path.join(current_app.config["ZIP_UPLOAD_DIR"], "istex-subset*.zip")
     files = glob.glob(zip_pattern)
     zip_files = []
     for zf in files:
         _name, _size, _nb_json, _job_id = zip_archive_info(zf)
-        zip_files.append({'name': _name, 'size': _size, 'nb_json': _nb_json, 'job_id': _job_id})
+        _subset_dir = subset_directory(_name, current_app.config["ZIP_UPLOAD_DIR"])
+        zip_files.append({'name': _name, 'dir': _subset_dir, 'size': _size, 'nb_json': _nb_json, 'job_id': _job_id})
     return render_template("subsets.html", zip_files=zip_files)
 
 
@@ -998,7 +998,7 @@ def api_subset_unzip():
     else:
         response_object, http_code = {
             "status": "failed",
-            "data": {"err_message": f"no such file {subset_name}"}
+            "data": {"err_message": f"no such file {subset_name}.zip"}
         }, 503
 
     return jsonify(response_object), http_code
@@ -1006,6 +1006,7 @@ def api_subset_unzip():
 
 @bp.route("/api/subset_status/<subset_name>", methods=["GET"])
 def api_subset_status(subset_name):
+    subset_dir = subset_directory(subset_name, current_app.config["ZIP_UPLOAD_DIR"])
     task_id = job_by_subset(subset_name)
     current_app.logger.debug(f"--------------------------------------------------------------------------------")
     current_app.logger.debug(f"Subset: <{subset_name}> Task: <{task_id}>")
@@ -1014,6 +1015,8 @@ def api_subset_status(subset_name):
         response_object = {
             'status': "failed",
             'data': {
+                'subset_name': subset_name,
+                'subset_dir': subset_dir,
                 'message': "No task",
                 'alt_message': f"No task id for {subset_name}"
             }
@@ -1027,6 +1030,8 @@ def api_subset_status(subset_name):
         response_object = {
             'status': "success",
             'data': {
+                'subset_name': subset_name,
+                'subset_dir': subset_dir,
                 'task_id': task_id,
                 'task_status': task_status,
                 'task_progress': task_progress,
@@ -1057,6 +1062,8 @@ def api_subset_status(subset_name):
         response_object = {
             'status': "error",
             'data': {
+                'subset_name': subset_name,
+                'subset_dir': subset_dir,
                 'message': "Job Id Error",
                 'alt_message': f"No such job id {task_id} was found",
             }

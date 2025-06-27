@@ -1,9 +1,21 @@
 import os.path
+import re
 
 from flask import current_app
 from rq import get_current_job
 import zipfile
 import time
+
+ISTEX_SUBSET_PATTERN = r"^istex-subset-\d{4}-\d{2}-\d{2}$"
+ISTEX_ZIP_PATTERN = rf"{ISTEX_SUBSET_PATTERN}zip$"
+
+
+def subset_directory(subset_name, base_dir):
+    _subset_dir = os.path.join(base_dir, subset_name)
+    if not (re.match(ISTEX_SUBSET_PATTERN, str(subset_name))
+            and os.path.isdir(_subset_dir)):
+        return None
+    return _subset_dir
 
 
 def job_by_subset(subset_name):
@@ -29,7 +41,7 @@ def zip_archive_info(zip_path):
         json_files = [f for f in archive.namelist() if f.endswith('.json')]
         nb_json = len(json_files)
 
-    subset_name, zip_ext = os.path.splitext( os.path.basename(zip_path))
+    subset_name, zip_ext = os.path.splitext(os.path.basename(zip_path))
     job_id = job_by_subset(subset_name)
     return subset_name, size_mo, nb_json, job_id
 
