@@ -1,0 +1,12 @@
+{% extends "base_page.html" %}
+{%  block more_head %}
+<title>Subset</title>
+{%  endblock %}
+{% block content %}
+<h4>{{subset.name}}</h4>
+<ul>
+    {% for p in subset.papers %}
+    <li>{{p.name}}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

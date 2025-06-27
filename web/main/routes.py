@@ -52,7 +52,8 @@ from datetime import datetime, timezone
 from typing import Optional
 from flask import jsonify
 
-from ..subset_tools import get_unzip_callback, zip_archive_info, job_by_subset, ISTEX_ZIP_PATTERN, subset_directory
+from ..subset_tools import get_unzip_callback, zip_archive_info, job_by_subset, ISTEX_ZIP_PATTERN, subset_directory, \
+    Subset
 
 
 @dataclass
@@ -843,6 +844,12 @@ def subset_upload():
         return redirect(url_for("main.subsets"))
 
 
+@bp.route("/subset/show/<subset_name>", methods=["GET"])
+def subset_show(subset_name):
+    subset = Subset(subset_name)
+    return render_template("subset.html", subset=subset)
+
+
 @bp.route("/subsets")
 def subsets():
     # get the list of available zip files to unzip
@@ -1068,7 +1075,6 @@ def api_subset_status(subset_name):
             }
             http_code = 200
         else:
-            current_app.logger.info(f"{subset_name}: {subset_dir}")
             response_object = {
                 'status': "error",
                 'data': {
