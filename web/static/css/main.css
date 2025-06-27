@@ -211,6 +211,10 @@ tr.paper_exists {
 th.td_num, td.td_num {
     text-align: center !important;
 }
+th.td_num>a , td.td_num>a {
+    width: 100% !important;
+    display: inline-block;
+}
 input.failed{
     background-color: #ffcccc !important;
 }

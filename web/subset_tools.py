@@ -39,9 +39,16 @@ class Subset:
                 continue
             with open(_paper_json) as pj:
                 _meta = json.load(pj)
-            _in_db = db.session.query(Paper).filter_by(istex_id=_dir).one_or_none() is not None
-            _papers.append({'name': _dir, 'title': _meta["title"], 'json': _paper_json, 'cleaned': _paper_cleaned,
-                            'in_db': _in_db})
+            paper = db.session.query(Paper).filter_by(istex_id=_dir).one_or_none()
+            if paper is not None:
+                _in_db = True
+                _db_id = paper.id
+            else:
+                _in_db = False
+                _db_id = None
+            _papers.append(
+                {'id': _db_id, 'name': _dir, 'title': _meta["title"], 'json': _paper_json, 'cleaned': _paper_cleaned,
+                 'in_db': _in_db})
         return _papers
 
 
