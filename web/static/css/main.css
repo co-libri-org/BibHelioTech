@@ -202,6 +202,10 @@ a.btn[disabled] {
     background-color:var(--bs-warning);
 }
 
+tr.to_add {
+    background-color: #f5ecd3 ;
+}
+
 /* ISTEX RESULTS */
 /* change tr color to show if is in db */
 tr.paper_exists {

@@ -15,7 +15,7 @@
     </thead>
     <tbody>
         {% for p in subset.papers %}
-        <tr>
+        <tr class='{{"to_add" if not p.in_db }}'>
             <th scope="row" class="td_num">
                 {% if p.id %}
                 <a class="btn btn-warning " href="{{url_for('main.paper_show', paper_id=p.id)}}"
@@ -26,7 +26,17 @@
             </th>
             <td title="{{p.title}}">
             &laquo;{{p.title | truncate(75, False, end=" ...")}}&raquo;
-            <td>{{ "In db" if p.in_db else "To add"}} </td>
+            <td>
+            {% if p.in_db %}
+            in db
+            {% else %}
+            <a class="btn btn-warning " href="#"
+               onclick="event.preventDefault(); alert('Not implemented yet');"
+               title="Add to DB">
+                add in db
+            </a>
+            {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>
