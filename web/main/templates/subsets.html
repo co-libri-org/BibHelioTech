@@ -89,20 +89,23 @@
                 const taskStatus = res.data.task_status;
                 const taskProgress = res.data.task_progress;
                 if (taskStatus == "started") {
-                    console.log("Task: started");
-                    $(statusElmtId).html(taskProgress);
+                    $(statusElmtId).html(taskProgress)
+                                       .attr("title", res.data.alt_message);
                     setTimeout(function() {
                         updateSubsetStatus(subset_name);
-                    }, 1000);
+                    }, 500);
                 } else if (taskStatus == "queued") {
-                    console.log("Task: queued");
-                    $(statusElmtId).html(taskStatus);
+                    $(statusElmtId).html(taskStatus)
+                                       .attr("title", res.data.alt_message);
                     // wait for queued to be executed
                     setTimeout(function() {
                         updateSubsetStatus(subset_name);
-                    }, 5000);
+                    }, 1000);
+                } else if (taskStatus == "finished") {
+                    // update display
+                    $(statusElmtId).html("Finished")
+                                       .attr("title", res.data.alt_message);
                 } else {
-                    console.log("Task: "+taskStatus);
                     $(statusElmtId).html(res.data.message)
                                        .attr("title", res.data.alt_message);
                 }

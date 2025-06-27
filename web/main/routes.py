@@ -1025,17 +1025,23 @@ def api_subset_status(subset_name):
         task_progress = job.meta.get("progress")
 
         response_object = {
-            "status": "success",
-            "data": {
-                "task_id": task_id,
-                "task_status": task_status,
-                "task_progress": task_progress,
+            'status': "success",
+            'data': {
+                'task_id': task_id,
+                'task_status': task_status,
+                'task_progress': task_progress,
+                'alt_message': "",
             },
         }
 
-        if task_status in ["queued", "started"]:
+        if task_status == "queued":
+            response_object['data']['alt_message'] = f"Task queued at {job.enqueued_at}"
+            http_code = 202
+        elif task_status == "started":
+            response_object['data']['alt_message'] = f"Task started at {job.started_at}"
             http_code = 202
         elif task_status == "finished":
+            response_object['data']['alt_message'] = f"Task finished at {job.ended_at}"
             http_code = 200
         else:
             response_object = {
