@@ -4,9 +4,22 @@
 {%  endblock %}
 {% block content %}
 <h4>{{subset.name}}</h4>
-<ul>
-    {% for p in subset.papers %}
-    <li>{{p.name}}</li>
-    {% endfor %}
-</ul>
+<hr class="mt-4 mb-4">
+<table class="table-hover table">
+    <thead>
+    <tr>
+        <th scope="col" class="col">paper</th>
+        <th scope="col" class="col">status</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for p in subset.papers %}
+        <tr>
+            <td title="{{p.title}}">{{p.name}}</td>
+            <td>{{ "In db" if p.in_db else "To add"}} </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}

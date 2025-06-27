@@ -1,3 +1,4 @@
+import json
 import os.path
 import re
 
@@ -6,18 +7,21 @@ from rq import get_current_job
 import zipfile
 import time
 
+from web import db
+from web.models import Paper
+
 ISTEX_SUBSET_PATTERN = r"^istex-subset-\d{4}-\d{2}-\d{2}$"
 ISTEX_ZIP_PATTERN = rf"{ISTEX_SUBSET_PATTERN}zip$"
 
 
 class Subset:
     def __init__(self, _subset_name):
-        self.subset_name = _subset_name
+        self.name = _subset_name
 
     @property
     def subset_dir(self):
         # TODO: move function to this method
-        return subset_directory(self.subset_name, current_app.config["ZIP_UPLOAD_DIR"])
+        return subset_directory(self.name, current_app.config["ZIP_UPLOAD_DIR"])
 
     @property
     def papers(self):
@@ -31,8 +35,13 @@ class Subset:
                 continue
             _paper_json = os.path.join(_abs_dir, f"{_dir}.json")
             _paper_cleaned = os.path.join(_abs_dir, f"{_dir}.cleaned")
-            if os.path.isfile(_paper_json) and os.path.isfile(_paper_cleaned):
-                _papers.append({'name': _dir, 'json': _paper_json, 'cleaned': _paper_cleaned})
+            if not (os.path.isfile(_paper_json) and os.path.isfile(_paper_cleaned)):
+                continue
+            with open(_paper_json) as pj:
+                _meta = json.load(pj)
+            _in_db = db.session.query(Paper).filter_by(istex_id=_dir).one_or_none() is not None
+            _papers.append({'name': _dir, 'title': _meta["title"], 'json': _paper_json, 'cleaned': _paper_cleaned,
+                            'in_db': _in_db})
         return _papers
 
 
