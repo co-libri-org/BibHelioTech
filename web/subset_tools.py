@@ -11,7 +11,7 @@ from web import db
 from web.models import Paper
 
 ISTEX_SUBSET_PATTERN = r"^istex-subset-\d{4}-\d{2}-\d{2}$"
-ISTEX_ZIP_PATTERN = rf"{ISTEX_SUBSET_PATTERN}zip$"
+ISTEX_ZIP_PATTERN = rf"{ISTEX_SUBSET_PATTERN[:-1]}.zip$"
 
 
 class Subset:
