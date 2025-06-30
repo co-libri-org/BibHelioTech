@@ -28,25 +28,27 @@ class Subset:
     def papers(self):
         _subset_dir = str(self.subset_dir)
         _papers = []
+        existing_papers = {p.istex_id: p for p in db.session.query(Paper).all()}
 
-        for _dir in os.listdir(_subset_dir):
-
-            _abs_dir = os.path.join(_subset_dir, _dir)
-            if not os.path.isdir(_abs_dir):
-                continue
-            _paper_json = os.path.join(_abs_dir, f"{_dir}.json")
-            _paper_cleaned = os.path.join(_abs_dir, f"{_dir}.cleaned")
+        for _dir in (d for d in os.scandir(_subset_dir) if d.is_dir()):
+            _abs_dir = _dir.path
+            _name = _dir.name
+            _paper_json = os.path.join(_abs_dir, f"{_name}.json")
+            _paper_cleaned = os.path.join(_abs_dir, f"{_name}.cleaned")
             if not (os.path.isfile(_paper_json) and os.path.isfile(_paper_cleaned)):
                 continue
             with open(_paper_json) as pj:
                 _meta = json.load(pj)
-            paper = db.session.query(Paper).filter_by(istex_id=_dir).one_or_none()
+
+
+            paper = existing_papers.get(_name)
             if paper is not None:
                 _in_db = True
                 _db_id = paper.id
             else:
                 _in_db = False
                 _db_id = None
+
             _papers.append(
                 {'id': _db_id, 'name': _dir, 'title': _meta["title"], 'json': _paper_json, 'cleaned': _paper_cleaned,
                  'in_db': _in_db})
