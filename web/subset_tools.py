@@ -26,8 +26,10 @@ class Subset:
 
     @property
     def papers(self):
-        _subset_dir = str(self.subset_dir)
         _papers = []
+        if self.subset_dir is None:
+            return _papers
+        _subset_dir = str(self.subset_dir)
         existing_papers = {p.istex_id: p for p in db.session.query(Paper).all()}
 
         for _dir in (d for d in os.scandir(_subset_dir) if d.is_dir()):
