@@ -847,7 +847,8 @@ def subset_upload():
 @bp.route("/subset/show/<subset_name>", methods=["GET"])
 def subset_show(subset_name):
     subset = Subset(subset_name)
-    return render_template("subset.html", subset=subset)
+    papers = subset.papers
+    return render_template("subset.html", subset=subset, papers=papers)
 
 
 @bp.route("/subsets")
