@@ -1014,21 +1014,19 @@ def api_subset_unzip():
 @bp.route("/api/subset_status/<subset_name>", methods=["GET"])
 def api_subset_status(subset_name):
     subset_dir = subset_directory(subset_name, current_app.config["ZIP_UPLOAD_DIR"])
-    task_id = job_by_subset(subset_name)
-    current_app.logger.debug(f"--------------------------------------------------------------------------------")
-    current_app.logger.debug(f"Subset: <{subset_name}> Task: <{task_id}>")
-    current_app.logger.debug(f"--------------------------------------------------------------------------------")
-    if task_id is None:
-        response_object = {
-            'status': "failed",
-            'data': {
-                'subset_name': subset_name,
-                'message': "No task",
-                'alt_message': f"No task id for {subset_name}"
-            }
-        }
-        return response_object, 503
     try:
+        task_id = job_by_subset(subset_name)
+        if task_id is None:
+            response_object = {
+                'status': "failed",
+                'data': {
+                    'subset_name': subset_name,
+                    'message': "No task",
+                    'alt_message': f"No task id for {subset_name}"
+                }
+            }
+            return response_object, 503
+
         job = Job.fetch(task_id, connection=current_app.redis_conn)
         task_status = job.get_status(refresh=True).value
         task_progress = job.meta.get("progress")

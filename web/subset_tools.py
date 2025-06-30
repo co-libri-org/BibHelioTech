@@ -2,6 +2,7 @@ import json
 import os.path
 import re
 
+from redis.connection import ConnectionError
 from flask import current_app
 from rq import get_current_job
 import zipfile
@@ -84,7 +85,10 @@ def zip_archive_info(zip_path):
         nb_json = len(json_files)
 
     subset_name, zip_ext = os.path.splitext(os.path.basename(zip_path))
-    job_id = job_by_subset(subset_name)
+    try:
+        job_id = job_by_subset(subset_name)
+    except ConnectionError:
+        job_id = None
     return subset_name, size_mo, nb_json, job_id
 
 
