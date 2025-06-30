@@ -858,9 +858,16 @@ def subsets():
     files = glob.glob(zip_pattern)
     zip_files = []
     for zf in files:
+        # TODO: this should come from Subset instance
         _name, _size, _nb_json, _job_id = zip_archive_info(zf)
-        _subset_dir = subset_directory(_name, current_app.config["ZIP_UPLOAD_DIR"])
-        zip_files.append({'name': _name, 'dir': _subset_dir, 'size': _size, 'nb_json': _nb_json, 'job_id': _job_id})
+        subset = Subset(_name)
+        zip_files.append(
+            {'name': _name,
+             'dir': subset.subset_dir,
+             'extracted': subset.extracted,
+             'size': _size,
+             'nb_json': _nb_json,
+             'job_id': _job_id})
     return render_template("subsets.html", zip_files=zip_files)
 
 

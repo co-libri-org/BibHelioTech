@@ -20,6 +20,10 @@ class Subset:
         self.name = _subset_name
 
     @property
+    def extracted(self):
+        return self.subset_dir is not None
+
+    @property
     def subset_dir(self):
         # TODO: move function to this method
         return subset_directory(self.name, current_app.config["ZIP_UPLOAD_DIR"])
@@ -41,7 +45,6 @@ class Subset:
                 continue
             with open(_paper_json) as pj:
                 _meta = json.load(pj)
-
 
             paper = existing_papers.get(_name)
             if paper is not None:

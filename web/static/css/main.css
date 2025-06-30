@@ -338,6 +338,13 @@ button.stat-status:hover {
     font-weight: bold;
 }
 
+/* -------------------------- S U B S E T S -------------------------- */
+button.unzip-subset.disabled, a.show-subset.disabled {
+    background: lightgrey;
+    border: solid grey 1pt !important;
+    point-events: auto;
+ }
+
 /* ----------------------------P L O T S--------------------------------- */
 .plot-container {
     margin: 1em 0;
