@@ -63,17 +63,18 @@ class Subset:
                  'in_db': _in_db})
         return _papers
 
+    @property
+    def task_id(self):
+        # Now, retrieve jobid by filename stored at job start
+        task_id_bytes = current_app.redis_conn.get(f"task_by_filename:{self.name}")
+        if task_id_bytes is not None:
+            task_id = task_id_bytes.decode()  # Conversion bytes -> str
+        else:
+            task_id = None
+        return task_id
 
-
-
-def job_by_subset(subset_name):
-    # Now, retrieve jobid by filename stored at job start
-    job_id_bytes = current_app.redis_conn.get(f"job_by_filename:{subset_name}")
-    if job_id_bytes is not None:
-        job_id = job_id_bytes.decode()  # Conversion bytes -> str
-    else:
-        job_id = None
-    return job_id
+    def set_task_id(self, task_id):
+        current_app.redis_conn.set(f"job_by_filename:{self.name}", task_id)
 
 
 def zip_archive_info(zip_path):

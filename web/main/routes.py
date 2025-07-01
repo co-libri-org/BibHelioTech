@@ -1005,7 +1005,8 @@ def api_subset_unzip():
         )
         # now, store the jobid by filename for later retrieval
         # TODO: Subset.set_task_id
-        current_app.redis_conn.set(f"job_by_filename:{subset_name}", job.get_id())
+        subset = Subset(subset_name)
+        subset.set_task_id(job.get_id())
         response_object, http_code = {
             "status": "success",
             "data": {"task_id": job.get_id()}
