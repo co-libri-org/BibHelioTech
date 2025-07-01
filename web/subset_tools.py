@@ -17,7 +17,11 @@ ISTEX_ZIP_PATTERN = rf"{ISTEX_SUBSET_PATTERN[:-1]}.zip$"
 
 class Subset:
     def __init__(self, _subset_name):
+        self.size = None
+        self.nb_json = None
         self.name = _subset_name
+        self.base_dir = current_app.config['ZIP_UPLOAD_DIR']
+        self.set_archive_info()
 
     @property
     def extracted(self):
@@ -25,8 +29,7 @@ class Subset:
 
     @property
     def directory(self):
-        base_dir = current_app.config['ZIP_UPLOAD_DIR']
-        _subset_dir = os.path.join(base_dir, self.name)
+        _subset_dir = os.path.join(self.base_dir, self.name)
         if not (re.match(ISTEX_SUBSET_PATTERN, str(self.name))
                 and os.path.isdir(_subset_dir)):
             return None
@@ -63,6 +66,21 @@ class Subset:
                  'in_db': _in_db})
         return _papers
 
+    def set_archive_info(self):
+        import math
+        import zipfile
+        # archive size in Mo
+        zip_path = os.path.join(self.base_dir, f"{self.name}.zip")
+        size_octets = os.path.getsize(zip_path)
+        size_mo = size_octets / (1024 * 1024)
+        self.size = f"{math.ceil(size_mo)} Mo"
+
+        # Count JSON files contained in archive
+        with zipfile.ZipFile(zip_path, 'r') as archive:
+            json_files = [f for f in archive.namelist() if f.endswith('.json')]
+            self.nb_json = len(json_files)
+
+
     @property
     def task_id(self):
         # Now, retrieve jobid by filename stored at job start
@@ -77,25 +95,6 @@ class Subset:
         current_app.redis_conn.set(f"job_by_filename:{self.name}", task_id)
 
 
-def zip_archive_info(zip_path):
-    import math
-    import zipfile
-    # archive size in Mo
-    size_octets = os.path.getsize(zip_path)
-    size_mo = size_octets / (1024 * 1024)
-    size_mo = f"{math.ceil(size_mo)} Mo"
-
-    # Count JSON files contained in archive
-    with zipfile.ZipFile(zip_path, 'r') as archive:
-        json_files = [f for f in archive.namelist() if f.endswith('.json')]
-        nb_json = len(json_files)
-
-    subset_name, zip_ext = os.path.splitext(os.path.basename(zip_path))
-    try:
-        job_id = job_by_subset(subset_name)
-    except ConnectionError:
-        job_id = None
-    return subset_name, size_mo, nb_json, job_id
 
 
 def get_unzip_callback(test=True):

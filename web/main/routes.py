@@ -52,7 +52,7 @@ from datetime import datetime, timezone
 from typing import Optional
 from flask import jsonify
 
-from ..subset_tools import get_unzip_callback, zip_archive_info, job_by_subset, ISTEX_ZIP_PATTERN, Subset
+from ..subset_tools import get_unzip_callback, ISTEX_ZIP_PATTERN, Subset
 
 
 @dataclass
@@ -858,15 +858,15 @@ def subsets():
     zip_files = []
     for zf in files:
         # TODO: this should come from Subset instance
-        _name, _size, _nb_json, _job_id = zip_archive_info(zf)
-        subset = Subset(_name)
+        subset_name, zip_ext = os.path.splitext(os.path.basename(zf))
+        subset = Subset(subset_name)
         zip_files.append(
-            {'name': _name,
-             'dir': subset.subset_dir,
+            {'name': subset.name,
+             'dir': subset.directory,
              'extracted': subset.extracted,
-             'size': _size,
-             'nb_json': _nb_json,
-             'job_id': _job_id})
+             'size': subset.size,
+             'nb_json': subset.nb_json,
+             'job_id': subset.task_id})
     return render_template("subsets.html", zip_files=zip_files)
 
 
@@ -1027,7 +1027,7 @@ def api_subset_status(subset_name):
     subset_status = "extracted" if _subset.extracted else "zipped"
     try:
         # TODO: subset.task_id
-        task_id = job_by_subset(subset_name)
+        task_id = _subset.task_id
         if task_id is None:
             response_object = {
                 'status': "failed",
