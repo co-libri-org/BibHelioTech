@@ -339,7 +339,9 @@ button.stat-status:hover {
 }
 
 /* -------------------------- S U B S E T S -------------------------- */
-button.unzip-subset.disabled, a.show-subset.disabled {
+/*button.unzip-subset.disabled, a.show-subset.disabled {*/
+[id^="unzip-istex-subset-"].disabled ,
+[id^="show-istex-subset-"].disabled {
     background: lightgrey;
     border: solid grey 1pt !important;
     point-events: auto;
