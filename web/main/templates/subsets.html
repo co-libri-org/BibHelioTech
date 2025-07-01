@@ -62,7 +62,7 @@
             <td>
                 <span class="zip-status" title="" id="zip-status-{{zf.name}}"
                       data-subset_name="{{zf.name}}"></span>
-                <span class="spinner-border spinner-border-sm text-warning d-none" id="spinner-{{zf.name}}"></span>
+                <span class="spinner-border spinner-border-sm d-none" id="spinner-{{zf.name}}"></span>
             </td>
         </tr>
         {% endfor %}
@@ -95,7 +95,9 @@
             console.log("Updating status for "+subset_name);
            // now dynamically build the flask url
            const url = urlSubsetStatusTemplate.replace("__subset_name__", subset_name);
+           const spinnerElmtId = '#spinner-' + subset_name
            const statusElmtId = '#zip-status-' + subset_name;
+
 
            $.ajax({
                     url: url,
@@ -104,7 +106,15 @@
            .done((res) => {
                 const taskStatus = res.data.task_status;
                 const taskProgress = res.data.task_progress;
+
+               // Disable spinner if active
+               $(spinnerElmtId).removeClass('d-inline-block')
+               $(spinnerElmtId).addClass('d-none')
+
                 if (taskStatus == "started") {
+                    // show spinner while running task
+                    $(spinnerElmtId).removeClass('d-none')
+                    $(spinnerElmtId).addClass('d-inline-block')
                     $(statusElmtId).html(taskProgress)
                                        .attr("title", res.data.alt_message);
                     setTimeout(function() {

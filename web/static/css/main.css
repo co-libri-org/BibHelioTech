@@ -345,6 +345,11 @@ button.unzip-subset.disabled, a.show-subset.disabled {
     point-events: auto;
  }
 
+[id^="spinner-istex-subset-"] {
+  margin-left: 10px;
+  color: var(--app-theme-color);
+}
+
 /* ----------------------------P L O T S--------------------------------- */
 .plot-container {
     margin: 1em 0;
