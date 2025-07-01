@@ -1005,6 +1005,7 @@ def api_subset_unzip():
             job_timeout=600,
         )
         # now, store the jobid by filename for later retrieval
+        # TODO: Subset.set_task_id
         current_app.redis_conn.set(f"job_by_filename:{subset_name}", job.get_id())
         response_object, http_code = {
             "status": "success",
@@ -1021,23 +1022,30 @@ def api_subset_unzip():
 
 @bp.route("/api/subset_status/<subset_name>", methods=["GET"])
 def api_subset_status(subset_name):
-    subset_dir = subset_directory(subset_name, current_app.config["ZIP_UPLOAD_DIR"])
+    _subset = Subset(subset_name)
+    # TODO: subset.status
+    subset_status = "extracted" if _subset.extracted else "zipped"
     try:
+        # TODO: subset.task_id
         task_id = job_by_subset(subset_name)
         if task_id is None:
             response_object = {
                 'status': "failed",
                 'data': {
                     'subset_name': subset_name,
+                    'subset_status': subset_status,
                     'message': "No task",
                     'alt_message': f"No task id for {subset_name}"
                 }
             }
+            # TODO: should return http_code 200 or 202
             return response_object, 503
 
+        # TODO: subset.task_status , subset.task_progress
         job = Job.fetch(task_id, connection=current_app.redis_conn)
         task_status = job.get_status(refresh=True).value
         task_progress = job.meta.get("progress")
+        # TODO: end
 
         response_object = {
             'status': "success",
@@ -1050,14 +1058,13 @@ def api_subset_status(subset_name):
             },
         }
 
-        if task_status == "queued":
-            response_object['data']['alt_message'] = f"Task queued at {job.enqueued_at}"
-            http_code = 202
-        elif task_status == "started":
-            response_object['data']['alt_message'] = f"Task started at {job.started_at}"
+        if task_status in ["queued", "started"]:
+            response_object['data']['alt_message'] = f"Task {task_status} at {job.enqueued_at}"
+            response_object['data']['subset_status'] = subset_status
             http_code = 202
         elif task_status == "finished":
             response_object['data']['alt_message'] = f"Task finished at {job.ended_at}"
+            response_object['data']['subset_status'] = subset_status
             http_code = 200
         else:
             response_object = {
@@ -1070,11 +1077,12 @@ def api_subset_status(subset_name):
             http_code = 422
 
     except NoSuchJobError:
-        if subset_dir:
+        if _subset.extracted:
             response_object = {
                 'status': "success",
                 'data': {
                     'subset_name': subset_name,
+                    'subset_status': subset_status,
                     'message': "Extracted",
                     'alt_message': f"{subset_name}.zip is extracted in {subset_name}/",
                 }
@@ -1089,6 +1097,7 @@ def api_subset_status(subset_name):
                     'alt_message': f"Job was run, but non extracted archive found",
                 }
             }
+            # TODO: that is not a server error, so not a 503
             http_code = 503
 
     except ConnectionError:
