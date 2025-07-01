@@ -21,19 +21,23 @@ class Subset:
 
     @property
     def extracted(self):
-        return self.subset_dir is not None
+        return self.directory is not None
 
     @property
-    def subset_dir(self):
-        # TODO: move function to this method
-        return subset_directory(self.name, current_app.config["ZIP_UPLOAD_DIR"])
+    def directory(self):
+        base_dir = current_app.config['ZIP_UPLOAD_DIR']
+        _subset_dir = os.path.join(base_dir, self.name)
+        if not (re.match(ISTEX_SUBSET_PATTERN, str(self.name))
+                and os.path.isdir(_subset_dir)):
+            return None
+        return _subset_dir
 
     @property
     def papers(self):
         _papers = []
-        if self.subset_dir is None:
+        if self.directory is None:
             return _papers
-        _subset_dir = str(self.subset_dir)
+        _subset_dir = str(self.directory)
         existing_papers = {p.istex_id: p for p in db.session.query(Paper).all()}
 
         for _dir in (d for d in os.scandir(_subset_dir) if d.is_dir()):
@@ -60,12 +64,6 @@ class Subset:
         return _papers
 
 
-def subset_directory(subset_name, base_dir):
-    _subset_dir = os.path.join(base_dir, subset_name)
-    if not (re.match(ISTEX_SUBSET_PATTERN, str(subset_name))
-            and os.path.isdir(_subset_dir)):
-        return None
-    return _subset_dir
 
 
 def job_by_subset(subset_name):

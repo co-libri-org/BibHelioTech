@@ -52,8 +52,7 @@ from datetime import datetime, timezone
 from typing import Optional
 from flask import jsonify
 
-from ..subset_tools import get_unzip_callback, zip_archive_info, job_by_subset, ISTEX_ZIP_PATTERN, subset_directory, \
-    Subset
+from ..subset_tools import get_unzip_callback, zip_archive_info, job_by_subset, ISTEX_ZIP_PATTERN, Subset
 
 
 @dataclass
