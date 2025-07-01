@@ -33,7 +33,9 @@
         {% for zf in zip_files %}
         <tr>
             <td>
-                <a class="btn btn-warning" href="{{url_for('main.subset_show', subset_name=zf.name)}}"
+                <a id="show-{{zf.name}}"
+                   class="btn btn-warning show-subset"
+                   href="{{url_for('main.subset_show', subset_name=zf.name)}}"
                    title="Show subset {{zf.name}}">
                     {{zf.name}}
                 </a>
@@ -41,7 +43,8 @@
             <td>{{zf.size}}</td>
             <td>{{zf.nb_json}}</td>
             <td>
-                <button class="btn btn-warning unzip-subset"
+                <button id="unzip-{{zf.name}}"
+                        class="btn btn-warning unzip-subset"
                         data-subset_name="{{zf.name}}"
                         data-total_files="{{zf.nb_json}}"
                         title="Unzip Subset">
