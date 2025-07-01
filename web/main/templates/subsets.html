@@ -31,31 +31,20 @@
         </thead>
         <tbody>
         {% for zf in zip_files %}
-        {% if zf.extracted %}
-            {%set show_enabled = ""%}
-            {%set show_title = "Show subset "+zf.name%}
-            {%set unzip_enabled = "disabled"%}
-            {%set unzip_title = "Already unzipped"%}
-        {% else %}
-            {%set show_enabled = "disabled"%}
-            {%set show_title = "Unzip first"%}
-            {%set unzip_enabled = ""%}
-            {%set unzip_title = "Unzip Subset"+zf.name%}
-        {% endif %}
         <tr>
             <td>
-                <a class="btn btn-warning show-subset {{show_enabled}}" href="{{url_for('main.subset_show', subset_name=zf.name)}}"
-                   title="{{show_title}}">
+                <a class="btn btn-warning" href="{{url_for('main.subset_show', subset_name=zf.name)}}"
+                   title="Show subset {{zf.name}}">
                     {{zf.name}}
                 </a>
             </td>
             <td>{{zf.size}}</td>
             <td>{{zf.nb_json}}</td>
             <td>
-                <button class="btn btn-warning unzip-subset {{unzip_enabled}}"
+                <button class="btn btn-warning unzip-subset"
                         data-subset_name="{{zf.name}}"
                         data-total_files="{{zf.nb_json}}"
-                        title="{{unzip_title}}">
+                        title="Unzip Subset">
                     Unzip
                 </button>
             </td>
