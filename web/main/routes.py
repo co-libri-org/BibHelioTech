@@ -13,6 +13,7 @@ import requests
 from rq.job import Job
 from rq.exceptions import NoSuchJobError
 from redis.connection import ConnectionError
+from redis.exceptions import RedisError
 
 from sqlalchemy import func
 
@@ -35,7 +36,7 @@ from bht.pipeline import PipeStep
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType, istexid_to_paper, stream_to_db
+from web.models import Paper, Mission, HpEvent, BhtFileType, stream_to_db
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -249,10 +250,10 @@ def basename_filter(filename):
     return os.path.basename(filename)
 
 
-# Add colors as default variable for all template
+# Add colors as default variable for all templates
 @bp.before_request
 def add_css_colors_to_templates():
-    # Insert CSS_COLORS in templates global context
+    # Insert CSS_COLORS in template's global context
     current_app.jinja_env.globals['css_colors'] = current_app.config['CSS_COLORS']
 
 
@@ -300,7 +301,7 @@ def db_stats():
 
 @bp.errorhandler(Exception)
 def handle_exception(e):
-    current_app.logger.exception("Exception has occurred")
+    current_app.logger.exception(f"Exception has occurred: {e}")
     return "FLASK Internal Error", 500
 
 
@@ -474,7 +475,7 @@ def enlighted_json():
         )
     elif comp_type == "analysed":
         response = Response(
-            response=step_lighter.analysed_json,
+            response=step_lighter.json_analysed,
             mimetype="text/plain",
             headers={"Content-disposition": "inline"},
         )
@@ -620,25 +621,24 @@ def bht_status(paper_id):
                                          status="failed",
                                          http_code=404)
 
-
     # Get task info from db
     elif paper.task_status in ["finished", "failed", None]:
         response_object = StatusResponse(paper=paper,
                                          status="success",
                                          http_code=200)
-    # Or Get task info from task manager
+    # Or Get task info from the task manager
     else:
         # task_status is in ["queued", "started"] but can change before next if
 
         task_id = paper.task_id
         try:
             job = Job.fetch(
-                task_id, connection=current_app.redis_conn
+                task_id, connection=current_app.redis_conn  # type: ignore[attr-defined]
             )
             task_status = job.get_status(refresh=True).value
 
-            # even if we entered that case with status in ["queued", "started"] it can have changed in the meantime
-            # so we need to also test  "finished" and "failed" statuses
+            # even if we entered that case with status in ["queued", "started"], it can have changed in the meantime,
+            # so we need to also test "finished" and "failed" statuses
             if task_status in ["started", "finished", "failed"]:
                 task_started = job.started_at
             elif task_status == "queued":
@@ -734,7 +734,7 @@ def istex_test():
 def istex():
     """
     Given an istex api url (found in the form request)
-    Parse the json response data
+    Parse the JSON response data
     Redirect to our "istex" page to display papers list
     """
     # Juste display form at first sight
@@ -745,7 +745,7 @@ def istex():
     istex_req_url = request.form.get("istex_req_url")
     ark_istex = request.form.get("ark_istex")
     if istex_req_url:
-        # just go on with it
+        # go on with it
         pass
     elif ark_istex:
         # then build the request_url from ark
@@ -754,10 +754,10 @@ def istex():
         flash(f"Could not read any argument: istex_req_url or ark_istex ", "error")
         return redirect(url_for("main.istex"))
 
-    # build a link to allow direct human check by click into error message
+    # build a link to allow direct human check by click into an error message
     istex_req_url_a = f'<a target="_blank" href="{istex_req_url}" title="get istex request"> {istex_req_url} </a>'
 
-    # now try to get some results from Istex, or quit with err message
+    # now try to get some results from Istex, or quit with an error message
     try:
         r = requests.get(url=istex_req_url)
         json_content = r.json()
@@ -812,9 +812,9 @@ def subset_upload():
 
 @bp.route("/subset/show/<subset_name>", methods=["GET"])
 def subset_show(subset_name):
-    subset = Subset(subset_name)
-    papers = subset.papers
-    return render_template("subset.html", subset=subset, papers=papers)
+    _subset = Subset(subset_name)
+    _papers = _subset.papers
+    return render_template("subset.html", subset=_subset, papers=_papers)
 
 
 @bp.route("/subsets")
@@ -824,7 +824,6 @@ def subsets():
     files = glob.glob(zip_pattern)
     zip_files = []
     for zf in files:
-        # TODO: this should come from Subset instance
         subset_name, zip_ext = os.path.splitext(os.path.basename(zf))
         subset = Subset(subset_name)
         zip_files.append(
@@ -865,7 +864,7 @@ def events(ref_name, ref_id):
 def admin():
     # build a list of papers with catalogs not already inserted in db
     page = request.args.get('page', 1, type=int)
-    _query = Paper.query.filter(Paper.cat_in_db == False, Paper.cat_path != 'None')
+    _query = Paper.query.filter(Paper.cat_in_db is False, Paper.cat_path != 'None')
 
     _paginated_papers = _query.paginate(
         page=page,
@@ -971,7 +970,6 @@ def api_subset_unzip():
             job_timeout=600,
         )
         # now, store the jobid by filename for later retrieval
-        # TODO: Subset.set_task_id
         subset = Subset(subset_name)
         subset.set_task_id(job.get_id())
         response_object, http_code = {
@@ -1009,7 +1007,7 @@ def api_subset_status(subset_name):
             return response_object, 503
 
         # TODO: subset.task_status , subset.task_progress
-        job = Job.fetch(task_id, connection=current_app.redis_conn)
+        job = Job.fetch(task_id, connection=current_app.redis_conn)  # type: ignore[attr-defined]
         task_status = job.get_status(refresh=True).value
         task_progress = job.meta.get("progress")
         # TODO: end
@@ -1085,7 +1083,7 @@ def api_stat_update():
     """Load stat data into REDIS keys for later call"""
     from sqlalchemy.orm import joinedload
     try:
-        current_app.redis_conn.ping()
+        current_app.redis_conn.ping()  # type: ignore[attr-defined]
     except redis.exceptions.ConnectionError:
         current_app.logger.exception("Failed to ping Redis")
         abort(503, description="Redis unavailable")
@@ -1095,7 +1093,7 @@ def api_stat_update():
         _papers = Paper.query.options(joinedload(Paper.hp_events)).all()
         for i, p in enumerate(_papers):
             _cached_events.append({"paper_id": p.id, "num_events": len(p.hp_events)})
-        current_app.redis_conn.set('cached_events', json.dumps(_cached_events))
+        current_app.redis_conn.set('cached_events', json.dumps(_cached_events))  # type: ignore[attr-defined]
         current_app.logger.debug("Updating cached_events REDIS key")
 
         _cached_nconf = []
@@ -1104,10 +1102,10 @@ def api_stat_update():
         for i, e in enumerate(_events):
             e_dict = e.get_dict(max_conf)
             _cached_nconf.append({'nconf': e_dict['nconf']})
-        current_app.redis_conn.set('cached_nconf', json.dumps(_cached_nconf))
+        current_app.redis_conn.set('cached_nconf', json.dumps(_cached_nconf))  # type: ignore[attr-defined]
         current_app.logger.debug("Updating cached_nconf REDIS key")
 
-    except Exception as e:
+    except (RedisError, ConnectionError):
         current_app.logger.exception("Failed to update Redis cache")
         abort(500, description="Redis update failed")
 
@@ -1134,7 +1132,7 @@ def api_papers_events_graph():
     error_occurred = False
 
     try:
-        cached_raw = current_app.redis_conn.get('cached_events')
+        cached_raw = current_app.redis_conn.get('cached_events')  # type: ignore[attr-defined]
         cached_events = json.loads(cached_raw) if cached_raw else []
         df = pd.DataFrame(cached_events)
 
@@ -1142,7 +1140,7 @@ def api_papers_events_graph():
             df['num_events'] = []
 
         df = df[(df['num_events'] >= params['events_min']) & (df['num_events'] <= params['events_max'])]
-    except redis.RedisError as e:
+    except RedisError:
         # If redis exception, fill in with empty data
         df = pd.DataFrame({'num_events': []})
         error_occurred = True
@@ -1193,7 +1191,7 @@ def api_nconf_dist_graph():
     error_occurred = False
 
     try:
-        cached_raw = current_app.redis_conn.get('cached_nconf')
+        cached_raw = current_app.redis_conn.get('cached_nconf')  # type: ignore[attr-defined]
         cached_nconf = json.loads(cached_raw) if cached_raw else []
         df = pd.DataFrame(cached_nconf)
 
@@ -1201,7 +1199,7 @@ def api_nconf_dist_graph():
             df['nconf'] = []
 
         df = df[(df['nconf'] >= params['nconf_min']) & (df['nconf'] <= params['nconf_max'])]
-    except redis.RedisError as e:
+    except RedisError:
         # If redis exception, fill in with empty data
         df = pd.DataFrame({'nconf': []})
         error_occurred = True
@@ -1267,14 +1265,14 @@ def api_nconf_dist_graph():
 
 @bp.route("/api/catalogs/txt", methods=["POST", "GET"])
 def api_catalogs_txt():
-    """Download the txt version of the catalog for the given mission
+    """ Download the txt version of the catalog for the given mission
 
     To do that,
      - retrieve from db all events related to that mission id
      - Dump this events list to a text file.
 
 
-    :parameter: mission_id  in get request
+    :parameter: Mission_id in get.request
     :return: catalog text file as attachment
     """
     if request.method == "POST":
@@ -1339,11 +1337,11 @@ def api_catalogs_txt():
 
 @bp.route("/api/push_catalog", methods=["POST"])
 def api_push_catalog():
-    """Inserts hp_events to db from paper's  catalog
+    """Inserts hp_events to db from paper's catalog
 
-    :argument: paper_id in POST request as json
+    :argument: paper_id in POST request as JSON
     :method: GET
-    :return: json result
+    :return: JSON result
     """
     paper_id = request.json.get("paper_id")
     paper = db.session.get(Paper, paper_id)
