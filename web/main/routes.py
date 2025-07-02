@@ -10,6 +10,7 @@ import dateutil.parser as parser
 import pandas as pd
 import redis
 import requests
+from rq.job import Job
 from rq.exceptions import NoSuchJobError
 from redis.connection import ConnectionError
 from redis.exceptions import RedisError
@@ -986,14 +987,15 @@ def api_subset_unzip():
 @bp.route("/api/subset_status/<subset_name>", methods=["GET"])
 def api_subset_status(subset_name):
     _subset = Subset(subset_name)
+    base_data = {'subset_name': _subset.name,
+                 'subset_status': _subset.status}
     try:
         task_id = _subset.task_id
         if task_id is None:
             response_object = {
                 'status': "failed",
                 'data': {
-                    'subset_name': _subset.name,
-                    'subset_status': _subset.status,
+                    **base_data,
                     'message': "No task",
                     'alt_message': f"No task id for {_subset.name}"
                 }
@@ -1003,26 +1005,26 @@ def api_subset_status(subset_name):
         response_object = {
             'status': "success",
             'data': {
-                'subset_name': _subset.name,
+                **base_data,
                 'task_id': _subset.task_id,
                 'task_status': _subset.task_status,
                 'task_progress': _subset.task_progress,
+                'message': f"Task {_subset.task_status}",
                 'alt_message': "",
             },
         }
 
         if _subset.task_status in ["queued", "started"]:
             response_object['data']['alt_message'] = f"Task {_subset.task_status} at {_subset.job.enqueued_at}"
-            response_object['data']['subset_status'] = _subset.status
             http_code = 202
         elif _subset.task_status == "finished":
             response_object['data']['alt_message'] = f"Task finished at {_subset.job.ended_at}"
-            response_object['data']['subset_status'] = _subset.status
             http_code = 200
         else:
             response_object = {
                 'status': "failed",
                 'data': {
+                    **base_data,
                     'message': "Unmanaged status",
                     'alt_message': f"Status '{_subset.task_status}' is unmanaged"
                 }
@@ -1034,8 +1036,7 @@ def api_subset_status(subset_name):
             response_object = {
                 'status': "success",
                 'data': {
-                    'subset_name': _subset.name,
-                    'subset_status': _subset.status,
+                    **base_data,
                     'message': "Extracted",
                     'alt_message': f"{subset_name}.zip is extracted in {subset_name}/",
                 }
@@ -1045,13 +1046,12 @@ def api_subset_status(subset_name):
             response_object = {
                 'status': "error",
                 'data': {
-                    'subset_name': subset_name,
+                    **base_data,
                     'message': "Job Id Error",
                     'alt_message': f"Job was run, but non extracted archive found",
                 }
             }
-            # TODO: that is not a server error, so not a 503
-            http_code = 503
+            http_code = 200
 
     except ConnectionError:
         response_object = {
