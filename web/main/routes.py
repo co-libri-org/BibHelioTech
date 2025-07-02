@@ -10,7 +10,6 @@ import dateutil.parser as parser
 import pandas as pd
 import redis
 import requests
-from rq.job import Job
 from rq.exceptions import NoSuchJobError
 from redis.connection import ConnectionError
 from redis.exceptions import RedisError
@@ -735,7 +734,7 @@ def istex():
     """
     Given an istex api url (found in the form request)
     Parse the JSON response data
-    Redirect to our "istex" page to display papers list
+    Redirect to our "istex" page to display a papers' list
     """
     # Juste display form at first sight
     if request.method == "GET":
@@ -988,8 +987,6 @@ def api_subset_unzip():
 @bp.route("/api/subset_status/<subset_name>", methods=["GET"])
 def api_subset_status(subset_name):
     _subset = Subset(subset_name)
-    # TODO: subset.status
-    subset_status = "extracted" if _subset.extracted else "zipped"
     try:
         # TODO: subset.task_id
         task_id = _subset.task_id
@@ -997,46 +994,40 @@ def api_subset_status(subset_name):
             response_object = {
                 'status': "failed",
                 'data': {
-                    'subset_name': subset_name,
-                    'subset_status': subset_status,
+                    'subset_name': _subset.name,
+                    'subset_status': _subset.status,
                     'message': "No task",
-                    'alt_message': f"No task id for {subset_name}"
+                    'alt_message': f"No task id for {_subset.name}"
                 }
             }
             # TODO: should return http_code 200 or 202
             return response_object, 503
 
-        # TODO: subset.task_status , subset.task_progress
-        job = Job.fetch(task_id, connection=current_app.redis_conn)  # type: ignore[attr-defined]
-        task_status = job.get_status(refresh=True).value
-        task_progress = job.meta.get("progress")
-        # TODO: end
-
         response_object = {
             'status': "success",
             'data': {
-                'subset_name': subset_name,
-                'task_id': task_id,
-                'task_status': task_status,
-                'task_progress': task_progress,
+                'subset_name': _subset.name,
+                'task_id': _subset.task_id,
+                'task_status': _subset.task_status,
+                'task_progress': _subset.task_progress,
                 'alt_message': "",
             },
         }
 
-        if task_status in ["queued", "started"]:
-            response_object['data']['alt_message'] = f"Task {task_status} at {job.enqueued_at}"
-            response_object['data']['subset_status'] = subset_status
+        if _subset.task_status in ["queued", "started"]:
+            response_object['data']['alt_message'] = f"Task {_subset.task_status} at {_subset.job.enqueued_at}"
+            response_object['data']['subset_status'] = _subset.status
             http_code = 202
-        elif task_status == "finished":
-            response_object['data']['alt_message'] = f"Task finished at {job.ended_at}"
-            response_object['data']['subset_status'] = subset_status
+        elif _subset.task_status == "finished":
+            response_object['data']['alt_message'] = f"Task finished at {_subset.job.ended_at}"
+            response_object['data']['subset_status'] = _subset.status
             http_code = 200
         else:
             response_object = {
                 'status': "failed",
                 'data': {
                     'message': "Unmanaged status",
-                    'alt_message': f"Status '{task_status}' is unmanaged"
+                    'alt_message': f"Status '{_subset.task_status}' is unmanaged"
                 }
             }
             http_code = 422
@@ -1046,8 +1037,8 @@ def api_subset_status(subset_name):
             response_object = {
                 'status': "success",
                 'data': {
-                    'subset_name': subset_name,
-                    'subset_status': subset_status,
+                    'subset_name': _subset.name,
+                    'subset_status': _subset.status,
                     'message': "Extracted",
                     'alt_message': f"{subset_name}.zip is extracted in {subset_name}/",
                 }

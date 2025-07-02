@@ -4,6 +4,7 @@ import re
 
 from flask import current_app
 from rq import get_current_job
+from rq.job import Job
 import zipfile
 import time
 
@@ -21,6 +22,10 @@ class Subset:
         self.name = _subset_name
         self.base_dir = current_app.config['ZIP_UPLOAD_DIR']
         self.set_archive_info()
+
+    @property
+    def status(self):
+        return "extracted" if self.extracted else "zipped"
 
     @property
     def extracted(self):
@@ -78,6 +83,18 @@ class Subset:
         with zipfile.ZipFile(zip_path, 'r') as archive:
             json_files = [f for f in archive.namelist() if f.endswith('.json')]
             self.nb_json = len(json_files)
+
+    @property
+    def job(self):
+        return Job.fetch(self.task_id, connection=current_app.redis_conn)  # type: ignore[attr-defined]
+
+    @property
+    def task_status(self):
+        return self.job.get_status(refresh=True).value
+
+    @property
+    def task_progress(self):
+        return self.job.meta.get("progress")
 
     @property
     def task_id(self):
