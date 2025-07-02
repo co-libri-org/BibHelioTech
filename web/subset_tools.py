@@ -2,7 +2,6 @@ import json
 import os.path
 import re
 
-from redis.connection import ConnectionError
 from flask import current_app
 from rq import get_current_job
 import zipfile
@@ -80,11 +79,10 @@ class Subset:
             json_files = [f for f in archive.namelist() if f.endswith('.json')]
             self.nb_json = len(json_files)
 
-
     @property
     def task_id(self):
         # Now, retrieve jobid by filename stored at job start
-        task_id_bytes = current_app.redis_conn.get(f"task_by_filename:{self.name}")
+        task_id_bytes = current_app.redis_conn.get(f"task_by_filename:{self.name}")  # type: ignore[attr-defined]
         if task_id_bytes is not None:
             task_id = task_id_bytes.decode()  # Conversion bytes -> str
         else:
@@ -92,9 +90,7 @@ class Subset:
         return task_id
 
     def set_task_id(self, task_id):
-        current_app.redis_conn.set(f"job_by_filename:{self.name}", task_id)
-
-
+        current_app.redis_conn.set(f"job_by_filename:{self.name}", task_id)  # type: ignore[attr-defined]
 
 
 def get_unzip_callback(test=True):
@@ -109,7 +105,7 @@ def get_unzip_callback(test=True):
         return unzip_subset
 
 
-def unzip_mocked(zip_path, zip_folder, total_files):
+def unzip_mocked(_zip_path, _zip_folder, total_files):
     job = get_current_job()
     for i in range(total_files):
         # simulate some work
@@ -119,7 +115,7 @@ def unzip_mocked(zip_path, zip_folder, total_files):
         job.save_meta()
 
 
-def unzip_subset(zip_path, dst_folder, zip_files=None):
+def unzip_subset(zip_path, dst_folder, _zip_files=None):
     job = get_current_job()
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
