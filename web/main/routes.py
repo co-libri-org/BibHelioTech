@@ -296,39 +296,6 @@ def db_stats():
     return _db_stats
 
 
-#  - - - - - - - - - - - - - - - R O U T E S - F I X - B U L K 2 - - - - - - - - - - - - - - - - - - - #
-@bp.route('/fix_bulk_2')
-def fix_bulk_2():
-    page = request.args.get('page', 0, type=int)
-    year = request.args.get("year")
-
-    begin_year = 2024
-    end_year = 2025
-    if year is not None:
-        begin_year = int(year)
-        end_year = int(year)
-
-    # Unwanted dates
-    start_date = datetime(begin_year, 1, 1)
-    end_date = datetime(end_year, 12, 31, 23, 59, 59)
-
-    # Build request
-    query = (
-        db.session.query(Paper)
-        .join(HpEvent, Paper.id == HpEvent.paper_id)  # Jon on paper_id
-        .filter(HpEvent.start_date.between(start_date, end_date))  # Filter on start_date
-    )
-
-    # Run
-    _papers = query.all()
-    # _papers = query.paginate(
-    #     page=page,
-    #     per_page=current_app.config["PER_PAGE"],
-    #     error_out=False
-    # )
-    return render_template("fix_bulk_2.html", papers=_papers)
-
-
 #  - - - - - - - - - - - - - - - - - - - - R O U T E S - - - - - - - - - - - - - - - - - - - - - - - - #
 
 @bp.errorhandler(Exception)
