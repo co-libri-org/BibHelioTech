@@ -14,6 +14,8 @@ from web.models import Paper
 ISTEX_SUBSET_PATTERN = r"^istex-subset-\d{4}-\d{2}-\d{2}$"
 ISTEX_ZIP_PATTERN = rf"{ISTEX_SUBSET_PATTERN[:-1]}.zip$"
 
+JOB_BY_FILENAME_KEY = "job_by_filename"
+
 
 class Subset:
     def __init__(self, _subset_name):
@@ -99,7 +101,7 @@ class Subset:
     @property
     def task_id(self):
         # Now, retrieve jobid by filename stored at job start
-        task_id_bytes = current_app.redis_conn.get(f"task_by_filename:{self.name}")  # type: ignore[attr-defined]
+        task_id_bytes = current_app.redis_conn.get(f"{JOB_BY_FILENAME_KEY}:{self.name}")  # type: ignore[attr-defined]
         if task_id_bytes is not None:
             task_id = task_id_bytes.decode()  # Conversion bytes -> str
         else:
@@ -107,7 +109,7 @@ class Subset:
         return task_id
 
     def set_task_id(self, task_id):
-        current_app.redis_conn.set(f"job_by_filename:{self.name}", task_id)  # type: ignore[attr-defined]
+        current_app.redis_conn.set(f"{JOB_BY_FILENAME_KEY}:{self.name}", task_id)  # type: ignore[attr-defined]
 
 
 def get_unzip_callback(test=True):
