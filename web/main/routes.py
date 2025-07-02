@@ -830,8 +830,7 @@ def subsets():
              'dir': subset.directory,
              'extracted': subset.extracted,
              'size': subset.size,
-             'nb_json': subset.nb_json,
-             'job_id': subset.task_id})
+             'nb_json': subset.nb_json})
     return render_template("subsets.html", zip_files=zip_files)
 
 
@@ -988,7 +987,6 @@ def api_subset_unzip():
 def api_subset_status(subset_name):
     _subset = Subset(subset_name)
     try:
-        # TODO: subset.task_id
         task_id = _subset.task_id
         if task_id is None:
             response_object = {
@@ -1000,7 +998,6 @@ def api_subset_status(subset_name):
                     'alt_message': f"No task id for {_subset.name}"
                 }
             }
-            # TODO: should return http_code 200 or 202
             return response_object, 503
 
         response_object = {
