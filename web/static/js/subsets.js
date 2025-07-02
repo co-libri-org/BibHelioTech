@@ -10,7 +10,7 @@ function failedToStatus(err, statusElmtId, message) {
     console.error(err)
 }
 
-function toggleSubsetDisplay(subset_name, task_status, subset_status, message, alt_message){
+function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt_message){
 
     const subsetTr = $(`#${subset_name}`);
     const showLink = subsetTr.find(".show-subset");
@@ -20,7 +20,46 @@ function toggleSubsetDisplay(subset_name, task_status, subset_status, message, a
 
     showLink.addClass("disabled");
     unzipBtn.addClass("disabled");
-    statusMsg.text(task_status+" World");
+    statusMsg.text(taskStatus+" World");
+
+    if (taskStatus === "CnxError") {
+        if (subsetStatus === "extracted") {
+            enable(showLink);
+            disable(unzipBtn);
+            statusMsg.text("Extracted");
+        } else {
+            disable(showLink);
+            disable(unzipBtn);
+            statusMsg.text("Err Cnx");
+        }
+    } else if (taskStatus === "NoJob") {
+        if (subsetStatus === "extracted") {
+            enable(showLink);
+            disable(unzipBtn);
+            statusMsg.text("Extracted");
+        } else {
+            disable(showLink);
+            enable(unzipBtn);
+            statusMsg.text("Zipped");
+        }
+    } else if (taskStatus === "queued") {
+        statusMsg.text("queued since ...");
+    } else if (taskStatus === "started") {
+        statusMsg.text("running since ...");
+    } else if (taskStatus === "finished" || taskStatus === "other") {
+        if (subsetStatus === "extracted") {
+            enable(showLink);
+            disable(unzipBtn);
+            statusMsg.text("Extracted");
+        } else {
+            disable(showLink);
+            enable(unzipBtn);
+            statusMsg.text("Zipped");
+        }
+    } else {
+        console.log("taskStatus: "+taskStatus);
+        console.log("subsetStatus: "+subsetStatus);
+    }
 }
 
 
