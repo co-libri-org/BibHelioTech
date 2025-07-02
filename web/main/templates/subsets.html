@@ -31,7 +31,7 @@
         </thead>
         <tbody>
         {% for zf in zip_files %}
-        <tr>
+        <tr id="{{zf.name}}">
             <td>
                 <a id="show-{{zf.name}}"
                    class="btn btn-warning show-subset"
@@ -54,7 +54,7 @@
             <td>
                 <span class="zip-status" title="" id="zip-status-{{zf.name}}"
                       data-subset_name="{{zf.name}}"></span>
-                <span class="spinner-border spinner-border-sm d-none" id="spinner-{{zf.name}}"></span>
+                <span class="status-spin spinner-border spinner-border-sm d-none" id="spinner-{{zf.name}}"></span>
             </td>
         </tr>
         {% endfor %}
@@ -69,8 +69,10 @@
 {% block scripts %}
 <script src="{{url_for('static', filename='js/subsets.js') | staticversion }} " defer></script>
 <script>
+    // url_for template for dynamically use before subset_name is known
+    const urlSubsetStatusTemplate = "{{ url_for('main.api_subset_status', subset_name='__subset_name__') }}";
     $(document).ready(function() {
-        setUnzipBtnOnCLick();
+        //setUnzipBtnOnCLick();
         updateAllStatuses();
     });
 </script>
