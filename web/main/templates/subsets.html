@@ -69,7 +69,7 @@
 {% block scripts %}
 <script src="{{url_for('static', filename='js/subsets.js') | staticversion }} " defer></script>
 <script>
-    // url_for template for dynamically use before subset_name is known
+    // url_for template for dynamical use before subset_name is known
     const urlSubsetStatusTemplate = "{{ url_for('main.api_subset_status', subset_name='__subset_name__') }}";
     $(document).ready(function() {
         //setUnzipBtnOnCLick();
