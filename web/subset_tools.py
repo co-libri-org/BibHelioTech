@@ -128,9 +128,9 @@ def unzip_mocked(_zip_path, _zip_folder, total_files):
     job = get_current_job()
     for i in range(total_files):
         # simulate some work
-        time.sleep(0.001)
+        time.sleep(0.01)
         # update progress
-        job.meta['progress'] = f" {int((i + 1) / total_files * 100)}%"
+        job.meta['progress'] = f" {int(i + 1)} / {total_files}"
         job.save_meta()
 
 
