@@ -1,3 +1,9 @@
+function enable(elmt){
+    elmt.removeClass('disabled').addClass('enabled');
+}
+function disable(elmt){
+    elmt.removeClass('enabled').addClass('disabled');
+}
 function failedToStatus(err, statusElmtId, message) {
     err_status = err.responseJSON.status;
     err_message = err.responseJSON.data.message;
@@ -22,44 +28,18 @@ function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt
     unzipBtn.addClass("disabled");
     statusMsg.text(taskStatus+" World");
 
-    if (taskStatus === "CnxError") {
-        if (subsetStatus === "extracted") {
-            enable(showLink);
-            disable(unzipBtn);
-            statusMsg.text("Extracted");
-        } else {
-            disable(showLink);
-            disable(unzipBtn);
-            statusMsg.text("Err Cnx");
-        }
-    } else if (taskStatus === "NoJob") {
-        if (subsetStatus === "extracted") {
-            enable(showLink);
-            disable(unzipBtn);
-            statusMsg.text("Extracted");
-        } else {
-            disable(showLink);
-            enable(unzipBtn);
-            statusMsg.text("Zipped");
-        }
-    } else if (taskStatus === "queued") {
-        statusMsg.text("queued since ...");
-    } else if (taskStatus === "started") {
-        statusMsg.text("running since ...");
-    } else if (taskStatus === "finished" || taskStatus === "other") {
-        if (subsetStatus === "extracted") {
-            enable(showLink);
-            disable(unzipBtn);
-            statusMsg.text("Extracted");
-        } else {
-            disable(showLink);
-            enable(unzipBtn);
-            statusMsg.text("Zipped");
-        }
-    } else {
-        console.log("taskStatus: "+taskStatus);
-        console.log("subsetStatus: "+subsetStatus);
+    if ( subsetStatus == "extracted"){
+        enable(showLink);
+        disable(unzipBtn);
+        statusMsg.text(message).attr("title", alt_message);
     }
+    else if  (1 === 1) {
+        console.log("else if")
+    }
+    else {
+        console.log("else ")
+    }
+
 }
 
 
@@ -73,9 +53,8 @@ function updateSubsetStatus(subsetName){
             method: 'GET',
         })
    .done((res) => {
-        const subsetStatus = res.data.subset_status;
         const taskStatus = res.data.task_status;
-        const taskProgress = res.data.task_progress;
+        const subsetStatus = res.data.subset_status;
         const subsetMessage = res.data.message;
         const altMessage = res.data.alt_message;
 
@@ -92,14 +71,7 @@ function updateSubsetStatus(subsetName){
             }, 1000);
         }
 
-        let normalizedStatus = taskStatus;
-        if (res.status === "error" && altMessage.includes("Redis")) {
-            normalizedStatus = "CnxError";
-        } else if (res.status === "failed" && altMessage.includes("No task id")) {
-            normalizedStatus = "NoJob";
-        }
-
-       toggleSubsetDisplay(subsetName, normalizedStatus, subsetStatus, subsetMessage, altMessage)
+       toggleSubsetDisplay(subsetName, taskStatus, subsetStatus, subsetMessage, altMessage)
 
    })
    .fail((err) => {
