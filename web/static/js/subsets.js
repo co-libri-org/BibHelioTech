@@ -27,6 +27,10 @@ function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt
     disable(showLink)
     disable(unzipBtn)
 
+    statusSpinner.removeClass('d-inline-block')
+    statusSpinner.addClass('d-none')
+
+    statusMsg.removeClass("success").removeClass("warning").removeClass("error");
     statusMsg.text(message).attr("title", alt_message).addClass(statusClass);
 
     if (["unknown", "failed", "finished"].includes(taskStatus)) {
@@ -43,9 +47,13 @@ function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt
         // unless we get some different status
         disable(showLink);
         disable(unzipBtn);
+        if (taskStatus == "started"){
+            statusSpinner.removeClass('d-none')
+            statusSpinner.addClass('d-inline-block')
+        }
     }
     else {
-        console.log("else ")
+        console.error("Else taskStatus:"+taskStatus+" zipStatus: "+subsetStatus)
     }
 
 }
@@ -79,10 +87,10 @@ function updateSubsetStatus(subsetName){
             }, 1000);
         } else if (["unknown", "finished"].includes(taskStatus)) {
             statusClass = ""
-            console.log("Subset status is "+taskStatus+": nothing to do")
+            console.log("Subset status for "+subsetName+": "+taskStatus+": nothing to do")
         } else {
             statusClass = "warning"
-            console.error("Subset status "+taskStatus+" not managed")
+            console.error("Subset status for "+subsetName+": "+taskStatus+" not managed")
         }
 
         toggleSubsetDisplay(subsetName, taskStatus, subsetStatus, subsetMessage, altMessage, statusClass)

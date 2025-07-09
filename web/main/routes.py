@@ -993,7 +993,7 @@ def api_subset_status(subset_name):
         # Could raise redis.ConnectionError or rq.NoSuchJobError
         task_id = _subset.task_id
         task_progress = _subset.task_progress
-        if _subset.task_status == "failed" or task_progress is None:
+        if _subset.task_status in ["failed", "finished"] or task_progress is None:
             # remove 'None' display
             task_progress = ""
 
@@ -1009,15 +1009,17 @@ def api_subset_status(subset_name):
         }
 
         # How to respond depending on task_status
-        # "queued" and "started" should mean 'subset_status' == "unzipped"
+        # "queued" and "started" should mean 'subset_status' == "zipped"
         # "finished" should mean 'subset_status' == "extracted"
+        # but task can have finished and subset not yet got the extracted information
+        # or taks can still be started and subset extracted yet
         if _subset.task_status == "queued" and _subset.status == "zipped":
             response_object['data']['alt_message'] = f"Task enqueued at {_subset.job.enqueued_at}"
             http_code = 202
-        elif _subset.task_status == "started" and _subset.status == "zipped":
+        elif _subset.task_status == "started": # and _subset.status == "zipped":
             response_object['data']['alt_message'] = f"Task started at {_subset.job.started_at}"
             http_code = 202
-        elif _subset.task_status == "finished" and _subset.status == "extracted":
+        elif _subset.task_status == "finished": # and _subset.status == "extracted":
             response_object['data']['alt_message'] = f"Task finished at {_subset.job.ended_at}"
             http_code = 200
         elif _subset.task_status == "failed":
