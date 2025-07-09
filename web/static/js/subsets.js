@@ -28,10 +28,21 @@ function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt
     unzipBtn.addClass("disabled");
     statusMsg.text(taskStatus+" World");
 
-    if ( subsetStatus == "extracted"){
-        enable(showLink);
-        disable(unzipBtn);
-        statusMsg.text(message).attr("title", alt_message);
+    if ( taskStatus == "error" ){
+            disable(showLink);
+            disable(unzipBtn);
+            statusMsg.text(message).attr("title", alt_message);
+    } else if ( taskStatus == "unknown" ){
+        if ( subsetStatus == "extracted"){
+            enable(showLink);
+            disable(unzipBtn);
+            statusMsg.text(message).attr("title", alt_message);
+        } else if ( subsetStatus == "zipped") {
+            enable(unzipBtn);
+            disable(showLink);
+            statusMsg.text(message).attr("title", alt_message);
+        }
+
     }
     else if  (1 === 1) {
         console.log("else if")
@@ -44,7 +55,6 @@ function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt
 
 
 function updateSubsetStatus(subsetName){
-    console.log("Updating status for "+subsetName);
    // now dynamically build the flask url
    const url = urlSubsetStatusTemplate.replace("__subset_name__", subsetName);
 
@@ -75,8 +85,11 @@ function updateSubsetStatus(subsetName){
 
    })
    .fail((err) => {
-        console.error("Error", err);
-        // TODO: call fallback
+        res = err.responseJSON
+        console.error("Got 503 from route:", res);
+        const subsetMessage = res.data.message;
+        const altMessage = res.data.alt_message;
+        toggleSubsetDisplay(subsetName, "error", "", subsetMessage, altMessage)
    });
 }
 
