@@ -95,7 +95,7 @@ function setUnzipBtnOnClick(){
         const subset_name = $(this).data("subset_name")
         const total_files = $(this).data("total_files")
         $.ajax({
-            url: "{{url_for('main.api_subset_unzip')}}",
+            url: urlSubsetUnzip,
             method: "POST",
             data: JSON.stringify({ subset_name: subset_name, total_files: total_files}),
             contentType: 'application/json; charset=utf-8'
