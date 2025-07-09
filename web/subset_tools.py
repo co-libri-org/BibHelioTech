@@ -4,6 +4,7 @@ import re
 
 from flask import current_app
 from rq import get_current_job
+from rq.exceptions import NoSuchJobError
 from rq.job import Job
 import zipfile
 import time
@@ -102,10 +103,9 @@ class Subset:
     def task_id(self):
         # Now, retrieve jobid by filename stored at job start
         task_id_bytes = current_app.redis_conn.get(f"{JOB_BY_FILENAME_KEY}:{self.name}")  # type: ignore[attr-defined]
-        if task_id_bytes is not None:
-            task_id = task_id_bytes.decode()  # Conversion bytes -> str
-        else:
-            task_id = None
+        if task_id_bytes is None:
+            raise NoSuchJobError
+        task_id = task_id_bytes.decode()  # Conversion bytes -> str
         return task_id
 
     def set_task_id(self, task_id):
