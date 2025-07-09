@@ -992,6 +992,10 @@ def api_subset_status(subset_name):
     try:
         # Could raise redis.ConnectionError or rq.NoSuchJobError
         task_id = _subset.task_id
+        task_progress = _subset.task_progress
+        if _subset.task_status == "failed" or task_progress is None:
+            # remove 'None' display
+            task_progress = ""
 
         response_object = {
             'status': "success",
@@ -999,7 +1003,7 @@ def api_subset_status(subset_name):
                 **base_subset,
                 'task_id': task_id,
                 'task_status': _subset.task_status,
-                'message': f"Task {_subset.task_status} {_subset.task_progress}",
+                'message': f"Task {_subset.task_status} {task_progress}",
                 'alt_message': "",
             },
         }
@@ -1015,6 +1019,9 @@ def api_subset_status(subset_name):
             http_code = 202
         elif _subset.task_status == "finished" and _subset.status == "extracted":
             response_object['data']['alt_message'] = f"Task finished at {_subset.job.ended_at}"
+            http_code = 200
+        elif _subset.task_status == "failed":
+            response_object['data']['alt_message'] = f"Task failed"
             http_code = 200
         else:
             response_object['status'] = "error"
