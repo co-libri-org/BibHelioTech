@@ -7,7 +7,7 @@
 <h5> {{papers|length}} papers</h5>
 <h6>({{nb_unadded}} not in db)</h6>
 <div>
-   <button class="btn btn-warning">Filter</button>
+    <button class="btn btn-warning">Filter</button>
     <button class="btn btn-warning">Add All</button>
 </div>
 <hr class="mt-4 mb-4">
@@ -20,32 +20,64 @@
     </tr>
     </thead>
     <tbody>
-        {% for p in papers %}
-        <tr class='{{"to_add" if not p.in_db }}'>
-            <th scope="row" class="td_num">
-                {% if p.id %}
-                <a class="btn btn-warning " href="{{url_for('main.paper_show', paper_id=p.id)}}"
-                   title="Show paper #{{p.id}}">
-                    {{p.id}}
-                </a>
-                {% endif %}
-            </th>
-            <td title="{{p.title}}">
+    {% for p in papers %}
+    <tr class='{{"to_add" if not p.in_db }}'>
+        <th scope="row" class="td_num">
+            {% if p.id %}
+            <a class="btn btn-warning " href="{{url_for('main.paper_show', paper_id=p.id)}}"
+               title="Show paper #{{p.id}}">
+                {{p.id}}
+            </a>
+            {% endif %}
+        </th>
+        <td title="{{p.title}}">
             &laquo;{{p.title | truncate(75, False, end=" ...")}}&raquo;
-            <td>
+        <td>
             {% if p.in_db %}
             in db
             {% else %}
-            <a class="btn btn-warning " href="#"
-               onclick="event.preventDefault(); alert('Not implemented yet');"
-               title="Add to DB">
+            <button id="btn-{{p.name}}" class="add-extracted btn btn-warning "
+                    data-subset_name="{{subset.name}}"
+                    data-istex_id="{{p.name}}"
+                    title="Add to DB">
                 add in db
-            </a>
+            </button>
             {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
+        </td>
+    </tr>
+    {% endfor %}
     </tbody>
 </table>
 
+{% endblock %}
+
+{% block scripts %}
+{# <script src="{{url_for('static', filename='js/subset.js') | staticversion }} " defer></script> #}
+<script>
+    const urlAddExtracted = "{{url_for('main.api_add_extracted')}}"
+    function setAddBtnOnClick(){
+        $('.add-extracted').click(function(){
+            const subset_name = $(this).data("subset_name")
+            const istex_id = $(this).data("istex_id")
+            $.ajax({
+                url: urlAddExtracted,
+                method: "POST",
+                data: JSON.stringify({ subset_name: subset_name, istex_id: istex_id, exce_type: "struct" }),
+                contentType: 'application/json; charset=utf-8'
+            })
+            .done((res) => {
+                //updateSubsetStatus(subset_name);
+                console.log(res);
+            })
+            .fail((err) => {
+                //const statusElmtId = '#zip-status-' + subset_name;
+                //failedToStatus(err, statusElmtId, "FAILED Unzip Subset");
+                console.error(err);
+            });
+        });
+    }
+    $(document).ready(function() {
+        setAddBtnOnClick();
+    });
+</script>
 {% endblock %}
