@@ -956,7 +956,8 @@ def statistics():
 @bp.route("/api/add_extracted", methods=["POST"])
 def api_add_extracted():
     from typing import cast
-
+    from web.istex_proxy import istex_doc_to_struct
+    exec_type = request.json.get("exec_type", "db")
     subset_name = cast(str, request.json.get("subset_name"))
     istex_id = cast(str, request.json.get("istex_id"))
     if not subset_name or not istex_id:
@@ -967,18 +968,32 @@ def api_add_extracted():
     istex_json = os.path.join(paper_folder, f"{istex_id}.json")
     istex_cleaned = os.path.join(paper_folder, f"{istex_id}.cleaned")
 
-    if not (os.path.isfile(istex_json) and os.path.isfile(istex_json)):
-        return jsonify({"status": "error", "message": "Some files dont exist"}), 404
+    if exec_type == "struct":
+        with open(istex_json) as json_fp:
+            document_json = json.load(json_fp)
+            istex_struct = istex_doc_to_struct(document_json)
 
-    istex_struct = istexjson_to_db(istex_json,
-                                   current_app.config["WEB_UPLOAD_DIR"],
-                                   force_update=True)
+        return jsonify(istex_struct), 200
+    elif not exec_type == "db":
+        return jsonify({"status": "error", "message": f"Wrong exec_type: {exec_type}"}), 422
+
+    try:
+
+        if not (os.path.isfile(istex_json) and os.path.isfile(istex_cleaned)):
+            raise FilePathError
+
+        istex_struct = istexjson_to_db(istex_json,
+                                       current_app.config["WEB_UPLOAD_DIR"],
+                                       force_update=True)
+
+    except FilePathError:
+        return jsonify({"status": "error", "message": "Some files dont exist"}), 404
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Unexpected error {e}"}), 503
 
     response_object, http_code = {
         "status": "success",
         "data": {"subset_name": subset_name,
-                 "istex_json": istex_json,
-                 "istex_cleaned": istex_cleaned,
                  "istex_struct": istex_struct}
     }, 200
     return jsonify(response_object), http_code
