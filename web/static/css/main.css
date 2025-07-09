@@ -1,5 +1,5 @@
-.bg-app-theme {
-    background-color: var(--app-theme-color) !important;
+.bg-bht-theme {
+    background-color: var(--bht-theme-color) !important;
 }
 
 tr {
@@ -349,7 +349,7 @@ button.stat-status:hover {
 
 [id^="spinner-istex-subset-"] {
   margin-left: 10px;
-  color: var(--app-theme-color);
+  color: var(--bht-theme-color);
 }
 
 .zip-status {
