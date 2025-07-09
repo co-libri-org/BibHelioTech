@@ -352,6 +352,17 @@ button.stat-status:hover {
   color: var(--app-theme-color);
 }
 
+.zip-status {
+    padding: .5rem .5rem;
+    border: solid 1pt transparent;
+}
+.zip-status:hover {
+    cursor: pointer;
+    background: white;
+    border: solid 1pt lightgrey;
+    border-radius: 5pt;
+}
+
 /* ----------------------------P L O T S--------------------------------- */
 .plot-container {
     margin: 1em 0;
