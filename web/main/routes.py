@@ -36,7 +36,7 @@ from bht.pipeline import PipeStep
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType, stream_to_db
+from web.models import Paper, Mission, HpEvent, BhtFileType, stream_to_db, istexjson_to_db
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -953,6 +953,37 @@ def statistics():
 
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
+@bp.route("/api/add_extracted", methods=["POST"])
+def api_add_extracted():
+    from typing import cast
+
+    subset_name = cast(str, request.json.get("subset_name"))
+    istex_id = cast(str, request.json.get("istex_id"))
+    if not subset_name or not istex_id:
+        return jsonify({"status": "error", "message": "Missing required parameters"}), 400
+
+    subset_folder = os.path.join(current_app.config["ZIP_UPLOAD_DIR"], subset_name)
+    paper_folder = os.path.join(subset_folder, f"{istex_id}")
+    istex_json = os.path.join(paper_folder, f"{istex_id}.json")
+    istex_cleaned = os.path.join(paper_folder, f"{istex_id}.cleaned")
+
+    if not (os.path.isfile(istex_json) and os.path.isfile(istex_json)):
+        return jsonify({"status": "error", "message": "Some files dont exist"}), 404
+
+    istex_struct = istexjson_to_db(istex_json,
+                                   current_app.config["WEB_UPLOAD_DIR"],
+                                   force_update=True)
+
+    response_object, http_code = {
+        "status": "success",
+        "data": {"subset_name": subset_name,
+                 "istex_json": istex_json,
+                 "istex_cleaned": istex_cleaned,
+                 "istex_struct": istex_struct}
+    }, 200
+    return jsonify(response_object), http_code
+
+
 @bp.route("/api/subset_unzip", methods=["POST"])
 def api_subset_unzip():
     total_files = request.json.get("total_files")
@@ -1018,10 +1049,10 @@ def api_subset_status(subset_name):
         if _subset.task_status == "queued" and _subset.status == "zipped":
             response_object['data']['alt_message'] = f"Task enqueued at {_subset.job.enqueued_at}"
             http_code = 202
-        elif _subset.task_status == "started": # and _subset.status == "zipped":
+        elif _subset.task_status == "started":  # and _subset.status == "zipped":
             response_object['data']['alt_message'] = f"Task started at {_subset.job.started_at}"
             http_code = 202
-        elif _subset.task_status == "finished": # and _subset.status == "extracted":
+        elif _subset.task_status == "finished":  # and _subset.status == "extracted":
             response_object['data']['alt_message'] = f"Task finished at {_subset.job.ended_at}"
             http_code = 200
         elif _subset.task_status == "failed":
