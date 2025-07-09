@@ -5,7 +5,7 @@ import re
 import requests
 from requests import RequestException
 
-from web.errors import IstexParamError, IstexError
+from web.errors import IstexError
 
 ISTEX_BASE_URL = "https://api.istex.fr/"
 
@@ -17,6 +17,7 @@ class IstexDoctype(StrEnum):
     TXT = auto()
     TEI = auto()
     CLEANED = auto()
+
 
 def istex_doc_to_struct(document_json):
     istex_id = document_json.get("id", None)
@@ -32,9 +33,10 @@ def istex_doc_to_struct(document_json):
     }
     return _res_dict
 
+
 def json_to_hits(istex_json):
     """
-    Translate an istex request json response
+    Translate an istex request JSON response
     into a list of hits as dict
 
     @param istex_json:
@@ -64,7 +66,7 @@ def ark_to_id(ark):
 
 def ark_to_istex_url(ark_istex):
     """ "
-    From an ark_istex, build the request url so we can call it and get the papers' json
+    From an ark_istex, build the request url so we can call it and get the papers' JSON
     """
     req_url = f'{ISTEX_BASE_URL}document/?q=(arkIstex:"{ark_istex}")&facet=corpusName[*]&size=10&output=*&stats'
     return req_url
@@ -75,7 +77,7 @@ def get_file_from_id(istex_id, doc_type=IstexDoctype.PDF):
     Get file content from istex by id and doctype
 
     @param istex_id:  istex id
-    @param doc_type: doc type (PDF, TXT, TEI ,....)
+    @param doc_type: doc type (PDF, TXT, TEI)
     @return: (file_stream, file_name, doi, ark)
     """
     istex_struct = get_doc_url(istex_id, doc_type)
@@ -108,7 +110,7 @@ def get_file_from_url(url):
 
 def get_doc_url(istex_id, doc_type=IstexDoctype.PDF):
     """
-    Build url to request file from Istex for pdf, txt, or any supported doctype.
+    Build url to request a file from Istex for PDF, txt, or any supported doctype.
 
     @param istex_id:  the istex document id.
     @param doc_type: the type of document to fetch

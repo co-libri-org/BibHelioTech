@@ -70,14 +70,14 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=Fals
 
     :param json_file: Istex JSON article's meta-info
     :param upload_dir: Where to save paper's content to
-    :param file_ext: paper file extension (txt, cleaned, pdf)
+    :param file_ext: paper file extension (txt, cleaned, PDF)
     :param force_update: if True, update when already exists
     :return:
     """
     if not os.path.isfile(json_file):
         raise FilePathError(f"Couldn't find {json_file}")
 
-    # status: 'failed' if unable to load json
+    # status: 'failed' if unable to load the JSON file
     with open(json_file) as json_fp:
         try:
             document_json = json.load(json_fp)

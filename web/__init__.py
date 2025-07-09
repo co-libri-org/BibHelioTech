@@ -47,6 +47,12 @@ def create_app(bht_env=None):
     app.config.from_mapping(yml_settings)
     app.config.from_object(config_instance)
 
+    # Make sure dirs are created
+    if not os.path.isdir(app.config["WEB_UPLOAD_DIR"]):
+        os.mkdir(app.config["WEB_UPLOAD_DIR"])
+    if not os.path.isdir(app.config["ZIP_UPLOAD_DIR"]):
+        os.mkdir(app.config["ZIP_UPLOAD_DIR"])
+
     # Set htpasswd protection if needed
     if "FLASK_HTPASSWD_PATH" in app.config:
         app.logger.debug(
@@ -57,9 +63,9 @@ def create_app(bht_env=None):
         HtPasswdAuth(app)
 
     # Initialize Redis
-    redis_conn  = redis.from_url(app.config["REDIS_URL"])
+    redis_conn = redis.from_url(app.config["REDIS_URL"])
     task_queue = Queue(connection=redis_conn)
-    app.redis_conn  = redis_conn
+    app.redis_conn = redis_conn
     app.task_queue = task_queue
 
     # Initialize other plugins

@@ -1,5 +1,5 @@
-.bg-app-theme {
-    background-color: var(--app-theme-color) !important;
+.bg-bht-theme {
+    background-color: var(--bht-theme-color) !important;
 }
 
 tr {
@@ -116,7 +116,7 @@ padding: 1px 2px !important;
     border: solid 1pt black !important ;
 }
 .mission-catalog:has(input:checked) {
-     background-color: #ffca2c;
+     background-color: var(--bht-theme-color);
 }
 .mission-catalog > input[type="checkbox"] {
     border: solid 1pt grey;
@@ -202,6 +202,10 @@ a.btn[disabled] {
     background-color:var(--bs-warning);
 }
 
+tr.to_add {
+    background-color: #f5ecd3 ;
+}
+
 /* ISTEX RESULTS */
 /* change tr color to show if is in db */
 tr.paper_exists {
@@ -210,6 +214,10 @@ tr.paper_exists {
 
 th.td_num, td.td_num {
     text-align: center !important;
+}
+th.td_num>a , td.td_num>a {
+    width: 100% !important;
+    display: inline-block;
 }
 input.failed{
     background-color: #ffcccc !important;
@@ -328,6 +336,49 @@ button.stat-status:hover {
 .paper_attr_no {
     color: red !important;
     font-weight: bold;
+}
+
+/* -------------------------- S U B S E T S -------------------------- */
+/*button.unzip-subset.disabled, a.show-subset.disabled {*/
+[id^="unzip-istex-subset-"].disabled ,
+[id^="show-istex-subset-"].disabled {
+    background: lightgrey;
+    border: solid grey 1pt !important;
+    point-events: auto;
+ }
+
+[id^="spinner-istex-subset-"] {
+  margin-left: 10px;
+  color: var(--bht-theme-color);
+}
+
+/* set a fixed length for that variable status column */
+td .zip-status {
+    display: inline-block;
+    width: 300px;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+.zip-status {
+    padding: .5rem .5rem;
+    border: solid 1pt transparent;
+    border-radius: 5pt;
+}
+.zip-status.success {
+    background: var(--bht-success-color);
+}
+.zip-status.warning {
+    background: var(--bht-warning-color);
+}
+.zip-status.error {
+    background: var(--bht-error-color);
+}
+.zip-status:hover {
+    cursor: pointer;
+    background: white;
+    border: solid 1pt lightgrey;
+    border-radius: 5pt;
 }
 
 /* ----------------------------P L O T S--------------------------------- */

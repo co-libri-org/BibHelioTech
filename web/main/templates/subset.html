@@ -1,0 +1,46 @@
+{% extends "base_page.html" %}
+{%  block more_head %}
+<title>Subset</title>
+{%  endblock %}
+{% block content %}
+<h4>{{subset.name}}</h4>
+<h5> {{papers|length}} papers</h5>
+<hr class="mt-4 mb-4">
+<table class="table-hover table">
+    <thead>
+    <tr>
+        <th scope="col" style="width: 20px">Id</th>
+        <th scope="col" class="col">Title</th>
+        <th scope="col" class="col">Status</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for p in papers %}
+        <tr class='{{"to_add" if not p.in_db }}'>
+            <th scope="row" class="td_num">
+                {% if p.id %}
+                <a class="btn btn-warning " href="{{url_for('main.paper_show', paper_id=p.id)}}"
+                   title="Show paper #{{p.id}}">
+                    {{p.id}}
+                </a>
+                {% endif %}
+            </th>
+            <td title="{{p.title}}">
+            &laquo;{{p.title | truncate(75, False, end=" ...")}}&raquo;
+            <td>
+            {% if p.in_db %}
+            in db
+            {% else %}
+            <a class="btn btn-warning " href="#"
+               onclick="event.preventDefault(); alert('Not implemented yet');"
+               title="Add to DB">
+                add in db
+            </a>
+            {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

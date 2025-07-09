@@ -298,7 +298,22 @@ def papers_add_from_datadir(force_update):
 @cli.command("papers_add_from_subset")
 @click.argument("subset_dir", required=True)
 def papers_add_from_subset(subset_dir):
-    """Add all papers contained in an istex subset directory"""
+    """Add all papers contained in an istex subset directory
+        This directory is usually named 'istex-subset-YYYY-MM-DD' contains
+        ├── 00062DE6CB4B83B8CDDFDA88B6AA3640D60A2965/
+        │ ├── 00062DE6CB4B83B8CDDFDA88B6AA3640D60A2965.cleaned
+        │ └── 00062DE6CB4B83B8CDDFDA88B6AA3640D60A2965.json
+        ├── 00109D61FE06B2C9783FB3888CBB24A5F58DC0E4/
+        │ ├── 00109D61FE06B2C9783FB3888CBB24A5F58DC0E4.cleaned
+        │ └── 00109D61FE06B2C9783FB3888CBB24A5F58DC0E4.json
+        ├── 00133C11D7CC5D1DD51404D04B695CA9833CAB33/
+        │ ├── 00133C11D7CC5D1DD51404D04B695CA9833CAB33.cleaned
+        │ └── 00133C11D7CC5D1DD51404D04B695CA9833CAB33.json
+
+    where each directory named by istex-id contains a .cleaned file, the paper's content,
+     and a .json file, the meta-data for that paper.
+
+    """
     json_files = glob.glob(os.path.join(subset_dir, "*/*json"))
     for i, j in enumerate(json_files):
         istex_struct = istexjson_to_db(j, current_app.config["WEB_UPLOAD_DIR"], force_update=True)
@@ -312,7 +327,7 @@ def papers_add_from_subset(subset_dir):
 @cli.command("paper_del")
 @click.argument("paper_id", required=True)
 def paper_del(paper_id):
-    """Remove from database the record by id"""
+    """Remove from the database the record by id"""
     p = db.session.get(Paper, paper_id)
     db.session.delete(p)
     db.session.commit()
@@ -364,6 +379,7 @@ def paper_run(paper_id):
     except Exception as e:
         print(f"Couldn't run on paper #{paper_id}")
 
+
 def paper_web_run(paper_id, start_step):
     """Run the latest pipeline on that paper's article through web/RQ"""
     start_step = PipeStep[start_step]
@@ -377,6 +393,7 @@ def paper_web_run(paper_id, start_step):
         else:
             print(f"Failed to process paper {paper_id}. Status code: {status_code}")
 
+
 @cli.command("paper_web_run")
 @click.argument("paper_id", required=True)
 @click.option(
@@ -388,6 +405,7 @@ def paper_web_run(paper_id, start_step):
 def paper_web_run_cmd(paper_id, start_step):
     """Run the latest pipeline on that paper's article through web/RQ"""
     paper_web_run(paper_id, start_step)
+
 
 @cli.command("papers_web_run")
 @click.option("-i", "--ids-file",
@@ -441,6 +459,7 @@ def paper_web_status_all():
                 response, status_code = bht_status(paper_id=p.id)
                 # print(response.json)
 
+
 @click.option(
     "--dry-run",
     is_flag=True,
@@ -457,10 +476,10 @@ def papers_status_reset(dry_run):
 
     if len(papers) == 0:
         print("No 'queued' or 'started' papers")
-        return()
+        return ()
 
-    for  i, paper in enumerate( papers):
-        print(f"Paper #{paper.id:<6} {i:4}/{len(papers)}", end = " ")
+    for i, paper in enumerate(papers):
+        print(f"Paper #{paper.id:<6} {i:4}/{len(papers)}", end=" ")
         task_id = paper.task_id
         try:
             job = Job.fetch(
@@ -471,9 +490,9 @@ def papers_status_reset(dry_run):
                 print(f"task_status: {task_status}   ", end="\r")
             else:
                 print(f"no update needed             ", end="\r")
-        except  ConnectionError:
+        except ConnectionError:
             print("Redis connexion error")
-            return()
+            return ()
         except NoSuchJobError:
             if dry_run:
                 print(f"status to reset", end="\r")
@@ -482,7 +501,7 @@ def papers_status_reset(dry_run):
                 paper.set_task_status("")
         except Exception as e:
             print(f"Another exception {e}", end="\r")
-    print()
+    return None
 
 
 @cli.command("paper_run")
@@ -506,7 +525,7 @@ def papers_refresh():
 
     Parse the files on disk and update db
 
-    - parse disk and re-insert pdf and txt files
+    - parse disk and re-insert PDF and txt files
 
     Directory tree structure comes from bht module, and looks like
 
@@ -525,18 +544,18 @@ def papers_refresh():
     """
     print("DEPRECATED: TOBE REFACTORED")
     sys.exit()
-    # First remove all papers
+    # First, remove all papers
     for _p in Paper.query.all():
         db.session.delete(_p)
         db.session.commit()
     # Then
-    # Search for pdf file in base directory and build corresponding Paper
+    # Search for PDF file in base directory and build corresponding Paper
     for _f in Path(current_app.config["WEB_UPLOAD_DIR"]).glob("*.pdf"):
         pdf_filename = os.path.basename(str(_f))
         paper_name = pdf_filename.split(".")[0]
         pdf_filepath = os.path.join(current_app.config["WEB_UPLOAD_DIR"], pdf_filename)
         _p = Paper(title=paper_name, pdf_path=pdf_filepath)
-        # If subdirectory  exists and has txt catalog, update paper accordingly
+        # If subdirectory exists and has txt catalog, update paper accordingly
         cat_filename = None
         paper_dir = os.path.join(current_app.config["WEB_UPLOAD_DIR"], paper_name)
         if os.path.isdir(paper_dir):
@@ -561,7 +580,7 @@ def papers_refresh():
 @cli.command("papers_mock")
 def papers_mock():
     """Create a false list of papers inserted in database for test purpose"""
-    papers_list = [
+    _papers_list = [
         ["aa33199-18", "aa33199-18.pdf", None, None],
         [
             "2016GL069787",
@@ -576,7 +595,7 @@ def papers_mock():
             None,
         ],
     ]
-    for p_l in papers_list:
+    for p_l in _papers_list:
         paper = Paper(title=p_l[0], pdf_path=p_l[1], cat_path=p_l[2], task_id=p_l[3])
         db.session.add(paper)
     db.session.commit()
@@ -593,7 +612,7 @@ def missions_list():
 @click.option("-m", "--mission-id")
 @click.option("-p", "--paper-id")
 def events_list(mission_id=None, paper_id=None):
-    """Show events for given mission or paper, or all contained in database"""
+    """Show events for a given mission or paper, or all contained in the database"""
     if mission_id and paper_id:
         print("Provide only one argument --paper-id or --mission-id")
         return
@@ -671,7 +690,7 @@ def events_refresh(paper_id=None, ids_file=None, cat_status=None, force_update=F
 
     Can be used in conjunction with papers_refresh() that has to be run first.
 
-    This method was first writen to fix the hpevent datetime value in db
+    This method was first written to fix the hpevent datetime value in db
     A db bug that was fixed in the commit '6b38c89 Fix the missing hours in hpevent bug'
 
     @param: paper_id to run refresh on that only
@@ -702,7 +721,7 @@ def events_refresh(paper_id=None, ids_file=None, cat_status=None, force_update=F
         print("No paper to update")
         return
     else:
-        print(f"Updating {len(papers)} papers" )
+        print(f"Updating {len(papers)} papers")
 
     # then parse catalogs again
     from datetime import datetime
