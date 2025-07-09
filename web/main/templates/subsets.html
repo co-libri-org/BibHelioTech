@@ -72,8 +72,9 @@
     // url_for template for dynamical use before subset_name is known
     const urlSubsetStatusTemplate = "{{ url_for('main.api_subset_status', subset_name='__subset_name__') }}";
     $(document).ready(function() {
-        //setUnzipBtnOnCLick();
+        setUnzipBtnOnClick();
         updateAllStatuses();
+
     });
 </script>
 {% endblock %}

@@ -108,7 +108,7 @@ function updateSubsetStatus(subsetName){
    });
 }
 
-function setUnzipBtnOnCLick(){
+function setUnzipBtnOnClick(){
     $('.unzip-subset').click(function(){
         const subset_name = $(this).data("subset_name")
         const total_files = $(this).data("total_files")
