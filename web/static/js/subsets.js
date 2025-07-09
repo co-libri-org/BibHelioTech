@@ -28,10 +28,9 @@ function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt
     disable(unzipBtn)
 
     statusMsg.text(message).attr("title", alt_message).addClass(statusClass);
-    if ( taskStatus == "error" ){
-            disable(showLink);
-            disable(unzipBtn);
-    } else if ( taskStatus == "unknown" ){
+
+    if (["unknown", "failed", "finished"].includes(taskStatus)) {
+        // Display depends on extracted status
         if ( subsetStatus == "extracted"){
             enable(showLink);
             disable(unzipBtn);
@@ -39,10 +38,11 @@ function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt
             enable(unzipBtn);
             disable(showLink);
         }
-
     }
-    else if  (1 === 1) {
-        console.log("else if")
+    else if (["queued", "started", "error"].includes(taskStatus)) {
+        // unless we get some different status
+        disable(showLink);
+        disable(unzipBtn);
     }
     else {
         console.log("else ")
@@ -67,22 +67,28 @@ function updateSubsetStatus(subsetName){
 
 
         if (taskStatus == "started") {
+            statusClass  = "success";
             // update and wait for task to finish
             setTimeout(function() {
                 updateSubsetStatus(subsetName);
             }, 500);
         } else if (taskStatus == "queued") {
+            statusClass  = "success";
             // update and wait for task to be executed
             setTimeout(function() {
                 updateSubsetStatus(subsetName);
             }, 1000);
+        } else {
+            statusClass=""
         }
 
-       toggleSubsetDisplay(subsetName, taskStatus, subsetStatus, subsetMessage, altMessage)
+
+
+       toggleSubsetDisplay(subsetName, taskStatus, subsetStatus, subsetMessage, altMessage, statusClass)
 
    })
    .fail((err) => {
-        res = err.responseJSON
+        res = err.responseJSON;
         console.error("Got 503 from route:", res);
         const subsetMessage = res.data.message;
         const altMessage = res.data.alt_message;
