@@ -355,6 +355,10 @@ button.stat-status:hover {
 .zip-status {
     padding: .5rem .5rem;
     border: solid 1pt transparent;
+    border-radius: 5pt;
+}
+.zip-status.error {
+    background: #ff9e9e;
 }
 .zip-status:hover {
     cursor: pointer;

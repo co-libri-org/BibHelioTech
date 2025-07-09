@@ -16,7 +16,7 @@ function failedToStatus(err, statusElmtId, message) {
     console.error(err)
 }
 
-function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt_message){
+function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt_message, statusClass) {
 
     const subsetTr = $(`#${subset_name}`);
     const showLink = subsetTr.find(".show-subset");
@@ -24,23 +24,20 @@ function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt
     const statusMsg = subsetTr.find(".zip-status");
     const statusSpinner = subsetTr.find(".status-spin");
 
-    showLink.addClass("disabled");
-    unzipBtn.addClass("disabled");
-    statusMsg.text(taskStatus+" World");
+    disable(showLink)
+    disable(unzipBtn)
 
+    statusMsg.text(message).attr("title", alt_message).addClass(statusClass);
     if ( taskStatus == "error" ){
             disable(showLink);
             disable(unzipBtn);
-            statusMsg.text(message).attr("title", alt_message);
     } else if ( taskStatus == "unknown" ){
         if ( subsetStatus == "extracted"){
             enable(showLink);
             disable(unzipBtn);
-            statusMsg.text(message).attr("title", alt_message);
         } else if ( subsetStatus == "zipped") {
             enable(unzipBtn);
             disable(showLink);
-            statusMsg.text(message).attr("title", alt_message);
         }
 
     }
@@ -89,7 +86,7 @@ function updateSubsetStatus(subsetName){
         console.error("Got 503 from route:", res);
         const subsetMessage = res.data.message;
         const altMessage = res.data.alt_message;
-        toggleSubsetDisplay(subsetName, "error", "", subsetMessage, altMessage)
+        toggleSubsetDisplay(subsetName, "error", "", subsetMessage, altMessage, "error")
    });
 }
 
