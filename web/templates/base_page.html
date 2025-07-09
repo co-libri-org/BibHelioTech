@@ -15,6 +15,9 @@
     <style>
         :root {
             --bht-theme-color: {{ css_colors.bht_theme_color }};
+            --bht-success-color: {{ css_colors.bht_success_color }};
+            --bht-warning-color: {{ css_colors.bht_warning_color }};
+            --bht-error-color: {{ css_colors.bht_error_color }};
         }
     </style>
     <link href="{{url_for('static', filename='css/main.css') | staticversion }} " rel="stylesheet">

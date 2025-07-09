@@ -3,7 +3,7 @@
 # or relative path, which is to current project dir
 #
 BHT_DATA_DIR: "DATA"
-BHT_LOGFILE_NAME: "bht2.log"
+BHT_LOGFILE_NAME: "bht3.log"
 BHT_LOGLEVEL_CONSOLE: DEBUG
 BHT_LOGLEVEL_LOGFILE: INFO
 
@@ -16,7 +16,10 @@ QUEUES: ["default"]
 PER_PAGE: 50
 
 CSS_COLORS: {
-  'bht_theme_color': '#FFC107', # prod
-  #    'bht_theme_color': '#2ECC71',  # dev
-  #    'bht_theme_color': '#FF4422', # bulk
+    'bht_theme_color': '#FFC107', # prod
+#   'bht_theme_color': '#2ECC71',  # dev
+#   'bht_theme_color': '#FF4422', # bulk
+    'bht_success_color': '#CCFFDD',
+    'bht_warning_color': '#FFD876',
+    'bht_error_color': '#FF9E9E',
 }
