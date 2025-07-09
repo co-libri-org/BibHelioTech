@@ -5,6 +5,11 @@
 {% block content %}
 <h4>{{subset.name}}</h4>
 <h5> {{papers|length}} papers</h5>
+<h6>({{nb_unadded}} not in db)</h6>
+<div>
+   <button class="btn btn-warning">Filter</button>
+    <button class="btn btn-warning">Add All</button>
+</div>
 <hr class="mt-4 mb-4">
 <table class="table-hover table">
     <thead>

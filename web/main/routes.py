@@ -814,7 +814,9 @@ def subset_upload():
 def subset_show(subset_name):
     _subset = Subset(subset_name)
     _papers = _subset.papers
-    return render_template("subset.html", subset=_subset, papers=_papers)
+    _nb_unadded = sum(1 for item in _papers if not item['in_db'])
+
+    return render_template("subset.html", subset=_subset, papers=_papers, nb_unadded=_nb_unadded)
 
 
 @bp.route("/subsets")
