@@ -987,71 +987,62 @@ def api_subset_unzip():
 @bp.route("/api/subset_status/<subset_name>", methods=["GET"])
 def api_subset_status(subset_name):
     _subset = Subset(subset_name)
-    base_data = {'subset_name': _subset.name,
-                 'subset_status': _subset.status}
+    base_subset = {'subset_name': _subset.name,
+                   'subset_status': _subset.status}
     try:
+        # Could raise redis.ConnectionError or rq.NoSuchJobError
         task_id = _subset.task_id
-        if task_id is None:
-            response_object = {
-                'status': "failed",
-                'data': {
-                    **base_data,
-                    'message': "No task",
-                    'alt_message': f"No task id for {_subset.name}"
-                }
-            }
-            return response_object, 503
 
         response_object = {
             'status': "success",
             'data': {
-                **base_data,
-                'task_id': _subset.task_id,
+                **base_subset,
+                'task_id': task_id,
                 'task_status': _subset.task_status,
-                'task_progress': _subset.task_progress,
-                'message': f"Task {_subset.task_status}",
+                'message': f"Task {_subset.task_status} {_subset.task_progress}",
                 'alt_message': "",
             },
         }
 
-        if _subset.task_status in ["queued", "started"]:
-            response_object['data']['alt_message'] = f"Task {_subset.task_status} at {_subset.job.enqueued_at}"
+        # How to respond depending on task_status
+        # "queued" and "started" should mean 'subset_status' == "unzipped"
+        # "finished" should mean 'subset_status' == "extracted"
+        if _subset.task_status == "queued" and _subset.status == "zipped":
+            response_object['data']['alt_message'] = f"Task enqueued at {_subset.job.enqueued_at}"
             http_code = 202
-        elif _subset.task_status == "finished":
+        elif _subset.task_status == "started" and _subset.status == "zipped":
+            response_object['data']['alt_message'] = f"Task started at {_subset.job.started_at}"
+            http_code = 202
+        elif _subset.task_status == "finished" and _subset.status == "extracted":
             response_object['data']['alt_message'] = f"Task finished at {_subset.job.ended_at}"
             http_code = 200
         else:
-            response_object = {
-                'status': "failed",
-                'data': {
-                    **base_data,
-                    'message': "Unmanaged status",
-                    'alt_message': f"Status '{_subset.task_status}' is unmanaged"
-                }
-            }
+            response_object['status'] = "error"
+            response_object['data'][
+                'alt_message'] = f"Task:'{_subset.task_status}'/Subset:'{_subset.status}' is unmanaged"
             http_code = 422
 
     except NoSuchJobError:
         if _subset.extracted:
-            response_object = {
-                'status': "success",
-                'data': {
-                    **base_data,
-                    'message': "Extracted",
-                    'alt_message': f"{subset_name}.zip is extracted in {subset_name}/",
-                }
+            base_message = {
+                'task_status': "unknown",
+                'message': "Extracted",
+                'alt_message': f"{subset_name}.zip is extracted in {subset_name}/"
             }
-            http_code = 200
         else:
-            response_object = {
-                'status': "error",
-                'data': {
-                    **base_data,
-                    'message': "Job Id Error",
-                    'alt_message': f"Job was run, but non extracted archive found",
-                }
+            base_message = {
+                'task_status': "unknown",
+                'message': "Zipped",
+                'alt_message': "No extracted archive found",
             }
-            http_code = 200
+        response_object = {
+            'status': "success",
+            'data': {
+                **base_subset,
+                **base_message
+            }
+        }
+        http_code = 200
 
     except ConnectionError:
         response_object = {
