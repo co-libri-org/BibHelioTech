@@ -357,8 +357,14 @@ button.stat-status:hover {
     border: solid 1pt transparent;
     border-radius: 5pt;
 }
+.zip-status.success {
+    background: var(--bht-success-color);
+}
+.zip-status.warning {
+    background: var(--bht-warning-color);
+}
 .zip-status.error {
-    background: #ff9e9e;
+    background: var(--bht-error-color);
 }
 .zip-status:hover {
     cursor: pointer;

@@ -16,7 +16,7 @@ function failedToStatus(err, statusElmtId, message) {
     console.error(err)
 }
 
-function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt_message, statusClass) {
+function toggleSubsetDisplay(subset_name, taskStatus, subsetStatus, message, alt_message, statusClass="") {
 
     const subsetTr = $(`#${subset_name}`);
     const showLink = subsetTr.find(".show-subset");
