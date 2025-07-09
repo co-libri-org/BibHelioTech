@@ -25,6 +25,9 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [3.3.0-dev] - 2025-07-xx - Add extracted papers to db
+### New
+
 ## [3.2.0] - 2025-07-09 - Upload subsets as zip and unzip
 ### New
 - Allow for istex subset zip upload and extract
