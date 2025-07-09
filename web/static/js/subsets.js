@@ -66,25 +66,26 @@ function updateSubsetStatus(subsetName){
         const altMessage = res.data.alt_message;
 
 
+        statusClass  = "success";
         if (taskStatus == "started") {
-            statusClass  = "success";
             // update and wait for task to finish
             setTimeout(function() {
                 updateSubsetStatus(subsetName);
             }, 500);
         } else if (taskStatus == "queued") {
-            statusClass  = "success";
             // update and wait for task to be executed
             setTimeout(function() {
                 updateSubsetStatus(subsetName);
             }, 1000);
+        } else if (["unknown", "finished"].includes(taskStatus)) {
+            statusClass = ""
+            console.log("Subset status is "+taskStatus+": nothing to do")
         } else {
-            statusClass=""
+            statusClass = "warning"
+            console.error("Subset status "+taskStatus+" not managed")
         }
 
-
-
-       toggleSubsetDisplay(subsetName, taskStatus, subsetStatus, subsetMessage, altMessage, statusClass)
+        toggleSubsetDisplay(subsetName, taskStatus, subsetStatus, subsetMessage, altMessage, statusClass)
 
    })
    .fail((err) => {
