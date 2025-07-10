@@ -21,7 +21,7 @@
     </thead>
     <tbody>
     {% for p in papers %}
-    <tr class='{{"to_add" if not p.in_db }}'>
+    <tr id="{{p.name}}"  class='{{"to_add" if not p.in_db }}'>
         <th scope="row" class="td_num">
             {% if p.id %}
             <a class="btn btn-warning " href="{{url_for('main.paper_show', paper_id=p.id)}}"
@@ -36,7 +36,7 @@
             {% if p.in_db %}
             in db
             {% else %}
-            <button id="btn-{{p.name}}" class="add-extracted btn btn-warning "
+            <button class="add-extracted btn btn-warning "
                     data-subset_name="{{subset.name}}"
                     data-istex_id="{{p.name}}"
                     title="Add to DB">
