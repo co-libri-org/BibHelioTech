@@ -965,11 +965,11 @@ def api_add_extracted():
 
     subset_folder = os.path.join(current_app.config["ZIP_UPLOAD_DIR"], subset_name)
     paper_folder = os.path.join(subset_folder, f"{istex_id}")
-    istex_json = os.path.join(paper_folder, f"{istex_id}.json")
+    istex_json_filepath = os.path.join(paper_folder, f"{istex_id}.json")
 
     if exec_type == "mocked":
         import random
-        with open(istex_json) as json_fp:
+        with open(istex_json_filepath) as json_fp:
             document_json = json.load(json_fp)
             istex_struct = istex_doc_to_struct(document_json)
         hex_value = f"{random.randint(0, 0xFFFFFF):06x}"
@@ -987,7 +987,7 @@ def api_add_extracted():
 
     try:
 
-        istex_struct = istexjson_to_db(istex_json,
+        istex_struct = istexjson_to_db(istex_json_filepath,
                                        current_app.config["WEB_UPLOAD_DIR"],
                                        force_update=True)
 
