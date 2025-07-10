@@ -113,7 +113,7 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=Fals
 
     with open(istex_file_path) as _ifd:
         try:
-            paper_id = stream_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+            paper_id = stream_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct, force_update)
             istex_struct['paper_id'] = paper_id
         except DbError as e:
             return {'status': 'failed', 'reason': str(e)}
@@ -140,12 +140,12 @@ def stream_to_db(file_stream, filename, upload_dir, istex_struct=None, force_cop
         os.makedirs(upload_dir)
     _file_path = os.path.join(upload_dir, filename)
 
-    # Copy filestream unless file already exists or force
+    # Copy filestream unless the file already exists or force is set
     if not os.path.isfile(_file_path) or force_copy:
         with open(_file_path, "wb") as _fd:
             _fd.write(file_stream)
     else:
-        print(f"                                                  {filename} exists, dont overwrite", end="\r")
+        print(f"                                                  {filename} exists and force: {force_copy}, dont overwrite", end="\r")
     if not os.path.isfile(_file_path):
         raise FilePathError(f"There was an error on {filename} copy")
     _guessed_filetype = filetype.guess(_file_path)
@@ -159,11 +159,14 @@ def stream_to_db(file_stream, filename, upload_dir, istex_struct=None, force_cop
         return None
     if istex_struct is not None:
         _paper_title = istex_struct["title"]
+        _istex_id = istex_struct["istex_id"]
+        paper = Paper.query.filter_by(istex_id=_istex_id).one_or_none()
     else:
         _paper_title = _split_filename[0]
-    paper = Paper.query.filter_by(title=_paper_title).one_or_none()
+        _istex_id = None
+        paper = Paper.query.filter_by(title=_paper_title).one_or_none()
     if paper is None:
-        paper = Paper(title=_paper_title)
+        paper = Paper(title=_paper_title, istex_id=_istex_id)
 
     # set_file_path() will add and commit paper
     paper.set_file_path(_file_path, _file_type)
