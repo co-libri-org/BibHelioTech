@@ -37,7 +37,7 @@ def istexid_to_paper(istex_id):
 def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
     """
     Read a dir containing a .cleaned file and a .json file with meta info
-    Add the file in database for later processing
+    Add the file in a database for later processing
     """
     istex_id = os.path.basename(_istex_dir)
     istex_file_name = f"{istex_id}.{file_ext}"
@@ -47,7 +47,7 @@ def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
             or not os.path.isfile(istex_file_path) \
             or not os.path.isfile(json_file_path):
         raise FilePathError(f"Istex dir has wrong structure")
-    # read  json in dir
+    # read JSON in dir
     with open(json_file_path) as json_fp:
         try:
             document_json = json.load(json_fp)
@@ -59,20 +59,25 @@ def istexdir_to_db(_istex_dir, upload_dir, file_ext="cleaned"):
 
     with open(istex_file_path) as _ifd:
         stream_to_db(_ifd.read().encode("UTF-8"), istex_file_name, upload_dir, istex_struct)
+        return None
 
 
 def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=False):
     """
-    Read the JSON meta-info file from istex directory
-    Then
-        1. Get article file
-        2. Add to db for later usage
+    Parse the given ISTEX JSON metadata file, locate the corresponding article file,
+    and store its contents for future use in the database.
 
-    :param json_file: Istex JSON article's meta-info
-    :param upload_dir: Where to save paper's content to
-    :param file_ext: paper file extension (txt, cleaned, PDF)
-    :param force_update: if True, update when already exists
-    :return:
+    Steps:
+        1. Locate the article file corresponding to the metadata.
+        2. Copy or convert it to the specified upload directory.
+        3. Register or update the paper's metadata and location in the database.
+
+
+    :param json_file: Path to the ISTEX JSON metadata file.
+    :param upload_dir: Directory where the article file should be saved.
+    :param file_ext: Expected file extension of the article file (e.g., "txt", "cleaned", "pdf").
+    :param force_update: If True, overwrite existing entries in the database if they already exist.
+    :return: istex_struct
     """
     if not os.path.isfile(json_file):
         raise FilePathError(f"Couldn't find {json_file}")
@@ -117,18 +122,18 @@ def istexjson_to_db(json_file, upload_dir, file_ext="cleaned", force_update=Fals
 
 def stream_to_db(file_stream, filename, upload_dir, istex_struct=None, force_copy=False):
     """
-    Push Paper to db from a stream
-    (update Paper's content if exists)
+    Store a paper in the database from a file stream.
 
-        - write content to destination file
-        - add new Paper object to db
+    This function:
+      - Writes the provided file stream to the destination directory.
+      - Creates or updates the corresponding Paper entry in the database.
 
-    :param force_copy:
-    :param upload_dir:
-    :param istex_struct:
-    :param file_stream the file content
-    :param filename
-    :return: the paper's id, or None if couldn't do it
+    :param file_stream: The content of the file to write (binary or text stream).
+    :param filename: Name of the file (used to determine path and file type).
+    :param upload_dir: Directory where the file should be saved.
+    :param istex_struct: Optional ISTEX metadata structure associated with the paper.
+    :param force_copy: If True, overwrite the file even if it already exists.
+    :return: The paper's ID if successful, or None if the operation failed.
     """
     filename = secure_filename(filename)
     if not os.path.isdir(upload_dir):
@@ -292,6 +297,7 @@ class HpEvent(db.Model):
         # normalize conf index on the whole database
         r_dict["nconf"] = 1.0 - r_dict["conf"] / max_conf
         return r_dict
+
     #
     # def set_doi(self, doi_str):
     #     doi = db.session.query(Doi).filter_by(doi=doi_str).one_or_none()
@@ -503,7 +509,6 @@ class Paper(db.Model):
         HpEvent.query.filter_by(paper_id=self.id).delete(synchronize_session=False)
         self.cat_in_db = False
         db.session.commit()
-
 
     @property
     def pipeline_version(self):
