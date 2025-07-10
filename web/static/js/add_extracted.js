@@ -21,9 +21,9 @@ function updateExtractedTr(istex_struct){
     $lastTd.empty().text(istex_struct.status);
 
     // move the page to that <tr>
-    $('html, body').animate({
-        scrollTop: $tr.offset().top - 100 // offset for visibility
-    }, 500);
+    //$('html, body').animate({
+    //    scrollTop: $tr.offset().top - 100 // offset for visibility
+    //}, 500);
 }
 
 // Add extracted calls api/add_extracted
@@ -31,7 +31,7 @@ function handleAddExtracted(subset_name, istex_id){
     $.ajax({
         url: urlAddExtracted,
         method: "POST",
-        data: JSON.stringify({ subset_name: subset_name, istex_id: istex_id, exec_type: "mocked" }),
+        data: JSON.stringify({ subset_name: subset_name, istex_id: istex_id, exec_type: "db" }),
         contentType: 'application/json; charset=utf-8'
     })
     .done((res) => {
@@ -53,3 +53,30 @@ function setAddBtnOnClick(){
         handleAddExtracted(subset_name, istex_id);
     });
 }
+
+// Filtering enables Add All button
+$('#filter-not_in_db').click(function () {
+    const $filterBtn = $(this);
+    const $addAllBtn = $('#add-not_in_db')
+    const isFiltering = $filterBtn.text().trim() === "Filter db";
+    if ( isFiltering ){
+        $('tr.in_db').hide();
+        $addAllBtn.prop("disabled", false);
+        $filterBtn.text("Unfilter");
+    } else {
+        $('tr.in_db').show();
+        $addAllBtn.prop("disabled", true);
+        $filterBtn.text("Filter db");
+    }
+
+});
+
+// when add-all-btn is clicked,
+// call the same callback for each button.add-extracted
+$('#add-not_in_db').click(function () {
+    $('.add-extracted').each(function () {
+        const subset_name = $(this).data("subset_name");
+        const istex_id = $(this).data("istex_id");
+        handleAddExtracted(subset_name, istex_id);
+    });
+});
