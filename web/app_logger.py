@@ -1,5 +1,4 @@
 import logging
-import os
 from logging.handlers import SMTPHandler, RotatingFileHandler
 
 from flask.logging import default_handler
@@ -24,7 +23,8 @@ class AppLogger:
 
         if _app.config.get("LOG_TO_STDOUT") and _app.config["LOG_TO_STDOUT"]:
             stream_handler = logging.StreamHandler()
-            stream_handler.setLevel(logging.INFO)
+            stream_loglevel = logging.getLevelName(_app.config.get("BHT_LOGLEVEL_CONSOLE"))
+            stream_handler.setLevel(stream_loglevel)
             stream_handler.setFormatter(
                 logging.Formatter(
                     "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
@@ -42,5 +42,6 @@ class AppLogger:
                     "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
                 )
             )
-            file_handler.setLevel(logging.INFO)
+            file_loglevel = logging.getLevelName(_app.config.get("BHT_LOGLEVEL_LOGFILE"))
+            file_handler.setLevel(file_loglevel)
             _app.logger.addHandler(file_handler)
