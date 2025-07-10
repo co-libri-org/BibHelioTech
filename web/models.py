@@ -363,7 +363,7 @@ class Region(db.Model):
 
 class Paper(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String, unique=True, nullable=False)
+    title = db.Column(db.String, unique=False, nullable=False)
     doi = db.Column(db.String, unique=True)
     ark = db.Column(db.String, unique=True)
     istex_id = db.Column(db.String, unique=True)
