@@ -16,6 +16,7 @@
     <tr>
         <th scope="col" style="width: 20px">Id</th>
         <th scope="col" class="col">Title</th>
+        <th scope="col" class="col">IstexID</th>
         <th scope="col" class="col">Status</th>
     </tr>
     </thead>
@@ -32,6 +33,10 @@
         </th>
         <td title="{{p.title}}">
             &laquo;{{p.title | truncate(75, False, end=" ...")}}&raquo;
+        </td>
+        <td>
+            {{p.name}}
+        </td>
         <td>
             {% if p.in_db %}
             in db
