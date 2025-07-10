@@ -62,7 +62,7 @@
             $.ajax({
                 url: urlAddExtracted,
                 method: "POST",
-                data: JSON.stringify({ subset_name: subset_name, istex_id: istex_id, exce_type: "struct" }),
+                data: JSON.stringify({ subset_name: subset_name, istex_id: istex_id, exec_type: "mocked" }),
                 contentType: 'application/json; charset=utf-8'
             })
             .done((res) => {
