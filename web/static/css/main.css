@@ -379,6 +379,18 @@ td .zip-status {
 }
 
 /* ------------------------- E X T R A C T E D ---------------------- */
+div.unadded {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+}
+div.unadded h5 {
+    margin: 0;
+    margin-right: 10rem;
+    padding: 0;
+    line-height: 1;
+    display: inline-block;
+}
 tr.to_add {
     background-color: #f5ecd3 ;
 }

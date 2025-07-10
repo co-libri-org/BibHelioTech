@@ -26,6 +26,7 @@ function updateExtractedTr(istex_struct){
     }, 500);
 }
 
+// Add extracted calls api/add_extracted
 function handleAddExtracted(subset_name, istex_id){
     $.ajax({
         url: urlAddExtracted,
@@ -43,6 +44,8 @@ function handleAddExtracted(subset_name, istex_id){
     });
 }
 
+// for each button.add-extracted,
+// set the on-click event callback
 function setAddBtnOnClick(){
     $('.add-extracted').click(function(){
         const subset_name = $(this).data("subset_name");

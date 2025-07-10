@@ -4,11 +4,11 @@
 {%  endblock %}
 {% block content %}
 <h4>{{subset.name}}</h4>
-<h5> {{papers|length}} papers</h5>
-<h6>({{nb_unadded}} not in db)</h6>
-<div>
-    <button class="btn btn-warning">Filter</button>
-    <button class="btn btn-warning">Add All</button>
+<h5> {{papers|length}} papers extracted</h5>
+<div class="unadded">
+    <h5>{{nb_unadded}} not in db</h5>
+    <button id="filter-not_in_db" class="btn btn-warning" title="Show papers not in db">Filter db</button>
+    <button id="add-not_in_db" class="btn btn-warning" title="Add papers not in db" disabled>Add All</button>
 </div>
 <hr class="mt-4 mb-4">
 <table class="table-hover table">
@@ -21,7 +21,7 @@
     </thead>
     <tbody>
     {% for p in papers %}
-    <tr id="{{p.name}}"  class='{{"to_add" if not p.in_db }}'>
+    <tr id="{{p.name}}"  class='{{"in_db" if p.in_db else "to_add"}}'>
         <th scope="row" class="td_num">
             {% if p.id %}
             <a class="btn btn-warning " href="{{url_for('main.paper_show', paper_id=p.id)}}"
