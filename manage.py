@@ -20,6 +20,7 @@ from web import create_app, db
 from web.bht_proxy import pipe_paper
 from web.models import catfile_to_db, Mission, istexdir_to_db, istexjson_to_db
 from web.models import Paper, HpEvent
+from web.subset_tools import Subset
 
 cli = FlaskGroup(create_app=create_app)
 
@@ -730,6 +731,20 @@ def status_update():
         p.task_status = 'finished'
         db.session.add(p)
     db.session.commit()
+
+
+@cli.command("subset_papers_show")
+@click.argument("subset_name", required=True)
+@click.option("--long", is_flag=True, default=False, help="Show long version of paper details")
+def subset_papers_show(subset_name, long):
+    """Show all papers contained in an istex subset directory"""
+    subset = Subset(subset_name)
+    for _p in subset.papers:
+        if long:
+            print(_p)
+        else:
+            # print(f"db_id: {_p.db_id}, istex_id:{_p.itex_id}, in_db: {_p.in_db}")
+            print(f"db_id: {_p["id"]}, istex_id:{_p["name"]}, in_db: {_p["in_db"]}")
 
 
 @cli.command("subset_papers_add")
