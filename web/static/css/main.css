@@ -202,9 +202,6 @@ a.btn[disabled] {
     background-color:var(--bs-warning);
 }
 
-tr.to_add {
-    background-color: #f5ecd3 ;
-}
 
 /* ISTEX RESULTS */
 /* change tr color to show if is in db */
@@ -379,6 +376,17 @@ td .zip-status {
     background: white;
     border: solid 1pt lightgrey;
     border-radius: 5pt;
+}
+
+/* ------------------------- E X T R A C T E D ---------------------- */
+tr.to_add {
+    background-color: #f5ecd3 ;
+}
+tr.mocked {
+    background-color: #ffe6ff ;
+}
+tr.added {
+    background: var(--bht-success-color);
 }
 
 /* ----------------------------P L O T S--------------------------------- */
