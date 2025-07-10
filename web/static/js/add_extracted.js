@@ -1,4 +1,6 @@
 function updateExtractedTr(istex_struct){
+    // build the paper-show url
+    const paper_show_url = urlPaperShowTemplate.replace("__paper_id__", istex_struct.paper_id);
     // get <tr> by id==istex_id
     const $tr = $('#'+istex_struct.istex_id);
     if ($tr.length === 0){
@@ -9,7 +11,7 @@ function updateExtractedTr(istex_struct){
     $tr.removeClass("to_add").addClass(istex_struct.status);
     // insert <a class="btn"> in first <th>  with inner_text=istex_struct.paper_id and href="#"
     $firstTh = $tr.find('th.td_num');
-    $firstTh.html(`<a class="btn btn-warning" href="#" title="Show paper #${istex_struct.paper_id}">${istex_struct.paper_id}</a>`);
+    $firstTh.html(`<a class="btn btn-warning" href="${paper_show_url}" title="Show paper #${istex_struct.paper_id}">${istex_struct.paper_id}</a>`);
     // in last <td> remove <button> replace with text "added"
     const $lastTd = $tr.find('td').last();
     $lastTd.empty().text(istex_struct.status);

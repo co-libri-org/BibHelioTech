@@ -54,6 +54,7 @@
 {% block scripts %}
 <script src="{{url_for('static', filename='js/add_extracted.js') | staticversion }} " defer></script>
 <script>
+    const urlPaperShowTemplate = "{{ url_for('main.paper_show', paper_id='__paper_id__') }}";
     const urlAddExtracted = "{{url_for('main.api_add_extracted')}}"
     $(document).ready(function() {
         setAddBtnOnClick();
