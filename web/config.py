@@ -4,6 +4,9 @@ from bht_config import yml_settings, BHT_ROOT_DIR
 
 
 class Config(object):
+    BHT_LOGLEVEL_CONSOLE = yml_settings["BHT_LOGLEVEL_CONSOLE"]
+    BHT_LOGLEVEL_LOGFILE = yml_settings["BHT_LOGLEVEL_LOGFILE"]
+
     LOG_TO_STDOUT = True
     LOG_TO_FILE = True
     TESTING = False
@@ -27,6 +30,8 @@ class ProdConfig(Config):
 
 
 class DevConfig(Config):
+    BHT_LOGLEVEL_CONSOLE = "DEBUG"
+    BHT_LOGLEVEL_LOGFILE = "DEBUG"
     # Set DEBUG with `flask run --debug` option
     TESTING = True
     WEB_UPLOAD_DIR = os.path.join(BHT_ROOT_DIR, "dev-upload/")
@@ -35,7 +40,7 @@ class DevConfig(Config):
     )
 
 
-class TestConfig(Config):
+class TestConfig(DevConfig):
     TESTING = True
     # Set DEBUG with `flask run --debug` option
     # Ignore @login_required decorator

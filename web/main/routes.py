@@ -36,7 +36,7 @@ from bht.pipeline import PipeStep
 from tools import StepLighter
 from . import bp
 from web import db
-from web.models import Paper, Mission, HpEvent, BhtFileType, stream_to_db
+from web.models import Paper, Mission, HpEvent, BhtFileType, stream_to_db, istexjson_to_db
 from bht.catalog_tools import rows_to_catstring
 from web.bht_proxy import get_pipe_callback
 from web.istex_proxy import (
@@ -814,7 +814,9 @@ def subset_upload():
 def subset_show(subset_name):
     _subset = Subset(subset_name)
     _papers = _subset.papers
-    return render_template("subset.html", subset=_subset, papers=_papers)
+    _nb_unadded = sum(1 for item in _papers if not item['in_db'])
+
+    return render_template("subset.html", subset=_subset, papers=_papers, nb_unadded=_nb_unadded)
 
 
 @bp.route("/subsets")
@@ -951,6 +953,57 @@ def statistics():
 
 
 #  - - - - - - - - - - - - - - - - - - A P I  R O U T E S  - - - - - - - - - - - - - - - - - - - - #
+@bp.route("/api/add_extracted", methods=["POST"])
+def api_add_extracted():
+    from typing import cast
+    from web.istex_proxy import istex_doc_to_struct
+    exec_type = request.json.get("exec_type", "db")
+    subset_name = cast(str, request.json.get("subset_name"))
+    istex_id = cast(str, request.json.get("istex_id"))
+    if not subset_name or not istex_id:
+        return jsonify({"status": "error", "message": "Missing required parameters"}), 400
+
+    subset_folder = os.path.join(current_app.config["ZIP_UPLOAD_DIR"], subset_name)
+    paper_folder = os.path.join(subset_folder, f"{istex_id}")
+    istex_json_filepath = os.path.join(paper_folder, f"{istex_id}.json")
+
+    if exec_type == "mocked":
+        import random
+        with open(istex_json_filepath) as json_fp:
+            document_json = json.load(json_fp)
+            istex_struct = istex_doc_to_struct(document_json)
+        hex_value = f"{random.randint(0, 0xFFFFFF):06x}"
+        istex_struct["paper_id"] = hex_value
+        istex_struct["status"] = "mocked"
+        response_object, http_code = {
+            "status": "success",
+            "data": {"subset_name": subset_name,
+                     "istex_struct": istex_struct}
+        }, 200
+
+        return jsonify(response_object), http_code
+    elif not exec_type == "db":
+        return jsonify({"status": "error", "message": f"Wrong exec_type: {exec_type}"}), 422
+
+    try:
+
+        istex_struct = istexjson_to_db(istex_json_filepath,
+                                       current_app.config["WEB_UPLOAD_DIR"],
+                                       force_update=True)
+
+    except FilePathError:
+        return jsonify({"status": "error", "message": "Some files dont exist"}), 404
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Unexpected error {e}"}), 503
+
+    response_object, http_code = {
+        "status": "success",
+        "data": {"subset_name": subset_name,
+                 "istex_struct": istex_struct}
+    }, 200
+    return jsonify(response_object), http_code
+
+
 @bp.route("/api/subset_unzip", methods=["POST"])
 def api_subset_unzip():
     total_files = request.json.get("total_files")
@@ -1016,10 +1069,10 @@ def api_subset_status(subset_name):
         if _subset.task_status == "queued" and _subset.status == "zipped":
             response_object['data']['alt_message'] = f"Task enqueued at {_subset.job.enqueued_at}"
             http_code = 202
-        elif _subset.task_status == "started": # and _subset.status == "zipped":
+        elif _subset.task_status == "started":  # and _subset.status == "zipped":
             response_object['data']['alt_message'] = f"Task started at {_subset.job.started_at}"
             http_code = 202
-        elif _subset.task_status == "finished": # and _subset.status == "extracted":
+        elif _subset.task_status == "finished":  # and _subset.status == "extracted":
             response_object['data']['alt_message'] = f"Task finished at {_subset.job.ended_at}"
             http_code = 200
         elif _subset.task_status == "failed":

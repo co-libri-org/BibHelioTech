@@ -5,6 +5,7 @@ import yaml
 
 __all__ = [
     "yml_settings",
+    "BHT_ROOT_DIR"
 ]
 
 BHT_ROOT_DIR = os.path.dirname(__file__)

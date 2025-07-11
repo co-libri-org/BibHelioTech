@@ -20,6 +20,7 @@ from web import create_app, db
 from web.bht_proxy import pipe_paper
 from web.models import catfile_to_db, Mission, istexdir_to_db, istexjson_to_db
 from web.models import Paper, HpEvent
+from web.subset_tools import Subset
 
 cli = FlaskGroup(create_app=create_app)
 
@@ -293,35 +294,6 @@ def papers_add_from_datadir(force_update):
             paper.set_cat_path(catalog_file)
         print(istex_struct['istex_id'], istex_struct['status'], end='\r')
     print('\n')
-
-
-@cli.command("papers_add_from_subset")
-@click.argument("subset_dir", required=True)
-def papers_add_from_subset(subset_dir):
-    """Add all papers contained in an istex subset directory
-        This directory is usually named 'istex-subset-YYYY-MM-DD' contains
-        ├── 00062DE6CB4B83B8CDDFDA88B6AA3640D60A2965/
-        │ ├── 00062DE6CB4B83B8CDDFDA88B6AA3640D60A2965.cleaned
-        │ └── 00062DE6CB4B83B8CDDFDA88B6AA3640D60A2965.json
-        ├── 00109D61FE06B2C9783FB3888CBB24A5F58DC0E4/
-        │ ├── 00109D61FE06B2C9783FB3888CBB24A5F58DC0E4.cleaned
-        │ └── 00109D61FE06B2C9783FB3888CBB24A5F58DC0E4.json
-        ├── 00133C11D7CC5D1DD51404D04B695CA9833CAB33/
-        │ ├── 00133C11D7CC5D1DD51404D04B695CA9833CAB33.cleaned
-        │ └── 00133C11D7CC5D1DD51404D04B695CA9833CAB33.json
-
-    where each directory named by istex-id contains a .cleaned file, the paper's content,
-     and a .json file, the meta-data for that paper.
-
-    """
-    json_files = glob.glob(os.path.join(subset_dir, "*/*json"))
-    for i, j in enumerate(json_files):
-        istex_struct = istexjson_to_db(j, current_app.config["WEB_UPLOAD_DIR"], force_update=True)
-        print(f"{i}/{len(json_files)}", end=" ")
-        if istex_struct['status'] == 'failed':
-            print(j, istex_struct['reason'])
-        else:
-            print(istex_struct['istex_id'], istex_struct['status'])
 
 
 @cli.command("paper_del")
@@ -759,6 +731,49 @@ def status_update():
         p.task_status = 'finished'
         db.session.add(p)
     db.session.commit()
+
+
+@cli.command("subset_papers_show")
+@click.argument("subset_name", required=True)
+@click.option("--long", is_flag=True, default=False, help="Show long version of paper details")
+def subset_papers_show(subset_name, long):
+    """Show all papers contained in an istex subset directory"""
+    subset = Subset(subset_name)
+    for _p in subset.papers:
+        if long:
+            print(_p)
+        else:
+            # print(f"db_id: {_p.db_id}, istex_id:{_p.itex_id}, in_db: {_p.in_db}")
+            print(f"db_id: {_p["id"]}, istex_id:{_p["name"]}, in_db: {_p["in_db"]}")
+
+
+@cli.command("subset_papers_add")
+@click.argument("subset_dir", required=True)
+def subset_papers_add(subset_dir):
+    """Add all papers contained in an istex subset directory
+        This directory is usually named 'istex-subset-YYYY-MM-DD' contains
+        ├── 00062DE6CB4B83B8CDDFDA88B6AA3640D60A2965/
+        │ ├── 00062DE6CB4B83B8CDDFDA88B6AA3640D60A2965.cleaned
+        │ └── 00062DE6CB4B83B8CDDFDA88B6AA3640D60A2965.json
+        ├── 00109D61FE06B2C9783FB3888CBB24A5F58DC0E4/
+        │ ├── 00109D61FE06B2C9783FB3888CBB24A5F58DC0E4.cleaned
+        │ └── 00109D61FE06B2C9783FB3888CBB24A5F58DC0E4.json
+        ├── 00133C11D7CC5D1DD51404D04B695CA9833CAB33/
+        │ ├── 00133C11D7CC5D1DD51404D04B695CA9833CAB33.cleaned
+        │ └── 00133C11D7CC5D1DD51404D04B695CA9833CAB33.json
+
+    where each directory named by istex-id contains a .cleaned file, the paper's content,
+     and a .json file, the meta-data for that paper.
+
+    """
+    json_files = glob.glob(os.path.join(subset_dir, "*/*json"))
+    for i, j in enumerate(json_files):
+        istex_struct = istexjson_to_db(j, current_app.config["WEB_UPLOAD_DIR"], force_update=True)
+        print(f"{i}/{len(json_files)}", end=" ")
+        if istex_struct['status'] == 'failed':
+            print(j, istex_struct['reason'])
+        else:
+            print(istex_struct['istex_id'], istex_struct['status'])
 
 
 if __name__ == "__main__":

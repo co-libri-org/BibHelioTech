@@ -69,7 +69,7 @@ class Subset:
                 _db_id = None
 
             _papers.append(
-                {'id': _db_id, 'name': _dir, 'title': _meta["title"], 'json': _paper_json, 'cleaned': _paper_cleaned,
+                {'id': _db_id, 'name': _name, 'title': _meta["title"], 'json': _paper_json, 'cleaned': _paper_cleaned,
                  'in_db': _in_db})
         return _papers
 
