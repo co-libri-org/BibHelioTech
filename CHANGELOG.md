@@ -25,13 +25,17 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
-## [3.3.0-dev] - 2025-07-xx - Add extracted papers to db
+## [3.3.0] - 2025-07-11 - Add extracted papers to db
 ### New
+- Add and Add_all buttons linked to new api route
+- 
+### Change
+- Paper.title property is not uniq anymore
 
 ## [3.2.0] - 2025-07-09 - Upload subsets as zip and unzip
 ### New
 - Allow for istex subset zip upload and extract
-- Show subset papers on web list
+- Show subset papers on a web list
 
 ## [3.1.0] - 2025-06-18 - Update stats
 ### Changed
