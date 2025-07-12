@@ -1,6 +1,5 @@
 FROM ubuntu:24.04 as bht-fastapi
-LABEL maintainer="Benjamin Renard <benjamin.renard@irap.omp.eu>,\
-                  Richard Hitier <hitier.richard@gmail.com>"
+LABEL maintainer="Richard Hitier <hitier.richard@gmail.com>"
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \

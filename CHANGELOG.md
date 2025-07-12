@@ -25,6 +25,10 @@ Changes are kept under subsections:
 Only major refactoring improvements or functional changes should be noted.
 
 --------------------------------------------------------------------------------
+## [3.3.1] - 2025-07-12 - Fix jpype version number
+### Fixed
+- Freeze jpype version to 1.5.2
+
 ## [3.3.0] - 2025-07-11 - Add extracted papers to db
 ### New
 - Add and Add_all buttons linked to new api route
