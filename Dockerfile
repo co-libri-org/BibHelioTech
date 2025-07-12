@@ -28,7 +28,7 @@ RUN pip install --upgrade pip && \
 WORKDIR /home/bibheliotech/BibHelioTech
 
 
-COPY --parents LICENSE VERSION.txt requirements.txt ./
+COPY --parents LICENSE CHANGELOG.md VERSION.txt requirements.txt ./
 COPY --parents bht_config.py bht_web.py manage.py ./
 COPY --parents migrations/ ./
 COPY --parents resources/ ./
