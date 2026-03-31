@@ -172,10 +172,26 @@ BHT_ENV can take 3 possible values:
 
 ### Password protection with flask-htpasswd
 
+This is very basic htpasswd protection.
+
 If you wish to run the application on the production mode, please make sure you have created the file:
 
     apt-get install apache2-utils
     htpasswd -c .htpasswd the_user_name
+
+    or
+
+    htpasswd -b .htpasswd the_user_name the_password
+
+If the server is already running, the file has to be copied to
+the web container, and relaunched:
+
+    htpasswd -b .htpasswd stagiaire cafe
+    docker cp .htpasswd bht-web-1:/home/bibheliotech/BibHelioTech/.htpasswd                                          <<<
+    docker compose restart                                                                                           <<<
+
+
+
 
 ### Running files treatment under ./DATA/
 
